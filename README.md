@@ -30,18 +30,31 @@ Universal Paper is a vocabulary, a grammar, and a set of validity rules. It is n
 
 ## Quick start
 
-Requires Python 3.11+ and the `cryptography` package.
+Requires Python 3.11+ and Git. From an empty terminal on macOS or Linux:
 
 ```sh
-pip install -e '.[test]'          # or: pip install -e . && export PYTHONPATH=src
+git clone https://github.com/Uppercentile/universal-paper.git
+cd universal-paper
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e '.[test]'
+
 up validate examples/conventional/bundle.json
-up derive   examples/conventional/bundle.json --at 2027-04-30T00:00:00Z
-up render   examples/confidential/bundle.json --chain 0 --hashes-only
-up simulate examples/conventional/bundle.json my-hypothetical-events.json
-up trace    examples/conventional/bundle.json -o conventional.trace.json
-up hash     some-object.json
-python -m pytest
 ```
+
+On Windows (PowerShell), activate the environment with `.venv\Scripts\Activate.ps1` instead of `source .venv/bin/activate`. The virtual environment keeps the install out of your system Python, which recent macOS and Linux releases refuse to modify ([PEP 668](https://peps.python.org/pep-0668/)).
+
+Then try the other commands, from the same folder with the environment active:
+
+```sh
+up derive examples/conventional/bundle.json --at 2027-04-30T00:00:00Z   # status, tiers, prices and what is owed on a date
+up render examples/conventional/bundle.json --chain 0                   # the agreement as contract text
+up render examples/confidential/bundle.json --chain 0 --hashes-only     # the same with every private value sealed
+up trace  examples/conventional/bundle.json -o conventional.trace.json  # every event, every check, every state hash
+up hash   spec/06-terms/UP-Admin-Fee.json                               # the content address of a Term definition
+python -m pytest                                                        # the full test suite (Node.js 20+ for the JavaScript parts)
+```
+
+`up simulate BUNDLE EVENTS.json` runs your own hypothetical events forward against a bundle.
 
 | Command | Does |
 |---|---|

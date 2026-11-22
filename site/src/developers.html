@@ -971,7 +971,7 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
       <a class="btn primary" href="#how">See how it works</a>
       <a class="btn" href="#start">Start building</a>
     </div>
-    <div class="install"><pre>up validate examples/conventional/bundle.json</pre><button class="copybtn" type="button">Copy</button></div>
+    <div class="install"><pre>git clone https://github.com/Uppercentile/universal-paper.git</pre><button class="copybtn" type="button">Copy</button></div>
     <div class="statrow">
       <div class="stat"><b>7</b><span>primitives</span></div>
       <div class="stat"><b>16</b><span>standard Terms</span></div>
@@ -1092,7 +1092,7 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
   <div class="wrap g">
     <div class="pathshead"><h2 id="pathsH">Start where you work</h2><span class="note">Four ways into the same language</span></div>
     <div class="pgrid">
-      <a class="path" href="#start"><span class="who">Engineers</span><h3>Validate a real agreement in four commands</h3><p>Install the reference interpreter, replay the example chains and derive what's owed.</p><span class="go">Get started →</span></a>
+      <a class="path" href="#start"><span class="who">Engineers</span><h3>Validate a real agreement in four steps</h3><p>Install the reference interpreter, replay the example chains and derive what's owed.</p><span class="go">Get started →</span></a>
       <a class="path" href="#apps"><span class="who">Product builders</span><h3>See ten apps the language makes possible</h3><p>Deal desks, price sync, renewal calendars and agents that work with every counterparty.</p><span class="go">Browse app ideas →</span></a>
       <a class="path" href="#teams"><span class="who">Procurement & finance</span><h3>See what changes between "signed" and "paid"</h3><p>Before-and-after for business development, procurement, finance, implementation and legal.</p><span class="go">Compare by team →</span></a>
       <a class="path" href="#terms"><span class="who">Legal & standards</span><h3>Read the 16 standard Terms and the rules</h3><p>Every Term's contract text, parameters and machine meaning, hashed in your browser.</p><span class="go">Open the Term library →</span></a>
@@ -1533,10 +1533,12 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
 
     <div class="start" id="start">
       <div class="rise">
-        <h3 style="font-size:var(--s2);margin-bottom:22px">Verified agreement in four commands</h3>
+        <h3 style="font-size:var(--s2);margin-bottom:22px">Verified agreement in four steps</h3>
         <ol>
-          <li><div><b>Install</b> <span class="note">Python 3.11+ and the cryptography package</span><pre>cd universal-paper
-pip install -e '.[test]'      # or: export PYTHONPATH=src</pre></div></li>
+          <li><div><b>Get the code and install</b> <span class="note">Python 3.11+ and Git. On Windows, run .venv\Scripts\Activate.ps1 instead of source</span><pre>git clone https://github.com/Uppercentile/universal-paper.git
+cd universal-paper
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e '.[test]'</pre></div></li>
           <li><div><b>Validate an example</b><pre>up validate examples/conventional/bundle.json</pre></div></li>
           <li><div><b>Ask what's owed on a date</b><pre>up derive examples/conventional/bundle.json --at 2027-04-30T00:00:00Z</pre></div></li>
           <li><div><b>Read it as a contract, run the tests</b><pre>up render examples/conventional/bundle.json --chain 0
