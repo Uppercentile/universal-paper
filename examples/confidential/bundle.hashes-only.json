@@ -1,0 +1,1724 @@
+{
+  "chains": [
+    [
+      {
+        "at": "2026-12-01T15:00:00Z",
+        "body": {
+          "agreement": {
+            "clauses": [
+              {
+                "def": "sha256:19126e50a5e29d7b86c6c2cac51bd3b743048e3139b0b02763cb6d685d5e5d22",
+                "n": "term",
+                "params": {
+                  "end": "2028-01-01T00:00:00Z",
+                  "max_renewals": 2,
+                  "optout_notice": {
+                    "count": 90,
+                    "unit": "day"
+                  },
+                  "optout_roles": [
+                    "aggregator",
+                    "supplier"
+                  ],
+                  "renewal_period": {
+                    "count": 1,
+                    "unit": "year"
+                  },
+                  "start": "2027-01-01T00:00:00Z"
+                },
+                "term": "UP:Renewing-Term"
+              },
+              {
+                "def": "sha256:cd0f44c7971fc2370e510efe478c354b791b17f1c9a10165aa80b1d78cd3aeb0",
+                "n": "tiers",
+                "params": {
+                  "prices": [
+                    {
+                      "by": {
+                        "A": {
+                          "seal": "sha256:750d8a8ebb343c22eb51c0429f0f086a9a96f6446ea98ab477f1856376752447"
+                        },
+                        "B": {
+                          "seal": "sha256:e40460adc67e72a2b8aa7faf9f7b064bf0a5f07d66a2b4c670cebdc21d8588dc"
+                        },
+                        "C": {
+                          "seal": "sha256:d558535b99fb999bbdec6911219bae04ac2ee21adddd0817dc5594f353c45f1f"
+                        }
+                      },
+                      "item": {
+                        "id": "00000000000017",
+                        "scheme": "GTIN"
+                      }
+                    },
+                    {
+                      "by": {
+                        "A": {
+                          "seal": "sha256:85dd80e3eb1c2ad4dc6758b4c9ab1454bb9560a34723a6fe37148b90e9e197ba"
+                        },
+                        "B": {
+                          "seal": "sha256:27fa1b969341cd0212e53132403c8fa4ab8c483e7ed3727eba64010c0f360ccb"
+                        },
+                        "C": {
+                          "seal": "sha256:ac2c31074a280c1605e3fc712134cb761d491f4e5403a92ccc2bff2babcd1071"
+                        }
+                      },
+                      "item": {
+                        "id": "00000000000024",
+                        "scheme": "GTIN"
+                      }
+                    },
+                    {
+                      "by": {
+                        "A": {
+                          "seal": "sha256:f284f4d7865b1401c80272278db28c91f2c727380a3f6642f7e2457daa071346"
+                        },
+                        "B": {
+                          "seal": "sha256:ca60cdb0fd625c3442ee7c0c18f480831f4f8b12fcfd642a4babe5bfa02c3a82"
+                        },
+                        "C": {
+                          "seal": "sha256:83ca601fd4ff36ce1bed5637399ae9a223c97d4214f2b548c945ea6a649f842b"
+                        }
+                      },
+                      "item": {
+                        "id": "00000000000031",
+                        "scheme": "GTIN"
+                      }
+                    }
+                  ],
+                  "tiers": [
+                    {
+                      "conditions": {
+                        "seal": "sha256:8fa444bad51c9d55bcfd888930ed407cbb16e0084995b97b7d70cae358e225ad"
+                      },
+                      "name": "A"
+                    },
+                    {
+                      "conditions": {
+                        "seal": "sha256:d43552e0d704fa5812df440c7a46f4430eb9ed40abe1c9d3d4af1da67cbd313c"
+                      },
+                      "name": "B"
+                    },
+                    {
+                      "conditions": {
+                        "seal": "sha256:a5b84e4eaf3362874488672af7e2238474b00496684e08de76595773d6abb58f"
+                      },
+                      "name": "C"
+                    }
+                  ]
+                },
+                "term": "UP:Tiers"
+              },
+              {
+                "def": "sha256:dbef07d6cee32d6bf7293f28239c09b66efa98ddb73195ce329568d3bc7cba84",
+                "n": "reporting",
+                "params": {
+                  "due": {
+                    "count": 15,
+                    "unit": "day"
+                  },
+                  "period": {
+                    "count": 1,
+                    "unit": "month"
+                  },
+                  "recipient": "aggregator",
+                  "reporter": "supplier"
+                },
+                "term": "UP:Sales-Reporting"
+              },
+              {
+                "def": "sha256:7794f7872d6cef305839b2fdc7b7e9f2916e71f20cde4bdac95321848e21a85e",
+                "n": "fee",
+                "params": {
+                  "due": {
+                    "count": 30,
+                    "unit": "day"
+                  },
+                  "payee": "aggregator",
+                  "payer": "supplier",
+                  "period": {
+                    "count": 1,
+                    "unit": "month"
+                  },
+                  "rate": {
+                    "seal": "sha256:41135ba3df21b5c495b02e47280b2b6dcacc876c9f4485112fefd05fdd173f1e"
+                  },
+                  "report_clause": "reporting",
+                  "rounding": {
+                    "mode": "half-even",
+                    "scale": 2
+                  }
+                },
+                "term": "UP:Admin-Fee"
+              },
+              {
+                "def": "sha256:8d60e3ce9a589784026b794689da8d9fe153f926552b99892fd00038409d41a8",
+                "n": "audit",
+                "params": {
+                  "auditee": "supplier",
+                  "auditor": "aggregator",
+                  "max_requests": 1,
+                  "per": {
+                    "count": 1,
+                    "unit": "year"
+                  },
+                  "response": {
+                    "count": 30,
+                    "unit": "day"
+                  }
+                },
+                "term": "UP:Audit"
+              },
+              {
+                "def": "sha256:6636ada39098601025c16e5ea201ed2ccde106ee20a1c499c815d26e14703cff",
+                "n": "exit",
+                "params": {
+                  "holders": [
+                    "aggregator",
+                    "supplier"
+                  ],
+                  "notice": {
+                    "count": 90,
+                    "unit": "day"
+                  }
+                },
+                "term": "UP:Termination-Convenience"
+              },
+              {
+                "def": "sha256:ac1e78bc3e0ed82e0cda2f203c4cd5446cb1da7ef7ce1dd972763ca76fcc59e1",
+                "n": "notices",
+                "params": {},
+                "term": "UP:Notices"
+              },
+              {
+                "def": "sha256:0b111a86bffafa0e54bacb62d294082939bfb1e61cd121f41b099f54295e49d2",
+                "n": "law",
+                "params": {
+                  "forum": "[hypothetical forum]",
+                  "law": "[hypothetical jurisdiction]"
+                },
+                "term": "UP:Governing-Law"
+              }
+            ],
+            "label": "Master agreement (hypothetical) — confidential",
+            "parties": [
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "0000000000017",
+                      "scheme": "GLN"
+                    }
+                  ],
+                  "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+                  "name": "Hypothetical Health Purchasing Alliance"
+                },
+                "role": "aggregator"
+              },
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "0000000000024",
+                      "scheme": "GLN"
+                    }
+                  ],
+                  "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+                  "name": "Example Medical Supply Co."
+                },
+                "role": "supplier"
+              }
+            ],
+            "spec": "UP/0.1-draft",
+            "type": "Agreement"
+          }
+        },
+        "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+        "kind": "propose",
+        "sigs": [
+          {
+            "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+            "sig": "a8de74c0cd7e350d97fa16f8fa87e940efc873b370a0a1f9a03da3ac15292a9dcf07bd23956e1011e9663309f12ce239f3a5dbcac5168abeda23073f79722c05"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2026-12-05T10:00:00Z",
+        "body": {
+          "target": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab"
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "accept",
+        "prev": "sha256:86d44d969ab5a536079a6c12390dda8d2977aa201a3ac1197c607b1958dc24e2",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "7e42e3e20387d25b2b7a6e553c4025bb9876d9b75f7b0c5db184e4aaee0c3e26082cf7db3b4350852f1fcd042189584068474547f0f80329616e89c13febda05"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-02-10T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "reporting",
+            "data": {
+              "lines": [
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:7045a21b4f9937d890fe4120c9ea1aed74c3fea0fc7092bc18ee32de8552382a"
+                  },
+                  "participation": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+                  "quantity": {
+                    "seal": "sha256:d9f37dabb27c22f11bf7b1f99cf7030c6669815778bf8a4b28c6eefedbf7c5c8"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000024",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:32f30fb2089ba4352836625d5394263b534848e6e78b0f68490adf84e2ec2843"
+                  },
+                  "participation": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+                  "quantity": {
+                    "seal": "sha256:16f8e3a2608a0dd105da6d19bfb197f58877e12e853407f80061f3e5479c7633"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:3e22f1242fbda2fbc893cd65343285fbb734209ea0f8343a5ba02c3ffcd67fc3"
+                  },
+                  "participation": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+                  "quantity": {
+                    "seal": "sha256:c906fd24a06e905b789e302f29e9f24f329d5691f9c63723eca5021e7ac541a1"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000031",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:c7c801746c7c05183d3dae5ef85655e842d842ec7e7c52e57454f7e4034749c6"
+                  },
+                  "participation": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+                  "quantity": {
+                    "seal": "sha256:b6545fbfba72890c4d1fc1f36caf4fa135ac4172c49fdbe2f14c0c78f3f54f39"
+                  }
+                }
+              ],
+              "period": {
+                "end": "2027-02-01T00:00:00Z",
+                "start": "2027-01-01T00:00:00Z"
+              },
+              "total_net": {
+                "seal": "sha256:1b7142ec0c2128009a608f08ed72a83badd5b6e309e435cd4a7def93928fced5"
+              }
+            },
+            "type": "UP:Sales-Reporting/report"
+          }
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "attest",
+        "prev": "sha256:b618e41b3d7312b910ae1fc9aa8ee0a9e132b52875304c0c2ded22746268eca3",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "7966a3e92b85bd2fb85ca2c13ac10155ad465a4f179a31337f937fb2e5839e5144b996028f8801a16f7ba8341e5be7c0d632f4fc6243c5f9a6d5ba5f2954580f"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-02-20T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "fee",
+            "data": {
+              "amount": {
+                "seal": "sha256:59da9f631a6a6e50b36a2988deaeb4d08e5758d4abe300060e0f88eb97f73070"
+              },
+              "period": {
+                "end": "2027-02-01T00:00:00Z",
+                "start": "2027-01-01T00:00:00Z"
+              },
+              "reference": {
+                "seal": "sha256:4f39b329710ba0b375ac67a8153b63afdf522fe1b09b704af41c5748fb1f0cc0"
+              }
+            },
+            "type": "UP:Admin-Fee/paid"
+          }
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "attest",
+        "prev": "sha256:d7d50754a5ead305297e19989091652a228ea7e0cee1b462a828daadc45c79cc",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "abc3ba84fb4ac3a285ed048743b86bdae373b934a034b85b6f91979203fcd76058358e4dcb337b6b74db9755773db956b025e628df3d8d54b907e40427411e07"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-02-21T12:00:00Z",
+        "body": {
+          "target": "sha256:ecb9634ba161a69610dc5d7f9ea92d8c0125137929a4cdc6f9acb319d7140ec6"
+        },
+        "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "accept",
+        "prev": "sha256:f6428a2344137ec340bfb1f9c0082bdcf1f178bbe4572d806e9567b26603f9ea",
+        "sigs": [
+          {
+            "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+            "sig": "535ee6e5923a8a210664ecd8e48dd9b1d09a8f6d7b4ba9fa208bbb23718fcf9b65003b04696d9b23c2a8bf666f46093d8624ed74420e8a06d5409ec0a9407501"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-03-10T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "reporting",
+            "data": {
+              "lines": [
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:4f4a82b3d286486697b32ca43dc4293bdce52b161e1ee3424e3a93a0374ee6fe"
+                  },
+                  "participation": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+                  "quantity": {
+                    "seal": "sha256:4437679c5507686135632284577fbb2bf49ee598a1c87f343004d7352c857157"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:78a4c963962cbfb1147f8dc891047e24ea0c7db24a454d59553860a1c458741c"
+                  },
+                  "participation": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+                  "quantity": {
+                    "seal": "sha256:5cdc3880685be2ad44667268b54726ec26dd28e732082100e7e8bfde9b9f40c6"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000024",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:cbad5919cb6b1ca66131533a0113f62cd73398b9cda519fca5937756b59b27cd"
+                  },
+                  "participation": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+                  "quantity": {
+                    "seal": "sha256:5957dd1713bf03573fe4f49e97b5dd3e16f4ccf5bed6ac22bd2b0e0c960c7cb0"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:ea6fdc4a15d58a29cb3ab1f96055c8180d9868cee2b411e3922319db8d3cf040"
+                  },
+                  "participation": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+                  "quantity": {
+                    "seal": "sha256:83af178f543becc4f8d7020535ef16d1431b5881a6a27afb63b1d36ded68ff29"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000031",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:f13c0536350c85aab16f491dc4953593c76b092ed9361eafe2e3f565ccb27045"
+                  },
+                  "participation": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+                  "quantity": {
+                    "seal": "sha256:9ba0deff4160d45528700c95a38fa365e7aa1f116a092d51080629dfe0851c11"
+                  }
+                }
+              ],
+              "period": {
+                "end": "2027-03-01T00:00:00Z",
+                "start": "2027-02-01T00:00:00Z"
+              },
+              "total_net": {
+                "seal": "sha256:cd096074c241bf7cc344199d7a7eab1553c961fe634a8c9ddf40b7f40940b1f4"
+              }
+            },
+            "type": "UP:Sales-Reporting/report"
+          }
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "attest",
+        "prev": "sha256:17d8177d6f496603fce8182eccb5a1a0ac7ce942c6fc478ab7e00a22b12cc056",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "8dc52ce3d9f087b472dbca1fba54bee2aaa34acf88444e885c531e9318f49bd97835c39e1ae7c43493c28553117ded65fb39377623e5df32862eecbb8234c402"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-03-25T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "fee",
+            "data": {
+              "amount": {
+                "seal": "sha256:5af90ff1032f9bcf5a3cc5b938a111451883df74a05bd7a825feb9c327969d44"
+              },
+              "period": {
+                "end": "2027-03-01T00:00:00Z",
+                "start": "2027-02-01T00:00:00Z"
+              },
+              "reference": {
+                "seal": "sha256:426e66d1f60e08aac6a0d183c62521f8649febd257f3afaab98d870f69f549a1"
+              }
+            },
+            "type": "UP:Admin-Fee/paid"
+          }
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "attest",
+        "prev": "sha256:3bbedba1d2422c5fe6066f36a8d3b96b61aa7978e32d65fe9c41d93d1794b179",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "ab6377ad72e0b8390c3464a43391a4880ef29fea59e1e2f9a9b99c6a1fd8d99cf3d668f7fda7ac7090a66b3761b0362a855963e295ff74f028ff06afad964b0d"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-03-26T12:00:00Z",
+        "body": {
+          "target": "sha256:48a398f2258c13f1a3837b347e21ca96db976b8af544a65844a5bebe54c7a2b9"
+        },
+        "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "accept",
+        "prev": "sha256:04a3fd86840f10d5b07ce8b35c5c7a7652600e9aec39cc2c298006d8dbe64d0e",
+        "sigs": [
+          {
+            "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+            "sig": "d2f6b207644c9acec2498ddc4bc965c4f0ee3ecc004d313ed6361de3e80f7a13dc1b53388ff6b107ba07bf7c4f0c8205321bc38ac1800ef42e76aeb435d04604"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-04-10T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "reporting",
+            "data": {
+              "lines": [
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:e05058c257daa56553933f6e38bf847ca4c9ea5dbd0f55dddef42d795603b2ce"
+                  },
+                  "participation": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+                  "quantity": {
+                    "seal": "sha256:405b85eae077194b4e7951ccb3dc186ca241294b0e15a1a7cc883ec3f8277bf6"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000024",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:9312992b89fb9ebcf5ecc22c2aee32e9eb0850e453af90f3e47dd6ea9b3f9adf"
+                  },
+                  "participation": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+                  "quantity": {
+                    "seal": "sha256:b2fd98b107ba3b2c52605509cd323d75ac1fe2f0d8d3b77b8342467858bc5426"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:8e5a7651623f0cf84c0aa89e01506e2bedd4b2cadf1d1068961cf1835665a02d"
+                  },
+                  "participation": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+                  "quantity": {
+                    "seal": "sha256:5ad395adf711ce3c8712a5950ea708bea862049ff94090c3c02d2aac0f6b6ade"
+                  }
+                },
+                {
+                  "item": {
+                    "id": "00000000000031",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "seal": "sha256:888903a36a53b1c4066205daf4d2a23e37b64b1524013b1f8ca1b844ae4998c1"
+                  },
+                  "participation": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+                  "quantity": {
+                    "seal": "sha256:bb4994c3375158ec77e7e9520c9f5f40a9435b5eba6d2eb5f8b4d1ade0cfe9e9"
+                  }
+                }
+              ],
+              "period": {
+                "end": "2027-04-01T00:00:00Z",
+                "start": "2027-03-01T00:00:00Z"
+              },
+              "total_net": {
+                "seal": "sha256:c6e483fbf5d9138aea498aeea1ac16de61529d6be9da87581a561d0e2e020570"
+              }
+            },
+            "type": "UP:Sales-Reporting/report"
+          }
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab",
+        "kind": "attest",
+        "prev": "sha256:e71b0f056f925c06f8a6c1ebef614165a13e41dec87befa551cf61397e41d3ce",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "74758f37c7a058162a827f12e220d131baefde4382475acc3060498356a6e69a7e44cd79360933485b7d26cd43980e16dbd0d278bfddad09dc6d72d87d17d103"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      }
+    ],
+    [
+      {
+        "at": "2027-01-04T09:00:00Z",
+        "body": {
+          "agreement": {
+            "clauses": [
+              {
+                "def": "sha256:b4702b4663f074fff69b20fa34d5eaf46e5c26d1912365cc9288f159e5889701",
+                "n": "participation",
+                "params": {
+                  "parent": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab"
+                },
+                "term": "UP:Participation"
+              },
+              {
+                "def": "sha256:b6428925befec7c2267083b0664c08c2b7700f93f570f0ef3219c4b61b516d75",
+                "n": "tier",
+                "params": {
+                  "effective": "on-ack",
+                  "initial": "C",
+                  "tiers_clause": "tiers"
+                },
+                "term": "UP:Tier-Selection"
+              },
+              {
+                "def": "sha256:0f0c265a43d9fa361ef55b8136d4cad9d5e11ebabe79a8ea93e87f352b68f372",
+                "n": "term",
+                "params": {
+                  "end": "2028-01-01T00:00:00Z",
+                  "start": "2027-01-05T00:00:00Z"
+                },
+                "term": "UP:Fixed-Term"
+              },
+              {
+                "def": "sha256:bbee8002e913a12e1472c6d7f0763f94a07f3dc6451048b3cece180d359149ac",
+                "n": "disclosure",
+                "params": {
+                  "due": {
+                    "count": 30,
+                    "unit": "day"
+                  },
+                  "period": {
+                    "count": 1,
+                    "unit": "quarter"
+                  }
+                },
+                "term": "UP:Fee-Disclosure"
+              },
+              {
+                "def": "sha256:6636ada39098601025c16e5ea201ed2ccde106ee20a1c499c815d26e14703cff",
+                "n": "exit",
+                "params": {
+                  "holders": [
+                    "member"
+                  ],
+                  "notice": {
+                    "count": 30,
+                    "unit": "day"
+                  }
+                },
+                "term": "UP:Termination-Convenience"
+              },
+              {
+                "def": "sha256:ac1e78bc3e0ed82e0cda2f203c4cd5446cb1da7ef7ce1dd972763ca76fcc59e1",
+                "n": "notices",
+                "params": {},
+                "term": "UP:Notices"
+              }
+            ],
+            "label": "Participation of Hypothetical Community Hospital",
+            "parties": [
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "0000000000017",
+                      "scheme": "GLN"
+                    }
+                  ],
+                  "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+                  "name": "Hypothetical Health Purchasing Alliance"
+                },
+                "role": "aggregator"
+              },
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "HYP000001",
+                      "scheme": "HIN"
+                    }
+                  ],
+                  "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
+                  "name": "Hypothetical Community Hospital"
+                },
+                "role": "member"
+              },
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "0000000000024",
+                      "scheme": "GLN"
+                    }
+                  ],
+                  "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+                  "name": "Example Medical Supply Co."
+                },
+                "role": "supplier"
+              }
+            ],
+            "spec": "UP/0.1-draft",
+            "type": "Agreement"
+          }
+        },
+        "by": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
+        "kind": "propose",
+        "sigs": [
+          {
+            "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
+            "sig": "b22fd8a911d12971fafdf3bdbc143c1b54af85dc4f593acdba73e3793e85c76ac00c885b9c6fd1d1c8145eae0a514a3e9e3e3c39b5e65023cbedaa978a3a450b"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-01-04T13:00:00Z",
+        "body": {
+          "target": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752"
+        },
+        "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+        "chain": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+        "kind": "accept",
+        "prev": "sha256:9f02bd5facf86e8e241813d212928b1a3c5920bd6b95a2380caa7cba07d130d0",
+        "sigs": [
+          {
+            "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+            "sig": "0dd724d940c58a5a2c521ac5b4b69ca7dbdf889e8a089ea91f1769bce0d6f2cf9aebaa681a330117c63af4fb6fc501920a0de5783f2f82ecec131be611bd970d"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-01-04T16:00:00Z",
+        "body": {
+          "target": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752"
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+        "kind": "accept",
+        "prev": "sha256:e2708a198a6c0070c97765c0ea66fa3ece0a0f99fedb6b02a687ebd0a00a7cb5",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "df61871680f104fd422777e4f3a51d9d6f6f96a30853aa865ce6c6168c30a41818ed2abda224382d6c0f4d667b04549523371b12cd5a31d8508dd5c18c455e03"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-01-07T10:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "tier",
+            "data": {
+              "basis": {
+                "seal": "sha256:67fe2e70d578cce2fa35101b3078355208ad3ce894dad7cb212d084e4e36b22e"
+              },
+              "option": "B"
+            },
+            "type": "UP:Tier-Selection/selects"
+          }
+        },
+        "by": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
+        "chain": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+        "kind": "attest",
+        "prev": "sha256:8855c099dc5847a36c3e28bd2dc4acc3444932d852000114c959599492ea233a",
+        "sigs": [
+          {
+            "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
+            "sig": "a2f16b63fd37424d55c266ba9c03a67f9218a87b81094cf38ed6407c4b9daf77a2b4031e3a28327c050cc00f9cd53ecd8d7a653a7361babd92561ab72b2a7c01"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-01-07T15:00:00Z",
+        "body": {
+          "target": "sha256:1d55bb6b368cd98410f231670573ecf81b501cf1661268b4b8f15f6b997315ba"
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+        "kind": "accept",
+        "prev": "sha256:c77ff94c19d8dab25de8919b1ac0b31bae2e5d28d0c94632a4dfd3719ebd4870",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "fbc2ba1084b281abb3719fd08e08a45218666f98b6d3f6dc57db24059b548a1610acb95af06ba32867499df69c93d74db93412065ad03106019c840404306400"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-02-15T10:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "tier",
+            "data": {
+              "basis": {
+                "seal": "sha256:5e8b8acd611884723d3cfaf305cad5c000adb04ad957272e15d9c71d7b8e4258"
+              },
+              "option": "A"
+            },
+            "type": "UP:Tier-Selection/selects"
+          }
+        },
+        "by": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
+        "chain": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+        "kind": "attest",
+        "prev": "sha256:efe29b362123d9e3f07fa3dda60617747f33c8d565e663c22c0c7da52badf0c5",
+        "sigs": [
+          {
+            "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
+            "sig": "231e85405408211305a4d8be7f70e07fad5ada275747121237724f950de2ee131749c4b566cf14aab5b1a7e15b9ce0814ed482585000a59710f7ebca14ae0a0b"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-02-16T09:00:00Z",
+        "body": {
+          "target": "sha256:43901e3359404a1d9b28e0938803f4f9ff42db18e99224acef99c9b493b05d7a"
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+        "kind": "accept",
+        "prev": "sha256:eeb2451824f395f7b32653af746d6044b46a1e193a2f5a1d5db5734daae27b90",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "73f46e87b9490d731e6d550518caacbd47c24e9b8af22fb1502a993ecc6e95dfc51703e1f471f7c91570da3ef32f41de688815ae152d9edf354a20049848d501"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-04-20T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "disclosure",
+            "data": {
+              "basis": {
+                "seal": "sha256:a7b2f790d347d7b38731b9201324ed6a86c2f19c46fc7bc800279bdfb4a4f7b4"
+              },
+              "period": {
+                "end": "2027-04-05T00:00:00Z",
+                "start": "2027-01-05T00:00:00Z"
+              },
+              "received": {
+                "seal": "sha256:9d4e673ffe01eb0c605d57b4ceff126bcddae8786f98ac8e63a13c1c9f8a3403"
+              }
+            },
+            "type": "UP:Fee-Disclosure/disclosed"
+          }
+        },
+        "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+        "chain": "sha256:8267cac6223d80c33495a89e4b68847e0e03becd154ad4f7390b7d5d78736752",
+        "kind": "attest",
+        "prev": "sha256:8689a9d547d23f10f559cc313bc9c898eeaa50d717232f913a873555ba6f41a9",
+        "sigs": [
+          {
+            "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+            "sig": "05d4a73b8206dd2885bd3d400671ae7f86736b570eda75fafa68160051a27e20ee1f34655b9726b7f457ebb7a213b4a6965e9d7b7a29459d2a6acad188c15702"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      }
+    ],
+    [
+      {
+        "at": "2027-01-10T09:00:00Z",
+        "body": {
+          "agreement": {
+            "clauses": [
+              {
+                "def": "sha256:b4702b4663f074fff69b20fa34d5eaf46e5c26d1912365cc9288f159e5889701",
+                "n": "participation",
+                "params": {
+                  "parent": "sha256:e56ce39acac14e109220e7ef358e7cc344c9916b494a1eaa1eca75f32db2acab"
+                },
+                "term": "UP:Participation"
+              },
+              {
+                "def": "sha256:b6428925befec7c2267083b0664c08c2b7700f93f570f0ef3219c4b61b516d75",
+                "n": "tier",
+                "params": {
+                  "effective": "on-ack",
+                  "initial": "C",
+                  "tiers_clause": "tiers"
+                },
+                "term": "UP:Tier-Selection"
+              },
+              {
+                "def": "sha256:0f0c265a43d9fa361ef55b8136d4cad9d5e11ebabe79a8ea93e87f352b68f372",
+                "n": "term",
+                "params": {
+                  "end": "2028-01-01T00:00:00Z",
+                  "start": "2027-01-11T00:00:00Z"
+                },
+                "term": "UP:Fixed-Term"
+              },
+              {
+                "def": "sha256:bbee8002e913a12e1472c6d7f0763f94a07f3dc6451048b3cece180d359149ac",
+                "n": "disclosure",
+                "params": {
+                  "due": {
+                    "count": 30,
+                    "unit": "day"
+                  },
+                  "period": {
+                    "count": 1,
+                    "unit": "quarter"
+                  }
+                },
+                "term": "UP:Fee-Disclosure"
+              },
+              {
+                "def": "sha256:6636ada39098601025c16e5ea201ed2ccde106ee20a1c499c815d26e14703cff",
+                "n": "exit",
+                "params": {
+                  "holders": [
+                    "member"
+                  ],
+                  "notice": {
+                    "count": 30,
+                    "unit": "day"
+                  }
+                },
+                "term": "UP:Termination-Convenience"
+              },
+              {
+                "def": "sha256:ac1e78bc3e0ed82e0cda2f203c4cd5446cb1da7ef7ce1dd972763ca76fcc59e1",
+                "n": "notices",
+                "params": {},
+                "term": "UP:Notices"
+              }
+            ],
+            "label": "Participation of Sample Regional Clinic",
+            "parties": [
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "0000000000017",
+                      "scheme": "GLN"
+                    }
+                  ],
+                  "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+                  "name": "Hypothetical Health Purchasing Alliance"
+                },
+                "role": "aggregator"
+              },
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "HYP000002",
+                      "scheme": "HIN"
+                    }
+                  ],
+                  "key": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
+                  "name": "Sample Regional Clinic"
+                },
+                "role": "member"
+              },
+              {
+                "party": {
+                  "ids": [
+                    {
+                      "id": "0000000000024",
+                      "scheme": "GLN"
+                    }
+                  ],
+                  "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+                  "name": "Example Medical Supply Co."
+                },
+                "role": "supplier"
+              }
+            ],
+            "spec": "UP/0.1-draft",
+            "type": "Agreement"
+          }
+        },
+        "by": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
+        "kind": "propose",
+        "sigs": [
+          {
+            "key": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
+            "sig": "0c528ebbebf2e7c907d6794c547e8b8ff127d152ec16c69f76fa0f354e9f2fa61890477a816ba0eae47040d0c16ad3fa9841b76d840f0ebacc29c6909620d300"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-01-10T13:00:00Z",
+        "body": {
+          "target": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476"
+        },
+        "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+        "chain": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+        "kind": "accept",
+        "prev": "sha256:9f429d9d5a69fa50691635740b0b87ca854e57e1150ef232c26222f0f1dc57c8",
+        "sigs": [
+          {
+            "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
+            "sig": "6ee15458a52d4efacf672c42c89f926d0497db58ab0769d15f3bed0b58ba0f00dc1c0d2744229a3f451e00c3b08cf66fa5b3238bb9658337cc6098db248af106"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-01-10T16:00:00Z",
+        "body": {
+          "target": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476"
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+        "kind": "accept",
+        "prev": "sha256:912fd6cbc5d63bd180e3f11052bd950ff7091e439cf4ecbf0505e77f6a78584e",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "a70a30b3a6ef65d83a676f557a56e004bdbbc947b76424ff56135af0e1941ca20e4d6c084a5f64e0bf1a2eea11fe7b4ee92b271de77eca3320fe08185e06b009"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-01-12T10:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "tier",
+            "data": {
+              "basis": {
+                "seal": "sha256:b26f85a8b18b0df2a33690c66031dc165e81c5b49b3d12b95e8b0863e3cee24a"
+              },
+              "option": "A"
+            },
+            "type": "UP:Tier-Selection/selects"
+          }
+        },
+        "by": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
+        "chain": "sha256:b6b62ffbc244f4b42e2d37f728e5f84586fe1443d92d3cb734202d0fb2801476",
+        "kind": "attest",
+        "prev": "sha256:50af8b7eb4dfebcf2afc6273246942aed5fff1ba9578f16ae893fc63254d254a",
+        "sigs": [
+          {
+            "key": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
+            "sig": "80d5cefe64b21d19ddcdf01e9be3402ade0bf3e037cda4ee56eb3609029d7940e631c63d940bbcb925c13a4a1dd1a5a80cefd3e469abdf47b7d3871f8674580c"
+          },
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "1e83b7a40cc29f87d37f15350143e5666484269a55157a14f455e59b401823605eccbdb5412c429998ca228e6976ab1bc69d437ed1cfb85fd957b75e86d9cf0f"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      }
+    ]
+  ],
+  "mandates": [],
+  "spec": "UP/0.1-draft",
+  "terms": [
+    {
+      "claims": {
+        "UP:Admin-Fee/paid": {
+          "data": {
+            "amount": "Amount",
+            "period": "{start: Time, end: Time}",
+            "reference": "string"
+          },
+          "doc": "The payer attests payment of the fee for the period. Discharges the duty when acknowledged by the payee."
+        }
+      },
+      "forms": [
+        {
+          "amount": {
+            "base": {
+              "claim": "UP:Sales-Reporting/report",
+              "clause": {
+                "param": "report_clause"
+              },
+              "field": "total_net"
+            },
+            "rate": {
+              "param": "rate"
+            },
+            "rounding": {
+              "param": "rounding"
+            }
+          },
+          "discharge": {
+            "ack": [
+              {
+                "param": "payee"
+              }
+            ],
+            "claim": "UP:Admin-Fee/paid"
+          },
+          "due": {
+            "param": "due"
+          },
+          "duty": "pay",
+          "form": "Duty",
+          "obligee": {
+            "param": "payee"
+          },
+          "obligor": {
+            "param": "payer"
+          },
+          "trigger": {
+            "anchor": "window-start",
+            "every": {
+              "param": "period"
+            }
+          }
+        }
+      ],
+      "id": "UP:Admin-Fee",
+      "params": {
+        "due": {
+          "doc": "Time after each period's end by which the fee is due.",
+          "type": "Period"
+        },
+        "payee": {
+          "doc": "Role that receives the fee.",
+          "type": "Role"
+        },
+        "payer": {
+          "doc": "Role that pays the fee.",
+          "type": "Role"
+        },
+        "period": {
+          "doc": "Fee period.",
+          "type": "Period"
+        },
+        "rate": {
+          "doc": "Fee as a fraction of reported net sales.",
+          "type": "Rate"
+        },
+        "report_clause": {
+          "doc": "Name of the Sales-Reporting clause whose reports form the base.",
+          "type": "string"
+        },
+        "rounding": {
+          "doc": "Rounding applied to each period's fee.",
+          "type": "Rounding"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "For each period of {{period|period}}, {{payer|role}} pays {{payee|role}} an administrative fee equal to {{rate|rate}} of the net sales reported for that period, rounded {{rounding|rounding}}, within {{due|period}} after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.",
+      "spec": "UP/0.1-draft",
+      "title": "Administrative fee",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Audit/available": {
+          "data": {
+            "request": "Hash"
+          },
+          "doc": "The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor."
+        },
+        "UP:Audit/request": {
+          "data": {
+            "lookback": "{start: Time, end: Time}",
+            "scope": "string"
+          },
+          "doc": "Request for an audit of records within the stated scope and time range."
+        }
+      },
+      "forms": [
+        {
+          "discharge": {
+            "ack": [
+              {
+                "param": "auditor"
+              }
+            ],
+            "claim": "UP:Audit/available"
+          },
+          "due": {
+            "param": "response"
+          },
+          "duty": "make-records-available",
+          "form": "Duty",
+          "obligee": {
+            "param": "auditor"
+          },
+          "obligor": {
+            "param": "auditee"
+          },
+          "trigger": {
+            "by": [
+              {
+                "param": "auditor"
+              }
+            ],
+            "limit": {
+              "count": {
+                "param": "max_requests"
+              },
+              "per": {
+                "param": "per"
+              }
+            },
+            "on": "UP:Audit/request"
+          }
+        }
+      ],
+      "id": "UP:Audit",
+      "params": {
+        "auditee": {
+          "doc": "Role whose records are audited.",
+          "type": "Role"
+        },
+        "auditor": {
+          "doc": "Role that may request an audit.",
+          "type": "Role"
+        },
+        "max_requests": {
+          "doc": "Maximum requests per limit period.",
+          "type": "int"
+        },
+        "per": {
+          "doc": "Limit period.",
+          "type": "Period"
+        },
+        "response": {
+          "doc": "Time after a request by which records must be made available.",
+          "type": "Period"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.",
+      "spec": "UP/0.1-draft",
+      "title": "Audit right",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Fee-Disclosure/disclosed": {
+          "data": {
+            "basis": "string",
+            "period": "{start: Time, end: Time}",
+            "received": "Amount"
+          },
+          "doc": "The Aggregator states the administrative fees it received from the Supplier for the period under the parent agreement, attributable to this Member where the parent agreement reports by participation."
+        }
+      },
+      "forms": [
+        {
+          "discharge": {
+            "claim": "UP:Fee-Disclosure/disclosed"
+          },
+          "due": {
+            "param": "due"
+          },
+          "duty": "disclose",
+          "form": "Duty",
+          "obligee": "member",
+          "obligor": "aggregator",
+          "trigger": {
+            "anchor": "window-start",
+            "every": {
+              "param": "period"
+            }
+          }
+        }
+      ],
+      "id": "UP:Fee-Disclosure",
+      "params": {
+        "due": {
+          "doc": "Time after each period's end by which the disclosure is due.",
+          "type": "Period"
+        },
+        "period": {
+          "doc": "Disclosure period.",
+          "type": "Period"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "For each period of {{period|period}}, the Aggregator discloses to the Member, in writing, the amount of administrative fees it received from the Supplier under the parent agreement for that period, within {{due|period}} after the period ends. This clause records a disclosure process. It makes no statement about whether any arrangement satisfies any law.",
+      "spec": "UP/0.1-draft",
+      "title": "Fee disclosure",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [
+        {
+          "end": {
+            "param": "end"
+          },
+          "form": "Window",
+          "start": {
+            "param": "start"
+          }
+        }
+      ],
+      "id": "UP:Fixed-Term",
+      "params": {
+        "end": {
+          "doc": "First instant the Agreement is no longer in force.",
+          "type": "Time"
+        },
+        "start": {
+          "doc": "First instant the Agreement is in force.",
+          "type": "Time"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "This Agreement is in force from {{start|time}} until {{end|time}}.",
+      "spec": "UP/0.1-draft",
+      "title": "Term of agreement",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [],
+      "id": "UP:Governing-Law",
+      "params": {
+        "forum": {
+          "doc": "Forum for disputes.",
+          "type": "string"
+        },
+        "law": {
+          "doc": "Governing law, e.g. a named jurisdiction.",
+          "type": "string"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "This Agreement is governed by the law of {{law}}. Disputes are resolved in {{forum}}.",
+      "spec": "UP/0.1-draft",
+      "title": "Governing law",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [],
+      "id": "UP:Notices",
+      "params": {},
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "Any notice under this Agreement is given by a signed attestation recorded on this Agreement's chain of events, and is given at the time stated in that attestation.",
+      "spec": "UP/0.1-draft",
+      "title": "Notices",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [
+        {
+          "bind": [
+            "aggregator",
+            "supplier"
+          ],
+          "form": "Link",
+          "parent": {
+            "param": "parent"
+          }
+        }
+      ],
+      "id": "UP:Participation",
+      "params": {
+        "parent": {
+          "doc": "The chain of the parent Agreement.",
+          "type": "ChainId"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "This Agreement is a participation under the agreement identified by {{parent}}. The Aggregator and the Supplier of that agreement are parties to this one in the same roles. This Agreement is in force only while that agreement is in force.",
+      "spec": "UP/0.1-draft",
+      "title": "Participation in an aggregator agreement",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Renewing-Term/optout": {
+          "data": {},
+          "doc": "Notice that the Agreement will not renew at the end of the current term."
+        }
+      },
+      "forms": [
+        {
+          "end": {
+            "param": "end"
+          },
+          "form": "Window",
+          "renew": {
+            "max": {
+              "param": "max_renewals"
+            },
+            "optout_notice": {
+              "param": "optout_notice"
+            },
+            "optout_roles": {
+              "param": "optout_roles"
+            },
+            "period": {
+              "param": "renewal_period"
+            }
+          },
+          "start": {
+            "param": "start"
+          }
+        }
+      ],
+      "id": "UP:Renewing-Term",
+      "params": {
+        "end": {
+          "doc": "End of the initial term.",
+          "type": "Time"
+        },
+        "max_renewals": {
+          "doc": "Maximum number of renewals.",
+          "type": "int"
+        },
+        "optout_notice": {
+          "doc": "How long before a term ends an opt-out notice must be given.",
+          "type": "Period"
+        },
+        "optout_roles": {
+          "doc": "Roles that may prevent the next renewal.",
+          "type": "[Role]"
+        },
+        "renewal_period": {
+          "doc": "Length of each renewal.",
+          "type": "Period"
+        },
+        "start": {
+          "doc": "First instant in force.",
+          "type": "Time"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "This Agreement is in force from {{start|time}} until {{end|time}}. It then renews for successive periods of {{renewal_period|period}}, up to {{max_renewals}} times, unless {{optout_roles|role}} gives notice of non-renewal at least {{optout_notice|period}} before the end of the then-current term.",
+      "spec": "UP/0.1-draft",
+      "title": "Term of agreement with renewal",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Sales-Reporting/report": {
+          "data": {
+            "lines": "[{participation: ChainId, item: Identifier, quantity: Decimal, net: Amount}]",
+            "period": "{start: Time, end: Time}",
+            "total_net": "Amount"
+          },
+          "doc": "Sales for one period, by participation and Item, with the total net sales."
+        }
+      },
+      "forms": [
+        {
+          "discharge": {
+            "claim": "UP:Sales-Reporting/report"
+          },
+          "due": {
+            "param": "due"
+          },
+          "duty": "report",
+          "form": "Duty",
+          "obligee": {
+            "param": "recipient"
+          },
+          "obligor": {
+            "param": "reporter"
+          },
+          "trigger": {
+            "anchor": "window-start",
+            "every": {
+              "param": "period"
+            }
+          }
+        }
+      ],
+      "id": "UP:Sales-Reporting",
+      "params": {
+        "due": {
+          "doc": "Time after each period's end by which the report is due.",
+          "type": "Period"
+        },
+        "period": {
+          "doc": "Reporting period.",
+          "type": "Period"
+        },
+        "recipient": {
+          "doc": "Role that receives the report.",
+          "type": "Role"
+        },
+        "reporter": {
+          "doc": "Role that reports.",
+          "type": "Role"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "{{reporter|role}} reports to {{recipient|role}} the sales made under this Agreement in each reporting period of {{period|period}}, by Member participation and Item, within {{due|period}} after the period ends.",
+      "spec": "UP/0.1-draft",
+      "title": "Sales reporting",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Termination-Convenience/notice": {
+          "data": {},
+          "doc": "Notice of termination."
+        }
+      },
+      "forms": [
+        {
+          "form": "Exit",
+          "holders": {
+            "param": "holders"
+          },
+          "notice": {
+            "param": "notice"
+          }
+        }
+      ],
+      "id": "UP:Termination-Convenience",
+      "params": {
+        "holders": {
+          "doc": "Roles that may terminate.",
+          "type": "[Role]"
+        },
+        "notice": {
+          "doc": "Time from notice to termination.",
+          "type": "Period"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "{{holders|role}} may terminate this Agreement without cause by notice. Termination takes effect {{notice|period}} after the notice is given.",
+      "spec": "UP/0.1-draft",
+      "title": "Termination for convenience",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Tier-Selection/selects": {
+          "data": {
+            "basis": "string",
+            "option": "string"
+          },
+          "doc": "The Member attests that it meets the conditions of the named tier, stating the basis."
+        }
+      },
+      "forms": [
+        {
+          "ack": [
+            "supplier"
+          ],
+          "effective": {
+            "param": "effective"
+          },
+          "form": "Selection",
+          "initial": {
+            "param": "initial"
+          },
+          "options": {
+            "from": {
+              "clause": {
+                "param": "tiers_clause"
+              },
+              "link": true
+            }
+          },
+          "subject": "member"
+        }
+      ],
+      "id": "UP:Tier-Selection",
+      "params": {
+        "effective": {
+          "doc": "When an acknowledged selection takes effect.",
+          "type": "\"on-ack\" | {next: Period}"
+        },
+        "initial": {
+          "doc": "Tier in effect before any selection.",
+          "type": "string"
+        },
+        "tiers_clause": {
+          "doc": "Name of the Tiers clause in the parent Agreement.",
+          "type": "string"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "The Member's tier is {{initial}} until changed under this clause. The Member may attest that it meets the conditions of another tier, stating the basis. The change takes effect when the Supplier acknowledges the attestation, {{effective|effective}}.",
+      "spec": "UP/0.1-draft",
+      "title": "Tier attestation and selection",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [
+        {
+          "form": "Valuation",
+          "source": {
+            "options": {
+              "param": "tiers"
+            },
+            "table": {
+              "param": "prices"
+            }
+          }
+        }
+      ],
+      "id": "UP:Tiers",
+      "params": {
+        "prices": {
+          "doc": "Price of each Item in each tier.",
+          "type": "[{item: Identifier, by: {<tier>: Amount}}]"
+        },
+        "tiers": {
+          "doc": "The tiers, in order, with descriptive qualification conditions.",
+          "type": "[{name: string, conditions: string}]"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "The following tiers apply. {{#each tiers}}Tier {{name}}: {{conditions}}. {{/each}}The price of each Item in each tier is: {{#each prices}}{{item}}: {{by|amount}}. {{/each}}Whether a Member meets a tier's conditions is established by that Member's attestation and the Supplier's acknowledgment, as set out in the tier selection clause of the Member's participation.",
+      "spec": "UP/0.1-draft",
+      "title": "Tiered price schedule",
+      "type": "TermDefinition"
+    }
+  ],
+  "type": "Bundle"
+}

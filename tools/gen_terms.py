@@ -165,9 +165,9 @@ TERMS = [
           "due": P("response"), "discharge": {"claim": "UP:Audit/available", "ack": [P("auditor")]}}],
   claims={"request": ({"scope": "string", "lookback": "{start: Time, end: Time}"}, "Request for an audit of records within the stated scope and time range."),
           "available": ({"request": "Hash"}, "The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor.")},
-  render=("{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement, up "
-          "to {{max_requests}} times per {{per|period}}. {{auditee|role}} makes the requested records available within "
-          "{{response|period}} of each request.")),
+  render=("{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The "
+          "number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} "
+          "makes the requested records available within {{response|period}} of each request.")),
 
  dict(id="UP:Purchase-Commitment", title="Purchase commitment", family="Compliance",
   purpose="Records a member's commitment to purchase a stated share of its purchases in a stated category under the Agreement, with periodic attestation.",

@@ -70,7 +70,7 @@ No parameter has a default value (A6).
 ## Human rendering
 
 ```text
-{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement, up to {{max_requests}} times per {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.
+{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.
 ```
 
 ## Provenance

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universal-paper.example/schema/UP-0.1-draft/trace.schema.json",
+  "title": "Universal Paper trace (up-trace/0.1)",
+  "description": "Output of the reference interpreter's trace command. Each step records one event, every check each evaluator ran on it, whether each evaluator accepted it, each evaluator's independently computed state hashes, and the values derived after the step. Viewers such as the Explorer only play this back; they never compute validity themselves.",
+  "type": "object",
+  "required": ["type", "format", "spec", "title", "evaluators", "parties", "chains", "steps", "final"],
+  "properties": {
+    "type": {"const": "Trace"},
+    "format": {"const": "up-trace/0.1"},
+    "spec": {"const": "UP/0.1-draft"},
+    "generated_by": {"type": "string"},
+    "title": {"type": "string"},
+    "description": {"type": "string"},
+    "hypothetical": {"type": "boolean", "description": "True when the parties and values are illustrative."},
+    "evaluators": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "name", "hashes_only"],
+      "properties": {"id": {"type": "string"}, "name": {"type": "string"}, "hashes_only": {"type": "boolean"},
+        "tampered": {"type": ["string", "null"], "description": "If set, this evaluator's copy of the data was altered, as described."}}}},
+    "parties": {"type": "object", "additionalProperties": {"type": "string"}, "description": "Public key to display name."},
+    "chains": {"type": "array", "items": {"type": "object", "required": ["position", "label", "chain_id"],
+      "properties": {"position": {"type": "integer"}, "label": {"type": "string"}, "chain_id": {"type": "string"}}}},
+    "steps": {"type": "array", "items": {"$ref": "#/$defs/Step"}},
+    "final": {"type": "object", "required": ["at", "by_evaluator"]}
+  },
+  "$defs": {
+    "Check": {"type": "object", "required": ["id", "rule", "label", "passed", "reason"],
+      "properties": {"id": {"type": "string"}, "rule": {"type": "string", "description": "Axiom (A1–A13), transition rule (R-*), or clause form (F-*)."},
+        "label": {"type": "string"}, "passed": {"type": "boolean"}, "reason": {"type": "string", "description": "Plain-language explanation."}}},
+    "Result": {"type": "object", "required": ["accepted", "reason", "checks", "chain_state_hash", "world_hash", "derived"],
+      "properties": {"event_hash": {"type": ["string", "null"]}, "accepted": {"type": "boolean"}, "reason": {"type": "string"},
+        "checks": {"type": "array", "items": {"$ref": "#/$defs/Check"}},
+        "chain_state_hash": {"type": ["string", "null"], "description": "Hash of this evaluator's current State of the event's chain."},
+        "world_hash": {"type": "string", "description": "Hash over this evaluator's current State hashes of every chain. Equal world hashes mean consensus."},
+        "derived": {"type": "object", "required": ["at", "chains"]}}},
+    "Step": {"type": "object", "required": ["step", "event", "results", "consensus"],
+      "properties": {"step": {"type": "integer"},
+        "event": {"type": "object", "required": ["chain", "chain_label", "index", "kind", "at", "by", "hash", "description", "signers"],
+          "properties": {"kind": {"enum": ["propose", "accept", "attest"]}, "mandate": {"type": "object"}}},
+        "results": {"type": "object", "additionalProperties": {"$ref": "#/$defs/Result"}},
+        "consensus": {"type": "boolean"},
+        "reference_accepted": {"type": ["boolean", "null"]}}}
+  }
+}

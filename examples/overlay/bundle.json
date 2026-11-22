@@ -1,0 +1,471 @@
+{
+  "chains": [
+    [
+      {
+        "at": "2027-02-10T09:00:00Z",
+        "body": {
+          "agreement": {
+            "clauses": [
+              {
+                "def": "sha256:120f918ad9a1a2a8f55d269f44a5fdb18ed19ca6a235142300330a962338b94a",
+                "n": "overlay",
+                "params": {
+                  "document": "sha256:dd996670081d18e62df684e86e3ae934e4f97970998d0cbb15b8037f42497b08",
+                  "document_date": "2024-03-01T00:00:00Z",
+                  "document_title": "Hypothetical Group Purchasing Agreement",
+                  "governs": "document"
+                },
+                "term": "UP:Overlay"
+              },
+              {
+                "def": "sha256:0f0c265a43d9fa361ef55b8136d4cad9d5e11ebabe79a8ea93e87f352b68f372",
+                "n": "term",
+                "params": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                },
+                "term": "UP:Fixed-Term"
+              },
+              {
+                "def": "sha256:cd0f44c7971fc2370e510efe478c354b791b17f1c9a10165aa80b1d78cd3aeb0",
+                "n": "tiers",
+                "params": {
+                  "prices": [
+                    {
+                      "by": {
+                        "Committed": {
+                          "currency": "USD",
+                          "value": "12.00"
+                        },
+                        "Standard": {
+                          "currency": "USD",
+                          "value": "12.60"
+                        }
+                      },
+                      "item": {
+                        "id": "00000000000017",
+                        "scheme": "GTIN"
+                      }
+                    },
+                    {
+                      "by": {
+                        "Committed": {
+                          "currency": "USD",
+                          "value": "40.00"
+                        },
+                        "Standard": {
+                          "currency": "USD",
+                          "value": "41.50"
+                        }
+                      },
+                      "item": {
+                        "id": "00000000000024",
+                        "scheme": "GTIN"
+                      }
+                    }
+                  ],
+                  "tiers": [
+                    {
+                      "conditions": "As defined in Exhibit A of the existing agreement",
+                      "name": "Committed"
+                    },
+                    {
+                      "conditions": "As defined in Exhibit A of the existing agreement",
+                      "name": "Standard"
+                    }
+                  ]
+                },
+                "term": "UP:Tiers"
+              },
+              {
+                "def": "sha256:dbef07d6cee32d6bf7293f28239c09b66efa98ddb73195ce329568d3bc7cba84",
+                "n": "reporting",
+                "params": {
+                  "due": {
+                    "count": 15,
+                    "unit": "day"
+                  },
+                  "period": {
+                    "count": 1,
+                    "unit": "month"
+                  },
+                  "recipient": "aggregator",
+                  "reporter": "supplier"
+                },
+                "term": "UP:Sales-Reporting"
+              },
+              {
+                "def": "sha256:7794f7872d6cef305839b2fdc7b7e9f2916e71f20cde4bdac95321848e21a85e",
+                "n": "fee",
+                "params": {
+                  "due": {
+                    "count": 30,
+                    "unit": "day"
+                  },
+                  "payee": "aggregator",
+                  "payer": "supplier",
+                  "period": {
+                    "count": 1,
+                    "unit": "month"
+                  },
+                  "rate": "0.02",
+                  "report_clause": "reporting",
+                  "rounding": {
+                    "mode": "half-even",
+                    "scale": 2
+                  }
+                },
+                "term": "UP:Admin-Fee"
+              }
+            ],
+            "label": "Overlay of an existing agreement (hypothetical)",
+            "parties": [
+              {
+                "party": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "name": "Hypothetical Legacy Purchasing Group"
+                },
+                "role": "aggregator"
+              },
+              {
+                "party": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "name": "Example Surgical Products Inc."
+                },
+                "role": "supplier"
+              }
+            ],
+            "spec": "UP/0.1-draft",
+            "type": "Agreement"
+          }
+        },
+        "by": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+        "kind": "propose",
+        "sigs": [
+          {
+            "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+            "sig": "a2711b9baddf430da3c3f08f1e27f6116a5cee9f14f3f2388d9d9680b8777b85a5c6dfdc8ef30edc14d5be1f49c05a04a4d81a5778e05ddbec55a4bfadaafb0a"
+          },
+          {
+            "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+            "sig": "d656119c5c168e7c2e8a11f4fba68f36ade496dcb6fe994e58d0b4a8ae3dfa0877e9e7010c3ec0418da5185f85292fb1e9b7d2e6aad059701af7b888aa012e06"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2027-03-12T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "reporting",
+            "data": {
+              "lines": [
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "currency": "USD",
+                    "value": "3600.00"
+                  },
+                  "participation": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+                  "quantity": "300"
+                }
+              ],
+              "period": {
+                "end": "2027-03-01T00:00:00Z",
+                "start": "2027-02-01T00:00:00Z"
+              },
+              "total_net": {
+                "currency": "USD",
+                "value": "3600.00"
+              }
+            },
+            "type": "UP:Sales-Reporting/report"
+          }
+        },
+        "by": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+        "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+        "kind": "attest",
+        "prev": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+        "sigs": [
+          {
+            "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+            "sig": "cdab762ade2d17ec95536e1e32a2606fe079b45f0d88d84aa48b6e3152b43d9bd14abed2a7175b46dc569a426a134a25460915d935f15edd9978f43679395f00"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      }
+    ]
+  ],
+  "mandates": [],
+  "spec": "UP/0.1-draft",
+  "terms": [
+    {
+      "claims": {
+        "UP:Admin-Fee/paid": {
+          "data": {
+            "amount": "Amount",
+            "period": "{start: Time, end: Time}",
+            "reference": "string"
+          },
+          "doc": "The payer attests payment of the fee for the period. Discharges the duty when acknowledged by the payee."
+        }
+      },
+      "forms": [
+        {
+          "amount": {
+            "base": {
+              "claim": "UP:Sales-Reporting/report",
+              "clause": {
+                "param": "report_clause"
+              },
+              "field": "total_net"
+            },
+            "rate": {
+              "param": "rate"
+            },
+            "rounding": {
+              "param": "rounding"
+            }
+          },
+          "discharge": {
+            "ack": [
+              {
+                "param": "payee"
+              }
+            ],
+            "claim": "UP:Admin-Fee/paid"
+          },
+          "due": {
+            "param": "due"
+          },
+          "duty": "pay",
+          "form": "Duty",
+          "obligee": {
+            "param": "payee"
+          },
+          "obligor": {
+            "param": "payer"
+          },
+          "trigger": {
+            "anchor": "window-start",
+            "every": {
+              "param": "period"
+            }
+          }
+        }
+      ],
+      "id": "UP:Admin-Fee",
+      "params": {
+        "due": {
+          "doc": "Time after each period's end by which the fee is due.",
+          "type": "Period"
+        },
+        "payee": {
+          "doc": "Role that receives the fee.",
+          "type": "Role"
+        },
+        "payer": {
+          "doc": "Role that pays the fee.",
+          "type": "Role"
+        },
+        "period": {
+          "doc": "Fee period.",
+          "type": "Period"
+        },
+        "rate": {
+          "doc": "Fee as a fraction of reported net sales.",
+          "type": "Rate"
+        },
+        "report_clause": {
+          "doc": "Name of the Sales-Reporting clause whose reports form the base.",
+          "type": "string"
+        },
+        "rounding": {
+          "doc": "Rounding applied to each period's fee.",
+          "type": "Rounding"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "For each period of {{period|period}}, {{payer|role}} pays {{payee|role}} an administrative fee equal to {{rate|rate}} of the net sales reported for that period, rounded {{rounding|rounding}}, within {{due|period}} after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.",
+      "spec": "UP/0.1-draft",
+      "title": "Administrative fee",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [
+        {
+          "end": {
+            "param": "end"
+          },
+          "form": "Window",
+          "start": {
+            "param": "start"
+          }
+        }
+      ],
+      "id": "UP:Fixed-Term",
+      "params": {
+        "end": {
+          "doc": "First instant the Agreement is no longer in force.",
+          "type": "Time"
+        },
+        "start": {
+          "doc": "First instant the Agreement is in force.",
+          "type": "Time"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "This Agreement is in force from {{start|time}} until {{end|time}}.",
+      "spec": "UP/0.1-draft",
+      "title": "Term of agreement",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [],
+      "id": "UP:Overlay",
+      "params": {
+        "document": {
+          "doc": "SHA-256 hash of the existing contract document, as the parties hold it.",
+          "type": "Hash"
+        },
+        "document_date": {
+          "doc": "Date the existing contract was signed.",
+          "type": "Time"
+        },
+        "document_title": {
+          "doc": "Title of the existing contract. Sealable.",
+          "type": "string"
+        },
+        "governs": {
+          "doc": "Which text controls if this record and the existing contract are inconsistent.",
+          "type": "\"document\" | \"this-record\""
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "This record describes the agreement titled {{document_title}}, signed on {{document_date|time}}, whose document has the hash {{document}}. It does not amend or replace that agreement. If this record and that agreement are inconsistent, {{governs|governs}} controls.",
+      "spec": "UP/0.1-draft",
+      "title": "Overlay of an existing agreement",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Sales-Reporting/report": {
+          "data": {
+            "lines": "[{participation: ChainId, item: Identifier, quantity: Decimal, net: Amount}]",
+            "period": "{start: Time, end: Time}",
+            "total_net": "Amount"
+          },
+          "doc": "Sales for one period, by participation and Item, with the total net sales."
+        }
+      },
+      "forms": [
+        {
+          "discharge": {
+            "claim": "UP:Sales-Reporting/report"
+          },
+          "due": {
+            "param": "due"
+          },
+          "duty": "report",
+          "form": "Duty",
+          "obligee": {
+            "param": "recipient"
+          },
+          "obligor": {
+            "param": "reporter"
+          },
+          "trigger": {
+            "anchor": "window-start",
+            "every": {
+              "param": "period"
+            }
+          }
+        }
+      ],
+      "id": "UP:Sales-Reporting",
+      "params": {
+        "due": {
+          "doc": "Time after each period's end by which the report is due.",
+          "type": "Period"
+        },
+        "period": {
+          "doc": "Reporting period.",
+          "type": "Period"
+        },
+        "recipient": {
+          "doc": "Role that receives the report.",
+          "type": "Role"
+        },
+        "reporter": {
+          "doc": "Role that reports.",
+          "type": "Role"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "{{reporter|role}} reports to {{recipient|role}} the sales made under this Agreement in each reporting period of {{period|period}}, by Member participation and Item, within {{due|period}} after the period ends.",
+      "spec": "UP/0.1-draft",
+      "title": "Sales reporting",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [
+        {
+          "form": "Valuation",
+          "source": {
+            "options": {
+              "param": "tiers"
+            },
+            "table": {
+              "param": "prices"
+            }
+          }
+        }
+      ],
+      "id": "UP:Tiers",
+      "params": {
+        "prices": {
+          "doc": "Price of each Item in each tier.",
+          "type": "[{item: Identifier, by: {<tier>: Amount}}]"
+        },
+        "tiers": {
+          "doc": "The tiers, in order, with descriptive qualification conditions.",
+          "type": "[{name: string, conditions: string}]"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "The following tiers apply. {{#each tiers}}Tier {{name}}: {{conditions}}. {{/each}}The price of each Item in each tier is: {{#each prices}}{{item}}: {{by|amount}}. {{/each}}Whether a Member meets a tier's conditions is established by that Member's attestation and the Supplier's acknowledgment, as set out in the tier selection clause of the Member's participation.",
+      "spec": "UP/0.1-draft",
+      "title": "Tiered price schedule",
+      "type": "TermDefinition"
+    }
+  ],
+  "type": "Bundle"
+}

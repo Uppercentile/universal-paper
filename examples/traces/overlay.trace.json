@@ -1,0 +1,1356 @@
+{
+  "chains": [
+    {
+      "chain_id": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+      "label": "Overlay of an existing agreement (hypothetical)",
+      "position": 0
+    }
+  ],
+  "description": "A contract signed in 2024 is described in Universal Paper in 2027 without renegotiation. It is identified by its document hash, and duties start only from the overlay's signing. All values are hypothetical.",
+  "evaluators": [
+    {
+      "hashes_only": false,
+      "id": "aggregator",
+      "name": "Aggregator CLM",
+      "tampered": null
+    },
+    {
+      "hashes_only": false,
+      "id": "supplier",
+      "name": "Supplier ERP",
+      "tampered": null
+    },
+    {
+      "hashes_only": false,
+      "id": "member",
+      "name": "Member spreadsheet",
+      "tampered": null
+    }
+  ],
+  "final": {
+    "at": "2027-04-15T00:00:00Z",
+    "by_evaluator": {
+      "aggregator": {
+        "at": "2027-04-15T00:00:00Z",
+        "chains": [
+          {
+            "chain": 0,
+            "label": "Overlay of an existing agreement (hypothetical)",
+            "obligations": [
+              {
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "reporting",
+                "discharged_at": "2027-03-12T12:00:00Z",
+                "due": "2027-03-16T00:00:00Z",
+                "duty": "report",
+                "late": false,
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-03-01T00:00:00Z",
+                  "start": "2027-02-01T00:00:00Z"
+                },
+                "status": "discharged"
+              },
+              {
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "reporting",
+                "due": "2027-04-16T00:00:00Z",
+                "duty": "report",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-04-01T00:00:00Z",
+                  "start": "2027-03-01T00:00:00Z"
+                },
+                "status": "open"
+              },
+              {
+                "amount": {
+                  "currency": "USD",
+                  "value": "72.00"
+                },
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "fee",
+                "due": "2027-03-31T00:00:00Z",
+                "duty": "pay",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-03-01T00:00:00Z",
+                  "start": "2027-02-01T00:00:00Z"
+                },
+                "status": "overdue"
+              },
+              {
+                "amount": "no base reported yet",
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "fee",
+                "due": "2027-05-01T00:00:00Z",
+                "duty": "pay",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-04-01T00:00:00Z",
+                  "start": "2027-03-01T00:00:00Z"
+                },
+                "status": "open"
+              }
+            ],
+            "state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+            "status": "active",
+            "window": {
+              "end": "2029-03-01T00:00:00Z",
+              "start": "2024-03-01T00:00:00Z"
+            }
+          }
+        ]
+      },
+      "member": {
+        "at": "2027-04-15T00:00:00Z",
+        "chains": [
+          {
+            "chain": 0,
+            "label": "Overlay of an existing agreement (hypothetical)",
+            "obligations": [
+              {
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "reporting",
+                "discharged_at": "2027-03-12T12:00:00Z",
+                "due": "2027-03-16T00:00:00Z",
+                "duty": "report",
+                "late": false,
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-03-01T00:00:00Z",
+                  "start": "2027-02-01T00:00:00Z"
+                },
+                "status": "discharged"
+              },
+              {
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "reporting",
+                "due": "2027-04-16T00:00:00Z",
+                "duty": "report",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-04-01T00:00:00Z",
+                  "start": "2027-03-01T00:00:00Z"
+                },
+                "status": "open"
+              },
+              {
+                "amount": {
+                  "currency": "USD",
+                  "value": "72.00"
+                },
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "fee",
+                "due": "2027-03-31T00:00:00Z",
+                "duty": "pay",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-03-01T00:00:00Z",
+                  "start": "2027-02-01T00:00:00Z"
+                },
+                "status": "overdue"
+              },
+              {
+                "amount": "no base reported yet",
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "fee",
+                "due": "2027-05-01T00:00:00Z",
+                "duty": "pay",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-04-01T00:00:00Z",
+                  "start": "2027-03-01T00:00:00Z"
+                },
+                "status": "open"
+              }
+            ],
+            "state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+            "status": "active",
+            "window": {
+              "end": "2029-03-01T00:00:00Z",
+              "start": "2024-03-01T00:00:00Z"
+            }
+          }
+        ]
+      },
+      "supplier": {
+        "at": "2027-04-15T00:00:00Z",
+        "chains": [
+          {
+            "chain": 0,
+            "label": "Overlay of an existing agreement (hypothetical)",
+            "obligations": [
+              {
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "reporting",
+                "discharged_at": "2027-03-12T12:00:00Z",
+                "due": "2027-03-16T00:00:00Z",
+                "duty": "report",
+                "late": false,
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-03-01T00:00:00Z",
+                  "start": "2027-02-01T00:00:00Z"
+                },
+                "status": "discharged"
+              },
+              {
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "reporting",
+                "due": "2027-04-16T00:00:00Z",
+                "duty": "report",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-04-01T00:00:00Z",
+                  "start": "2027-03-01T00:00:00Z"
+                },
+                "status": "open"
+              },
+              {
+                "amount": {
+                  "currency": "USD",
+                  "value": "72.00"
+                },
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "fee",
+                "due": "2027-03-31T00:00:00Z",
+                "duty": "pay",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-03-01T00:00:00Z",
+                  "start": "2027-02-01T00:00:00Z"
+                },
+                "status": "overdue"
+              },
+              {
+                "amount": "no base reported yet",
+                "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                "clause": "fee",
+                "due": "2027-05-01T00:00:00Z",
+                "duty": "pay",
+                "obligee": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "role": "aggregator"
+                },
+                "obligor": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "role": "supplier"
+                },
+                "period": {
+                  "end": "2027-04-01T00:00:00Z",
+                  "start": "2027-03-01T00:00:00Z"
+                },
+                "status": "open"
+              }
+            ],
+            "state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+            "status": "active",
+            "window": {
+              "end": "2029-03-01T00:00:00Z",
+              "start": "2024-03-01T00:00:00Z"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "format": "up-trace/0.1",
+  "generated_by": "universal-paper reference interpreter 0.1.0.dev0",
+  "hypothetical": true,
+  "parties": {
+    "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93": "Example Surgical Products Inc.",
+    "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9": "Hypothetical Legacy Purchasing Group"
+  },
+  "spec": "UP/0.1-draft",
+  "steps": [
+    {
+      "consensus": true,
+      "event": {
+        "at": "2027-02-10T09:00:00Z",
+        "body": {
+          "agreement": {
+            "clauses": [
+              {
+                "def": "sha256:120f918ad9a1a2a8f55d269f44a5fdb18ed19ca6a235142300330a962338b94a",
+                "n": "overlay",
+                "params": {
+                  "document": "sha256:dd996670081d18e62df684e86e3ae934e4f97970998d0cbb15b8037f42497b08",
+                  "document_date": "2024-03-01T00:00:00Z",
+                  "document_title": "Hypothetical Group Purchasing Agreement",
+                  "governs": "document"
+                },
+                "term": "UP:Overlay"
+              },
+              {
+                "def": "sha256:0f0c265a43d9fa361ef55b8136d4cad9d5e11ebabe79a8ea93e87f352b68f372",
+                "n": "term",
+                "params": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                },
+                "term": "UP:Fixed-Term"
+              },
+              {
+                "def": "sha256:cd0f44c7971fc2370e510efe478c354b791b17f1c9a10165aa80b1d78cd3aeb0",
+                "n": "tiers",
+                "params": {
+                  "prices": [
+                    {
+                      "by": {
+                        "Committed": {
+                          "currency": "USD",
+                          "value": "12.00"
+                        },
+                        "Standard": {
+                          "currency": "USD",
+                          "value": "12.60"
+                        }
+                      },
+                      "item": {
+                        "id": "00000000000017",
+                        "scheme": "GTIN"
+                      }
+                    },
+                    {
+                      "by": {
+                        "Committed": {
+                          "currency": "USD",
+                          "value": "40.00"
+                        },
+                        "Standard": {
+                          "currency": "USD",
+                          "value": "41.50"
+                        }
+                      },
+                      "item": {
+                        "id": "00000000000024",
+                        "scheme": "GTIN"
+                      }
+                    }
+                  ],
+                  "tiers": [
+                    {
+                      "conditions": "As defined in Exhibit A of the existing agreement",
+                      "name": "Committed"
+                    },
+                    {
+                      "conditions": "As defined in Exhibit A of the existing agreement",
+                      "name": "Standard"
+                    }
+                  ]
+                },
+                "term": "UP:Tiers"
+              },
+              {
+                "def": "sha256:dbef07d6cee32d6bf7293f28239c09b66efa98ddb73195ce329568d3bc7cba84",
+                "n": "reporting",
+                "params": {
+                  "due": {
+                    "count": 15,
+                    "unit": "day"
+                  },
+                  "period": {
+                    "count": 1,
+                    "unit": "month"
+                  },
+                  "recipient": "aggregator",
+                  "reporter": "supplier"
+                },
+                "term": "UP:Sales-Reporting"
+              },
+              {
+                "def": "sha256:7794f7872d6cef305839b2fdc7b7e9f2916e71f20cde4bdac95321848e21a85e",
+                "n": "fee",
+                "params": {
+                  "due": {
+                    "count": 30,
+                    "unit": "day"
+                  },
+                  "payee": "aggregator",
+                  "payer": "supplier",
+                  "period": {
+                    "count": 1,
+                    "unit": "month"
+                  },
+                  "rate": "0.02",
+                  "report_clause": "reporting",
+                  "rounding": {
+                    "mode": "half-even",
+                    "scale": 2
+                  }
+                },
+                "term": "UP:Admin-Fee"
+              }
+            ],
+            "label": "Overlay of an existing agreement (hypothetical)",
+            "parties": [
+              {
+                "party": {
+                  "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                  "name": "Hypothetical Legacy Purchasing Group"
+                },
+                "role": "aggregator"
+              },
+              {
+                "party": {
+                  "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                  "name": "Example Surgical Products Inc."
+                },
+                "role": "supplier"
+              }
+            ],
+            "spec": "UP/0.1-draft",
+            "type": "Agreement"
+          }
+        },
+        "by": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+        "by_name": "Hypothetical Legacy Purchasing Group",
+        "chain": 0,
+        "chain_label": "Overlay of an existing agreement (hypothetical)",
+        "description": "Hypothetical Legacy Purchasing Group proposes “Overlay of an existing agreement (hypothetical)”.",
+        "hash": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+        "index": 0,
+        "kind": "propose",
+        "prev": null,
+        "signers": [
+          {
+            "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+            "mandate": null,
+            "name": "Example Surgical Products Inc."
+          },
+          {
+            "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+            "mandate": null,
+            "name": "Hypothetical Legacy Purchasing Group"
+          }
+        ]
+      },
+      "reference_accepted": true,
+      "results": {
+        "aggregator": {
+          "accepted": true,
+          "chain_state_hash": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+          "checks": [
+            {
+              "id": "envelope",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The record is a well-formed Universal Paper event.",
+              "rule": "A1"
+            },
+            {
+              "id": "linkage",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "This is a genesis event: it starts a new chain.",
+              "rule": "A3"
+            },
+            {
+              "id": "genesis-kind",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "The genesis event is a proposal.",
+              "rule": "A3"
+            },
+            {
+              "id": "sigs-present",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "The event carries signatures.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-6c13aa54",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:6c13aa54… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-93a178ab",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:93a178ab… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "author",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "A valid signature speaks for the event's author.",
+              "rule": "A9"
+            },
+            {
+              "id": "signers-known",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Every signer is a party to this agreement (directly or through a Mandate).",
+              "rule": "A9"
+            },
+            {
+              "id": "propose-author",
+              "label": "Rule: propose",
+              "passed": true,
+              "reason": "The proposer is a party to the proposed agreement.",
+              "rule": "R-propose"
+            },
+            {
+              "id": "valid",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The proposed agreement is well formed and uses one spec version (A1, A6).",
+              "rule": "A1"
+            },
+            {
+              "id": "precedence",
+              "label": "Resolved precedence",
+              "passed": true,
+              "reason": "Every conflict between clauses is resolved by explicit precedence or specificity.",
+              "rule": "A13"
+            },
+            {
+              "id": "unanimity",
+              "label": "Unanimity",
+              "passed": true,
+              "reason": "Every required party has now signed the same agreement hash: the agreement is executed.",
+              "rule": "A2"
+            }
+          ],
+          "derived": {
+            "at": "2027-02-10T09:00:00Z",
+            "chains": [
+              {
+                "chain": 0,
+                "label": "Overlay of an existing agreement (hypothetical)",
+                "state_hash": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+                "status": "active",
+                "window": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                }
+              }
+            ]
+          },
+          "event_hash": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+          "reason": "",
+          "world_hash": "sha256:c0a6181795e8c5dd062b240ecbd8245e6eecaaa7a5660f6fb21b457095b828c2"
+        },
+        "member": {
+          "accepted": true,
+          "chain_state_hash": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+          "checks": [
+            {
+              "id": "envelope",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The record is a well-formed Universal Paper event.",
+              "rule": "A1"
+            },
+            {
+              "id": "linkage",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "This is a genesis event: it starts a new chain.",
+              "rule": "A3"
+            },
+            {
+              "id": "genesis-kind",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "The genesis event is a proposal.",
+              "rule": "A3"
+            },
+            {
+              "id": "sigs-present",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "The event carries signatures.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-6c13aa54",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:6c13aa54… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-93a178ab",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:93a178ab… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "author",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "A valid signature speaks for the event's author.",
+              "rule": "A9"
+            },
+            {
+              "id": "signers-known",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Every signer is a party to this agreement (directly or through a Mandate).",
+              "rule": "A9"
+            },
+            {
+              "id": "propose-author",
+              "label": "Rule: propose",
+              "passed": true,
+              "reason": "The proposer is a party to the proposed agreement.",
+              "rule": "R-propose"
+            },
+            {
+              "id": "valid",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The proposed agreement is well formed and uses one spec version (A1, A6).",
+              "rule": "A1"
+            },
+            {
+              "id": "precedence",
+              "label": "Resolved precedence",
+              "passed": true,
+              "reason": "Every conflict between clauses is resolved by explicit precedence or specificity.",
+              "rule": "A13"
+            },
+            {
+              "id": "unanimity",
+              "label": "Unanimity",
+              "passed": true,
+              "reason": "Every required party has now signed the same agreement hash: the agreement is executed.",
+              "rule": "A2"
+            }
+          ],
+          "derived": {
+            "at": "2027-02-10T09:00:00Z",
+            "chains": [
+              {
+                "chain": 0,
+                "label": "Overlay of an existing agreement (hypothetical)",
+                "state_hash": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+                "status": "active",
+                "window": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                }
+              }
+            ]
+          },
+          "event_hash": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+          "reason": "",
+          "world_hash": "sha256:c0a6181795e8c5dd062b240ecbd8245e6eecaaa7a5660f6fb21b457095b828c2"
+        },
+        "supplier": {
+          "accepted": true,
+          "chain_state_hash": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+          "checks": [
+            {
+              "id": "envelope",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The record is a well-formed Universal Paper event.",
+              "rule": "A1"
+            },
+            {
+              "id": "linkage",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "This is a genesis event: it starts a new chain.",
+              "rule": "A3"
+            },
+            {
+              "id": "genesis-kind",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "The genesis event is a proposal.",
+              "rule": "A3"
+            },
+            {
+              "id": "sigs-present",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "The event carries signatures.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-6c13aa54",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:6c13aa54… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-93a178ab",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:93a178ab… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "author",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "A valid signature speaks for the event's author.",
+              "rule": "A9"
+            },
+            {
+              "id": "signers-known",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Every signer is a party to this agreement (directly or through a Mandate).",
+              "rule": "A9"
+            },
+            {
+              "id": "propose-author",
+              "label": "Rule: propose",
+              "passed": true,
+              "reason": "The proposer is a party to the proposed agreement.",
+              "rule": "R-propose"
+            },
+            {
+              "id": "valid",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The proposed agreement is well formed and uses one spec version (A1, A6).",
+              "rule": "A1"
+            },
+            {
+              "id": "precedence",
+              "label": "Resolved precedence",
+              "passed": true,
+              "reason": "Every conflict between clauses is resolved by explicit precedence or specificity.",
+              "rule": "A13"
+            },
+            {
+              "id": "unanimity",
+              "label": "Unanimity",
+              "passed": true,
+              "reason": "Every required party has now signed the same agreement hash: the agreement is executed.",
+              "rule": "A2"
+            }
+          ],
+          "derived": {
+            "at": "2027-02-10T09:00:00Z",
+            "chains": [
+              {
+                "chain": 0,
+                "label": "Overlay of an existing agreement (hypothetical)",
+                "state_hash": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+                "status": "active",
+                "window": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                }
+              }
+            ]
+          },
+          "event_hash": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+          "reason": "",
+          "world_hash": "sha256:c0a6181795e8c5dd062b240ecbd8245e6eecaaa7a5660f6fb21b457095b828c2"
+        }
+      },
+      "step": 0
+    },
+    {
+      "consensus": true,
+      "event": {
+        "at": "2027-03-12T12:00:00Z",
+        "body": {
+          "claim": {
+            "clause": "reporting",
+            "data": {
+              "lines": [
+                {
+                  "item": {
+                    "id": "00000000000017",
+                    "scheme": "GTIN"
+                  },
+                  "net": {
+                    "currency": "USD",
+                    "value": "3600.00"
+                  },
+                  "participation": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+                  "quantity": "300"
+                }
+              ],
+              "period": {
+                "end": "2027-03-01T00:00:00Z",
+                "start": "2027-02-01T00:00:00Z"
+              },
+              "total_net": {
+                "currency": "USD",
+                "value": "3600.00"
+              }
+            },
+            "type": "UP:Sales-Reporting/report"
+          }
+        },
+        "by": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+        "by_name": "Example Surgical Products Inc.",
+        "chain": 0,
+        "chain_label": "Overlay of an existing agreement (hypothetical)",
+        "description": "Example Surgical Products Inc. reports sales for the period under “Overlay of an existing agreement (hypothetical)”.",
+        "hash": "sha256:aee57f133c924f5ac5a7a6df33c0cc33d3c277bd1f76d564f7359e259c32b1aa",
+        "index": 1,
+        "kind": "attest",
+        "prev": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+        "signers": [
+          {
+            "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+            "mandate": null,
+            "name": "Example Surgical Products Inc."
+          }
+        ]
+      },
+      "reference_accepted": true,
+      "results": {
+        "aggregator": {
+          "accepted": true,
+          "chain_state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+          "checks": [
+            {
+              "id": "envelope",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The record is a well-formed Universal Paper event.",
+              "rule": "A1"
+            },
+            {
+              "id": "linkage",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "The event references this chain and the exact prior state hash.",
+              "rule": "A3"
+            },
+            {
+              "id": "time",
+              "label": "Non-retroactivity",
+              "passed": true,
+              "reason": "The event's time is not earlier than the previous event.",
+              "rule": "A5"
+            },
+            {
+              "id": "sigs-present",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "The event carries signatures.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-6c13aa54",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:6c13aa54… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "author",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "A valid signature speaks for the event's author.",
+              "rule": "A9"
+            },
+            {
+              "id": "signers-known",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Every signer is a party to this agreement (directly or through a Mandate).",
+              "rule": "A9"
+            },
+            {
+              "id": "attest-chain",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The agreement is executed, so claims can be recorded under it.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-clause",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The claim is made under clause 'reporting' of the current agreement.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-type",
+              "label": "Closed evidence",
+              "passed": true,
+              "reason": "'UP:Sales-Reporting/report' is a claim type that this clause's Term defines.",
+              "rule": "A11"
+            },
+            {
+              "id": "attest-data",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The claim's data has exactly the fields its Term defines.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-role",
+              "label": "Role symmetry",
+              "passed": true,
+              "reason": "The author holds a role allowed to make this claim (supplier).",
+              "rule": "A7"
+            }
+          ],
+          "derived": {
+            "at": "2027-03-12T12:00:00Z",
+            "chains": [
+              {
+                "chain": 0,
+                "label": "Overlay of an existing agreement (hypothetical)",
+                "obligations": [
+                  {
+                    "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                    "clause": "reporting",
+                    "discharged_at": "2027-03-12T12:00:00Z",
+                    "due": "2027-03-16T00:00:00Z",
+                    "duty": "report",
+                    "late": false,
+                    "obligee": {
+                      "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                      "role": "aggregator"
+                    },
+                    "obligor": {
+                      "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                      "role": "supplier"
+                    },
+                    "period": {
+                      "end": "2027-03-01T00:00:00Z",
+                      "start": "2027-02-01T00:00:00Z"
+                    },
+                    "status": "discharged"
+                  },
+                  {
+                    "amount": {
+                      "currency": "USD",
+                      "value": "72.00"
+                    },
+                    "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                    "clause": "fee",
+                    "due": "2027-03-31T00:00:00Z",
+                    "duty": "pay",
+                    "obligee": {
+                      "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                      "role": "aggregator"
+                    },
+                    "obligor": {
+                      "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                      "role": "supplier"
+                    },
+                    "period": {
+                      "end": "2027-03-01T00:00:00Z",
+                      "start": "2027-02-01T00:00:00Z"
+                    },
+                    "status": "open"
+                  }
+                ],
+                "state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+                "status": "active",
+                "window": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                }
+              }
+            ]
+          },
+          "event_hash": "sha256:aee57f133c924f5ac5a7a6df33c0cc33d3c277bd1f76d564f7359e259c32b1aa",
+          "reason": "",
+          "world_hash": "sha256:adbf2a3188d938ea538a5ca56a280e5cf2b147a7ae57f726803b1241ccd888de"
+        },
+        "member": {
+          "accepted": true,
+          "chain_state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+          "checks": [
+            {
+              "id": "envelope",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The record is a well-formed Universal Paper event.",
+              "rule": "A1"
+            },
+            {
+              "id": "linkage",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "The event references this chain and the exact prior state hash.",
+              "rule": "A3"
+            },
+            {
+              "id": "time",
+              "label": "Non-retroactivity",
+              "passed": true,
+              "reason": "The event's time is not earlier than the previous event.",
+              "rule": "A5"
+            },
+            {
+              "id": "sigs-present",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "The event carries signatures.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-6c13aa54",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:6c13aa54… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "author",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "A valid signature speaks for the event's author.",
+              "rule": "A9"
+            },
+            {
+              "id": "signers-known",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Every signer is a party to this agreement (directly or through a Mandate).",
+              "rule": "A9"
+            },
+            {
+              "id": "attest-chain",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The agreement is executed, so claims can be recorded under it.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-clause",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The claim is made under clause 'reporting' of the current agreement.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-type",
+              "label": "Closed evidence",
+              "passed": true,
+              "reason": "'UP:Sales-Reporting/report' is a claim type that this clause's Term defines.",
+              "rule": "A11"
+            },
+            {
+              "id": "attest-data",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The claim's data has exactly the fields its Term defines.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-role",
+              "label": "Role symmetry",
+              "passed": true,
+              "reason": "The author holds a role allowed to make this claim (supplier).",
+              "rule": "A7"
+            }
+          ],
+          "derived": {
+            "at": "2027-03-12T12:00:00Z",
+            "chains": [
+              {
+                "chain": 0,
+                "label": "Overlay of an existing agreement (hypothetical)",
+                "obligations": [
+                  {
+                    "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                    "clause": "reporting",
+                    "discharged_at": "2027-03-12T12:00:00Z",
+                    "due": "2027-03-16T00:00:00Z",
+                    "duty": "report",
+                    "late": false,
+                    "obligee": {
+                      "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                      "role": "aggregator"
+                    },
+                    "obligor": {
+                      "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                      "role": "supplier"
+                    },
+                    "period": {
+                      "end": "2027-03-01T00:00:00Z",
+                      "start": "2027-02-01T00:00:00Z"
+                    },
+                    "status": "discharged"
+                  },
+                  {
+                    "amount": {
+                      "currency": "USD",
+                      "value": "72.00"
+                    },
+                    "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                    "clause": "fee",
+                    "due": "2027-03-31T00:00:00Z",
+                    "duty": "pay",
+                    "obligee": {
+                      "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                      "role": "aggregator"
+                    },
+                    "obligor": {
+                      "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                      "role": "supplier"
+                    },
+                    "period": {
+                      "end": "2027-03-01T00:00:00Z",
+                      "start": "2027-02-01T00:00:00Z"
+                    },
+                    "status": "open"
+                  }
+                ],
+                "state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+                "status": "active",
+                "window": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                }
+              }
+            ]
+          },
+          "event_hash": "sha256:aee57f133c924f5ac5a7a6df33c0cc33d3c277bd1f76d564f7359e259c32b1aa",
+          "reason": "",
+          "world_hash": "sha256:adbf2a3188d938ea538a5ca56a280e5cf2b147a7ae57f726803b1241ccd888de"
+        },
+        "supplier": {
+          "accepted": true,
+          "chain_state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+          "checks": [
+            {
+              "id": "envelope",
+              "label": "Composition",
+              "passed": true,
+              "reason": "The record is a well-formed Universal Paper event.",
+              "rule": "A1"
+            },
+            {
+              "id": "linkage",
+              "label": "Chained transitions",
+              "passed": true,
+              "reason": "The event references this chain and the exact prior state hash.",
+              "rule": "A3"
+            },
+            {
+              "id": "time",
+              "label": "Non-retroactivity",
+              "passed": true,
+              "reason": "The event's time is not earlier than the previous event.",
+              "rule": "A5"
+            },
+            {
+              "id": "sigs-present",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "The event carries signatures.",
+              "rule": "A9"
+            },
+            {
+              "id": "sig-6c13aa54",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Signature by ed25519:6c13aa54… verifies over the event's hash.",
+              "rule": "A9"
+            },
+            {
+              "id": "author",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "A valid signature speaks for the event's author.",
+              "rule": "A9"
+            },
+            {
+              "id": "signers-known",
+              "label": "Bounded delegation",
+              "passed": true,
+              "reason": "Every signer is a party to this agreement (directly or through a Mandate).",
+              "rule": "A9"
+            },
+            {
+              "id": "attest-chain",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The agreement is executed, so claims can be recorded under it.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-clause",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The claim is made under clause 'reporting' of the current agreement.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-type",
+              "label": "Closed evidence",
+              "passed": true,
+              "reason": "'UP:Sales-Reporting/report' is a claim type that this clause's Term defines.",
+              "rule": "A11"
+            },
+            {
+              "id": "attest-data",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "The claim's data has exactly the fields its Term defines.",
+              "rule": "R-attest"
+            },
+            {
+              "id": "attest-role",
+              "label": "Role symmetry",
+              "passed": true,
+              "reason": "The author holds a role allowed to make this claim (supplier).",
+              "rule": "A7"
+            }
+          ],
+          "derived": {
+            "at": "2027-03-12T12:00:00Z",
+            "chains": [
+              {
+                "chain": 0,
+                "label": "Overlay of an existing agreement (hypothetical)",
+                "obligations": [
+                  {
+                    "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                    "clause": "reporting",
+                    "discharged_at": "2027-03-12T12:00:00Z",
+                    "due": "2027-03-16T00:00:00Z",
+                    "duty": "report",
+                    "late": false,
+                    "obligee": {
+                      "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                      "role": "aggregator"
+                    },
+                    "obligor": {
+                      "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                      "role": "supplier"
+                    },
+                    "period": {
+                      "end": "2027-03-01T00:00:00Z",
+                      "start": "2027-02-01T00:00:00Z"
+                    },
+                    "status": "discharged"
+                  },
+                  {
+                    "amount": {
+                      "currency": "USD",
+                      "value": "72.00"
+                    },
+                    "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+                    "clause": "fee",
+                    "due": "2027-03-31T00:00:00Z",
+                    "duty": "pay",
+                    "obligee": {
+                      "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
+                      "role": "aggregator"
+                    },
+                    "obligor": {
+                      "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
+                      "role": "supplier"
+                    },
+                    "period": {
+                      "end": "2027-03-01T00:00:00Z",
+                      "start": "2027-02-01T00:00:00Z"
+                    },
+                    "status": "open"
+                  }
+                ],
+                "state_hash": "sha256:25df3ae4d853d3cbf00e34818d590e8e4dd494dfeb33f6adef046fb09b8bc2f7",
+                "status": "active",
+                "window": {
+                  "end": "2029-03-01T00:00:00Z",
+                  "start": "2024-03-01T00:00:00Z"
+                }
+              }
+            ]
+          },
+          "event_hash": "sha256:aee57f133c924f5ac5a7a6df33c0cc33d3c277bd1f76d564f7359e259c32b1aa",
+          "reason": "",
+          "world_hash": "sha256:adbf2a3188d938ea538a5ca56a280e5cf2b147a7ae57f726803b1241ccd888de"
+        }
+      },
+      "step": 1
+    }
+  ],
+  "title": "Overlay: an existing agreement described, not replaced",
+  "type": "Trace"
+}

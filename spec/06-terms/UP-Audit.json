@@ -79,7 +79,7 @@
       "doc": "The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor."
     }
   },
-  "render": "{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement, up to {{max_requests}} times per {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.",
+  "render": "{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.",
   "provenance": {
     "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
     "reviewed_by": [],
