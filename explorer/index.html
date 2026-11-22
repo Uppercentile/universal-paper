@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Universal Paper Explorer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: an instrument panel. Transport bar on top, event stream at left, the current event and its checks in the middle,
+   three independent evaluators side by side below, derived consequences at right. */
+:root {
+  --bg: #eef1f0;
+  --panel: #f8faf9;
+  --ink: #18211e;
+  --muted: #5b6863;
+  --line: #cfd8d4;
+  --accent: #1d5f7a;
+  --accent-soft: #dbe8ee;
+  --ok: #1f7a4d;
+  --ok-soft: #dcefe4;
+  --bad: #a33a2b;
+  --bad-soft: #f6e0db;
+  --warn: #8a6a12;
+  --warn-soft: #f4ecd2;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101614; --panel: #17201d; --ink: #dde6e2; --muted: #93a29c; --line: #2c3a35;
+    --accent: #7fb6cf; --accent-soft: #1d3440; --ok: #6cc597; --ok-soft: #173327;
+    --bad: #ec8e7f; --bad-soft: #3d1f1a; --warn: #e0c167; --warn-soft: #332b13; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101614; --panel: #17201d; --ink: #dde6e2; --muted: #93a29c; --line: #2c3a35;
+  --accent: #7fb6cf; --accent-soft: #1d3440; --ok: #6cc597; --ok-soft: #173327;
+  --bad: #ec8e7f; --bad-soft: #3d1f1a; --warn: #e0c167; --warn-soft: #332b13; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 32px;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font: 600 1.5rem/1.2 var(--font-display); letter-spacing: 0.01em; }
+h2 { font: 600 0.72rem/1.2 var(--font-body); text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+button, select, input { font: inherit; color: inherit; }
+button:focus-visible, select:focus-visible, input:focus-visible, li:focus-visible, .panel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.wrap { max-width: 1400px; margin: 0 auto; display: grid; gap: 14px; }
+
+header.top { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+.brand p { margin: 2px 0 0; color: var(--muted); max-width: 60ch; }
+.loader { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.loader select { padding: 6px 8px; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; max-width: 100%; }
+.btn { padding: 6px 12px; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+
+.scenario { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 4px; }
+.scenario h2 { color: var(--accent); }
+.scenario .t { font: 600 1.1rem/1.3 var(--font-display); }
+.scenario p { margin: 0; max-width: 90ch; color: var(--muted); }
+.badge { display: inline-flex; gap: 4px; align-items: center; font-size: 0.75rem; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+
+.transport { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.transport input[type=range] { flex: 1 1 200px; min-width: 0; accent-color: var(--accent); }
+.transport .pos { min-width: 9ch; }
+
+.consensus { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 8px; border: 1px solid; font-weight: 600; }
+.consensus.ok { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.consensus.bad { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.consensus .sub { font-weight: 400; color: var(--ink); }
+
+.grid { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr) minmax(260px, 360px); gap: 14px; align-items: start; }
+@media (max-width: 1100px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.col { display: grid; gap: 14px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; min-width: 0; display: grid; gap: 10px; }
+
+/* Event stream: blocks that close into the chain */
+ol.stream { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 70vh; overflow-y: auto; }
+ol.stream li { display: grid; grid-template-columns: 2.2em 1.4em minmax(0, 1fr); gap: 6px; align-items: start; padding: 6px 8px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; }
+ol.stream li:hover { border-color: var(--line); }
+ol.stream li.future { opacity: 0.45; }
+ol.stream li.current { background: var(--accent-soft); border-color: var(--accent); }
+ol.stream .n { color: var(--muted); font-size: 0.8rem; text-align: right; }
+ol.stream .d { font-size: 0.85rem; line-height: 1.35; }
+ol.stream .d small { display: block; color: var(--muted); }
+.ico { display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; border-radius: 50%; font-size: 0.75rem; font-weight: 700; }
+.ico.ok { background: var(--ok-soft); color: var(--ok); }
+.ico.bad { background: var(--bad-soft); color: var(--bad); }
+.ico.wait { background: var(--line); color: var(--muted); }
+
+/* Current event */
+.event-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border: 1px solid var(--line); }
+.chip.kind { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.chip.bad { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
+.chip.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.chip.plain { color: var(--muted); }
+.event-desc { font: 500 1.15rem/1.4 var(--font-display); margin: 0; }
+dl.meta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 12px; margin: 0; font-size: 0.85rem; }
+dl.meta dt { color: var(--muted); }
+dl.meta dd { margin: 0; overflow-wrap: anywhere; }
+.mandate { border: 1px dashed var(--warn); background: var(--warn-soft); border-radius: 6px; padding: 8px 10px; font-size: 0.85rem; display: grid; gap: 4px; }
+.mandate b { color: var(--warn); }
+.mandate ul { margin: 0; padding-left: 1.2em; }
+
+ol.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+ol.checks li { display: grid; grid-template-columns: 1.4em 10.5em minmax(0, 1fr); gap: 8px; align-items: start; padding: 5px 8px; border-radius: 6px; transition: background 0.2s, opacity 0.2s; }
+ol.checks li.pending { opacity: 0.35; }
+ol.checks li.fail { background: var(--bad-soft); }
+ol.checks .rule { font-weight: 600; font-size: 0.8rem; cursor: help; }
+ol.checks .rule small { display: block; font-weight: 400; color: var(--muted); }
+ol.checks .why { font-size: 0.85rem; }
+.verdict { padding: 8px 10px; border-radius: 6px; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+.tabs button { padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; cursor: pointer; font-size: 0.8rem; }
+.tabs button[aria-pressed=true] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+/* Evaluators */
+.evals { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.panel { border: 2px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--panel); display: grid; gap: 6px; cursor: pointer; min-width: 0; }
+.panel.agree { border-color: var(--ok); }
+.panel.diverge { border-color: var(--bad); background: var(--bad-soft); }
+.panel.selected { box-shadow: 0 0 0 3px var(--accent-soft); }
+.panel .name { font-weight: 600; display: flex; justify-content: space-between; gap: 6px; align-items: center; }
+.panel .hash { font-size: 1.05rem; letter-spacing: 0.02em; overflow-wrap: anywhere; }
+.panel .state { font-size: 0.75rem; color: var(--muted); overflow-wrap: anywhere; }
+.panel .note { font-size: 0.78rem; color: var(--bad); }
+.panel .note.info { color: var(--muted); }
+
+/* Derived */
+.chain-block { display: grid; gap: 6px; padding-top: 8px; border-top: 1px solid var(--line); }
+.chain-block:first-of-type { border-top: 0; padding-top: 0; }
+.chain-block h3 { font: 600 0.9rem/1.3 var(--font-body); display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.8rem; }
+th, td { text-align: left; padding: 3px 6px 3px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; }
+td.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sealed { color: var(--warn); font-style: italic; }
+
+.drop { border: 2px dashed var(--line); border-radius: 8px; padding: 28px; text-align: center; color: var(--muted); }
+.drop.over { border-color: var(--accent); color: var(--accent); }
+footer { color: var(--muted); font-size: 0.8rem; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Universal Paper Explorer</h1>
+      <p>Watch independent systems check every event against the same rules and reach the same answer, with no central authority.</p>
+    </div>
+    <div class="loader">
+      <label for="scenario" class="muted">Scenario</label>
+      <select id="scenario"></select>
+      <button class="btn" id="open-file" type="button">Open trace file…</button>
+      <input type="file" id="file" accept=".json,application/json" hidden>
+    </div>
+  </header>
+
+  <section class="scenario" id="scenario-info" aria-live="polite">
+    <h2>Scenario</h2>
+    <div class="t" id="sc-title">Loading…</div>
+    <p id="sc-desc"></p>
+    <div><span class="badge" id="sc-hypo">Hypothetical values</span></div>
+  </section>
+
+  <div id="drop" class="drop" hidden>
+    Drop a trace file here, or use “Open trace file…”. Traces are made by the reference interpreter’s <span class="mono">trace</span> command.
+    <div id="drop-msg" class="muted"></div>
+  </div>
+
+  <div id="main" hidden class="wrap">
+    <div class="transport" role="group" aria-label="Playback">
+      <button class="btn" id="first" type="button" title="Go to the first event">⏮</button>
+      <button class="btn" id="back" type="button" title="Previous event">◀</button>
+      <button class="btn primary" id="play" type="button">Play</button>
+      <button class="btn" id="fwd" type="button" title="Next event">▶</button>
+      <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Event position">
+      <span class="pos mono" id="pos"></span>
+      <label for="speed" class="muted">Speed</label>
+      <select id="speed">
+        <option value="2600">Slow</option>
+        <option value="1500" selected>Normal</option>
+        <option value="700">Fast</option>
+      </select>
+    </div>
+
+    <div class="consensus" id="consensus" role="status"></div>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="h-stream">
+        <h2 id="h-stream">Event stream</h2>
+        <ol class="stream" id="stream"></ol>
+      </section>
+
+      <div class="col">
+        <section class="card" aria-labelledby="h-event">
+          <h2 id="h-event">Current event</h2>
+          <div class="event-head" id="ev-head"></div>
+          <p class="event-desc" id="ev-desc"></p>
+          <dl class="meta" id="ev-meta"></dl>
+          <div id="ev-mandate"></div>
+        </section>
+        <section class="card" aria-labelledby="h-checks">
+          <h2 id="h-checks">Validation, as computed by <span id="checks-who"></span></h2>
+          <div class="tabs" id="check-tabs" role="group" aria-label="Show checks from"></div>
+          <ol class="checks" id="checks"></ol>
+          <div id="verdict"></div>
+        </section>
+        <section class="card" aria-labelledby="h-evals">
+          <h2 id="h-evals">Independent evaluators</h2>
+          <p class="muted" style="margin:0">Each panel is a separate party’s system holding its own copy of the data. The large code is a fingerprint of everything that system believes is true. Matching fingerprints mean the systems agree exactly.</p>
+          <div class="evals" id="evals"></div>
+        </section>
+      </div>
+
+      <section class="card" aria-labelledby="h-derived">
+        <h2 id="h-derived">Derived consequences</h2>
+        <p class="muted" style="margin:0">What the rules infer after this event, as computed by <b id="derived-who"></b>. Select a panel to switch.</p>
+        <div id="derived"></div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <span><span class="ico ok">✓</span> accepted or agreeing</span>
+    <span><span class="ico bad">✕</span> rejected or diverged</span>
+    <span><span class="ico wait">·</span> not yet processed</span>
+    <span>This page only plays back a trace file. It computes nothing: every verdict and fingerprint comes from the reference interpreter.</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var SCENARIOS = [
+    { file: "conventional.trace.json", label: "Conventional GPO arrangement" },
+    { file: "conventional.tamper-supplier-fee.trace.json", label: "Fault: Supplier copy has a changed fee" },
+    { file: "conventional.tamper-member-backdate.trace.json", label: "Fault: Member copy has a backdated attestation" },
+    { file: "conventional.tamper-aggregator-missing-signature.trace.json", label: "Fault: Aggregator copy is missing a signature" },
+    { file: "generative.trace.json", label: "Generative: agents under Mandates" },
+    { file: "confidential.trace.json", label: "Confidential: hashes only" },
+    { file: "overlay.trace.json", label: "Overlay of an existing agreement" }
+  ];
+  var BASES = ["../examples/traces/", "examples/traces/", "traces/", ""];
+  var RULES = {
+    A1: "Composition: an agreement is built only from defined Terms of one spec version, with every parameter filled in.",
+    A2: "Unanimity: an agreement takes effect only when every required party has signed the same fingerprint.",
+    A3: "Chained transitions: each event points at the exact state it changes, so history forms one unbroken chain.",
+    A4: "Determinism: the same data always gives the same answer, on every system.",
+    A5: "Non-retroactivity: no event can change the past. Events cannot be dated before the event they follow.",
+    A6: "Value neutrality: the language sets no default prices, fees, or thresholds. The parties supply every value.",
+    A7: "Role symmetry: rules speak of roles (aggregator, supplier, member), never of particular companies.",
+    A8: "Rendering binding: the readable contract text and the data are fixed by the same fingerprint.",
+    A9: "Bounded delegation: a signature must come from the party itself, or from its agent acting within a signed Mandate.",
+    A10: "Verifiable confidentiality: validity can be checked without seeing sealed prices or volumes.",
+    A11: "Closed evidence: outside facts enter only as signed attestations. The rules never assume a claim is true.",
+    A12: "Single attribution: every event belongs to exactly one agreement.",
+    A13: "Resolved precedence: conflicts between clauses are settled by declared precedence, then specificity, never by order.",
+    "R-propose": "The rule for proposals: who may propose, and what a valid proposal or amendment needs.",
+    "R-accept": "The rule for acceptances: who may sign a proposal or acknowledge a claim.",
+    "R-attest": "The rule for attestations: who may make which claim, and under which clause.",
+    "F-Link": "Link: a participation must be signed by the parent agreement's aggregator and supplier, and the parent must be in force.",
+    "F-Exit": "Exit: a party ends the agreement by notice, under the conditions its termination clause sets.",
+    "F-Selection": "Selection: a party chooses one of the named options, such as a tier.",
+    "F-Duty": "Duty: obligations that arise each period or on request, and what discharges them."
+  };
+  var KINDS = {
+    propose: "Proposal: a party offers an agreement, or an amendment, for others to sign.",
+    accept: "Acceptance: a party signs a proposal, or acknowledges another party's claim.",
+    attest: "Attestation: a party states, with its signature, that something is true, or gives a notice."
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var trace = null, cur = 0, timer = null, selected = null, checkWho = null, revealTimer = null;
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function short(h) { return h ? h.replace("sha256:", "").slice(0, 12) : "none"; }
+  function name(key) { return (trace.parties && trace.parties[key]) || (key ? key.slice(0, 16) + "…" : ""); }
+  function day(t) { return t ? t.slice(0, 10) : "open-ended"; }
+  function amt(a) {
+    if (a === "sealed") return '<span class="sealed">sealed</span>';
+    if (a && typeof a === "object" && "value" in a) return esc(a.currency + " " + a.value);
+    return a == null ? "–" : '<span class="muted">' + esc(a) + "</span>";
+  }
+  function refEval() {
+    var e = trace.evaluators.filter(function (x) { return !x.tampered; })[0];
+    return (e || trace.evaluators[0]).id;
+  }
+
+  function load(t) {
+    if (!t || t.type !== "Trace" || !Array.isArray(t.steps)) throw new Error("This file is not a Universal Paper trace.");
+    trace = t; cur = 0; stop();
+    selected = refEval(); checkWho = refEval();
+    $("sc-title").textContent = t.title || "Untitled trace";
+    $("sc-desc").textContent = t.description || "";
+    $("sc-hypo").hidden = !t.hypothetical;
+    $("drop").hidden = true; $("main").hidden = false;
+    $("scrub").max = Math.max(0, t.steps.length - 1);
+    buildStream(); renderTabs(); render(true);
+  }
+
+  function fetchTrace(file) {
+    var i = 0;
+    function next() {
+      if (i >= BASES.length) return Promise.reject(new Error("not found"));
+      var url = BASES[i++] + file;
+      return fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).catch(next);
+    }
+    return next();
+  }
+
+  function pick(file) {
+    $("sc-title").textContent = "Loading…";
+    fetchTrace(file).then(load).catch(function () {
+      $("main").hidden = true; $("drop").hidden = false;
+      $("sc-title").textContent = "Open a trace file";
+      $("sc-desc").textContent = "This browser could not load the bundled trace (pages opened directly from disk usually cannot). Open one from examples/traces/ with the button above, or drop it here.";
+    });
+  }
+
+  function buildStream() {
+    var ref = refEval();
+    $("stream").innerHTML = trace.steps.map(function (s, i) {
+      var ok = s.results[ref] && s.results[ref].accepted;
+      return '<li tabindex="0" data-i="' + i + '" title="' + esc(KINDS[s.event.kind]) + '">' +
+        '<span class="n mono">' + (i + 1) + '</span><span class="ico" data-ico></span>' +
+        '<span class="d">' + esc(s.event.description) + '<small>' + esc(s.event.chain_label) + " · " + esc(day(s.event.at)) + (ok ? "" : " · rejected") + "</small></span></li>";
+    }).join("");
+  }
+
+  function renderTabs() {
+    $("check-tabs").innerHTML = trace.evaluators.map(function (e) {
+      return '<button type="button" data-id="' + esc(e.id) + '" aria-pressed="' + (e.id === checkWho) + '">' + esc(e.name) + "</button>";
+    }).join("");
+  }
+
+  function render(animate) {
+    var s = trace.steps[cur], ref = refEval();
+    $("scrub").value = cur;
+    $("pos").textContent = (cur + 1) + " / " + trace.steps.length;
+
+    // stream
+    var lis = $("stream").children;
+    for (var i = 0; i < lis.length; i++) {
+      var li = lis[i], st = trace.steps[i], ok = st.results[ref] && st.results[ref].accepted;
+      li.className = i === cur ? "current" : i > cur ? "future" : "";
+      var ico = li.querySelector("[data-ico]");
+      ico.className = "ico " + (i > cur ? "wait" : ok ? "ok" : "bad");
+      ico.textContent = i > cur ? "·" : ok ? "✓" : "✕";
+    }
+    var curLi = lis[cur];
+    if (curLi && curLi.scrollIntoView) curLi.scrollIntoView({ block: "nearest" });
+
+    // event
+    var e = s.event;
+    $("ev-head").innerHTML = '<span class="chip kind" title="' + esc(KINDS[e.kind]) + '">' + esc(e.kind) + "</span>" +
+      '<span class="chip plain">' + esc(e.chain_label) + "</span>" + '<span class="chip plain mono">' + esc(e.at.replace("T", " ").replace("Z", " UTC")) + "</span>";
+    $("ev-desc").textContent = e.description;
+    $("ev-meta").innerHTML =
+      "<dt>Made for</dt><dd>" + esc(e.by_name) + "</dd>" +
+      "<dt>Signed by</dt><dd>" + e.signers.map(function (g) { return esc(g.name) + (g.mandate ? " (agent, under Mandate)" : ""); }).join("; ") + "</dd>" +
+      "<dt>Event fingerprint</dt><dd class=\"mono\">" + esc(short(e.hash)) + "…</dd>" +
+      "<dt>Builds on state</dt><dd class=\"mono\">" + (e.prev ? esc(short(e.prev)) + "…" : "none (starts a new agreement)") + "</dd>";
+    if (e.mandate) {
+      var m = e.mandate, items = [];
+      items.push("Allowed events: " + esc(m.scope.kinds.join(", ")) + "; acting as " + esc(m.scope.roles.join(", ")));
+      items.push("In force " + esc(day(m.not_before)) + " to " + esc(day(m.expires)));
+      Object.keys(m.scope.claims || {}).forEach(function (c) {
+        var b = m.scope.claims[c];
+        Object.keys(b).forEach(function (f) { if (!b[f].any) items.push(esc(c.split("/")[1]) + " · " + esc(f) + ": " + esc(JSON.stringify(b[f]))); });
+      });
+      Object.keys(m.scope.terms || {}).forEach(function (t) {
+        var b = m.scope.terms[t];
+        Object.keys(b).forEach(function (p) { if (!b[p].any) items.push(esc(t) + " · " + esc(p) + ": " + esc(JSON.stringify(b[p]))); });
+      });
+      $("ev-mandate").innerHTML = '<div class="mandate"><b>Agent acting under a Mandate from ' + esc(m.principal_name) + "</b>" +
+        "<span>Limits that bind the agent:</span><ul>" + items.map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ul></div>";
+    } else {
+      $("ev-mandate").innerHTML = "";
+    }
+
+    renderChecks(animate);
+    renderEvals();
+    renderDerived();
+  }
+
+  function renderChecks(animate) {
+    var s = trace.steps[cur], r = s.results[checkWho];
+    var ev = trace.evaluators.filter(function (x) { return x.id === checkWho; })[0];
+    $("checks-who").textContent = ev ? ev.name : checkWho;
+    clearTimeout(revealTimer);
+    var checks = r ? r.checks : [];
+    $("checks").innerHTML = checks.map(function (c) {
+      return '<li class="pending' + (c.passed ? "" : " fail") + '"><span class="ico ' + (c.passed ? "ok" : "bad") + '">' + (c.passed ? "✓" : "✕") + "</span>" +
+        '<span class="rule" title="' + esc(RULES[c.rule] || c.label) + '">' + esc(c.rule.indexOf("A") === 0 ? c.rule : "Rule") + "<small>" + esc(c.label.replace(/^(Rule|Form): /, "")) + "</small></span>" +
+        '<span class="why">' + esc(c.reason) + "</span></li>";
+    }).join("") || '<li><span></span><span></span><span class="why muted">This copy holds no such event.</span></li>';
+    var verdict = r && r.accepted
+      ? '<div class="verdict ok"><span class="ico ok">✓</span> Accepted into the chain</div>'
+      : '<div class="verdict bad"><span class="ico bad">✕</span> Rejected: ' + esc(r ? r.reason : "") + "</div>";
+    var items = $("checks").children, k = 0;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!animate || reduce) {
+      for (var i = 0; i < items.length; i++) items[i].classList.remove("pending");
+      $("verdict").innerHTML = verdict;
+      return;
+    }
+    $("verdict").innerHTML = "";
+    var stepMs = Math.min(110, Math.max(40, (Number($("speed").value) * 0.55) / Math.max(1, items.length)));
+    (function reveal() {
+      if (k < items.length) { items[k++].classList.remove("pending"); revealTimer = setTimeout(reveal, stepMs); }
+      else { $("verdict").innerHTML = verdict; }
+    })();
+  }
+
+  function renderEvals() {
+    var s = trace.steps[cur], counts = {};
+    trace.evaluators.forEach(function (e) { var h = s.results[e.id].world_hash; counts[h] = (counts[h] || 0) + 1; });
+    var major = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+    var n = trace.evaluators.length, agree = counts[major];
+    var c = $("consensus");
+    if (agree === n) {
+      c.className = "consensus ok";
+      c.innerHTML = '<span class="ico ok">✓</span> All ' + n + ' evaluators agree <span class="sub">Every system computed the identical fingerprint after event ' + (cur + 1) + ".</span>";
+    } else {
+      c.className = "consensus bad";
+      c.innerHTML = '<span class="ico bad">✕</span> ' + (n - agree) + " of " + n + ' evaluators diverged <span class="sub">The others still agree with each other. The truth is the valid chain of signed events, not any one system’s copy.</span>';
+    }
+    $("evals").innerHTML = trace.evaluators.map(function (e) {
+      var r = s.results[e.id], ok = r.world_hash === major && agree > n / 2;
+      var notes = "";
+      if (e.tampered) notes += '<div class="note">Altered copy: ' + esc(e.tampered) + "</div>";
+      if (e.hashes_only) notes += '<div class="note info">Sees hashes only. Holds no disclosures of prices, rates, or volumes.</div>';
+      return '<div class="panel ' + (ok ? "agree" : "diverge") + (e.id === selected ? " selected" : "") + '" tabindex="0" data-id="' + esc(e.id) + '">' +
+        '<div class="name"><span>' + esc(e.name) + '</span><span class="chip ' + (ok ? "ok" : "bad") + '">' + (ok ? "✓ agrees" : "✕ diverged") + "</span></div>" +
+        '<div class="hash mono" title="' + esc(r.world_hash) + '">' + esc(short(r.world_hash)) + "</div>" +
+        '<div class="state">This event: ' + (r.accepted ? "accepted" : "rejected") + " · agreement state " + '<span class="mono">' + esc(short(r.chain_state_hash)) + "</span></div>" + notes + "</div>";
+    }).join("");
+  }
+
+  function renderDerived() {
+    var s = trace.steps[cur], r = s.results[selected];
+    var ev = trace.evaluators.filter(function (x) { return x.id === selected; })[0];
+    $("derived-who").textContent = ev ? ev.name : selected;
+    var d = r.derived, html = "";
+    (d.chains || []).forEach(function (c) {
+      var st = c.status, cls = st === "active" ? "ok" : (st === "terminated" || st === "expired" || st === "lapsed" || st === "none") ? "bad" : "warn";
+      html += '<div class="chain-block"><h3><span>' + esc(c.label) + '</span><span class="chip ' + cls + '">' + esc(st) + "</span></h3>";
+      if (c.window) html += '<div class="muted" style="font-size:0.8rem">In force ' + esc(day(c.window.start)) + " to " + esc(day(c.window.end)) + "</div>";
+      if (c.selections) {
+        Object.keys(c.selections).forEach(function (k) { html += '<div style="font-size:0.85rem">Tier for ' + esc(name(k)) + ": <b>" + esc(c.selections[k] || "none") + "</b></div>"; });
+      }
+      if (c.prices && c.prices.length) {
+        html += '<div class="tbl-wrap"><table><thead><tr><th>Item</th><th class="num">Contract price</th></tr></thead><tbody>' +
+          c.prices.map(function (p) { return "<tr><td>" + esc(p.item.scheme + " " + (typeof p.item.id === "string" ? p.item.id : "sealed")) + '</td><td class="num">' + amt(p.price) + "</td></tr>"; }).join("") + "</tbody></table></div>";
+      }
+      if (c.obligations && c.obligations.length) {
+        html += '<div class="tbl-wrap"><table><thead><tr><th>Obligation</th><th>Period</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>' +
+          c.obligations.map(function (o) {
+            var scls = o.status === "discharged" ? "ok" : o.status === "overdue" ? "bad" : o.status === "sealed" ? "warn" : "plain";
+            return "<tr><td>" + esc(o.obligor.role + " · " + o.duty) + '</td><td class="mono" style="white-space:nowrap">' + esc(o.period.start === o.period.end ? day(o.period.start) : day(o.period.start).slice(5) + "→" + day(o.period.end).slice(5)) +
+              '</td><td class="num">' + (o.amount === undefined ? "–" : amt(o.amount)) + '</td><td><span class="chip ' + scls + '">' + esc(o.status) + "</span></td></tr>";
+          }).join("") + "</tbody></table></div>";
+      }
+      html += "</div>";
+    });
+    $("derived").innerHTML = html || '<p class="muted">Nothing has taken effect yet in this system’s copy.</p>';
+  }
+
+  function go(i, animate) { cur = Math.max(0, Math.min(trace.steps.length - 1, i)); render(animate !== false); }
+  function stop() { clearInterval(timer); timer = null; $("play").textContent = "Play"; }
+  function play() {
+    if (cur >= trace.steps.length - 1) go(0);
+    $("play").textContent = "Pause";
+    timer = setInterval(function () { if (cur >= trace.steps.length - 1) stop(); else go(cur + 1); }, Number($("speed").value));
+  }
+
+  // controls
+  $("scenario").innerHTML = SCENARIOS.map(function (s) { return '<option value="' + esc(s.file) + '">' + esc(s.label) + "</option>"; }).join("");
+  $("scenario").addEventListener("change", function () { pick(this.value); });
+  $("play").addEventListener("click", function () { timer ? stop() : play(); });
+  $("first").addEventListener("click", function () { stop(); go(0); });
+  $("back").addEventListener("click", function () { stop(); go(cur - 1); });
+  $("fwd").addEventListener("click", function () { stop(); go(cur + 1); });
+  $("scrub").addEventListener("input", function () { stop(); go(Number(this.value), false); });
+  $("speed").addEventListener("change", function () { if (timer) { stop(); play(); } });
+  $("stream").addEventListener("click", function (ev) { var li = ev.target.closest("li"); if (li) { stop(); go(Number(li.dataset.i)); } });
+  $("stream").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { var li = ev.target.closest("li"); if (li) { stop(); go(Number(li.dataset.i)); } } });
+  $("evals").addEventListener("click", function (ev) { var p = ev.target.closest(".panel"); if (p) { selected = p.dataset.id; renderEvals(); renderDerived(); } });
+  $("evals").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { var p = ev.target.closest(".panel"); if (p) { selected = p.dataset.id; renderEvals(); renderDerived(); } } });
+  $("check-tabs").addEventListener("click", function (ev) { var b = ev.target.closest("button"); if (b) { checkWho = b.dataset.id; renderTabs(); renderChecks(true); } });
+  document.addEventListener("keydown", function (ev) {
+    if (!trace || /INPUT|SELECT/.test(ev.target.tagName)) return;
+    if (ev.key === "ArrowRight") { stop(); go(cur + 1); }
+    if (ev.key === "ArrowLeft") { stop(); go(cur - 1); }
+    if (ev.key === " ") { ev.preventDefault(); timer ? stop() : play(); }
+  });
+
+  function readFile(f) {
+    var rd = new FileReader();
+    rd.onload = function () {
+      try { load(JSON.parse(rd.result)); } catch (e) { $("main").hidden = true; $("drop").hidden = false; $("drop-msg").textContent = "Could not open " + f.name + ": " + e.message; }
+    };
+    rd.readAsText(f);
+  }
+  $("open-file").addEventListener("click", function () { $("file").click(); });
+  $("file").addEventListener("change", function () { if (this.files[0]) readFile(this.files[0]); });
+  document.addEventListener("dragover", function (ev) { ev.preventDefault(); $("drop").classList.add("over"); });
+  document.addEventListener("dragleave", function () { $("drop").classList.remove("over"); });
+  document.addEventListener("drop", function (ev) { ev.preventDefault(); $("drop").classList.remove("over"); if (ev.dataTransfer.files[0]) readFile(ev.dataTransfer.files[0]); });
+
+  pick(SCENARIOS[0].file);
+})();
+</script>
+</body>
+</html>

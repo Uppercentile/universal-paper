@@ -34,7 +34,14 @@ def describe(E: dict, b: Bundle, names: dict[str, str], chain_label: str) -> str
             return f"{who}{via} proposes an amendment to “{chain_label}”."
         return f"{who}{via} proposes “{ag.get('label', 'an agreement')}”."
     if kind == "accept":
-        return f"{who}{via} signs or acknowledges an earlier event in “{chain_label}”."
+        target = next((x for ch in b.chain_list for x in ch if content_hash(x) == body.get("target")), None)
+        if target and target.get("kind") == "propose":
+            what = "the amendment to" if "supersedes" in target.get("body", {}) else "the proposed"
+            return f"{who}{via} signs {what} “{chain_label}”."
+        if target and target.get("kind") == "attest":
+            ctype = target["body"]["claim"]["type"].split("/")[0]
+            return f"{who}{via} acknowledges {names.get(target['by'], 'a party')}’s {ctype} claim under “{chain_label}”."
+        return f"{who}{via} accepts an earlier event in “{chain_label}”."
     claim = body.get("claim", {})
     ctype = claim.get("type", "")
     nice = {

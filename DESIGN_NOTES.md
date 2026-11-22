@@ -2,7 +2,7 @@
 
 This file records every place the v0 draft cut, merged, or added a primitive relative to the brief's first-pass lists, and why. It also records known limits, one design tension, future extensions kept out of the core, and the open questions for the steward.
 
-Status: **spec draft only.** The interpreter, schema, examples, traces, and Explorer are not started. The brief asks for a pause here.
+Status: spec drafted and reviewed at the pause on 2026-11-22; reference interpreter, schemas, examples, traces, tests, and Explorer built on it as drafted.
 
 ## 1. The primitive set after pressure-testing
 
@@ -99,6 +99,13 @@ Each was tempting because a specific use case needs it, and was deferred per the
 - **Price-change-by-notice** (a supplier updates prices with a notice period), expressible today through Price-Reference but worth a dedicated Term.
 - **An optional ledger substrate** for ordering and availability. The language must keep working without one.
 - **Translated renderings**, with the binding language stated.
+
+## 5a. Notes from building the interpreter
+
+- **Rejected events stay in a bundle.** An evaluator skips an invalid event, and the next event must build on the last *valid* state. This is how the generative example records two out-of-bounds agent actions without breaking its chains.
+- **Trace consensus is per evaluator, over all chains.** Each evaluator's "world hash" is the hash of its current State hash for every chain. Equal world hashes mean exact agreement.
+- **Every clause form needed only the fields in the spec.** No Term in the library required special code, which supports the clause-form approach.
+- **Spec gap found:** the Duty form needs a `clause` on its `amount.base` so a fee can read another clause's reports. The spec text now says so.
 
 ## 6. Open questions for the steward
 
