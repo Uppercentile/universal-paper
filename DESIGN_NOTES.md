@@ -109,11 +109,14 @@ Each was tempting because a specific use case needs it, and was deferred per the
 
 ## 5b. A second engine, and how it is held to the first
 
-The Explorer computes its Playground and proving ground in the browser, so the interpreter was ported to JavaScript (`explorer/src/`), including dependency-free SHA-256, SHA-512, and Ed25519. Two implementations of one spec are a test of the spec: anything ambiguous shows up as a mismatch.
+The Playground page computes everything in the browser, so the interpreter was ported to JavaScript (`explorer/src/`), including dependency-free SHA-256, SHA-512, and Ed25519. Two implementations of one spec are a test of the spec: anything ambiguous shows up as a mismatch.
 
 - **Conformance.** `tools/dump_conformance.py` records every example trace, rendering, and simulation from Python. `tests/js_conformance.mjs` requires the JavaScript engine to reproduce all of them exactly, including every check, reason, state hash, and derived value. It passed on the first complete run with no spec changes, which is some evidence that the spec text is precise enough to implement twice.
 - **Proving ground.** `up-lab.js` generates random agreements from a seed (parties, tiers, items, prices, fee rate and rounding mode, monthly or quarterly reporting, tier changes, short, late, and skipped payments, optional agents under Mandates, optional sealing) and checks eight invariants: honest events accepted, determinism across four evaluators (one with every object's fields reordered), every tampered copy caught at the tampered event with history before it unchanged, Mandate bounds, sealed-observer agreement, fees against integer arithmetic, prices against the tier in force, and rendering bound to the fingerprint. Seven attack types are tried. `tests/js_lab.mjs` runs 60 fixed seeds in CI.
 - **What this does not prove.** Random runs explore the shapes the generator knows. The generator does not use Audit, Termination-Cause, Price-Reference, Overlay, or Purchase-Commitment. Since the pre-release audit, `tests/test_js_conformance.py` also requires the JavaScript engine to reproduce a Python trace for every claim type of all sixteen Terms, and `tests/test_differential.py` compares both engines on tens of thousands of random primitive inputs. The engines still share their author, so a misreading of the spec common to both would only be caught by review.
+
+- **Why not a trace explorer.** The first page replayed recorded traces step by step. It proved the engines agree but asked visitors to read hashes. The page now leads with things a reader would do with an agreement (write it, compare versions, see what it obliges over time) and keeps the evidence in a Conformance section generated from the test suite. Recorded traces remain in `examples/traces/` for implementers.
+- **The ecosystem view is a vision.** It shows hypothetical apps and agents above the language. Only the events, signatures, fingerprints, and verdicts in it are real outputs of the engine.
 
 ## 5c. Pre-release audit
 

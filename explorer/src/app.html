@@ -1,14 +1,15 @@
-<title>Universal Paper Explorer</title>
+<title>Universal Paper Playground</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Universal Paper Explorer: a live proving ground, a Playground, and recorded traces for an open language of agreements.">
+<meta name="description" content="Universal Paper Playground: write an agreement and watch its fingerprint, compare versions, play its history, see the ecosystem it could support, and check the conformance evidence.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Space+Grotesk:wght@500;600;700&display=swap">
 <style>
-/* Layout: a sticky band of four views (story, proving ground, playground, replay) over an ink ground; data in mono, the contract on paper. */
+/* Layout: a short intro, then the ecosystem vision (layered diagram), the Playground (editor beside its outputs, in three tabs), and the conformance evidence. Data in mono, contracts on paper. */
 :root {
   --bg: #0e1521; --panel: #151e2d; --panel-2: #1b2638; --line: #2a3649; --fg: #e4e9f1; --muted: #8e9cb1;
-  --accent: #f0b54a; --accent-ink: #1a1405; --ok: #41c08a; --bad: #f06464; --warn: #e3b341;
-  --paper: #f7f7f4; --paper-ink: #1c2330; --paper-line: #dcdcd4;
+  --accent: #f0b54a; --accent-ink: #1a1405; --ok: #41c08a; --bad: #f06464; --ins: #41c08a; --del: #f06464;
+  --paper: #f7f7f4; --paper-ink: #1c2330; --paper-line: #dcdcd4; --paper-muted: #5b6271;
+  --found: #1f2c44; --found-line: #3b4f74;
   --c0: #5b9cf0; --c1: #b28cf2; --c2: #3cc2b0; --c3: #ec8d5e; --c4: #d9c34f; --c5: #e57aad;
   --f-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
   --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
@@ -19,18 +20,21 @@
 }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
   --bg: #f2f4f8; --panel: #ffffff; --panel-2: #edf0f5; --line: #d5dbe5; --fg: #142033; --muted: #5a677b;
-  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --warn: #9a6a00;
-  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc;
+  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --ins: #17804f; --del: #c43535;
+  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc; --paper-muted: #5b6271;
+  --found: #e4eaf4; --found-line: #a9b9d3;
   --c0: #2f6fd0; --c1: #7a4fd0; --c2: #10877a; --c3: #c0592a; --c4: #8f7a07; --c5: #b83f77;
   color-scheme: light; } }
 :root[data-theme="light"] {
   --bg: #f2f4f8; --panel: #ffffff; --panel-2: #edf0f5; --line: #d5dbe5; --fg: #142033; --muted: #5a677b;
-  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --warn: #9a6a00;
-  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc;
+  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --ins: #17804f; --del: #c43535;
+  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc; --paper-muted: #5b6271;
+  --found: #e4eaf4; --found-line: #a9b9d3;
   --c0: #2f6fd0; --c1: #7a4fd0; --c2: #10877a; --c3: #c0592a; --c4: #8f7a07; --c5: #b83f77;
   color-scheme: light; }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--f-body); }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
@@ -43,11 +47,12 @@ code, .mono { font-family: var(--f-mono); font-size: 0.86em; }
 button, select, input, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .eyebrow { font: 500 0.72rem/1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-.lede { color: var(--muted); max-width: 66ch; }
+.lede { color: var(--muted); max-width: 68ch; }
 .btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 0.45rem 0.8rem; cursor: pointer; line-height: 1.2; }
 .btn:hover { border-color: var(--muted); }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
 .btn.small { padding: 0.25rem 0.55rem; font-size: 0.85rem; }
+.btn[disabled] { opacity: 0.5; cursor: default; }
 .pill { display: inline-flex; align-items: center; gap: 0.35rem; font: 500 0.72rem/1 var(--f-mono); padding: 0.28rem 0.5rem; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
 .pill.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
 .pill.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
@@ -63,6 +68,7 @@ th, td { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(
 th { font: 500 0.7rem/1.2 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .scroll-x { overflow-x: auto; }
+.controls { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
 
 /* Top band */
 .band { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
@@ -73,74 +79,53 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .nav a { color: var(--muted); text-decoration: none; padding: 0.35rem 0.6rem; border-radius: 7px; font-size: 0.9rem; }
 .nav a:hover, .nav a.on { color: var(--fg); background: var(--panel-2); }
 .band .spec { font: 500 0.72rem var(--f-mono); color: var(--muted); }
-section.view { padding-block: 3.5rem 1rem; scroll-margin-top: 60px; }
-.view-head { display: grid; gap: 0.6rem; margin-bottom: 1.6rem; }
+section.view { padding-block: 3.2rem 1rem; scroll-margin-top: 60px; }
+.view-head { display: grid; gap: 0.6rem; margin-bottom: 1.4rem; }
 
-/* Story */
-.hero { padding-block: 3rem 1rem; display: grid; gap: 1rem; }
-.hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.02; max-width: 16ch; }
-.hero h1 em { font-style: normal; color: var(--accent); }
-.story { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2.5rem; align-items: start; }
-.steps { display: grid; }
-.step { min-height: 62vh; padding-block: 1.2rem; display: grid; align-content: start; gap: 0.6rem; opacity: 0.45; transition: opacity 0.3s; }
-.step:first-child { min-height: 44vh; }
-.step.on { opacity: 1; }
-.step .k { font: 500 0.72rem var(--f-mono); color: var(--accent); letter-spacing: 0.1em; }
-.step h3 { font-size: 1.5rem; }
-.step p { color: var(--muted); max-width: 46ch; }
-.visual { position: sticky; top: 76px; display: grid; gap: 0.8rem; }
-.vpart { transition: opacity 0.35s, transform 0.35s; }
-.visual[data-stage="1"] .s2, .visual[data-stage="1"] .s3, .visual[data-stage="2"] .s3,
-.visual[data-stage="1"] .s5, .visual[data-stage="2"] .s5, .visual[data-stage="3"] .s5, .visual[data-stage="4"] .s5 { opacity: 0.16; transform: translateY(4px); }
-.sentence { font: 1.12rem/1.6 var(--f-paper); background: var(--paper); color: var(--paper-ink); border-radius: var(--r); padding: 1.1rem 1.2rem; border: 1px solid var(--paper-line); }
+/* Intro */
+.intro { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2.5rem; align-items: center; padding-block: 2.6rem 0.5rem; }
+.intro h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.02; max-width: 15ch; }
+.intro h1 em { font-style: normal; color: var(--accent); }
+.intro .text { display: grid; gap: 1rem; }
+.demo { display: grid; gap: 0.7rem; }
+.sentence { font: 1.02rem/1.6 var(--f-paper); background: var(--paper); color: var(--paper-ink); border-radius: var(--r); padding: 1rem 1.15rem; border: 1px solid var(--paper-line); }
 .sentence mark { background: color-mix(in srgb, #f0b54a 45%, transparent); color: inherit; padding: 0 0.15em; border-radius: 3px; }
-pre.json { margin: 0; font: 0.78rem/1.45 var(--f-mono); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 1rem; overflow: auto; max-height: 15rem; color: var(--muted); }
-.visual pre.json { max-height: 8.5rem; }
-.visual .sentence { font-size: 1.02rem; }
-pre.json b { color: var(--fg); font-weight: 500; }
-.fp { font: 500 0.95rem/1.45 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 1rem; }
+.fp { font: 500 0.92rem/1.45 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.75rem 1rem; }
 .fp .lab { display: block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; font-family: var(--f-mono); }
 .fp .flip { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); border-radius: 2px; }
 .fp.flash { animation: flash 0.7s; }
 @keyframes flash { 0% { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); } }
-.evrows { display: grid; gap: 0.45rem; }
-.evrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.2rem 0.8rem; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.55rem 0.8rem; }
-.evrow .h { grid-column: 1 / -1; font: 0.76rem var(--f-mono); color: var(--muted); word-break: break-all; }
+.evrows { display: grid; gap: 0.4rem; }
+.evrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.15rem 0.8rem; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.8rem; font-size: 0.9rem; }
+.evrow .h { grid-column: 1 / -1; font: 0.74rem var(--f-mono); color: var(--muted); word-break: break-all; }
 .evrow.bad { border-color: color-mix(in srgb, var(--bad) 60%, transparent); }
-.evrow .why { grid-column: 1 / -1; font-size: 0.82rem; color: var(--bad); }
+.evrow .why { grid-column: 1 / -1; font-size: 0.8rem; color: var(--bad); }
 
-/* Proving ground */
-.status-row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
-.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.6rem; margin-block: 1rem; }
-.tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 0.9rem; display: grid; gap: 0.25rem; }
-.tile .v { font: 600 1.6rem/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
-.tile .s { font-size: 0.78rem; color: var(--muted); }
-.tile.good .v { color: var(--ok); }
-.tile.alarm .v { color: var(--bad); }
-.train { display: flex; gap: 8px; overflow-x: auto; padding: 0.6rem 0.2rem 0.9rem; scroll-snap-type: x proximity; }
-.blk { flex: 0 0 auto; width: 104px; min-height: 112px; border-radius: 8px; border: 1px solid var(--line); background: linear-gradient(180deg, color-mix(in srgb, var(--ok) 20%, var(--panel)) 0%, var(--panel) 70%); padding: 0.5rem; text-align: left; cursor: pointer; display: grid; align-content: start; gap: 0.2rem; scroll-snap-align: end; position: relative; }
-.blk.fail { background: linear-gradient(180deg, color-mix(in srgb, var(--bad) 30%, var(--panel)) 0%, var(--panel) 70%); border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
-.blk.sel { outline: 2px solid var(--accent); }
-.blk .seed { font: 500 0.72rem var(--f-mono); }
-.blk .big { font: 600 1.15rem/1.1 var(--f-display); }
-.blk .meta { font-size: 0.7rem; color: var(--muted); line-height: 1.35; }
-.blk.new { animation: slidein 0.45s ease-out; }
-@keyframes slidein { from { transform: translateX(14px); opacity: 0.2; } }
-.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
-.bar { height: 6px; background: var(--panel-2); border-radius: 3px; overflow: hidden; min-width: 60px; }
-.bar i { display: block; height: 100%; background: var(--ok); }
-.detail { margin-top: 1rem; }
-.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.inv-list { display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
-.inv-list li { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr); gap: 0.5rem; font-size: 0.88rem; }
-.inv-list .ic { font-family: var(--f-mono); }
-.inv-list .ok { color: var(--ok); } .inv-list .bad { color: var(--bad); }
-.seedform { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-.seedform input { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 0.4rem 0.6rem; width: 9rem; font-family: var(--f-mono); }
+/* Vision */
+.vision { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1rem; align-items: start; }
+.stage { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.5rem; min-width: 0; position: relative; }
+.stage svg { display: block; width: 100%; height: auto; }
+.stage .tag { position: absolute; top: 0.7rem; right: 0.8rem; }
+svg .layer-label { font: 500 11px var(--f-mono); letter-spacing: 0.12em; fill: var(--muted); text-transform: uppercase; }
+svg .node-label { font: 500 12px var(--f-body); fill: var(--fg); }
+svg .node-sub { font: 10.5px var(--f-body); fill: var(--muted); }
+svg .found-title { font: 700 22px var(--f-display); fill: var(--fg); }
+svg .found-sub { font: 12px var(--f-body); fill: var(--muted); }
+svg .lane-label { font: 10.5px var(--f-mono); fill: var(--muted); }
+svg .hashlbl { font: 10px var(--f-mono); fill: var(--accent); }
+.ticker { display: grid; gap: 0.45rem; align-content: start; }
+.tick { border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.65rem; font-size: 0.84rem; display: grid; gap: 0.2rem; background: var(--panel); }
+.tick .h { font: 0.72rem var(--f-mono); color: var(--muted); word-break: break-all; }
+.tick.bad { border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
+.tick .v { font: 500 0.72rem var(--f-mono); }
+.tick .v.ok { color: var(--ok); } .tick .v.bad { color: var(--bad); }
+.notes3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.notes3 .card h3 { font-size: 0.98rem; margin-bottom: 0.3rem; }
+.notes3 .card p { color: var(--muted); font-size: 0.9rem; }
 
 /* Playground */
 .pg { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 1rem; align-items: start; }
-.editor { display: grid; gap: 0.8rem; }
+.editor { display: grid; gap: 0.8rem; min-width: 0; }
 .editor .card { display: grid; gap: 0.6rem; }
 .field { display: grid; gap: 0.25rem; font-size: 0.85rem; }
 .field > span { color: var(--muted); font-size: 0.78rem; display: flex; justify-content: space-between; gap: 0.4rem; }
@@ -152,7 +137,7 @@ pre.json b { color: var(--fg); font-weight: 500; }
 .field .errmsg { color: var(--bad); font-size: 0.75rem; }
 .checks-inline { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .checks-inline label { display: flex; gap: 0.3rem; align-items: center; }
-.clause-head { display: flex; justify-content: space-between; gap: 0.5rem; align-items: center; }
+.clause-head { display: flex; justify-content: space-between; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 .clause-head .t { font: 600 0.95rem var(--f-display); }
 .clause-head .id { font: 0.72rem var(--f-mono); color: var(--muted); }
 .sealbtn { font: 0.68rem var(--f-mono); background: none; border: 1px solid var(--line); border-radius: 5px; padding: 0 0.3rem; cursor: pointer; color: var(--muted); }
@@ -161,79 +146,91 @@ details.clause > summary { list-style: none; cursor: pointer; }
 details.clause > summary::-webkit-details-marker { display: none; }
 .outputs { display: grid; gap: 1rem; min-width: 0; }
 .fpbar { position: sticky; top: 64px; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.6rem 1rem; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 1rem; }
-.fpbar .fp { border: 0; padding: 0; background: none; font-size: 1rem; }
+.fpbar .fp { border: 0; padding: 0; background: none; font-size: 0.98rem; }
 .fpbar .side { display: grid; gap: 0.35rem; justify-items: end; }
+.fpmini { display: none; position: sticky; top: 52px; z-index: 2; font: 500 0.76rem/1.4 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.7rem; }
+.fpmini .flip { color: var(--accent); }
+.tabs { display: flex; gap: 0.3rem; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 0.5rem 0.8rem; cursor: pointer; color: var(--muted); font-weight: 500; margin-bottom: -1px; }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
 .twopane { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 1rem; align-items: start; }
 .paper { background: var(--paper); color: var(--paper-ink); border: 1px solid var(--paper-line); border-radius: 6px; padding: 1.4rem 1.5rem; font: 0.98rem/1.6 var(--f-paper); min-width: 0; box-shadow: 0 1px 0 var(--paper-line), 0 12px 30px -18px rgba(0,0,0,0.35); }
 .paper h4 { font: 600 1.3rem/1.2 var(--f-paper); margin: 0 0 0.6rem; }
-.paper h5 { font: 600 0.78rem var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; margin: 1.2rem 0 0.4rem; color: #5b6271; }
+.paper h5 { font: 600 0.78rem var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; margin: 1.2rem 0 0.4rem; color: var(--paper-muted); }
 .paper h6 { font: 600 1rem var(--f-paper); margin: 1rem 0 0.25rem; }
 .paper p { margin: 0 0 0.5rem; }
 .paper ul { margin: 0 0 0.5rem; padding-left: 1.1rem; }
 .paper code { font-size: 0.74em; word-break: break-all; background: #eef0f3; padding: 0 0.2em; border-radius: 3px; }
 .paper .sealed { font-family: var(--f-mono); font-size: 0.74em; background: #2a3242; color: #e9edf3; padding: 0.05em 0.35em; border-radius: 3px; word-break: break-all; }
-.paper .meta { font: 0.78rem var(--f-mono); color: #5b6271; word-break: break-all; }
+.paper .meta { font: 0.78rem var(--f-mono); color: var(--paper-muted); word-break: break-all; }
+.paper ins { text-decoration: none; background: #d6f0e1; color: #0d5a35; border-radius: 2px; }
+.paper del { background: #f8dcdc; color: #8a1f1f; border-radius: 2px; }
 .cover dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.3rem 0.8rem; margin: 0.4rem 0 0.8rem; font-size: 0.9rem; }
-.cover dt { font: 600 0.72rem var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; color: #5b6271; padding-top: 0.2rem; }
+.cover dt { font: 600 0.72rem var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--paper-muted); padding-top: 0.2rem; }
 .cover dd { margin: 0; min-width: 0; }
 .cover .terms { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
 .cover .terms li { border-top: 1px solid var(--paper-line); padding-top: 0.4rem; font-size: 0.9rem; }
 .cover .terms b { font-family: var(--f-body); font-size: 0.8rem; display: block; }
-.fpmini { display: none; position: sticky; top: 52px; z-index: 2; font: 500 0.78rem/1.4 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.7rem; }
-.fpmini .flip { color: var(--accent); }
 .issues { margin: 0; padding-left: 1rem; font-size: 0.85rem; }
-.issues li { color: var(--bad); }
+.issues li { color: #c43535; }
 .sigs { display: grid; gap: 0.3rem; font-size: 0.85rem; }
 .sigs .s { display: flex; gap: 0.5rem; align-items: baseline; }
+.cmp-fps { display: grid; gap: 0.5rem; }
+.cmp-row { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.6rem; align-items: baseline; font: 0.82rem/1.45 var(--f-mono); word-break: break-all; }
+.cmp-row b { font-family: var(--f-body); }
+.cmp-clause { border-top: 1px solid var(--paper-line); padding-top: 0.6rem; margin-top: 0.6rem; }
+.cmp-clause .st { font: 600 0.7rem var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; padding: 0.1rem 0.35rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: 2px; }
+.st.added { background: #d6f0e1; color: #0d5a35; } .st.removed { background: #f8dcdc; color: #8a1f1f; } .st.changed { background: #f6ead0; color: #6b4a06; }
+.cmp-params { font: 0.78rem/1.5 var(--f-mono); margin: 0.3rem 0; display: grid; gap: 0.15rem; }
+.tl { display: grid; gap: 0.8rem; }
+.tl-row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.6rem; align-items: center; font-size: 0.85rem; }
+.tl-bar { display: flex; gap: 3px; min-width: 0; }
+.tl-bar span { flex: 1; height: 26px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--line); min-width: 6px; position: relative; }
+.tl-bar span.discharged { background: color-mix(in srgb, var(--ok) 55%, var(--panel)); border-color: var(--ok); }
+.tl-bar span.overdue { background: color-mix(in srgb, var(--bad) 45%, var(--panel)); border-color: var(--bad); }
+.tl-bar span.open { background: color-mix(in srgb, var(--accent) 25%, var(--panel)); border-color: var(--accent); }
+.tl-bar span.future { opacity: 0.35; }
+.legend { display: flex; gap: 0.9rem; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.3rem; vertical-align: -1px; border: 1px solid var(--line); }
+.periods { display: grid; gap: 0.35rem; }
+.period { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 0.5rem; align-items: center; font-size: 0.85rem; border-bottom: 1px solid var(--line); padding-block: 0.35rem; }
+.period input[type=text] { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 0.3rem 0.45rem; width: 100%; min-width: 0; font-family: var(--f-mono); }
+.slider { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+.slider input { flex: 1; min-width: 180px; accent-color: var(--accent); }
 
-/* Replay */
-.rp-top { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
-.rp-top select { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 0.4rem 0.6rem; max-width: 100%; }
-.legend { display: flex; gap: 0.8rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); }
-.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--hue); margin-right: 0.35rem; vertical-align: -1px; }
-.etrain { display: flex; gap: 6px; overflow-x: auto; padding: 0.6rem 0.1rem 0.8rem; }
-.eb { flex: 0 0 auto; width: 58px; height: 70px; border-radius: 7px; border: 1px solid var(--line); background: linear-gradient(180deg, color-mix(in srgb, var(--hue) 34%, var(--panel)) 0 34%, var(--panel) 34%); cursor: pointer; padding: 0.3rem; display: grid; align-content: space-between; text-align: left; font: 0.66rem/1.2 var(--f-mono); color: var(--fg); position: relative; }
-.eb .kd { font: 600 0.8rem var(--f-display); }
-.eb.rej::after { content: ""; position: absolute; inset: auto 4px 4px auto; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); }
-.eb.div { border-color: var(--bad); border-style: dashed; }
-.eb.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
-.eb.future { opacity: 0.45; }
-.controls { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-.rp-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 1rem; margin-top: 1rem; }
-.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.25rem 0.8rem; font-size: 0.86rem; margin: 0.6rem 0 0; }
-.kv dt { color: var(--muted); }
-.kv dd { margin: 0; min-width: 0; word-break: break-word; }
-.hash { font: 0.78rem var(--f-mono); word-break: break-all; }
-.ev-list { display: grid; gap: 0.45rem; }
-.ev-item { border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.7rem; display: grid; gap: 0.2rem; }
-.ev-item.bad { border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
-.chk { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr); gap: 0.45rem; font-size: 0.85rem; padding: 0.3rem 0; border-bottom: 1px solid var(--line); }
-.chk .r { font: 500 0.7rem var(--f-mono); color: var(--muted); }
-.chk .y { color: var(--ok); } .chk .n { color: var(--bad); }
-.tabs { display: flex; gap: 0.3rem; flex-wrap: wrap; margin: 0.4rem 0; }
-.tabs button { background: none; border: 1px solid var(--line); border-radius: 999px; padding: 0.2rem 0.6rem; cursor: pointer; font-size: 0.8rem; }
-.tabs button.on { background: var(--panel-2); border-color: var(--muted); }
-.derived-chain { border-top: 1px solid var(--line); padding-top: 0.6rem; margin-top: 0.6rem; display: grid; gap: 0.4rem; }
+/* Conformance */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; margin-block: 0.4rem 1rem; }
+.tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 0.9rem; display: grid; gap: 0.25rem; align-content: start; }
+.tile .v { font: 600 1.6rem/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.tile .s { font-size: 0.78rem; color: var(--muted); }
+.tile.good .v { color: var(--ok); }
+.tile.alarm .v { color: var(--bad); }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.sev { font: 500 0.7rem var(--f-mono); padding: 0.1rem 0.4rem; border-radius: 4px; border: 1px solid var(--line); white-space: nowrap; }
+.sev.High { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+.sev.Medium { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.inv-list { display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
+.inv-list li { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr); gap: 0.5rem; font-size: 0.88rem; }
+.inv-list .ok { color: var(--ok); } .inv-list .bad { color: var(--bad); }
+.callout { border-left: 3px solid var(--accent); padding: 0.4rem 0 0.4rem 0.9rem; color: var(--muted); font-size: 0.9rem; max-width: 80ch; }
 footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
 .empty { color: var(--muted); font-size: 0.9rem; padding: 1rem; border: 1px dashed var(--line); border-radius: var(--r); }
 
 @media (max-width: 980px) {
-  .story { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .visual { position: sticky; top: 52px; order: -1; z-index: 3; background: var(--bg); padding-block: 0.5rem; max-height: 52vh; overflow: hidden; }
-  .visual pre.json { max-height: 6rem; }
-  .step { min-height: 46vh; }
+  .intro, .vision, .pg, .twopane, .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .notes3 { grid-template-columns: minmax(0, 1fr); }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tiles .tile:last-child { grid-column: 1 / -1; }
-  .fpmini { display: block !important; }
-  .pg, .twopane, .grid2, .rp-grid { grid-template-columns: minmax(0, 1fr); }
   .fpbar { position: static; grid-template-columns: minmax(0, 1fr); }
   .fpbar .side { justify-items: start; }
+  .fpmini { display: block; }
+  .ticker { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   h2 { font-size: 1.5rem; }
   .nav a { padding: 0.3rem 0.45rem; font-size: 0.82rem; }
   .band .spec { display: none; }
-  .visual .s2 { display: none; }
+  .period { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .tl-row { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -242,82 +239,68 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
 <!--BODY-->
 <header class="band">
   <div class="wrap">
-    <a class="mark" href="#story" aria-label="Universal Paper Explorer, top">
+    <a class="mark" href="#top" aria-label="Universal Paper, top">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="14" height="19" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h6M8 11.5h6M8 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="17.5" cy="17.5" r="3.6" fill="var(--accent)"/></svg>
       Universal Paper
     </a>
     <nav class="nav" aria-label="Sections">
-      <a href="#story" data-nav="story">Story</a>
-      <a href="#proof" data-nav="proof">Proving ground</a>
+      <a href="#vision" data-nav="vision">Vision</a>
       <a href="#playground" data-nav="playground">Playground</a>
-      <a href="#replay" data-nav="replay">Replay</a>
+      <a href="#conformance" data-nav="conformance">Conformance</a>
     </nav>
     <span class="spec" id="spec-ver">UP/0.1-draft</span>
   </div>
 </header>
 
-<main>
-  <section class="view wrap" id="story" aria-labelledby="h-story">
-    <div class="hero">
-      <span class="eyebrow">An open language for agreements · Explorer</span>
-      <h1 id="h-story">An agreement you can <em>compute</em>.</h1>
-      <p class="lede">Universal Paper writes agreements between aggregators, suppliers, and members as data with a fingerprint. Every system that holds a copy computes the same answer, and any change shows. Scroll to see how. Everything on this page is computed live in your browser, except the recorded traces under Replay.</p>
+<main id="top">
+  <section class="wrap intro" aria-labelledby="h-intro">
+    <div class="text">
+      <span class="eyebrow">An open language for agreements</span>
+      <h1 id="h-intro">An agreement you can <em>compute</em>.</h1>
+      <p class="lede">Universal Paper writes agreements between aggregators, suppliers, and members as data with a fingerprint. Every system that holds a copy computes the same answer, and any change shows. Everything on this page is computed live in your browser.</p>
+      <div class="controls">
+        <button class="btn" id="d-toggle" type="button">Change the fee</button>
+        <button class="btn" id="d-tamper" type="button" aria-pressed="false">Edit the supplier’s copy after signing</button>
+      </div>
     </div>
-    <div class="story">
-      <div class="steps" id="steps">
-        <div class="step on" data-step="1"><span class="k">1 · THE CLAUSE</span><h3>This sentence is a clause.</h3><p>It reads like any contract. It is generated from a Term definition and the values the parties chose. Nobody typed it.</p></div>
-        <div class="step" data-step="2"><span class="k">2 · THE DATA</span><h3>Underneath, it is data.</h3><p>The clause names a Term by its own fingerprint and fills in its parameters. The language sets no default values. The parties supply every number.</p></div>
-        <div class="step" data-step="3"><span class="k">3 · THE FINGERPRINT</span><h3>The data has one fingerprint.</h3><p>The agreement is put in canonical form and hashed with SHA-256. Signatures cover this fingerprint, so they cover the text and the data at once.</p></div>
-        <div class="step" data-step="4"><span class="k">4 · ONE WORD</span><h3>Change one word, and the fingerprint flips.</h3><p>Move the fee from 2% to 2.5%. The text changes, and so does every character position the hash touches. Press the button, or watch it alternate.</p><p><button class="btn small" id="story-toggle" type="button">Change the fee</button></p></div>
-        <div class="step" data-step="5"><span class="k">5 · EVERYONE CHECKS</span><h3>Each party computes it alone.</h3><p>The aggregator’s contract system, the supplier’s ERP, and a member’s spreadsheet each evaluate the signed agreement from their own copy, and land on the same state fingerprint.</p></div>
-        <div class="step" data-step="6"><span class="k">6 · A CHANGED COPY</span><h3>A quietly edited copy is caught.</h3><p>Change the rate in one copy after signing, and its signatures no longer verify. That copy rejects the event and drops out of agreement with the others, at the exact event that was touched.</p></div>
-      </div>
-      <div class="visual" id="visual" data-stage="1" aria-live="polite">
-        <div class="vpart sentence" id="sv-text"></div>
-        <pre class="vpart json s2" id="sv-json"></pre>
-        <div class="vpart fp s3" id="sv-fp"></div>
-        <div class="vpart evrows s5" id="sv-evals"></div>
-      </div>
+    <div class="demo" aria-live="polite">
+      <div class="sentence" id="d-text"></div>
+      <div class="fp" id="d-fp"></div>
+      <div class="evrows" id="d-evals"></div>
     </div>
   </section>
 
-  <section class="view wrap" id="proof" aria-labelledby="h-proof">
+  <section class="view wrap" id="vision" aria-labelledby="h-vision">
     <div class="view-head">
-      <span class="eyebrow">Proving ground</span>
-      <h2 id="h-proof">Random agreements, random attacks, every run checked</h2>
-      <p class="lede">Each run invents parties, tiers, items, prices, a fee, reporting periods, tier changes, payments (some short, some late), and sometimes an agent with a Mandate or fully sealed values. It then attacks copies of the result and checks eight invariants against independent arithmetic. Runs continue until you close the page. Every run is reproducible from its seed.</p>
+      <span class="eyebrow">Vision · what could be built on it</span>
+      <h2 id="h-vision">The paper underneath the apps</h2>
+      <p class="lede">Universal Paper is meant to sit underneath, the way a file format or a network protocol does. Apps for contracting, procurement, pricing, and settlement can compete on everything above it, and agents can act for parties within signed limits. They interoperate because they all compute the same fingerprints below.</p>
     </div>
-    <div class="status-row">
-      <span class="pill live" id="pr-status">Starting</span>
-      <button class="btn small" id="pr-toggle" type="button">Pause</button>
-      <span class="muted" id="pr-where" style="font-size:0.82rem"></span>
-      <form class="seedform" id="pr-seedform" style="margin-left:auto">
-        <label for="pr-seed" class="muted" style="font-size:0.82rem">Reproduce a seed</label>
-        <input id="pr-seed" type="text" placeholder="e.g. a1b2-7" autocomplete="off">
-        <button class="btn small" type="submit">Run</button>
-      </form>
+    <div class="vision">
+      <div class="stage">
+        <span class="pill live tag running" id="v-tag">Live events</span>
+        <svg id="v-svg" role="img" aria-labelledby="v-title v-desc"><title id="v-title">Ecosystem diagram</title><desc id="v-desc">Parties at the top, the apps they use below them, agents in a sub-tier, and Universal Paper as the foundation. Signed events travel from the app or agent that signed them down to the foundation, where each is verified, then up to every counterparty’s app.</desc></svg>
+      </div>
+      <div class="ticker" id="v-ticker" aria-live="polite"></div>
     </div>
-    <div class="tiles">
-      <div class="tile"><span class="eyebrow">Runs</span><span class="v" id="t-runs">0</span><span class="s" id="t-rate">—</span></div>
-      <div class="tile"><span class="eyebrow">Events validated</span><span class="v" id="t-events">0</span><span class="s" id="t-sigs">0 signatures</span></div>
-      <div class="tile good"><span class="eyebrow">Attacks caught</span><span class="v" id="t-attacks">0</span><span class="s" id="t-attacks-s">of 0 attempted</span></div>
-      <div class="tile good"><span class="eyebrow">Invariant checks</span><span class="v" id="t-inv">0</span><span class="s">passed</span></div>
-      <div class="tile good" id="t-fail-tile"><span class="eyebrow">Failures</span><span class="v" id="t-fail">0</span><span class="s">kept as replayable cases</span></div>
+    <div class="controls" style="margin-top:0.7rem">
+      <button class="btn small" id="v-pause" type="button">Pause</button>
+      <button class="btn small" id="v-new" type="button">New scenario</button>
+      <span class="muted" style="font-size:0.82rem" id="v-caption"></span>
     </div>
-    <div class="train" id="pr-train" aria-label="Recent runs"><div class="empty">The first runs appear here within a second.</div></div>
-    <div class="grid2">
-      <div class="card scroll-x"><h3>Invariants</h3><table><thead><tr><th>Must hold</th><th class="num">Passed</th><th class="num">Failed</th></tr></thead><tbody id="pr-inv"></tbody></table></div>
-      <div class="card scroll-x"><h3>Attacks on copies</h3><table><thead><tr><th>Attack</th><th class="num">Caught</th><th>Caught by</th></tr></thead><tbody id="pr-att"></tbody></table></div>
+    <p class="callout" style="margin-top:1rem">This is an illustration of a possible future. The apps are hypothetical and none of them exist yet. The parties, events, signatures, verdicts, and fingerprints are real: each scenario is generated and evaluated by the Universal Paper engine as you watch.</p>
+    <div class="notes3">
+      <div class="card"><h3>Apps compete above</h3><p>A contract system, an ERP, and a procurement tool can each show the same agreement in their own way. None of them owns it, and none has to trust another’s copy.</p></div>
+      <div class="card"><h3>Agents act in a sub-tier</h3><p>An agent signs only under a Mandate its principal signed, with limits on what it may agree to. An action outside those limits is invalid for everyone, at once.</p></div>
+      <div class="card"><h3>The paper stays put</h3><p>Each agreement keeps its own chain of signed events, held by its parties. There is no shared ledger to join. Changing apps does not change the agreement.</p></div>
     </div>
-    <div class="card detail" id="pr-detail"><p class="muted">Select a run above to see what it generated, which attacks it tried, and why each invariant held. You can replay any run event by event.</p></div>
-    <div class="card detail" id="pr-fails-card" hidden><h3>Failures kept for replay</h3><div id="pr-fails"></div></div>
   </section>
 
   <section class="view wrap" id="playground" aria-labelledby="h-pg">
     <div class="view-head">
       <span class="eyebrow">Playground</span>
       <h2 id="h-pg">Write an agreement and watch it fingerprint</h2>
-      <p class="lede">Pick the parties, add Terms from the library, and set their values. The cover sheet, the full contract, and the fingerprint update as you type. Sign it, then change one word, and the signatures stop verifying. The values here are examples.</p>
+      <p class="lede">Pick the parties, add Terms from the library, and set their values. The cover sheet, the contract, and the fingerprint update as you type. Compare two versions clause by clause, or sign it and play out a year of reports and payments. The values here are examples.</p>
     </div>
     <div class="pg">
       <div class="editor"><div class="fpmini" id="pg-fpmini" aria-hidden="true"></div><div class="editor" id="pg-editor"></div></div>
@@ -332,55 +315,68 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
             </div>
           </div>
         </div>
-        <div class="twopane">
-          <div class="paper cover" id="pg-cover"></div>
-          <div class="paper" id="pg-contract"></div>
+        <div class="tabs" role="tablist" aria-label="Playground views">
+          <button role="tab" id="tab-write" aria-selected="true" aria-controls="panel-write" type="button">Write</button>
+          <button role="tab" id="tab-compare" aria-selected="false" aria-controls="panel-compare" type="button">Compare</button>
+          <button role="tab" id="tab-history" aria-selected="false" aria-controls="panel-history" type="button">History</button>
         </div>
-        <details class="card"><summary style="cursor:pointer"><b>The data being fingerprinted</b> <span class="muted">(canonical JSON, RFC 8785)</span></summary><pre class="json" id="pg-json" style="max-height:28rem;margin-top:0.6rem"></pre></details>
+        <div role="tabpanel" id="panel-write" aria-labelledby="tab-write" class="outputs">
+          <div class="twopane">
+            <div class="paper cover" id="pg-cover"></div>
+            <div class="paper" id="pg-contract"></div>
+          </div>
+          <details class="card"><summary style="cursor:pointer"><b>The data being fingerprinted</b> <span class="muted">(canonical JSON, RFC 8785)</span></summary><pre id="pg-json" style="max-height:28rem;margin:0.6rem 0 0;overflow:auto;font:0.76rem/1.45 var(--f-mono);color:var(--muted);white-space:pre-wrap;word-break:break-all"></pre></details>
+        </div>
+        <div role="tabpanel" id="panel-compare" aria-labelledby="tab-compare" hidden>
+          <div class="controls" style="margin-bottom:0.8rem">
+            <button class="btn small" id="cmp-base" type="button">Make the current version A</button>
+            <button class="btn small" id="cmp-amend" type="button">Try an example amendment</button>
+            <span class="muted" style="font-size:0.82rem" id="cmp-basenote"></span>
+          </div>
+          <div class="paper" id="cmp-out"></div>
+        </div>
+        <div role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden>
+          <div class="card" id="hist-out"></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="view wrap" id="replay" aria-labelledby="h-rp">
+  <section class="view wrap" id="conformance" aria-labelledby="h-conf">
     <div class="view-head">
-      <span class="eyebrow">Replay</span>
-      <h2 id="h-rp">Every event, every check, every evaluator</h2>
-      <p class="lede">Recorded traces come from the Python reference interpreter and are played back as recorded. Live runs from the proving ground are computed here in your browser and marked live.</p>
+      <span class="eyebrow">Conformance</span>
+      <h2 id="h-conf">How we know the engine is right</h2>
+      <p class="lede">Two independent implementations, one in Python and one in JavaScript, must agree on every fingerprint, verdict, and computed value. The figures below were recorded from the test suite when this page was built. You can also run fresh random checks here.</p>
     </div>
-    <div class="rp-top">
-      <label for="rp-pick" class="muted" style="font-size:0.85rem">Trace</label>
-      <select id="rp-pick"></select>
-      <span id="rp-source"></span>
+    <div class="tiles" id="cf-tiles"></div>
+    <div class="grid2">
+      <div class="card scroll-x"><h3>What the suite checks</h3><table><thead><tr><th>Test file</th><th class="num">Tests</th></tr></thead><tbody id="cf-files"></tbody></table></div>
+      <div class="card scroll-x"><h3>Pre-release audit findings</h3><table><thead><tr><th>#</th><th>Severity</th><th>Finding (all fixed)</th></tr></thead><tbody id="cf-audit"></tbody></table></div>
     </div>
-    <p class="muted" id="rp-desc" style="margin:0.6rem 0 0;max-width:80ch"></p>
-    <div class="legend" id="rp-legend" style="margin-top:0.6rem"></div>
-    <div class="etrain" id="rp-train" aria-label="Events"></div>
-    <div class="controls">
-      <button class="btn small" id="rp-first" type="button" aria-label="First event">⏮</button>
-      <button class="btn small" id="rp-prev" type="button" aria-label="Previous event">◀</button>
-      <button class="btn small primary" id="rp-play" type="button">Play</button>
-      <button class="btn small" id="rp-next" type="button" aria-label="Next event">▶</button>
-      <button class="btn small" id="rp-last" type="button" aria-label="Last event">⏭</button>
-      <label for="rp-speed" class="muted" style="font-size:0.82rem">Speed</label>
-      <select id="rp-speed" class="btn small"><option value="2200">Slow</option><option value="1200" selected>Normal</option><option value="500">Fast</option></select>
-      <span class="muted num" id="rp-count" style="font-size:0.85rem"></span>
+    <div class="card" style="margin-top:1rem">
+      <div class="clause-head"><h3>Run random checks in your browser</h3>
+        <div class="controls"><span class="pill live" id="lab-status">Not running</span><button class="btn small primary" id="lab-toggle" type="button">Start</button></div></div>
+      <p class="muted" style="font-size:0.88rem;margin:0.3rem 0 0.8rem;max-width:80ch">Each run invents an agreement and a history from a seed, attacks copies of it in seven ways, and checks eight invariants against arithmetic that does not use the engine. Failures are kept so you can reproduce them from the seed.</p>
+      <div class="tiles" id="lab-tiles"></div>
+      <div class="grid2">
+        <div class="scroll-x"><table><thead><tr><th>Must hold</th><th class="num">Passed</th><th class="num">Failed</th></tr></thead><tbody id="lab-inv"></tbody></table></div>
+        <div class="scroll-x"><table><thead><tr><th>Attack on a copy</th><th class="num">Caught</th><th>Caught by</th></tr></thead><tbody id="lab-att"></tbody></table></div>
+      </div>
+      <div id="lab-fails"></div>
     </div>
-    <div class="rp-grid">
-      <div class="card" id="rp-event"></div>
-      <div class="card" id="rp-evals"></div>
-      <div class="card" id="rp-checks"></div>
-      <div class="card" id="rp-derived"></div>
-    </div>
+    <p class="callout" style="margin-top:1rem" id="cf-open"></p>
   </section>
 </main>
 <footer class="wrap">
-  <p>Universal Paper is an open draft specification (CC BY 4.0) with reference code (Apache-2.0). All parties, identifiers, prices, and rates shown are hypothetical. The JavaScript engine on this page is a second implementation that must reproduce every recorded Python trace exactly before it ships.</p>
+  <p>Universal Paper is an open draft specification (CC BY 4.0) with reference code (Apache-2.0). All parties, identifiers, prices, and rates shown are hypothetical, and the Terms have not been reviewed by counsel. Example keys on this page come from public seeds and must never be used for real agreements.</p>
 </footer>
 
 <script id="terms-json" type="application/json">/*@@TERMS@@*/</script>
+<script id="conformance-json" type="application/json">/*@@CONFORMANCE@@*/</script>
 <script id="src-crypto">/*@@UP_CRYPTO@@*/</script>
 <script id="src-engine">/*@@UP_ENGINE@@*/</script>
 <script id="src-lab">/*@@UP_LAB@@*/</script>
+<script id="src-play">/*@@UP_PLAY@@*/</script>
 <script>
 /*@@APP@@*/
 </script>

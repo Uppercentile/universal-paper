@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Universal Paper Explorer</title>
+<title>Universal Paper Playground</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Universal Paper Explorer: a live proving ground, a Playground, and recorded traces for an open language of agreements.">
+<meta name="description" content="Universal Paper Playground: write an agreement and watch its fingerprint, compare versions, play its history, see the ecosystem it could support, and check the conformance evidence.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Space+Grotesk:wght@500;600;700&display=swap">
 <style>
-/* Layout: a sticky band of four views (story, proving ground, playground, replay) over an ink ground; data in mono, the contract on paper. */
+/* Layout: a short intro, then the ecosystem vision (layered diagram), the Playground (editor beside its outputs, in three tabs), and the conformance evidence. Data in mono, contracts on paper. */
 :root {
   --bg: #0e1521; --panel: #151e2d; --panel-2: #1b2638; --line: #2a3649; --fg: #e4e9f1; --muted: #8e9cb1;
-  --accent: #f0b54a; --accent-ink: #1a1405; --ok: #41c08a; --bad: #f06464; --warn: #e3b341;
-  --paper: #f7f7f4; --paper-ink: #1c2330; --paper-line: #dcdcd4;
+  --accent: #f0b54a; --accent-ink: #1a1405; --ok: #41c08a; --bad: #f06464; --ins: #41c08a; --del: #f06464;
+  --paper: #f7f7f4; --paper-ink: #1c2330; --paper-line: #dcdcd4; --paper-muted: #5b6271;
+  --found: #1f2c44; --found-line: #3b4f74;
   --c0: #5b9cf0; --c1: #b28cf2; --c2: #3cc2b0; --c3: #ec8d5e; --c4: #d9c34f; --c5: #e57aad;
   --f-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
   --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
@@ -24,18 +25,21 @@
 }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
   --bg: #f2f4f8; --panel: #ffffff; --panel-2: #edf0f5; --line: #d5dbe5; --fg: #142033; --muted: #5a677b;
-  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --warn: #9a6a00;
-  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc;
+  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --ins: #17804f; --del: #c43535;
+  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc; --paper-muted: #5b6271;
+  --found: #e4eaf4; --found-line: #a9b9d3;
   --c0: #2f6fd0; --c1: #7a4fd0; --c2: #10877a; --c3: #c0592a; --c4: #8f7a07; --c5: #b83f77;
   color-scheme: light; } }
 :root[data-theme="light"] {
   --bg: #f2f4f8; --panel: #ffffff; --panel-2: #edf0f5; --line: #d5dbe5; --fg: #142033; --muted: #5a677b;
-  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --warn: #9a6a00;
-  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc;
+  --accent: #a96c06; --accent-ink: #ffffff; --ok: #17804f; --bad: #c43535; --ins: #17804f; --del: #c43535;
+  --paper: #ffffff; --paper-ink: #1c2330; --paper-line: #e2e2dc; --paper-muted: #5b6271;
+  --found: #e4eaf4; --found-line: #a9b9d3;
   --c0: #2f6fd0; --c1: #7a4fd0; --c2: #10877a; --c3: #c0592a; --c4: #8f7a07; --c5: #b83f77;
   color-scheme: light; }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--f-body); }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
@@ -48,11 +52,12 @@ code, .mono { font-family: var(--f-mono); font-size: 0.86em; }
 button, select, input, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .eyebrow { font: 500 0.72rem/1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-.lede { color: var(--muted); max-width: 66ch; }
+.lede { color: var(--muted); max-width: 68ch; }
 .btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 0.45rem 0.8rem; cursor: pointer; line-height: 1.2; }
 .btn:hover { border-color: var(--muted); }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
 .btn.small { padding: 0.25rem 0.55rem; font-size: 0.85rem; }
+.btn[disabled] { opacity: 0.5; cursor: default; }
 .pill { display: inline-flex; align-items: center; gap: 0.35rem; font: 500 0.72rem/1 var(--f-mono); padding: 0.28rem 0.5rem; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
 .pill.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
 .pill.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
@@ -68,6 +73,7 @@ th, td { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(
 th { font: 500 0.7rem/1.2 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .scroll-x { overflow-x: auto; }
+.controls { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
 
 /* Top band */
 .band { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
@@ -78,74 +84,53 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .nav a { color: var(--muted); text-decoration: none; padding: 0.35rem 0.6rem; border-radius: 7px; font-size: 0.9rem; }
 .nav a:hover, .nav a.on { color: var(--fg); background: var(--panel-2); }
 .band .spec { font: 500 0.72rem var(--f-mono); color: var(--muted); }
-section.view { padding-block: 3.5rem 1rem; scroll-margin-top: 60px; }
-.view-head { display: grid; gap: 0.6rem; margin-bottom: 1.6rem; }
+section.view { padding-block: 3.2rem 1rem; scroll-margin-top: 60px; }
+.view-head { display: grid; gap: 0.6rem; margin-bottom: 1.4rem; }
 
-/* Story */
-.hero { padding-block: 3rem 1rem; display: grid; gap: 1rem; }
-.hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.02; max-width: 16ch; }
-.hero h1 em { font-style: normal; color: var(--accent); }
-.story { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2.5rem; align-items: start; }
-.steps { display: grid; }
-.step { min-height: 62vh; padding-block: 1.2rem; display: grid; align-content: start; gap: 0.6rem; opacity: 0.45; transition: opacity 0.3s; }
-.step:first-child { min-height: 44vh; }
-.step.on { opacity: 1; }
-.step .k { font: 500 0.72rem var(--f-mono); color: var(--accent); letter-spacing: 0.1em; }
-.step h3 { font-size: 1.5rem; }
-.step p { color: var(--muted); max-width: 46ch; }
-.visual { position: sticky; top: 76px; display: grid; gap: 0.8rem; }
-.vpart { transition: opacity 0.35s, transform 0.35s; }
-.visual[data-stage="1"] .s2, .visual[data-stage="1"] .s3, .visual[data-stage="2"] .s3,
-.visual[data-stage="1"] .s5, .visual[data-stage="2"] .s5, .visual[data-stage="3"] .s5, .visual[data-stage="4"] .s5 { opacity: 0.16; transform: translateY(4px); }
-.sentence { font: 1.12rem/1.6 var(--f-paper); background: var(--paper); color: var(--paper-ink); border-radius: var(--r); padding: 1.1rem 1.2rem; border: 1px solid var(--paper-line); }
+/* Intro */
+.intro { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2.5rem; align-items: center; padding-block: 2.6rem 0.5rem; }
+.intro h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.02; max-width: 15ch; }
+.intro h1 em { font-style: normal; color: var(--accent); }
+.intro .text { display: grid; gap: 1rem; }
+.demo { display: grid; gap: 0.7rem; }
+.sentence { font: 1.02rem/1.6 var(--f-paper); background: var(--paper); color: var(--paper-ink); border-radius: var(--r); padding: 1rem 1.15rem; border: 1px solid var(--paper-line); }
 .sentence mark { background: color-mix(in srgb, #f0b54a 45%, transparent); color: inherit; padding: 0 0.15em; border-radius: 3px; }
-pre.json { margin: 0; font: 0.78rem/1.45 var(--f-mono); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 1rem; overflow: auto; max-height: 15rem; color: var(--muted); }
-.visual pre.json { max-height: 8.5rem; }
-.visual .sentence { font-size: 1.02rem; }
-pre.json b { color: var(--fg); font-weight: 500; }
-.fp { font: 500 0.95rem/1.45 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 1rem; }
+.fp { font: 500 0.92rem/1.45 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.75rem 1rem; }
 .fp .lab { display: block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; font-family: var(--f-mono); }
 .fp .flip { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); border-radius: 2px; }
 .fp.flash { animation: flash 0.7s; }
 @keyframes flash { 0% { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); } }
-.evrows { display: grid; gap: 0.45rem; }
-.evrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.2rem 0.8rem; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.55rem 0.8rem; }
-.evrow .h { grid-column: 1 / -1; font: 0.76rem var(--f-mono); color: var(--muted); word-break: break-all; }
+.evrows { display: grid; gap: 0.4rem; }
+.evrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.15rem 0.8rem; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.8rem; font-size: 0.9rem; }
+.evrow .h { grid-column: 1 / -1; font: 0.74rem var(--f-mono); color: var(--muted); word-break: break-all; }
 .evrow.bad { border-color: color-mix(in srgb, var(--bad) 60%, transparent); }
-.evrow .why { grid-column: 1 / -1; font-size: 0.82rem; color: var(--bad); }
+.evrow .why { grid-column: 1 / -1; font-size: 0.8rem; color: var(--bad); }
 
-/* Proving ground */
-.status-row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
-.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.6rem; margin-block: 1rem; }
-.tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 0.9rem; display: grid; gap: 0.25rem; }
-.tile .v { font: 600 1.6rem/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
-.tile .s { font-size: 0.78rem; color: var(--muted); }
-.tile.good .v { color: var(--ok); }
-.tile.alarm .v { color: var(--bad); }
-.train { display: flex; gap: 8px; overflow-x: auto; padding: 0.6rem 0.2rem 0.9rem; scroll-snap-type: x proximity; }
-.blk { flex: 0 0 auto; width: 104px; min-height: 112px; border-radius: 8px; border: 1px solid var(--line); background: linear-gradient(180deg, color-mix(in srgb, var(--ok) 20%, var(--panel)) 0%, var(--panel) 70%); padding: 0.5rem; text-align: left; cursor: pointer; display: grid; align-content: start; gap: 0.2rem; scroll-snap-align: end; position: relative; }
-.blk.fail { background: linear-gradient(180deg, color-mix(in srgb, var(--bad) 30%, var(--panel)) 0%, var(--panel) 70%); border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
-.blk.sel { outline: 2px solid var(--accent); }
-.blk .seed { font: 500 0.72rem var(--f-mono); }
-.blk .big { font: 600 1.15rem/1.1 var(--f-display); }
-.blk .meta { font-size: 0.7rem; color: var(--muted); line-height: 1.35; }
-.blk.new { animation: slidein 0.45s ease-out; }
-@keyframes slidein { from { transform: translateX(14px); opacity: 0.2; } }
-.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
-.bar { height: 6px; background: var(--panel-2); border-radius: 3px; overflow: hidden; min-width: 60px; }
-.bar i { display: block; height: 100%; background: var(--ok); }
-.detail { margin-top: 1rem; }
-.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.inv-list { display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
-.inv-list li { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr); gap: 0.5rem; font-size: 0.88rem; }
-.inv-list .ic { font-family: var(--f-mono); }
-.inv-list .ok { color: var(--ok); } .inv-list .bad { color: var(--bad); }
-.seedform { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-.seedform input { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 0.4rem 0.6rem; width: 9rem; font-family: var(--f-mono); }
+/* Vision */
+.vision { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1rem; align-items: start; }
+.stage { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.5rem; min-width: 0; position: relative; }
+.stage svg { display: block; width: 100%; height: auto; }
+.stage .tag { position: absolute; top: 0.7rem; right: 0.8rem; }
+svg .layer-label { font: 500 11px var(--f-mono); letter-spacing: 0.12em; fill: var(--muted); text-transform: uppercase; }
+svg .node-label { font: 500 12px var(--f-body); fill: var(--fg); }
+svg .node-sub { font: 10.5px var(--f-body); fill: var(--muted); }
+svg .found-title { font: 700 22px var(--f-display); fill: var(--fg); }
+svg .found-sub { font: 12px var(--f-body); fill: var(--muted); }
+svg .lane-label { font: 10.5px var(--f-mono); fill: var(--muted); }
+svg .hashlbl { font: 10px var(--f-mono); fill: var(--accent); }
+.ticker { display: grid; gap: 0.45rem; align-content: start; }
+.tick { border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.65rem; font-size: 0.84rem; display: grid; gap: 0.2rem; background: var(--panel); }
+.tick .h { font: 0.72rem var(--f-mono); color: var(--muted); word-break: break-all; }
+.tick.bad { border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
+.tick .v { font: 500 0.72rem var(--f-mono); }
+.tick .v.ok { color: var(--ok); } .tick .v.bad { color: var(--bad); }
+.notes3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.notes3 .card h3 { font-size: 0.98rem; margin-bottom: 0.3rem; }
+.notes3 .card p { color: var(--muted); font-size: 0.9rem; }
 
 /* Playground */
 .pg { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 1rem; align-items: start; }
-.editor { display: grid; gap: 0.8rem; }
+.editor { display: grid; gap: 0.8rem; min-width: 0; }
 .editor .card { display: grid; gap: 0.6rem; }
 .field { display: grid; gap: 0.25rem; font-size: 0.85rem; }
 .field > span { color: var(--muted); font-size: 0.78rem; display: flex; justify-content: space-between; gap: 0.4rem; }
@@ -157,7 +142,7 @@ pre.json b { color: var(--fg); font-weight: 500; }
 .field .errmsg { color: var(--bad); font-size: 0.75rem; }
 .checks-inline { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .checks-inline label { display: flex; gap: 0.3rem; align-items: center; }
-.clause-head { display: flex; justify-content: space-between; gap: 0.5rem; align-items: center; }
+.clause-head { display: flex; justify-content: space-between; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 .clause-head .t { font: 600 0.95rem var(--f-display); }
 .clause-head .id { font: 0.72rem var(--f-mono); color: var(--muted); }
 .sealbtn { font: 0.68rem var(--f-mono); background: none; border: 1px solid var(--line); border-radius: 5px; padding: 0 0.3rem; cursor: pointer; color: var(--muted); }
@@ -166,79 +151,91 @@ details.clause > summary { list-style: none; cursor: pointer; }
 details.clause > summary::-webkit-details-marker { display: none; }
 .outputs { display: grid; gap: 1rem; min-width: 0; }
 .fpbar { position: sticky; top: 64px; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.6rem 1rem; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 1rem; }
-.fpbar .fp { border: 0; padding: 0; background: none; font-size: 1rem; }
+.fpbar .fp { border: 0; padding: 0; background: none; font-size: 0.98rem; }
 .fpbar .side { display: grid; gap: 0.35rem; justify-items: end; }
+.fpmini { display: none; position: sticky; top: 52px; z-index: 2; font: 500 0.76rem/1.4 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.7rem; }
+.fpmini .flip { color: var(--accent); }
+.tabs { display: flex; gap: 0.3rem; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 0.5rem 0.8rem; cursor: pointer; color: var(--muted); font-weight: 500; margin-bottom: -1px; }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
 .twopane { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 1rem; align-items: start; }
 .paper { background: var(--paper); color: var(--paper-ink); border: 1px solid var(--paper-line); border-radius: 6px; padding: 1.4rem 1.5rem; font: 0.98rem/1.6 var(--f-paper); min-width: 0; box-shadow: 0 1px 0 var(--paper-line), 0 12px 30px -18px rgba(0,0,0,0.35); }
 .paper h4 { font: 600 1.3rem/1.2 var(--f-paper); margin: 0 0 0.6rem; }
-.paper h5 { font: 600 0.78rem var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; margin: 1.2rem 0 0.4rem; color: #5b6271; }
+.paper h5 { font: 600 0.78rem var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; margin: 1.2rem 0 0.4rem; color: var(--paper-muted); }
 .paper h6 { font: 600 1rem var(--f-paper); margin: 1rem 0 0.25rem; }
 .paper p { margin: 0 0 0.5rem; }
 .paper ul { margin: 0 0 0.5rem; padding-left: 1.1rem; }
 .paper code { font-size: 0.74em; word-break: break-all; background: #eef0f3; padding: 0 0.2em; border-radius: 3px; }
 .paper .sealed { font-family: var(--f-mono); font-size: 0.74em; background: #2a3242; color: #e9edf3; padding: 0.05em 0.35em; border-radius: 3px; word-break: break-all; }
-.paper .meta { font: 0.78rem var(--f-mono); color: #5b6271; word-break: break-all; }
+.paper .meta { font: 0.78rem var(--f-mono); color: var(--paper-muted); word-break: break-all; }
+.paper ins { text-decoration: none; background: #d6f0e1; color: #0d5a35; border-radius: 2px; }
+.paper del { background: #f8dcdc; color: #8a1f1f; border-radius: 2px; }
 .cover dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.3rem 0.8rem; margin: 0.4rem 0 0.8rem; font-size: 0.9rem; }
-.cover dt { font: 600 0.72rem var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; color: #5b6271; padding-top: 0.2rem; }
+.cover dt { font: 600 0.72rem var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--paper-muted); padding-top: 0.2rem; }
 .cover dd { margin: 0; min-width: 0; }
 .cover .terms { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
 .cover .terms li { border-top: 1px solid var(--paper-line); padding-top: 0.4rem; font-size: 0.9rem; }
 .cover .terms b { font-family: var(--f-body); font-size: 0.8rem; display: block; }
-.fpmini { display: none; position: sticky; top: 52px; z-index: 2; font: 500 0.78rem/1.4 var(--f-mono); word-break: break-all; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.7rem; }
-.fpmini .flip { color: var(--accent); }
 .issues { margin: 0; padding-left: 1rem; font-size: 0.85rem; }
-.issues li { color: var(--bad); }
+.issues li { color: #c43535; }
 .sigs { display: grid; gap: 0.3rem; font-size: 0.85rem; }
 .sigs .s { display: flex; gap: 0.5rem; align-items: baseline; }
+.cmp-fps { display: grid; gap: 0.5rem; }
+.cmp-row { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.6rem; align-items: baseline; font: 0.82rem/1.45 var(--f-mono); word-break: break-all; }
+.cmp-row b { font-family: var(--f-body); }
+.cmp-clause { border-top: 1px solid var(--paper-line); padding-top: 0.6rem; margin-top: 0.6rem; }
+.cmp-clause .st { font: 600 0.7rem var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; padding: 0.1rem 0.35rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: 2px; }
+.st.added { background: #d6f0e1; color: #0d5a35; } .st.removed { background: #f8dcdc; color: #8a1f1f; } .st.changed { background: #f6ead0; color: #6b4a06; }
+.cmp-params { font: 0.78rem/1.5 var(--f-mono); margin: 0.3rem 0; display: grid; gap: 0.15rem; }
+.tl { display: grid; gap: 0.8rem; }
+.tl-row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.6rem; align-items: center; font-size: 0.85rem; }
+.tl-bar { display: flex; gap: 3px; min-width: 0; }
+.tl-bar span { flex: 1; height: 26px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--line); min-width: 6px; position: relative; }
+.tl-bar span.discharged { background: color-mix(in srgb, var(--ok) 55%, var(--panel)); border-color: var(--ok); }
+.tl-bar span.overdue { background: color-mix(in srgb, var(--bad) 45%, var(--panel)); border-color: var(--bad); }
+.tl-bar span.open { background: color-mix(in srgb, var(--accent) 25%, var(--panel)); border-color: var(--accent); }
+.tl-bar span.future { opacity: 0.35; }
+.legend { display: flex; gap: 0.9rem; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.3rem; vertical-align: -1px; border: 1px solid var(--line); }
+.periods { display: grid; gap: 0.35rem; }
+.period { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 0.5rem; align-items: center; font-size: 0.85rem; border-bottom: 1px solid var(--line); padding-block: 0.35rem; }
+.period input[type=text] { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 0.3rem 0.45rem; width: 100%; min-width: 0; font-family: var(--f-mono); }
+.slider { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+.slider input { flex: 1; min-width: 180px; accent-color: var(--accent); }
 
-/* Replay */
-.rp-top { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
-.rp-top select { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 0.4rem 0.6rem; max-width: 100%; }
-.legend { display: flex; gap: 0.8rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); }
-.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--hue); margin-right: 0.35rem; vertical-align: -1px; }
-.etrain { display: flex; gap: 6px; overflow-x: auto; padding: 0.6rem 0.1rem 0.8rem; }
-.eb { flex: 0 0 auto; width: 58px; height: 70px; border-radius: 7px; border: 1px solid var(--line); background: linear-gradient(180deg, color-mix(in srgb, var(--hue) 34%, var(--panel)) 0 34%, var(--panel) 34%); cursor: pointer; padding: 0.3rem; display: grid; align-content: space-between; text-align: left; font: 0.66rem/1.2 var(--f-mono); color: var(--fg); position: relative; }
-.eb .kd { font: 600 0.8rem var(--f-display); }
-.eb.rej::after { content: ""; position: absolute; inset: auto 4px 4px auto; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); }
-.eb.div { border-color: var(--bad); border-style: dashed; }
-.eb.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
-.eb.future { opacity: 0.45; }
-.controls { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-.rp-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 1rem; margin-top: 1rem; }
-.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.25rem 0.8rem; font-size: 0.86rem; margin: 0.6rem 0 0; }
-.kv dt { color: var(--muted); }
-.kv dd { margin: 0; min-width: 0; word-break: break-word; }
-.hash { font: 0.78rem var(--f-mono); word-break: break-all; }
-.ev-list { display: grid; gap: 0.45rem; }
-.ev-item { border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.7rem; display: grid; gap: 0.2rem; }
-.ev-item.bad { border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
-.chk { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr); gap: 0.45rem; font-size: 0.85rem; padding: 0.3rem 0; border-bottom: 1px solid var(--line); }
-.chk .r { font: 500 0.7rem var(--f-mono); color: var(--muted); }
-.chk .y { color: var(--ok); } .chk .n { color: var(--bad); }
-.tabs { display: flex; gap: 0.3rem; flex-wrap: wrap; margin: 0.4rem 0; }
-.tabs button { background: none; border: 1px solid var(--line); border-radius: 999px; padding: 0.2rem 0.6rem; cursor: pointer; font-size: 0.8rem; }
-.tabs button.on { background: var(--panel-2); border-color: var(--muted); }
-.derived-chain { border-top: 1px solid var(--line); padding-top: 0.6rem; margin-top: 0.6rem; display: grid; gap: 0.4rem; }
+/* Conformance */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; margin-block: 0.4rem 1rem; }
+.tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0.8rem 0.9rem; display: grid; gap: 0.25rem; align-content: start; }
+.tile .v { font: 600 1.6rem/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.tile .s { font-size: 0.78rem; color: var(--muted); }
+.tile.good .v { color: var(--ok); }
+.tile.alarm .v { color: var(--bad); }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.sev { font: 500 0.7rem var(--f-mono); padding: 0.1rem 0.4rem; border-radius: 4px; border: 1px solid var(--line); white-space: nowrap; }
+.sev.High { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+.sev.Medium { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.inv-list { display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
+.inv-list li { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr); gap: 0.5rem; font-size: 0.88rem; }
+.inv-list .ok { color: var(--ok); } .inv-list .bad { color: var(--bad); }
+.callout { border-left: 3px solid var(--accent); padding: 0.4rem 0 0.4rem 0.9rem; color: var(--muted); font-size: 0.9rem; max-width: 80ch; }
 footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
 .empty { color: var(--muted); font-size: 0.9rem; padding: 1rem; border: 1px dashed var(--line); border-radius: var(--r); }
 
 @media (max-width: 980px) {
-  .story { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .visual { position: sticky; top: 52px; order: -1; z-index: 3; background: var(--bg); padding-block: 0.5rem; max-height: 52vh; overflow: hidden; }
-  .visual pre.json { max-height: 6rem; }
-  .step { min-height: 46vh; }
+  .intro, .vision, .pg, .twopane, .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .notes3 { grid-template-columns: minmax(0, 1fr); }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tiles .tile:last-child { grid-column: 1 / -1; }
-  .fpmini { display: block !important; }
-  .pg, .twopane, .grid2, .rp-grid { grid-template-columns: minmax(0, 1fr); }
   .fpbar { position: static; grid-template-columns: minmax(0, 1fr); }
   .fpbar .side { justify-items: start; }
+  .fpmini { display: block; }
+  .ticker { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   h2 { font-size: 1.5rem; }
   .nav a { padding: 0.3rem 0.45rem; font-size: 0.82rem; }
   .band .spec { display: none; }
-  .visual .s2 { display: none; }
+  .period { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .tl-row { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -249,82 +246,68 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
 
 <header class="band">
   <div class="wrap">
-    <a class="mark" href="#story" aria-label="Universal Paper Explorer, top">
+    <a class="mark" href="#top" aria-label="Universal Paper, top">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="14" height="19" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h6M8 11.5h6M8 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="17.5" cy="17.5" r="3.6" fill="var(--accent)"/></svg>
       Universal Paper
     </a>
     <nav class="nav" aria-label="Sections">
-      <a href="#story" data-nav="story">Story</a>
-      <a href="#proof" data-nav="proof">Proving ground</a>
+      <a href="#vision" data-nav="vision">Vision</a>
       <a href="#playground" data-nav="playground">Playground</a>
-      <a href="#replay" data-nav="replay">Replay</a>
+      <a href="#conformance" data-nav="conformance">Conformance</a>
     </nav>
     <span class="spec" id="spec-ver">UP/0.1-draft</span>
   </div>
 </header>
 
-<main>
-  <section class="view wrap" id="story" aria-labelledby="h-story">
-    <div class="hero">
-      <span class="eyebrow">An open language for agreements · Explorer</span>
-      <h1 id="h-story">An agreement you can <em>compute</em>.</h1>
-      <p class="lede">Universal Paper writes agreements between aggregators, suppliers, and members as data with a fingerprint. Every system that holds a copy computes the same answer, and any change shows. Scroll to see how. Everything on this page is computed live in your browser, except the recorded traces under Replay.</p>
+<main id="top">
+  <section class="wrap intro" aria-labelledby="h-intro">
+    <div class="text">
+      <span class="eyebrow">An open language for agreements</span>
+      <h1 id="h-intro">An agreement you can <em>compute</em>.</h1>
+      <p class="lede">Universal Paper writes agreements between aggregators, suppliers, and members as data with a fingerprint. Every system that holds a copy computes the same answer, and any change shows. Everything on this page is computed live in your browser.</p>
+      <div class="controls">
+        <button class="btn" id="d-toggle" type="button">Change the fee</button>
+        <button class="btn" id="d-tamper" type="button" aria-pressed="false">Edit the supplier’s copy after signing</button>
+      </div>
     </div>
-    <div class="story">
-      <div class="steps" id="steps">
-        <div class="step on" data-step="1"><span class="k">1 · THE CLAUSE</span><h3>This sentence is a clause.</h3><p>It reads like any contract. It is generated from a Term definition and the values the parties chose. Nobody typed it.</p></div>
-        <div class="step" data-step="2"><span class="k">2 · THE DATA</span><h3>Underneath, it is data.</h3><p>The clause names a Term by its own fingerprint and fills in its parameters. The language sets no default values. The parties supply every number.</p></div>
-        <div class="step" data-step="3"><span class="k">3 · THE FINGERPRINT</span><h3>The data has one fingerprint.</h3><p>The agreement is put in canonical form and hashed with SHA-256. Signatures cover this fingerprint, so they cover the text and the data at once.</p></div>
-        <div class="step" data-step="4"><span class="k">4 · ONE WORD</span><h3>Change one word, and the fingerprint flips.</h3><p>Move the fee from 2% to 2.5%. The text changes, and so does every character position the hash touches. Press the button, or watch it alternate.</p><p><button class="btn small" id="story-toggle" type="button">Change the fee</button></p></div>
-        <div class="step" data-step="5"><span class="k">5 · EVERYONE CHECKS</span><h3>Each party computes it alone.</h3><p>The aggregator’s contract system, the supplier’s ERP, and a member’s spreadsheet each evaluate the signed agreement from their own copy, and land on the same state fingerprint.</p></div>
-        <div class="step" data-step="6"><span class="k">6 · A CHANGED COPY</span><h3>A quietly edited copy is caught.</h3><p>Change the rate in one copy after signing, and its signatures no longer verify. That copy rejects the event and drops out of agreement with the others, at the exact event that was touched.</p></div>
-      </div>
-      <div class="visual" id="visual" data-stage="1" aria-live="polite">
-        <div class="vpart sentence" id="sv-text"></div>
-        <pre class="vpart json s2" id="sv-json"></pre>
-        <div class="vpart fp s3" id="sv-fp"></div>
-        <div class="vpart evrows s5" id="sv-evals"></div>
-      </div>
+    <div class="demo" aria-live="polite">
+      <div class="sentence" id="d-text"></div>
+      <div class="fp" id="d-fp"></div>
+      <div class="evrows" id="d-evals"></div>
     </div>
   </section>
 
-  <section class="view wrap" id="proof" aria-labelledby="h-proof">
+  <section class="view wrap" id="vision" aria-labelledby="h-vision">
     <div class="view-head">
-      <span class="eyebrow">Proving ground</span>
-      <h2 id="h-proof">Random agreements, random attacks, every run checked</h2>
-      <p class="lede">Each run invents parties, tiers, items, prices, a fee, reporting periods, tier changes, payments (some short, some late), and sometimes an agent with a Mandate or fully sealed values. It then attacks copies of the result and checks eight invariants against independent arithmetic. Runs continue until you close the page. Every run is reproducible from its seed.</p>
+      <span class="eyebrow">Vision · what could be built on it</span>
+      <h2 id="h-vision">The paper underneath the apps</h2>
+      <p class="lede">Universal Paper is meant to sit underneath, the way a file format or a network protocol does. Apps for contracting, procurement, pricing, and settlement can compete on everything above it, and agents can act for parties within signed limits. They interoperate because they all compute the same fingerprints below.</p>
     </div>
-    <div class="status-row">
-      <span class="pill live" id="pr-status">Starting</span>
-      <button class="btn small" id="pr-toggle" type="button">Pause</button>
-      <span class="muted" id="pr-where" style="font-size:0.82rem"></span>
-      <form class="seedform" id="pr-seedform" style="margin-left:auto">
-        <label for="pr-seed" class="muted" style="font-size:0.82rem">Reproduce a seed</label>
-        <input id="pr-seed" type="text" placeholder="e.g. a1b2-7" autocomplete="off">
-        <button class="btn small" type="submit">Run</button>
-      </form>
+    <div class="vision">
+      <div class="stage">
+        <span class="pill live tag running" id="v-tag">Live events</span>
+        <svg id="v-svg" role="img" aria-labelledby="v-title v-desc"><title id="v-title">Ecosystem diagram</title><desc id="v-desc">Parties at the top, the apps they use below them, agents in a sub-tier, and Universal Paper as the foundation. Signed events travel from the app or agent that signed them down to the foundation, where each is verified, then up to every counterparty’s app.</desc></svg>
+      </div>
+      <div class="ticker" id="v-ticker" aria-live="polite"></div>
     </div>
-    <div class="tiles">
-      <div class="tile"><span class="eyebrow">Runs</span><span class="v" id="t-runs">0</span><span class="s" id="t-rate">—</span></div>
-      <div class="tile"><span class="eyebrow">Events validated</span><span class="v" id="t-events">0</span><span class="s" id="t-sigs">0 signatures</span></div>
-      <div class="tile good"><span class="eyebrow">Attacks caught</span><span class="v" id="t-attacks">0</span><span class="s" id="t-attacks-s">of 0 attempted</span></div>
-      <div class="tile good"><span class="eyebrow">Invariant checks</span><span class="v" id="t-inv">0</span><span class="s">passed</span></div>
-      <div class="tile good" id="t-fail-tile"><span class="eyebrow">Failures</span><span class="v" id="t-fail">0</span><span class="s">kept as replayable cases</span></div>
+    <div class="controls" style="margin-top:0.7rem">
+      <button class="btn small" id="v-pause" type="button">Pause</button>
+      <button class="btn small" id="v-new" type="button">New scenario</button>
+      <span class="muted" style="font-size:0.82rem" id="v-caption"></span>
     </div>
-    <div class="train" id="pr-train" aria-label="Recent runs"><div class="empty">The first runs appear here within a second.</div></div>
-    <div class="grid2">
-      <div class="card scroll-x"><h3>Invariants</h3><table><thead><tr><th>Must hold</th><th class="num">Passed</th><th class="num">Failed</th></tr></thead><tbody id="pr-inv"></tbody></table></div>
-      <div class="card scroll-x"><h3>Attacks on copies</h3><table><thead><tr><th>Attack</th><th class="num">Caught</th><th>Caught by</th></tr></thead><tbody id="pr-att"></tbody></table></div>
+    <p class="callout" style="margin-top:1rem">This is an illustration of a possible future. The apps are hypothetical and none of them exist yet. The parties, events, signatures, verdicts, and fingerprints are real: each scenario is generated and evaluated by the Universal Paper engine as you watch.</p>
+    <div class="notes3">
+      <div class="card"><h3>Apps compete above</h3><p>A contract system, an ERP, and a procurement tool can each show the same agreement in their own way. None of them owns it, and none has to trust another’s copy.</p></div>
+      <div class="card"><h3>Agents act in a sub-tier</h3><p>An agent signs only under a Mandate its principal signed, with limits on what it may agree to. An action outside those limits is invalid for everyone, at once.</p></div>
+      <div class="card"><h3>The paper stays put</h3><p>Each agreement keeps its own chain of signed events, held by its parties. There is no shared ledger to join. Changing apps does not change the agreement.</p></div>
     </div>
-    <div class="card detail" id="pr-detail"><p class="muted">Select a run above to see what it generated, which attacks it tried, and why each invariant held. You can replay any run event by event.</p></div>
-    <div class="card detail" id="pr-fails-card" hidden><h3>Failures kept for replay</h3><div id="pr-fails"></div></div>
   </section>
 
   <section class="view wrap" id="playground" aria-labelledby="h-pg">
     <div class="view-head">
       <span class="eyebrow">Playground</span>
       <h2 id="h-pg">Write an agreement and watch it fingerprint</h2>
-      <p class="lede">Pick the parties, add Terms from the library, and set their values. The cover sheet, the full contract, and the fingerprint update as you type. Sign it, then change one word, and the signatures stop verifying. The values here are examples.</p>
+      <p class="lede">Pick the parties, add Terms from the library, and set their values. The cover sheet, the contract, and the fingerprint update as you type. Compare two versions clause by clause, or sign it and play out a year of reports and payments. The values here are examples.</p>
     </div>
     <div class="pg">
       <div class="editor"><div class="fpmini" id="pg-fpmini" aria-hidden="true"></div><div class="editor" id="pg-editor"></div></div>
@@ -339,52 +322,64 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
             </div>
           </div>
         </div>
-        <div class="twopane">
-          <div class="paper cover" id="pg-cover"></div>
-          <div class="paper" id="pg-contract"></div>
+        <div class="tabs" role="tablist" aria-label="Playground views">
+          <button role="tab" id="tab-write" aria-selected="true" aria-controls="panel-write" type="button">Write</button>
+          <button role="tab" id="tab-compare" aria-selected="false" aria-controls="panel-compare" type="button">Compare</button>
+          <button role="tab" id="tab-history" aria-selected="false" aria-controls="panel-history" type="button">History</button>
         </div>
-        <details class="card"><summary style="cursor:pointer"><b>The data being fingerprinted</b> <span class="muted">(canonical JSON, RFC 8785)</span></summary><pre class="json" id="pg-json" style="max-height:28rem;margin-top:0.6rem"></pre></details>
+        <div role="tabpanel" id="panel-write" aria-labelledby="tab-write" class="outputs">
+          <div class="twopane">
+            <div class="paper cover" id="pg-cover"></div>
+            <div class="paper" id="pg-contract"></div>
+          </div>
+          <details class="card"><summary style="cursor:pointer"><b>The data being fingerprinted</b> <span class="muted">(canonical JSON, RFC 8785)</span></summary><pre id="pg-json" style="max-height:28rem;margin:0.6rem 0 0;overflow:auto;font:0.76rem/1.45 var(--f-mono);color:var(--muted);white-space:pre-wrap;word-break:break-all"></pre></details>
+        </div>
+        <div role="tabpanel" id="panel-compare" aria-labelledby="tab-compare" hidden>
+          <div class="controls" style="margin-bottom:0.8rem">
+            <button class="btn small" id="cmp-base" type="button">Make the current version A</button>
+            <button class="btn small" id="cmp-amend" type="button">Try an example amendment</button>
+            <span class="muted" style="font-size:0.82rem" id="cmp-basenote"></span>
+          </div>
+          <div class="paper" id="cmp-out"></div>
+        </div>
+        <div role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden>
+          <div class="card" id="hist-out"></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="view wrap" id="replay" aria-labelledby="h-rp">
+  <section class="view wrap" id="conformance" aria-labelledby="h-conf">
     <div class="view-head">
-      <span class="eyebrow">Replay</span>
-      <h2 id="h-rp">Every event, every check, every evaluator</h2>
-      <p class="lede">Recorded traces come from the Python reference interpreter and are played back as recorded. Live runs from the proving ground are computed here in your browser and marked live.</p>
+      <span class="eyebrow">Conformance</span>
+      <h2 id="h-conf">How we know the engine is right</h2>
+      <p class="lede">Two independent implementations, one in Python and one in JavaScript, must agree on every fingerprint, verdict, and computed value. The figures below were recorded from the test suite when this page was built. You can also run fresh random checks here.</p>
     </div>
-    <div class="rp-top">
-      <label for="rp-pick" class="muted" style="font-size:0.85rem">Trace</label>
-      <select id="rp-pick"></select>
-      <span id="rp-source"></span>
+    <div class="tiles" id="cf-tiles"></div>
+    <div class="grid2">
+      <div class="card scroll-x"><h3>What the suite checks</h3><table><thead><tr><th>Test file</th><th class="num">Tests</th></tr></thead><tbody id="cf-files"></tbody></table></div>
+      <div class="card scroll-x"><h3>Pre-release audit findings</h3><table><thead><tr><th>#</th><th>Severity</th><th>Finding (all fixed)</th></tr></thead><tbody id="cf-audit"></tbody></table></div>
     </div>
-    <p class="muted" id="rp-desc" style="margin:0.6rem 0 0;max-width:80ch"></p>
-    <div class="legend" id="rp-legend" style="margin-top:0.6rem"></div>
-    <div class="etrain" id="rp-train" aria-label="Events"></div>
-    <div class="controls">
-      <button class="btn small" id="rp-first" type="button" aria-label="First event">⏮</button>
-      <button class="btn small" id="rp-prev" type="button" aria-label="Previous event">◀</button>
-      <button class="btn small primary" id="rp-play" type="button">Play</button>
-      <button class="btn small" id="rp-next" type="button" aria-label="Next event">▶</button>
-      <button class="btn small" id="rp-last" type="button" aria-label="Last event">⏭</button>
-      <label for="rp-speed" class="muted" style="font-size:0.82rem">Speed</label>
-      <select id="rp-speed" class="btn small"><option value="2200">Slow</option><option value="1200" selected>Normal</option><option value="500">Fast</option></select>
-      <span class="muted num" id="rp-count" style="font-size:0.85rem"></span>
+    <div class="card" style="margin-top:1rem">
+      <div class="clause-head"><h3>Run random checks in your browser</h3>
+        <div class="controls"><span class="pill live" id="lab-status">Not running</span><button class="btn small primary" id="lab-toggle" type="button">Start</button></div></div>
+      <p class="muted" style="font-size:0.88rem;margin:0.3rem 0 0.8rem;max-width:80ch">Each run invents an agreement and a history from a seed, attacks copies of it in seven ways, and checks eight invariants against arithmetic that does not use the engine. Failures are kept so you can reproduce them from the seed.</p>
+      <div class="tiles" id="lab-tiles"></div>
+      <div class="grid2">
+        <div class="scroll-x"><table><thead><tr><th>Must hold</th><th class="num">Passed</th><th class="num">Failed</th></tr></thead><tbody id="lab-inv"></tbody></table></div>
+        <div class="scroll-x"><table><thead><tr><th>Attack on a copy</th><th class="num">Caught</th><th>Caught by</th></tr></thead><tbody id="lab-att"></tbody></table></div>
+      </div>
+      <div id="lab-fails"></div>
     </div>
-    <div class="rp-grid">
-      <div class="card" id="rp-event"></div>
-      <div class="card" id="rp-evals"></div>
-      <div class="card" id="rp-checks"></div>
-      <div class="card" id="rp-derived"></div>
-    </div>
+    <p class="callout" style="margin-top:1rem" id="cf-open"></p>
   </section>
 </main>
 <footer class="wrap">
-  <p>Universal Paper is an open draft specification (CC BY 4.0) with reference code (Apache-2.0). All parties, identifiers, prices, and rates shown are hypothetical. The JavaScript engine on this page is a second implementation that must reproduce every recorded Python trace exactly before it ships.</p>
+  <p>Universal Paper is an open draft specification (CC BY 4.0) with reference code (Apache-2.0). All parties, identifiers, prices, and rates shown are hypothetical, and the Terms have not been reviewed by counsel. Example keys on this page come from public seeds and must never be used for real agreements.</p>
 </footer>
 
 <script id="terms-json" type="application/json">[{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Admin-Fee","title":"Administrative fee","params":{"payer":{"type":"Role","doc":"Role that pays the fee."},"payee":{"type":"Role","doc":"Role that receives the fee."},"rate":{"type":"Rate","doc":"Fee as a fraction of reported net sales."},"report_clause":{"type":"Name","doc":"Name of the Sales-Reporting clause whose reports form the base."},"period":{"type":"Period","doc":"Fee period."},"due":{"type":"Period","doc":"Time after each period's end by which the fee is due."},"rounding":{"type":"Rounding","doc":"Rounding applied to each period's fee."}},"forms":[{"form":"Duty","duty":"pay","obligor":{"param":"payer"},"obligee":{"param":"payee"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Admin-Fee/paid","ack":[{"param":"payee"}]},"amount":{"rate":{"param":"rate"},"base":{"claim":"UP:Sales-Reporting/report","clause":{"param":"report_clause"},"field":"total_net"},"rounding":{"param":"rounding"}}}],"claims":{"UP:Admin-Fee/paid":{"data":{"period":"{start: Time, end: Time}","amount":"Amount","reference":"string"},"doc":"The payer attests payment of the fee for the period. Discharges the duty when acknowledged by the payee."}},"render":"For each period of {{period|period}}, {{payer|role}} pays {{payee|role}} an administrative fee equal to {{rate|rate}} of the net sales reported for that period, rounded {{rounding|rounding}}, within {{due|period}} after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Audit","title":"Audit right","params":{"auditor":{"type":"Role","doc":"Role that may request an audit."},"auditee":{"type":"Role","doc":"Role whose records are audited."},"response":{"type":"Period","doc":"Time after a request by which records must be made available."},"max_requests":{"type":"int","doc":"Maximum requests per limit period."},"per":{"type":"Period","doc":"Limit period."}},"forms":[{"form":"Duty","duty":"make-records-available","obligor":{"param":"auditee"},"obligee":{"param":"auditor"},"trigger":{"on":"UP:Audit/request","by":[{"param":"auditor"}],"limit":{"count":{"param":"max_requests"},"per":{"param":"per"}}},"due":{"param":"response"},"discharge":{"claim":"UP:Audit/available","ack":[{"param":"auditor"}]}}],"claims":{"UP:Audit/request":{"data":{"scope":"string","lookback":"{start: Time, end: Time}"},"doc":"Request for an audit of records within the stated scope and time range."},"UP:Audit/available":{"data":{"request":"Hash"},"doc":"The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor."}},"render":"{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fee-Disclosure","title":"Fee disclosure","params":{"period":{"type":"Period","doc":"Disclosure period."},"due":{"type":"Period","doc":"Time after each period's end by which the disclosure is due."}},"forms":[{"form":"Duty","duty":"disclose","obligor":"aggregator","obligee":"member","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Fee-Disclosure/disclosed"}}],"claims":{"UP:Fee-Disclosure/disclosed":{"data":{"period":"{start: Time, end: Time}","received":"Amount","basis":"string"},"doc":"The Aggregator states the administrative fees it received from the Supplier for the period under the parent agreement, attributable to this Member where the parent agreement reports by participation."}},"render":"For each period of {{period|period}}, the Aggregator discloses to the Member, in writing, the amount of administrative fees it received from the Supplier under the parent agreement for that period, within {{due|period}} after the period ends. This clause records a disclosure process. It makes no statement about whether any arrangement satisfies any law.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fixed-Term","title":"Term of agreement","params":{"start":{"type":"Time","doc":"First instant the Agreement is in force."},"end":{"type":"Time","doc":"First instant the Agreement is no longer in force."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"}}],"claims":{},"render":"This Agreement is in force from {{start|time}} until {{end|time}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Governing-Law","title":"Governing law","params":{"law":{"type":"string","doc":"Governing law, e.g. a named jurisdiction."},"forum":{"type":"string","doc":"Forum for disputes."}},"forms":[],"claims":{},"render":"This Agreement is governed by the law of {{law}}. Disputes are resolved in {{forum}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Notices","title":"Notices","params":{},"forms":[],"claims":{},"render":"Any notice under this Agreement is given by a signed attestation recorded on this Agreement's chain of events, and is given at the time stated in that attestation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Overlay","title":"Overlay of an existing agreement","params":{"document":{"type":"Hash","doc":"SHA-256 hash of the existing contract document, as the parties hold it."},"document_title":{"type":"string","doc":"Title of the existing contract. Sealable."},"document_date":{"type":"Time","doc":"Date the existing contract was signed."},"governs":{"type":"\"document\" | \"this-record\"","doc":"Which text controls if this record and the existing contract are inconsistent."}},"forms":[],"claims":{},"render":"This record describes the agreement titled {{document_title}}, signed on {{document_date|time}}, whose document has the hash {{document}}. It does not amend or replace that agreement. If this record and that agreement are inconsistent, {{governs|governs}} controls.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Participation","title":"Participation in an aggregator agreement","params":{"parent":{"type":"ChainId","doc":"The chain of the parent Agreement."}},"forms":[{"form":"Link","parent":{"param":"parent"},"bind":["aggregator","supplier"]}],"claims":{},"render":"This Agreement is a participation under the agreement identified by {{parent}}. The Aggregator and the Supplier of that agreement are parties to this one in the same roles. This Agreement is in force only while that agreement is in force.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Price-Reference","title":"Price by reference to a price list","params":{"items":{"type":"[Identifier]","doc":"Items in scope."},"list_role":{"type":"Role","doc":"Role that attests the reference price list."},"factor":{"type":"Decimal","doc":"Multiplier applied to the reference price."},"rounding":{"type":"Rounding","doc":"Rounding applied to the result."}},"forms":[{"form":"Valuation","items":{"param":"items"},"source":{"reference":{"claim":"UP:Price-Reference/list","role":{"param":"list_role"},"factor":{"param":"factor"},"rounding":{"param":"rounding"}}}}],"claims":{"UP:Price-Reference/list":{"data":{"effective":"Time","prices":"[{item: Identifier, price: Amount}]"},"doc":"A reference price list, effective from the stated time."}},"render":"The price of each Item in scope is its price in the most recent reference price list attested by {{list_role|role}} that is effective at the time of purchase, multiplied by {{factor}} and rounded {{rounding|rounding}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Purchase-Commitment","title":"Purchase commitment","params":{"category":{"type":"string","doc":"Description of the product category."},"share":{"type":"Rate","doc":"Committed share of category purchases."},"period":{"type":"Period","doc":"Measurement period."},"due":{"type":"Period","doc":"Time after each period's end by which the attestation is due."}},"forms":[{"form":"Duty","duty":"attest-compliance","obligor":"member","obligee":"supplier","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Purchase-Commitment/met","ack":["supplier"]}}],"claims":{"UP:Purchase-Commitment/met":{"data":{"period":"{start: Time, end: Time}","basis":"string"},"doc":"The Member attests that it met the committed share for the period. Discharges the duty when acknowledged by the Supplier."}},"render":"The Member commits to purchase under this Agreement at least {{share|rate}} of its purchases of {{category}} in each period of {{period|period}}, and attests whether it met that commitment within {{due|period}} after each period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Renewing-Term","title":"Term of agreement with renewal","params":{"start":{"type":"Time","doc":"First instant in force."},"end":{"type":"Time","doc":"End of the initial term."},"renewal_period":{"type":"Period","doc":"Length of each renewal."},"max_renewals":{"type":"int","doc":"Maximum number of renewals."},"optout_roles":{"type":"[Role]","doc":"Roles that may prevent the next renewal."},"optout_notice":{"type":"Period","doc":"How long before a term ends an opt-out notice must be given."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"},"renew":{"period":{"param":"renewal_period"},"max":{"param":"max_renewals"},"optout_roles":{"param":"optout_roles"},"optout_notice":{"param":"optout_notice"}}}],"claims":{"UP:Renewing-Term/optout":{"data":{},"doc":"Notice that the Agreement will not renew at the end of the current term."}},"render":"This Agreement is in force from {{start|time}} until {{end|time}}. It then renews for successive periods of {{renewal_period|period}}, up to {{max_renewals}} times, unless {{optout_roles|role}} gives notice of non-renewal at least {{optout_notice|period}} before the end of the then-current term.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Sales-Reporting","title":"Sales reporting","params":{"reporter":{"type":"Role","doc":"Role that reports."},"recipient":{"type":"Role","doc":"Role that receives the report."},"period":{"type":"Period","doc":"Reporting period."},"due":{"type":"Period","doc":"Time after each period's end by which the report is due."}},"forms":[{"form":"Duty","duty":"report","obligor":{"param":"reporter"},"obligee":{"param":"recipient"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Sales-Reporting/report"}}],"claims":{"UP:Sales-Reporting/report":{"data":{"period":"{start: Time, end: Time}","lines":"[{participation: ChainId, item: Identifier, quantity: Decimal, net: Amount}]","total_net":"Amount"},"doc":"Sales for one period, by participation and Item, with the total net sales."}},"render":"{{reporter|role}} reports to {{recipient|role}} the sales made under this Agreement in each reporting period of {{period|period}}, by Member participation and Item, within {{due|period}} after the period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Cause","title":"Termination for cause","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate for cause."},"cure_period":{"type":"Period","doc":"Time allowed to cure after a breach notice."},"notice":{"type":"Period","doc":"Time from termination notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"},"requires":{"claim":"UP:Termination-Cause/breach","age":{"param":"cure_period"},"unless":"UP:Termination-Cause/cured"}}],"claims":{"UP:Termination-Cause/breach":{"data":{"description":"string"},"doc":"Notice describing an alleged material breach."},"UP:Termination-Cause/cured":{"data":{"breach":"Hash"},"doc":"Statement that the breach identified by the referenced notice has been cured. Effective only when acknowledged by the party that gave the breach notice."},"UP:Termination-Cause/notice":{"data":{"breach":"Hash"},"doc":"Notice of termination for the referenced, uncured breach."}},"render":"If a party commits a material breach, {{holders|role}} may give notice describing it. If the breach is not cured within {{cure_period|period}} of that notice, {{holders|role}} may terminate this Agreement by further notice, effective {{notice|period}} after that notice. A breach counts as cured only when the party that gave the breach notice acknowledges the cure.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Convenience","title":"Termination for convenience","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate."},"notice":{"type":"Period","doc":"Time from notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"}}],"claims":{"UP:Termination-Convenience/notice":{"data":{},"doc":"Notice of termination."}},"render":"{{holders|role}} may terminate this Agreement without cause by notice. Termination takes effect {{notice|period}} after the notice is given.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tier-Selection","title":"Tier attestation and selection","params":{"tiers_clause":{"type":"Name","doc":"Name of the Tiers clause in the parent Agreement."},"initial":{"type":"Name","doc":"Tier in effect before any selection."},"effective":{"type":"\"on-ack\" | {next: Period}","doc":"When an acknowledged selection takes effect."}},"forms":[{"form":"Selection","options":{"from":{"link":true,"clause":{"param":"tiers_clause"}}},"subject":"member","ack":["supplier"],"effective":{"param":"effective"},"initial":{"param":"initial"}}],"claims":{"UP:Tier-Selection/selects":{"data":{"option":"Name","basis":"string"},"doc":"The Member attests that it meets the conditions of the named tier, stating the basis."}},"render":"The Member's tier is {{initial}} until changed under this clause. The Member may attest that it meets the conditions of another tier, stating the basis. The change takes effect when the Supplier acknowledges the attestation, {{effective|effective}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tiers","title":"Tiered price schedule","params":{"tiers":{"type":"[{name: Name, conditions: string}]","doc":"The tiers, in order, with descriptive qualification conditions."},"prices":{"type":"[{item: Identifier, by: {<tier>: Amount}}]","doc":"Price of each Item in each tier."}},"forms":[{"form":"Valuation","source":{"table":{"param":"prices"},"options":{"param":"tiers"}}}],"claims":{},"render":"The following tiers apply. {{#each tiers}}Tier {{name}}: {{conditions}}. {{/each}}The price of each Item in each tier is: {{#each prices}}{{item}}: {{by|amount}}. {{/each}}Whether a Member meets a tier's conditions is established by that Member's attestation and the Supplier's acknowledgment, as set out in the tier selection clause of the Member's participation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}}]</script>
+<script id="conformance-json" type="application/json">{"run": "2026-11-22", "pytest": {"passed": 170, "failed": 0}, "js": {"passed": 121, "total": 121, "traces": 26}, "lab": {"runs": 60, "failures": 0}, "files": [{"file": "test_terms.py", "tests": 49, "about": "All 16 Terms, every parameter and claim type"}, {"file": "test_axioms.py", "tests": 29, "about": "Each axiom A1 to A13 holds, and breaking it is rejected"}, {"file": "test_rules.py", "tests": 24, "about": "Clause forms: windows, exits, selections, valuations, duties, links"}, {"file": "test_audit_regressions.py", "tests": 22, "about": "One regression test per audit finding"}, {"file": "test_robustness.py", "tests": 13, "about": "Fuzzing signed events and the command line"}, {"file": "test_crypto.py", "tests": 10, "about": "Ed25519 test vectors and the strict verification rules"}, {"file": "test_canon.py", "tests": 9, "about": "Canonical JSON, hashing and seals"}, {"file": "test_simulate_trace.py", "tests": 7, "about": "Traces and what-if simulations"}, {"file": "test_differential.py", "tests": 5, "about": "Python and JavaScript on 30,000+ seeded random operations"}, {"file": "test_js_conformance.py", "tests": 2, "about": "The JavaScript engine reproduces every Python trace"}], "audit": [{"id": "F01", "sev": "High", "title": "A signed Agreement could hang every evaluator"}, {"id": "F02", "sev": "High", "title": "Parameters were not type-checked"}, {"id": "F03", "sev": "High", "title": "Claim data was not type-checked"}, {"id": "F04", "sev": "High", "title": "The two engines disagreed on signature validity"}, {"id": "F05", "sev": "High", "title": "Small-order keys allowed forgery"}, {"id": "F06", "sev": "Medium", "title": "Decimal arithmetic was not exact in Python"}, {"id": "F07", "sev": "Medium", "title": "Canonical JSON differed between engines"}, {"id": "F08", "sev": "Medium", "title": "Times and decimals were parsed differently"}, {"id": "F09", "sev": "Medium", "title": "Rendering depended on the machine's locale"}, {"id": "F10", "sev": "Medium", "title": "Renewals drifted at month end, and the spec contradicted itself"}, {"id": "F11", "sev": "Low", "title": "Mandate and proposal fields were not validated"}, {"id": "F12", "sev": "Low", "title": "A Bundle could hold two versions of one chain"}, {"id": "F13", "sev": "Low", "title": "The CLI printed tracebacks on bad input"}, {"id": "F14", "sev": "Low", "title": "An installed package had no Term library"}, {"id": "F15", "sev": "Low", "title": "Structural names could be sealed"}, {"id": "F16", "sev": "Low", "title": "Seal salts were only length-checked"}], "open": 8}</script>
 <script id="src-crypto">/* Universal Paper — JavaScript engine, part 1: canonical JSON, SHA-256/512, Ed25519, decimals, time.
  * A second, independent implementation of spec/01-domain.md §1–3 and spec/04-inference.md §2, §6.
  * No dependencies. Works in browsers and in Node. Licensed Apache-2.0. */
@@ -2311,265 +2306,333 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
   if (typeof module !== "undefined" && module.exports) module.exports = UP;
 })(typeof globalThis !== "undefined" ? globalThis : this);
 </script>
+<script id="src-play">/* Universal Paper — Playground history: signs an agreement written in the Playground, adds example sales reports
+ * and fee payments the visitor enters, and evaluates the chain with the engine. Requires up-crypto.js and up-engine.js.
+ * Licensed Apache-2.0. */
+(function (root) {
+  "use strict";
+  var UP = root.UP || (typeof require !== "undefined" ? require("./up-engine.js") : null);
+  var ch = UP.contentHash, SPEC = UP.SPEC, DAY = 86400000;
+  function shift(t, days) { return UP.fmtTime(new Date(UP.parseTime(t).getTime() + days * DAY)); }
+  function money(s) {
+    var v = String(s || "").replace(/[,\s$]/g, "");
+    if (!/^(0|[1-9][0-9]{0,11})(\.[0-9]{1,2})?$/.test(v)) return null;
+    var p = v.split("."); return p[0] + "." + ((p[1] || "") + "00").slice(0, 2);
+  }
+
+  // keyOf(publicKey) -> Key. inputs: {reports: {periodStart: "1234.56"}, paid: {periodStart: true}, disclosures: [...]}
+  // Disclosures open sealed values for the parties, so fees can be computed from a sealed rate.
+  function history(ag, terms, keyOf, inputs) {
+    inputs = inputs || {};
+    var discs = inputs.disclosures || [];
+    var data = { type: "Bundle", spec: SPEC, terms: terms, chains: [], disclosures: discs };
+    var b0 = new UP.Bundle(data), issues = UP.agreementIssues(b0, ag);
+    if (issues.length) return { issues: issues };
+    var cfs = UP.clauseForms(b0, ag);
+    var w = cfs.filter(function (c) { return c.kind === "Window"; })[0];
+    var start = w ? w.form.start : "2027-01-01T00:00:00Z";
+    var signAt = shift(start, -7);
+    var horizon = w ? w.form.end : UP.addPeriod(start, { unit: "year", count: 1 });
+    var parties = ag.parties, roleKey = {};
+    parties.forEach(function (p) { if (!roleKey[p.role]) roleKey[p.role] = p.party.key; });
+
+    var G = { type: "Event", spec: SPEC, kind: "propose", at: signAt, by: parties[0].party.key, body: { agreement: ag } };
+    G = UP.attach.apply(null, [G].concat(parties.map(function (p) { return keyOf(p.party.key).signObj(G); })));
+    var cid = ch(G);
+
+    function evaluate(planned) {
+      var chain = [G], d = { type: "Bundle", spec: SPEC, terms: terms, chains: [chain], disclosures: discs }, log = [];
+      planned.slice().sort(function (a, b) { return a.at < b.at ? -1 : a.at > b.at ? 1 : a.n - b.n; }).forEach(function (p) {
+        var ev = new UP.Evaluator(new UP.Bundle(d)), S = ev.stateAt(cid);
+        var E = { type: "Event", spec: SPEC, kind: "attest", at: p.at, by: p.by, chain: cid, prev: ch(S), body: { claim: p.claim } };
+        E = UP.attach.apply(null, [E].concat([p.by].concat(p.cosign || []).map(function (k) { return keyOf(k).signObj(E); })));
+        chain.push(E);
+        var steps = new UP.Evaluator(new UP.Bundle(d)).run(cid), st = steps[steps.length - 1];
+        log.push({ at: p.at, what: p.what, accepted: st.accepted, reason: st.reason, hash: ch(E) });
+        if (!st.accepted) chain.pop();
+      });
+      var ev2 = new UP.Evaluator(new UP.Bundle(d));
+      return { ev: ev2, data: d, log: log };
+    }
+
+    var rep = cfs.filter(function (c) { return c.tid === "UP:Sales-Reporting"; })[0];
+    var fee = rep && cfs.filter(function (c) { return c.tid === "UP:Admin-Fee" && c.form.amount && c.form.amount.base.clause === rep.name; })[0];
+    var planned = [], n = 0, notes = [];
+    var first = evaluate([]);
+    var repPeriods = [];
+    if (rep) {
+      var reporter = roleKey[rep.form.obligor];
+      if (!reporter) notes.push("Sales reports need a party in the " + rep.form.obligor + " role.");
+      repPeriods = first.ev.obligations(cid, horizon).filter(function (o) { return o.clause === rep.name; }).map(function (o) { return o.period; });
+      repPeriods.forEach(function (pd) {
+        var v = money((inputs.reports || {})[pd.start]);
+        if (v === null || !reporter) return;
+        planned.push({ n: n++, at: shift(pd.end, 2), by: reporter, what: "Sales report for the period starting " + pd.start.slice(0, 10) + ": USD " + v,
+          claim: { type: "UP:Sales-Reporting/report", clause: rep.name, data: { period: pd, lines: [], total_net: { value: v, currency: "USD" } } } });
+      });
+    }
+    var mid = evaluate(planned);
+    if (fee) {
+      var payer = roleKey[fee.form.obligor], payee = roleKey[fee.form.obligee];
+      mid.ev.obligations(cid, horizon).filter(function (o) { return o.clause === fee.name; }).forEach(function (o) {
+        if (!(inputs.paid || {})[o.period.start] || typeof o.amount !== "object" || !payer || !payee) return;
+        planned.push({ n: n++, at: shift(o.due, -3), by: payer, cosign: payer === payee ? [] : [payee], what: "Fee paid for the period starting " + o.period.start.slice(0, 10) + ": " + o.amount.currency + " " + o.amount.value,
+          claim: { type: "UP:Admin-Fee/paid", clause: fee.name, data: { period: o.period, amount: o.amount, reference: "Example remittance" } } });
+      });
+    }
+    var out = evaluate(planned);
+    return { cid: cid, ev: out.ev, data: out.data, log: out.log, start: start, end: w ? w.form.end : null, signAt: signAt, horizon: horizon,
+      reportClause: rep ? rep.name : null, feeClause: fee ? fee.name : null, reportPeriods: repPeriods, notes: notes, issues: [] };
+  }
+
+  UP.play = { history: history, money: money };
+  if (typeof module !== "undefined" && module.exports) module.exports = UP;
+})(typeof globalThis !== "undefined" ? globalThis : this);
+</script>
 <script>
 (function () {
   "use strict";
   var UP = window.UP, ch = UP.contentHash;
-  var TERMS = {};
-  JSON.parse(document.getElementById("terms-json").textContent).forEach(function (t) { TERMS[t.id] = t; });
+  var TERMS = {}, TERM_LIST = JSON.parse(document.getElementById("terms-json").textContent);
+  TERM_LIST.forEach(function (t) { TERMS[t.id] = t; });
+  var CONF = (function () { try { return JSON.parse(document.getElementById("conformance-json").textContent); } catch (e) { return null; } })();
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function short(h) { return h ? String(h).replace("sha256:", "").slice(0, 10) : "none"; }
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
-  function fmtN(n) { return n.toLocaleString("en-US"); }
+  function fmtN(n) { return Number(n).toLocaleString("en-US"); }
   function store(k, v) { try { if (v === undefined) { var s = localStorage.getItem(k); return s ? JSON.parse(s) : null; } localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SVGNS = "http://www.w3.org/2000/svg";
   $("spec-ver").textContent = UP.SPEC;
-
+  var RULES = { A1: "Composition", A2: "Unanimity", A3: "Chained transitions", A4: "Determinism", A5: "Non-retroactivity", A6: "Value neutrality",
+    A7: "Role symmetry", A8: "Rendering binding", A9: "Bounded delegation", A10: "Verifiable confidentiality", A11: "Closed evidence", A12: "Single attribution", A13: "Resolved precedence" };
+  function ruleName(r) { return r ? r + (RULES[r] ? " " + RULES[r] : "") : "—"; }
   function fpHTML(h, prev, label) {
     var hex = h.replace("sha256:", ""), ph = prev ? prev.replace("sha256:", "") : null, out = "";
     for (var i = 0; i < hex.length; i++) out += ph && ph[i] !== hex[i] ? '<span class="flip">' + hex[i] + "</span>" : hex[i];
-    return '<span class="lab">' + esc(label || "Fingerprint") + "</span>sha256:" + out;
+    return (label ? '<span class="lab">' + esc(label) + "</span>" : "") + "sha256:" + out;
   }
   function flash(el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
-  var RULES = {
-    A1: "Composition", A2: "Unanimity", A3: "Chained transitions", A4: "Determinism", A5: "Non-retroactivity", A6: "Value neutrality",
-    A7: "Role symmetry", A8: "Rendering binding", A9: "Bounded delegation", A10: "Verifiable confidentiality", A11: "Closed evidence",
-    A12: "Single attribution", A13: "Resolved precedence"
-  };
-  function ruleName(r) { return r ? r + (RULES[r] ? " " + RULES[r] : "") : "—"; }
 
-  // ======================================================================== Navigation
+  // ---- navigation highlight
   var navLinks = document.querySelectorAll("[data-nav]");
   if ("IntersectionObserver" in window) {
     var navObs = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) navLinks.forEach(function (a) { a.classList.toggle("on", a.dataset.nav === e.target.id); }); });
     }, { rootMargin: "-45% 0px -50% 0px" });
-    ["story", "proof", "playground", "replay"].forEach(function (id) { navObs.observe($(id)); });
+    ["vision", "playground", "conformance"].forEach(function (id) { navObs.observe($(id)); });
   }
 
-  // ======================================================================== Story
-  var story = (function () {
-    var agg = UP.Key.fromSeed("story:aggregator"), sup = UP.Key.fromSeed("story:supplier");
-    var rate = "0.02", prevFp = null, stage = 1, timer = null;
+  // ======================================================================== Intro demo
+  (function () {
+    var agg = UP.Key.fromSeed("story:aggregator"), sup = UP.Key.fromSeed("story:supplier"), fee = TERMS["UP:Admin-Fee"];
+    var rate = "0.02", prevFp = null, tampered = false;
     function agreement(r) {
-      var t = TERMS["UP:Admin-Fee"];
-      return {
-        type: "Agreement", spec: UP.SPEC, label: "Example master agreement (hypothetical)",
-        parties: [{ role: "aggregator", party: { key: agg.public, name: "Hypothetical Purchasing Group" } }, { role: "supplier", party: { key: sup.public, name: "Example Supply Co." } }].sort(function (a, b) { return a.role < b.role ? -1 : 1; }),
-        clauses: [{ n: "fee", term: "UP:Admin-Fee", def: ch(t), params: { payer: "supplier", payee: "aggregator", rate: r, report_clause: "reporting", period: { unit: "month", count: 1 }, due: { unit: "day", count: 30 }, rounding: { scale: 2, mode: "half-even" } } }]
-      };
+      return { type: "Agreement", spec: UP.SPEC, label: "Example master agreement (hypothetical)",
+        parties: [{ role: "aggregator", party: { key: agg.public, name: "Hypothetical Purchasing Group" } }, { role: "supplier", party: { key: sup.public, name: "Example Supply Co." } }],
+        clauses: [{ n: "fee", term: "UP:Admin-Fee", def: ch(fee), params: { payer: "supplier", payee: "aggregator", rate: r, report_clause: "reporting", period: { unit: "month", count: 1 }, due: { unit: "day", count: 30 }, rounding: { scale: 2, mode: "half-even" } } }] };
     }
-    function genesis(ag) {
-      var E = { type: "Event", spec: UP.SPEC, kind: "propose", at: "2026-12-01T15:00:00Z", by: agg.public, body: { agreement: ag } };
-      return UP.attach(E, agg.signObj(E), sup.signObj(E));
-    }
-    function stateOf(E) {
-      var b = new UP.Bundle({ type: "Bundle", spec: UP.SPEC, terms: [TERMS["UP:Admin-Fee"]], chains: [[E]] });
-      var st = new UP.Evaluator(b).run(ch(E))[0];
-      return st;
-    }
+    function run(E) { return new UP.Evaluator(new UP.Bundle({ type: "Bundle", spec: UP.SPEC, terms: [fee], chains: [[E]] })).run(ch(E))[0]; }
     function draw() {
-      var ag = agreement(rate), b = new UP.Bundle({ terms: [TERMS["UP:Admin-Fee"]] });
-      var text = UP.renderTemplate(b, TERMS["UP:Admin-Fee"].render, ag.clauses[0].params);
-      var pct = esc((Number(rate) * 100).toString() + "%");
-      $("sv-text").innerHTML = esc(text).replace(pct, "<mark>" + pct + "</mark>");
-      var json = JSON.stringify({ n: "fee", term: "UP:Admin-Fee", def: short(ag.clauses[0].def) + "…", params: ag.clauses[0].params }, null, 1);
-      $("sv-json").innerHTML = esc(json).replace('"rate": "' + rate + '"', '<b>"rate": "' + rate + '"</b>');
-      var h = ch(ag), fpEl = $("sv-fp");
-      fpEl.innerHTML = fpHTML(h, prevFp, "Agreement fingerprint");
-      if (prevFp && prevFp !== h) flash(fpEl);
+      var ag = agreement(rate), b = new UP.Bundle({ terms: [fee] });
+      var text = UP.renderTemplate(b, fee.render, ag.clauses[0].params), pct = esc((Number(rate) * 100) + "%");
+      $("d-text").innerHTML = esc(text).replace(pct, "<mark>" + pct + "</mark>");
+      var h = ch(ag);
+      $("d-fp").innerHTML = fpHTML(h, prevFp, "Agreement fingerprint" + (prevFp && prevFp !== h ? " · changed" : ""));
+      if (prevFp && prevFp !== h) flash($("d-fp"));
       prevFp = h;
-      var E = genesis(ag), honest = stateOf(E);
-      var rows = [["Aggregator’s contract system", honest], ["Supplier’s ERP", null], ["Member’s spreadsheet", stateOf(clone(E))]];
-      if (stage >= 6) {
-        var T = clone(E); T.body.agreement.clauses[0].params.rate = rate === "0.02" ? "0.015" : "0.02";
-        rows[1][1] = stateOf(T); rows[1][2] = true;
-      } else rows[1][1] = stateOf(clone(E));
-      $("sv-evals").innerHTML = rows.map(function (r) {
-        var st = r[1], ok = st.accepted, sh = ok ? ch(st.state) : null;
-        return '<div class="evrow' + (ok ? "" : " bad") + '"><b>' + esc(r[0]) + (r[2] ? ' <span class="muted">(copy edited after signing)</span>' : "") + '</b>' +
-          '<span class="pill ' + (ok ? "ok" : "bad") + '">' + (ok ? "executed" : "rejected") + "</span>" +
-          '<span class="h">' + (ok ? "state " + esc(sh) : "no valid state") + "</span>" +
-          (ok ? "" : '<span class="why">' + esc(st.reason) + "</span>") + "</div>";
+      var E = { type: "Event", spec: UP.SPEC, kind: "propose", at: "2026-12-01T15:00:00Z", by: agg.public, body: { agreement: ag } };
+      E = UP.attach(E, agg.signObj(E), sup.signObj(E));
+      var T = clone(E); if (tampered) T.body.agreement.clauses[0].params.rate = rate === "0.02" ? "0.015" : "0.02";
+      var rows = [["Aggregator’s contract system", run(clone(E))], ["Supplier’s ERP", run(T), tampered], ["Member’s spreadsheet", run(clone(E))]];
+      $("d-evals").innerHTML = rows.map(function (r) {
+        var st = r[1], ok = st.accepted;
+        return '<div class="evrow' + (ok ? "" : " bad") + '"><b>' + esc(r[0]) + (r[2] ? ' <span class="muted">(rate edited after signing)</span>' : "") + "</b>" +
+          '<span class="pill ' + (ok ? "ok" : "bad") + '">' + (ok ? "signed and valid" : "rejected") + "</span>" +
+          '<span class="h">' + (ok ? "state " + esc(ch(st.state)) : "no valid state") + "</span>" + (ok ? "" : '<span class="why">' + esc(st.reason) + "</span>") + "</div>";
       }).join("");
     }
-    function setStage(n) {
-      if (n === stage) return;
-      stage = n; $("visual").dataset.stage = String(Math.min(n, 5));
-      clearInterval(timer); timer = null;
-      if (n === 4 && !reduceMotion) timer = setInterval(toggle, 2600);
-      draw();
-    }
-    function toggle() { rate = rate === "0.02" ? "0.025" : "0.02"; draw(); }
-    $("story-toggle").addEventListener("click", function () { clearInterval(timer); timer = null; toggle(); });
-    var steps = document.querySelectorAll(".step");
-    if ("IntersectionObserver" in window) {
-      var obs = new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          if (!e.isIntersecting) return;
-          steps.forEach(function (s) { s.classList.toggle("on", s === e.target); });
-          setStage(Number(e.target.dataset.step));
-        });
-      }, { rootMargin: "-40% 0px -45% 0px" });
-      steps.forEach(function (s) { obs.observe(s); });
-    } else steps.forEach(function (s) { s.classList.add("on"); });
+    $("d-toggle").addEventListener("click", function () { rate = rate === "0.02" ? "0.025" : "0.02"; this.textContent = rate === "0.02" ? "Change the fee" : "Change it back"; draw(); });
+    $("d-tamper").addEventListener("click", function () { tampered = !tampered; this.setAttribute("aria-pressed", String(tampered)); this.textContent = tampered ? "Restore the supplier’s copy" : "Edit the supplier’s copy after signing"; draw(); });
     draw();
   })();
 
-  // ======================================================================== Proving ground
-  var proof = (function () {
-    var prefix = Math.random().toString(36).slice(2, 6), worker = null, running = true, mode = "starting", lastResult = 0;
-    var S = { runs: 0, events: 0, sigs: 0, attacks: 0, caught: 0, invOk: 0, invBad: 0, inv: {}, att: {}, t0: Date.now(), recent: [] };
-    var fails = store("up-explorer-failures") || [];
-    var INV = UP.lab.INVARIANTS, selected = null;
-    Object.keys(INV).forEach(function (k) { S.inv[k] = { ok: 0, bad: 0 }; });
-    Object.keys(UP.lab.ATTACKS).forEach(function (k) { S.att[k] = { n: 0, caught: 0, rules: {} }; });
-    var TERM_LIST = Object.keys(TERMS).map(function (k) { return TERMS[k]; });
-    var WORKER_MAIN = "var running=false,terms=null,prefix='',n=0;" +
-      "function strip(a){return a.map(function(x){var o={};for(var k in x)if(k!=='_data')o[k]=x[k];return o;});}function summ(r){return {seed:r.seed,cfg:r.cfg,invariants:r.invariants,attacks:strip(r.attacks),events:r.events,sigs:r.sigs,ms:r.ms};}" +
-      "function loop(){if(!running)return;var seed=prefix+'-'+(n++);var r;try{r=summ(UP.lab.runOne(seed,terms));}catch(e){r={seed:seed,invariants:[{id:'generator',ok:false,detail:String(e&&e.message)}],attacks:[],events:0,sigs:0,ms:0};}postMessage({type:'result',res:r});setTimeout(loop,0);}" +
-      "onmessage=function(e){var m=e.data;if(m.type==='init'){terms={};m.terms.forEach(function(t){terms[t.id]=t;});prefix=m.prefix;n=m.n||0;}" +
-      "if(m.type==='start'&&!running){running=true;loop();}if(m.type==='pause')running=false;" +
-      "if(m.type==='one'){postMessage({type:'result',res:summ(UP.lab.runOne(m.seed,terms)),manual:true});}};";
-    function startWorker() {
-      try {
-        var src = ["src-crypto", "src-engine", "src-lab"].map(function (id) { return $(id).textContent; }).join("\n;\n") + "\n" + WORKER_MAIN;
-        worker = new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })));
-        worker.onmessage = function (e) { if (e.data.type === "result") { mode = "worker"; onResult(e.data.res, e.data.manual); } };
-        worker.onerror = function () { fallback(); };
-        worker.postMessage({ type: "init", terms: TERM_LIST, prefix: prefix });
-        worker.postMessage({ type: "start" });
-        setTimeout(function () { if (mode === "starting") fallback(); }, 8000);
-      } catch (e) { fallback(); }
-    }
-    var n = 0, mainTimer = null;
-    function fallback() {
-      if (mode === "main") return;
-      if (worker) { try { worker.terminate(); } catch (e) { /* ignore */ } worker = null; }
-      mode = "main"; n = S.runs; mainLoop();
-    }
-    function mainLoop() {
-      clearTimeout(mainTimer);
-      if (!running || mode !== "main") return;
-      var seed = prefix + "-" + (n++);
-      onResult(summarize(UP.lab.runOne(seed, TERMS)));
-      mainTimer = setTimeout(mainLoop, 120);
-    }
-    function summarize(r) { return { seed: r.seed, cfg: r.cfg, invariants: r.invariants, attacks: r.attacks.map(function (a) { var o = {}; Object.keys(a).forEach(function (k) { if (k !== "_data") o[k] = a[k]; }); return o; }), events: r.events, sigs: r.sigs, ms: r.ms }; }
-    function runSeed(seed) {
-      if (mode === "worker" && worker) worker.postMessage({ type: "one", seed: seed });
-      else onResult(summarize(UP.lab.runOne(seed, TERMS)), true);
-    }
-    function onResult(r, manual) {
-      lastResult = Date.now();
-      var bad = r.invariants.filter(function (x) { return !x.ok; });
-      if (!manual) {
-        S.runs++; S.events += r.events; S.sigs += r.sigs;
-        r.invariants.forEach(function (x) { if (!S.inv[x.id]) S.inv[x.id] = { ok: 0, bad: 0 }; S.inv[x.id][x.ok ? "ok" : "bad"]++; S[x.ok ? "invOk" : "invBad"]++; S.inv[x.id].last = x.detail; });
-        r.attacks.forEach(function (a) {
-          var s = S.att[a.attack]; s.n++; S.attacks++;
-          if (a.detected) { s.caught++; S.caught++; s.rules[a.rule] = (s.rules[a.rule] || 0) + 1; }
-        });
+  // ======================================================================== Vision
+  (function () {
+    var svg = $("v-svg"), seedN = 0, g = null, trace = null, L = null, queue = [], packets = [], paused = false, visible = true, nextAt = 0, done = 0, raf = 0;
+    var narrow = false;
+    function el(tag, attrs, parent, text) { var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; (parent || svg).appendChild(e); return e; }
+    function shortName(n) { var w = n.split(" "); return w.length > 2 ? w[1] : n; }
+    function scenario() {
+      for (var tries = 0; tries < 6; tries++) {
+        var seed = "vision-" + Math.random().toString(36).slice(2, 7) + "-" + (seedN++);
+        try {
+          g = UP.lab.generate(seed, TERMS, { agent: true, sealed: false });
+          trace = UP.makeTrace(g.data, [{ id: "e", name: "Engine", data: g.data }], {}, g.finalAt);
+          return seed;
+        } catch (e) { g = null; }
       }
-      if (bad.length && !fails.some(function (f) { return f.seed === r.seed; })) {
-        fails.unshift({ seed: r.seed, failed: bad.map(function (b) { return b.id + ": " + b.detail; }), at: new Date().toISOString() });
-        fails = fails.slice(0, 50); store("up-explorer-failures", fails);
+      return null;
+    }
+    function layout() {
+      narrow = svg.getBoundingClientRect().width < 640;
+      var W = narrow ? 420 : 1200, H = narrow ? 860 : 650, P = {}, A = {}, lanes = [];
+      var mem = g.actors.members, agent = g.parts[0] && g.parts[0].agent;
+      if (!narrow) {
+        P[g.actors.agg.pub] = { x: 200, y: 82, role: "aggregator" }; P[g.actors.sup.pub] = { x: 1000, y: 82, role: "supplier" };
+        mem.forEach(function (m, i) { P[m.pub] = { x: mem.length === 1 ? 600 : 500 + i * (200 / (mem.length - 1)), y: 82, role: "member" }; });
+        A = { aggregator: { x: 200, y: 212, w: 180, t: "Contract management", s: "the aggregator’s app" }, price: { x: 400, y: 212, w: 160, t: "Price activation", s: "a shared service" },
+          member: { x: 600, y: 212, w: 180, t: "Member procurement", s: "each member’s app" }, settle: { x: 800, y: 212, w: 160, t: "Fee settlement", s: "a shared service" },
+          supplier: { x: 1000, y: 212, w: 180, t: "Supplier ERP", s: "the supplier’s app" } };
+        var agentNode = agent ? { x: 600, y: 322 } : null;
+        var fy = 380, fh = 250;
+        g.data.chains.forEach(function (c, i) { lanes.push({ y: fy + 98 + i * Math.min(36, 130 / Math.max(1, g.data.chains.length - 1 || 1)), x0: 250, x1: 1160 }); });
+        return { W: W, H: H, P: P, A: A, agent: agentNode, fy: fy, fh: fh, lanes: lanes, labelX: 40, bands: [[30, "Parties"], [160, "Apps (hypothetical)"], [292, "Agents"]] };
       }
-      S.recent.push(r); if (S.recent.length > 40) S.recent.shift();
-      addBlock(r, manual);
-      paint();
-      if (manual) select(r.seed);
+      P[g.actors.agg.pub] = { x: 52, y: 90, role: "aggregator" }; P[g.actors.sup.pub] = { x: 368, y: 90, role: "supplier" };
+      mem.forEach(function (m, i) { P[m.pub] = { x: mem.length === 1 ? 210 : 140 + i * (140 / (mem.length - 1)), y: 90, role: "member" }; });
+      A = { aggregator: { x: 75, y: 205, w: 128, t: "Contract mgmt", s: "aggregator" }, member: { x: 210, y: 205, w: 128, t: "Procurement", s: "members" },
+        supplier: { x: 345, y: 205, w: 128, t: "Supplier ERP", s: "supplier" }, price: { x: 140, y: 275, w: 128, t: "Price activation", s: "service" }, settle: { x: 280, y: 275, w: 128, t: "Fee settlement", s: "service" } };
+      var lanesN = [];
+      g.data.chains.forEach(function (c, i) { lanesN.push({ y: 520 + i * Math.min(70, 280 / Math.max(1, g.data.chains.length)), x0: 30, x1: 390, labelAbove: true }); });
+      return { W: W, H: H, P: P, A: A, agent: agent ? { x: 210, y: 368 } : null, fy: 420, fh: 420, lanes: lanesN, labelX: 20, bands: [[30, "Parties"], [158, "Apps (hypothetical)"], [340, "Agents"]] };
     }
-    function addBlock(r, manual) {
-      var train = $("pr-train"), empty = train.querySelector(".empty");
-      if (empty) empty.remove();
-      var ok = r.invariants.every(function (x) { return x.ok; }), c = r.cfg || {};
-      var el = document.createElement("button");
-      el.type = "button"; el.className = "blk new" + (ok ? "" : " fail"); el.dataset.seed = r.seed;
-      el.innerHTML = '<span class="seed">' + esc(r.seed) + (manual ? " ↺" : "") + '</span><span class="big num">' + r.events + '</span><span class="meta">events · ' + r.ms + " ms</span>" +
-        '<span class="meta">' + (c.members || 0) + " member" + (c.members === 1 ? "" : "s") + " · " + (c.tiers ? c.tiers.length : 0) + " tiers<br>" +
-        [c.unit === "quarter" ? "quarterly" : "monthly", c.sealed ? "sealed" : "", c.agent ? "agent" : ""].filter(Boolean).join(" · ") + "</span>";
-      el.addEventListener("click", function () { select(r.seed); });
-      train.appendChild(el);
-      while (train.children.length > 40) train.removeChild(train.firstChild);
-      var nearEnd = train.scrollWidth - train.scrollLeft - train.clientWidth < 260;
-      if (nearEnd) train.scrollLeft = train.scrollWidth;
+    function draw() {
+      cancelAnimationFrame(raf); packets = [];
+      while (svg.firstChild && svg.lastChild.nodeName !== "title" && svg.lastChild.nodeName !== "desc") svg.removeChild(svg.lastChild);
+      L = layout();
+      svg.setAttribute("viewBox", "0 0 " + L.W + " " + L.H);
+      L.bands.forEach(function (b) { el("text", { x: L.labelX, y: b[0], "class": "layer-label" }, null, b[1]); });
+      // links party -> app, app -> foundation
+      var lines = el("g", { stroke: "var(--line)", "stroke-width": 1, fill: "none" });
+      Object.keys(L.P).forEach(function (k) { var p = L.P[k], a = L.A[p.role]; el("line", { x1: p.x, y1: p.y + 16, x2: a.x, y2: a.y - 24 }, lines); });
+      Object.keys(L.A).forEach(function (k) { var a = L.A[k]; el("line", { x1: a.x, y1: a.y + 24, x2: a.x, y2: L.fy, "stroke-dasharray": "3 4" }, lines); });
+      if (L.agent) el("line", { x1: L.A.member.x, y1: L.A.member.y + 24, x2: L.agent.x, y2: L.agent.y - 14, stroke: "var(--accent)", "stroke-dasharray": "2 3" }, lines);
+      // parties
+      Object.keys(L.P).forEach(function (k) {
+        var p = L.P[k], name = trace.parties[k] || "";
+        var gg = el("g", { "data-node": "p:" + k });
+        el("circle", { cx: p.x, cy: p.y, r: 15, fill: "var(--panel-2)", stroke: "var(--c" + ({ aggregator: 0, member: 2, supplier: 3 })[p.role] + ")", "stroke-width": 2 }, gg);
+        el("text", { x: p.x, y: p.y + 32, "text-anchor": "middle", "class": "node-label" }, gg, shortName(name));
+        if (!(narrow && p.role === "member" && g.actors.members.length > 1)) el("text", { x: p.x, y: p.y + 46, "text-anchor": "middle", "class": "node-sub" }, gg, p.role);
+        else if (k === g.actors.members[0].pub) el("text", { x: 210, y: p.y + 46, "text-anchor": "middle", "class": "node-sub" }, gg, "members");
+      });
+      // apps
+      Object.keys(L.A).forEach(function (k) {
+        var a = L.A[k], gg = el("g", { "data-node": "a:" + k });
+        a.box = el("rect", { x: a.x - a.w / 2, y: a.y - 24, width: a.w, height: 48, rx: 8, fill: "var(--panel-2)", stroke: "var(--line)" }, gg);
+        el("text", { x: a.x, y: a.y - 3, "text-anchor": "middle", "class": "node-label" }, gg, a.t);
+        el("text", { x: a.x, y: a.y + 13, "text-anchor": "middle", "class": "node-sub" }, gg, a.s);
+      });
+      // agent
+      if (L.agent) {
+        var ag = el("g", {}), x = L.agent.x, y = L.agent.y;
+        L.agent.box = el("path", { d: "M" + x + " " + (y - 14) + " L" + (x + 14) + " " + y + " L" + x + " " + (y + 14) + " L" + (x - 14) + " " + y + "Z", fill: "var(--panel-2)", stroke: "var(--accent)", "stroke-width": 1.5 }, ag);
+        el("text", { x: x + 22, y: y - 2, "class": "node-label" }, ag, "Procurement agent");
+        el("text", { x: x + 22, y: y + 13, "class": "node-sub" }, ag, "Mandate allows tiers " + g.parts[0].agentAllowed);
+      }
+      // foundation
+      el("rect", { x: 10, y: L.fy, width: L.W - 20, height: L.fh, rx: 12, fill: "var(--found)", stroke: "var(--found-line)" });
+      el("text", { x: L.labelX + 10, y: L.fy + 34, "class": "found-title" }, null, "Universal Paper");
+      el("text", { x: L.labelX + 10, y: L.fy + 54, "class": "found-sub" }, null, narrow ? "Terms · agreements · signed events · fingerprints" : "Terms · agreements · signed events · fingerprints, checked by every party’s own engine");
+      L.dots = el("g", {});
+      L.lanes.forEach(function (ln, i) {
+        var lbl = trace.chains[i] ? trace.chains[i].label.replace(/ \(hypothetical\)$/, "").replace(/^Master agreement .*$/, "Master agreement").replace(/^Participation of Sample (\w+).*$/, "Participation: $1") : "";
+        if (ln.labelAbove) el("text", { x: ln.x0, y: ln.y - 10, "class": "lane-label" }, null, lbl);
+        else el("text", { x: L.labelX + 10, y: ln.y + 4, "class": "lane-label" }, null, lbl);
+        el("line", { x1: ln.x0, y1: ln.y, x2: ln.x1, y2: ln.y, stroke: "var(--found-line)", "stroke-width": 1 });
+      });
+      L.hashLbl = el("text", { x: L.W - 30, y: L.fy + 34, "text-anchor": "end", "class": "hashlbl" }, null, "");
+      L.pk = el("g", {});
     }
-    function paint() {
-      var secs = Math.max(1, (Date.now() - S.t0) / 1000);
-      $("t-runs").textContent = fmtN(S.runs);
-      $("t-rate").textContent = (S.runs / secs * 60).toFixed(0) + " runs a minute";
-      $("t-events").textContent = fmtN(S.events);
-      $("t-sigs").textContent = fmtN(S.sigs) + " signatures made and verified";
-      $("t-attacks").textContent = fmtN(S.caught);
-      $("t-attacks-s").textContent = "of " + fmtN(S.attacks) + " attempted";
-      $("t-inv").textContent = fmtN(S.invOk);
-      $("t-fail").textContent = fmtN(S.invBad);
-      $("t-fail-tile").className = "tile " + (S.invBad ? "alarm" : "good");
-      $("pr-status").textContent = running ? "Running live in your browser" : "Paused";
-      $("pr-status").classList.toggle("running", running);
-      $("pr-where").textContent = mode === "worker" ? "in a background worker" : mode === "main" ? "on the page (no background worker available)" : "";
-      $("pr-inv").innerHTML = Object.keys(INV).map(function (k) {
-        var s = S.inv[k], tot = s.ok + s.bad;
-        return "<tr><td>" + esc(INV[k]) + '<div class="muted" style="font-size:0.78rem">' + esc(s.last || "") + '</div></td><td class="num">' + fmtN(s.ok) + '</td><td class="num" style="color:' + (s.bad ? "var(--bad)" : "inherit") + '">' + fmtN(s.bad) + "</td></tr>";
-      }).join("");
-      $("pr-att").innerHTML = Object.keys(S.att).map(function (k) {
-        var s = S.att[k], rules = Object.keys(s.rules).map(function (r) { return '<span class="pill">' + esc(ruleName(r)) + "</span>"; }).join(" ");
-        return "<tr><td>" + esc(UP.lab.ATTACKS[k].label) + '</td><td class="num">' + fmtN(s.caught) + " / " + fmtN(s.n) + '</td><td><div class="chips">' + (rules || '<span class="muted">—</span>') + "</div></td></tr>";
-      }).join("");
-      var fc = $("pr-fails-card");
-      fc.hidden = !fails.length;
-      if (fails.length) $("pr-fails").innerHTML = fails.map(function (f) {
-        return '<div class="ev-item bad"><div><b class="mono">' + esc(f.seed) + '</b> <button class="btn small" type="button" data-replay="' + esc(f.seed) + '">Replay</button></div><div class="muted" style="font-size:0.82rem">' + f.failed.map(esc).join("<br>") + "</div></div>";
-      }).join("");
+    function appOf(role) { return L.A[role]; }
+    function recipients(step) {
+      var e = step.event, out = [], chainAg = g.data.chains[e.chain][0].body.agreement;
+      var roles = {}; chainAg.parties.forEach(function (p) { if (p.party.key !== e.by) roles[p.role] = 1; });
+      Object.keys(roles).forEach(function (r) { out.push(appOf(r)); });
+      var ct = e.kind === "attest" && e.body.claim ? e.body.claim.type : "";
+      if (/Tier-Selection|Tiers/.test(ct) || (e.chain > 0 && e.kind !== "attest")) out.push(L.A.price);
+      if (/Sales-Reporting|Admin-Fee/.test(ct)) out.push(L.A.settle);
+      return out.filter(function (a, i) { return out.indexOf(a) === i; });
     }
-    function select(seed) {
-      selected = seed;
-      document.querySelectorAll("#pr-train .blk").forEach(function (b) { b.classList.toggle("sel", b.dataset.seed === seed); });
-      var r = S.recent.filter(function (x) { return x.seed === seed; }).pop();
-      if (!r) return;
-      var c = r.cfg || {};
-      var desc = c.members ? [c.members + " member" + (c.members === 1 ? "" : "s"), c.tiers.length + " tiers (" + c.tiers.join(", ") + ")", c.items + " item" + (c.items === 1 ? "" : "s"),
-        (c.unit === "quarter" ? "quarterly" : "monthly") + " reporting", "fee " + (c.bp / 100).toFixed(2) + "% rounded " + c.mode, c.renewing ? "renewing term" : "fixed term",
-        c.sealed ? "every price, rate, quantity and amount sealed" : "values in the clear", c.agent ? "member 1 acts through an agent under a Mandate" : "no agents"].join(" · ") : "";
-      $("pr-detail").innerHTML = '<div class="clause-head"><h3>Run <span class="mono">' + esc(seed) + "</span></h3>" +
-        '<button class="btn small primary" type="button" data-replay="' + esc(seed) + '">Replay this run</button></div>' +
-        '<p class="muted" style="font-size:0.88rem;margin-top:0.3rem">' + esc(desc) + ". " + r.events + " events, computed in " + r.ms + " ms.</p>" +
-        '<div class="grid2" style="margin-top:0.8rem"><div><h3 style="font-size:0.9rem">Invariants</h3><ul class="inv-list">' +
-        r.invariants.map(function (x) { return '<li><span class="ic ' + (x.ok ? "ok" : "bad") + '">' + (x.ok ? "✓" : "✗") + "</span><span><b>" + esc(INV[x.id] || x.id) + '</b><br><span class="muted">' + esc(x.detail) + "</span></span></li>"; }).join("") +
-        '</ul></div><div><h3 style="font-size:0.9rem">Attacks</h3><ul class="inv-list">' +
-        r.attacks.map(function (a) { return '<li><span class="ic ' + (a.detected ? "ok" : "bad") + '">' + (a.detected ? "✓" : "✗") + "</span><span><b>" + esc(a.label) + "</b> on chain " + a.chain + ", event " + a.index + '<br><span class="muted">Caught by ' + esc(ruleName(a.rule)) + ": " + esc(a.reason) + "</span></span></li>"; }).join("") +
-        "</ul></div></div>";
+    function originOf(step) {
+      var e = step.event, viaAgent = e.signers.some(function (s) { return s.mandate; });
+      if (viaAgent && L.agent) return L.agent;
+      var role = g.data.chains[e.chain][0].body.agreement.parties.filter(function (p) { return p.party.key === e.by; })[0];
+      return appOf(role ? role.role : "member");
     }
-    document.addEventListener("click", function (e) {
-      var b = e.target.closest && e.target.closest("[data-replay]");
-      if (!b) return;
-      var seed = b.dataset.replay;
-      b.disabled = true; b.textContent = "Computing…";
-      setTimeout(function () {
-        var res = UP.lab.runOne(seed, TERMS);
-        if (!res.g) { b.textContent = "Could not generate"; return; }
-        replay.loadLive(UP.lab.traceOf(res), seed);
-        b.disabled = false; b.textContent = "Replay";
-        $("replay").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
-      }, 30);
-    });
-    $("pr-toggle").addEventListener("click", function () {
-      running = !running;
-      this.textContent = running ? "Pause" : "Resume";
-      if (mode === "worker" && worker) worker.postMessage({ type: running ? "start" : "pause" });
-      else if (mode === "main") mainLoop();
-      paint();
-    });
-    $("pr-seedform").addEventListener("submit", function (e) { e.preventDefault(); var s = $("pr-seed").value.trim(); if (s) runSeed(s); });
-    paint();
-    setTimeout(startWorker, 400);
-    return {};
+    function lanePoint(i, chainIdx) { var ln = L.lanes[chainIdx], n = trace.steps.length; return { x: ln.x0 + (i + 0.5) / n * (ln.x1 - ln.x0), y: ln.y }; }
+    function addPacket(from, to, color, dur, onDone) {
+      var c = el("circle", { r: 5, cx: from.x, cy: from.y, fill: color }, L.pk);
+      packets.push({ c: c, a: { x: from.x, y: from.y + 24 }, b: to, t0: performance.now(), dur: dur, done: onDone });
+    }
+    function pulse(node) { if (!node || !node.box) return; node.box.setAttribute("stroke", "var(--accent)"); setTimeout(function () { node.box.setAttribute("stroke", node === L.agent ? "var(--accent)" : "var(--line)"); }, 500); }
+    function land(i) {
+      var step = trace.steps[i], ok = step.results.e.accepted, p = lanePoint(i, step.event.chain);
+      el("circle", { cx: p.x, cy: p.y, r: ok ? 5 : 6, fill: ok ? "var(--c" + (step.event.chain % 6) + ")" : "var(--bad)", stroke: ok ? "none" : "var(--bad)" }, L.dots);
+      if (!ok) el("path", { d: "M" + (p.x - 4) + " " + (p.y - 4) + " l8 8 m0 -8 l-8 8", stroke: "var(--panel)", "stroke-width": 2 }, L.dots);
+      L.hashLbl.textContent = (narrow ? "" : "last event ") + step.event.hash.slice(0, 23) + "…";
+      tick(step);
+    }
+    function tick(step) {
+      var r = step.results.e, ok = r.accepted, t = $("v-ticker"), d = document.createElement("div");
+      d.className = "tick" + (ok ? "" : " bad");
+      d.innerHTML = "<span>" + esc(step.event.description.replace(/ vision-[a-z0-9]+-\d+/g, "")) + '</span><span class="h">' + esc(step.event.hash.slice(0, 30)) + '…</span><span class="v ' + (ok ? "ok" : "bad") + '">' +
+        (ok ? "✓ valid · every counterparty computes the same state" : "✗ rejected for everyone · " + esc(r.reason)) + "</span>";
+      t.insertBefore(d, t.firstChild);
+      while (t.children.length > (narrow ? 3 : 4)) t.removeChild(t.lastChild);
+    }
+    function fire(i) {
+      var step = trace.steps[i], o = originOf(step), p = lanePoint(i, step.event.chain), ok = step.results.e.accepted;
+      pulse(o);
+      addPacket(o, p, "var(--accent)", 750, function () {
+        land(i);
+        if (!ok) return;
+        recipients(step).forEach(function (a) { addPacket({ x: p.x, y: p.y - 24 }, { x: a.x, y: a.y + 24 }, "var(--c" + (step.event.chain % 6) + ")", 700, function () { pulse(a); }); });
+      });
+    }
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      if (paused || !visible) { nextAt = Math.max(nextAt, now + 300); return; }
+      var finished = [];
+      packets = packets.filter(function (k) {
+        var u = Math.min(1, (now - k.t0) / k.dur), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+        k.c.setAttribute("cx", k.a.x + (k.b.x - k.a.x) * e); k.c.setAttribute("cy", k.a.y + (k.b.y - k.a.y) * e);
+        if (u >= 1) { k.c.remove(); if (k.done) finished.push(k.done); return false; }
+        return true;
+      });
+      finished.forEach(function (f) { f(); });
+      if (now >= nextAt) {
+        if (done < trace.steps.length) { fire(done++); nextAt = now + 1150; }
+        else if (!packets.length) { start(); }
+      }
+    }
+    function start() {
+      var seed = scenario();
+      if (!seed) { $("v-caption").textContent = "Could not generate a scenario."; return; }
+      if (g.parts[0] && g.parts[0].agent) g.parts[0].agentAllowed = (g.mandateChecks.length ? "" : "") + allowedTiers();
+      $("v-ticker").innerHTML = "";
+      draw(); done = 0; nextAt = performance.now() + 500;
+      var nr = trace.steps.filter(function (s) { return !s.results.e.accepted; }).length;
+      $("v-caption").textContent = "Scenario " + seed + ": " + g.actors.members.length + " member" + (g.actors.members.length === 1 ? "" : "s") + ", " + trace.steps.length + " signed events" + (nr ? ", " + nr + " of them outside an agent’s Mandate" : "") + ".";
+      if (reduceMotion) { for (var i = 0; i < trace.steps.length; i++) land(i); done = trace.steps.length; return; }
+      cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
+    }
+    function allowedTiers() {
+      var m = g.data.mandates[0]; if (!m) return "";
+      var b = m.scope.claims["UP:Tier-Selection/selects"]; return b && b.option["in"] ? b.option["in"].join(", ") : "any";
+    }
+    $("v-pause").addEventListener("click", function () { paused = !paused; this.textContent = paused ? "Resume" : "Pause"; $("v-tag").classList.toggle("running", !paused); $("v-tag").textContent = paused ? "Paused" : "Live events"; });
+    $("v-new").addEventListener("click", function () { start(); });
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(svg);
+    var rw = 0;
+    window.addEventListener("resize", function () { clearTimeout(rw); rw = setTimeout(function () { var n = svg.getBoundingClientRect().width < 640; if (n !== narrow && g) { draw(); for (var i = 0; i < done; i++) land(i); } }, 200); });
+    start();
   })();
 
   // ======================================================================== Playground
-  var pg = (function () {
+  (function () {
     var D = function (n) { return { unit: "day", count: n }; }, M = { unit: "month", count: 1 }, Q = { unit: "quarter", count: 1 }, Y = { unit: "year", count: 1 };
     var R2 = { scale: 2, mode: "half-even" }, G = function (s) { return { scheme: "GTIN", id: s }; }, USD = function (v) { return { value: v, currency: "USD" }; };
     var SAMPLE = {
@@ -2602,23 +2665,27 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     var SEALABLE = { Rate: 1, Decimal: 1, string: 1 };
     var st = {
       label: "", parties: { aggregator: { name: "Hypothetical Purchasing Group", on: true }, supplier: { name: "Example Supply Co.", on: true }, member: { name: "Sample Community Clinic", on: false } },
-      clauses: [], salts: {}, sigs: null, signedHash: null, prevHash: null, observer: false
+      clauses: [], salts: {}, sigs: null, signedHash: null, prevHash: null, observer: false, base: null, tab: "write",
+      hist: { reports: { "2027-01-01T00:00:00Z": "48,200.00", "2027-02-01T00:00:00Z": "51,375.50", "2027-03-01T00:00:00Z": "46,910.25" }, paid: { "2027-01-01T00:00:00Z": true } }, asOf: null
     };
     function newClause(term) {
       var base = NAMES[term] || "clause", n = base, i = 2;
       while (st.clauses.some(function (c) { return c.n === n; })) n = base + "-" + (i++);
-      return { n: n, term: term, params: clone(SAMPLE[term] || {}), over: [], sealed: {}, raw: {} };
+      return { n: n, term: term, params: clone(SAMPLE[term] || {}), over: [], sealed: {} };
     }
     function preset(name) {
       var p = PRESETS[name];
       st.label = p.label; st.clauses = [];
       ["aggregator", "supplier", "member"].forEach(function (r) { st.parties[r].on = p.roles.indexOf(r) >= 0; });
       p.terms.forEach(function (t) { st.clauses.push(newClause(t)); });
-      st.sigs = null; st.signedHash = null;
+      st.sigs = null; st.signedHash = null; st.base = null; st.prevHash = null;
       drawEditor(); update();
+      st.base = Object.assign(build(), { note: "the " + p.label.replace(" (example)", "").toLowerCase() + " as first loaded" });
+      update();
     }
-    var keyCache = {};
-    function keyFor(role, name) { var s = "playground:" + role + ":" + name; return keyCache[s] || (keyCache[s] = UP.Key.fromSeed(s)); }
+    var keyCache = {}, keyByPub = {};
+    function keyFor(role, name) { var s = "playground:" + role + ":" + name; var k = keyCache[s] || (keyCache[s] = UP.Key.fromSeed(s)); keyByPub[k.public] = k; return k; }
+    function randomHex() { var a = new Uint8Array(32); if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(a); else for (var i = 0; i < 32; i++) a[i] = Math.floor(Math.random() * 256); return UP.hex(a); }
     function build() {
       var discs = [];
       var parties = ["aggregator", "member", "supplier"].filter(function (r) { return st.parties[r].on; }).map(function (r) {
@@ -2629,9 +2696,8 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
         Object.keys(c.params).forEach(function (p) {
           var v = c.params[p];
           if (c.sealed[p]) {
-            var sk = c.n + "/" + p + "/" + JSON.stringify(v);
-            var salt = st.salts[sk] || (st.salts[sk] = randomHex());
-            var s = UP.sealOf(v, salt); discs.push({ seal: s.seal, salt: salt, value: v }); v = s;
+            var sk = c.n + "/" + p + "/" + JSON.stringify(v), salt = st.salts[sk] || (st.salts[sk] = randomHex()), s = UP.sealOf(v, salt);
+            discs.push({ seal: s.seal, salt: salt, value: v }); v = s;
           }
           params[p] = v;
         });
@@ -2643,28 +2709,27 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
       if (st.label) ag.label = st.label;
       return { ag: ag, discs: discs };
     }
-    function randomHex() { var a = new Uint8Array(32); (window.crypto || {}).getRandomValues ? window.crypto.getRandomValues(a) : a.forEach(function (_, i) { a[i] = Math.floor(Math.random() * 256); }); return UP.hex(a); }
+    function bundleFor(discs) { var d = { type: "Bundle", spec: UP.SPEC, terms: TERM_LIST }; if (!st.observer) d.disclosures = discs; return new UP.Bundle(d); }
 
-    // ---- editors
+    // ---- editor
     function typeEditor(ci, p, type, v) {
       var id = "pg-" + ci + "-" + p, c = st.clauses[ci];
       var sealBtn = SEALABLE[type] ? '<button type="button" class="sealbtn' + (c.sealed[p] ? " on" : "") + '" data-seal="' + ci + "|" + esc(p) + '" title="Seal this value: only a hash goes into the agreement">' + (c.sealed[p] ? "sealed" : "seal") + "</button>" : "";
-      var head = '<span><label for="' + id + '">' + esc(p) + ' <span class="mono" style="opacity:0.7">' + esc(type) + "</span></label>" + sealBtn + "</span>";
-      var body;
+      var head = '<span><label for="' + id + '">' + esc(p) + ' <span class="mono" style="opacity:0.7">' + esc(type) + "</span></label>" + sealBtn + "</span>", body;
       if (type === "Time") body = '<input type="date" id="' + id + '" data-k="time" value="' + esc(String(v).slice(0, 10)) + '">';
       else if (type === "Period") body = '<div class="row"><input type="number" min="1" id="' + id + '" data-k="pcount" value="' + esc(v.count) + '"><select data-k="punit" aria-label="' + esc(p) + ' unit">' + ["day", "month", "quarter", "year"].map(function (u) { return "<option" + (u === v.unit ? " selected" : "") + ">" + u + "</option>"; }).join("") + "</select></div>";
       else if (type === "Role") body = '<select id="' + id + '" data-k="role">' + UP.ROLES.map(function (r) { return "<option" + (r === v ? " selected" : "") + ">" + r + "</option>"; }).join("") + "</select>";
       else if (type === "[Role]") body = '<div class="checks-inline" id="' + id + '">' + UP.ROLES.map(function (r) { return '<label><input type="checkbox" data-k="roles" value="' + r + '"' + (v.indexOf(r) >= 0 ? " checked" : "") + "> " + r + "</label>"; }).join("") + "</div>";
       else if (type === "int") body = '<input type="number" id="' + id + '" data-k="int" value="' + esc(v) + '">';
-      else if (type === "Rounding") body = '<div class="row"><input type="number" min="0" max="6" id="' + id + '" data-k="rscale" value="' + esc(v.scale) + '"><select data-k="rmode" aria-label="rounding mode">' + ["half-even", "half-up", "down", "up"].map(function (m) { return "<option" + (m === v.mode ? " selected" : "") + ">" + m + "</option>"; }).join("") + "</select></div>";
+      else if (type === "Rounding") body = '<div class="row"><input type="number" min="0" max="18" id="' + id + '" data-k="rscale" value="' + esc(v.scale) + '"><select data-k="rmode" aria-label="rounding mode">' + ["half-even", "half-up", "down", "up"].map(function (m) { return "<option" + (m === v.mode ? " selected" : "") + ">" + m + "</option>"; }).join("") + "</select></div>";
       else if (/^"on-ack"/.test(type)) body = '<select id="' + id + '" data-k="effective"><option value="on-ack"' + (v === "on-ack" ? " selected" : "") + '>on acknowledgment</option><option value="month"' + (v !== "on-ack" && v.next.unit === "month" ? " selected" : "") + '>start of next month</option><option value="quarter"' + (v !== "on-ack" && v.next.unit === "quarter" ? " selected" : "") + ">start of next quarter</option></select>";
       else if (/^"document"/.test(type)) body = '<select id="' + id + '" data-k="enum">' + ["document", "this-record"].map(function (x) { return "<option" + (x === v ? " selected" : "") + ">" + x + "</option>"; }).join("") + "</select>";
-      else if (type === "Rate" || type === "Decimal" || type === "string" || type === "Hash" || type === "ChainId") body = '<input type="text" id="' + id + '" data-k="' + (type === "Rate" || type === "Decimal" ? "dec" : "str") + '" value="' + esc(v) + '" spellcheck="false">';
+      else if (type === "Rate" || type === "Decimal" || type === "string" || type === "Name" || type === "Hash" || type === "ChainId") body = '<input type="text" id="' + id + '" data-k="' + (type === "Rate" || type === "Decimal" ? "dec" : "str") + '" value="' + esc(v) + '" spellcheck="false">';
       else body = '<textarea id="' + id + '" data-k="json" spellcheck="false">' + esc(JSON.stringify(v, null, 1)) + "</textarea>";
       return '<div class="field" data-ci="' + ci + '" data-p="' + esc(p) + '">' + head + body + '<span class="errmsg" hidden></span></div>';
     }
     function drawEditor() {
-      var html = '<div class="card"><div class="clause-head"><h3>Start from</h3></div><div class="controls">' +
+      var html = '<div class="card"><h3>Start from</h3><div class="controls">' +
         Object.keys(PRESETS).map(function (k) { return '<button class="btn small" type="button" data-preset="' + k + '">' + esc(PRESETS[k].label.replace(" (example)", "")) + "</button>"; }).join("") + "</div>" +
         '<div class="field"><span><label for="pg-label">Label</label></span><input type="text" id="pg-label" value="' + esc(st.label) + '"></div></div>';
       html += '<div class="card"><h3>Parties</h3>' + ["aggregator", "supplier", "member"].map(function (r) {
@@ -2707,11 +2772,11 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
       var c = st.clauses[Number(f.dataset.ci)], p = f.dataset.p, k = t.dataset.k, v = c.params[p], err = "";
       try {
         if (k === "time") { if (!t.value) throw new Error("Choose a date."); v = t.value + "T00:00:00Z"; }
-        else if (k === "pcount" || k === "punit") { var cnt = Number(f.querySelector('[data-k="pcount"]').value); if (!(cnt >= 1 && Number.isInteger(cnt))) throw new Error("Use a whole number of 1 or more."); v = { unit: f.querySelector('[data-k="punit"]').value, count: cnt }; }
+        else if (k === "pcount" || k === "punit") { var cnt = Number(f.querySelector('[data-k="pcount"]').value); if (!(cnt >= 1 && cnt <= 10000 && Number.isInteger(cnt))) throw new Error("Use a whole number from 1 to 10,000."); v = { unit: f.querySelector('[data-k="punit"]').value, count: cnt }; }
         else if (k === "role" || k === "enum") v = t.value;
         else if (k === "roles") v = Array.prototype.filter.call(f.querySelectorAll('[data-k="roles"]'), function (x) { return x.checked; }).map(function (x) { return x.value; });
         else if (k === "int") { var n = Number(t.value); if (!Number.isInteger(n)) throw new Error("Use a whole number."); v = n; }
-        else if (k === "rscale" || k === "rmode") { var sc = Number(f.querySelector('[data-k="rscale"]').value); if (!Number.isInteger(sc) || sc < 0) throw new Error("Use a whole number of places."); v = { scale: sc, mode: f.querySelector('[data-k="rmode"]').value }; }
+        else if (k === "rscale" || k === "rmode") { var sc = Number(f.querySelector('[data-k="rscale"]').value); if (!Number.isInteger(sc) || sc < 0 || sc > 18) throw new Error("Use 0 to 18 places."); v = { scale: sc, mode: f.querySelector('[data-k="rmode"]').value }; }
         else if (k === "effective") v = t.value === "on-ack" ? "on-ack" : { next: { unit: t.value, count: 1 } };
         else if (k === "dec") { if (!/^-?(0|[1-9][0-9]*)(\.[0-9]+)?$/.test(t.value)) throw new Error("Write a decimal such as 0.02, with no % sign."); v = t.value; }
         else if (k === "str") v = t.value;
@@ -2722,13 +2787,13 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
       if (!err) { c.params[p] = v; update(); }
     }
 
-    // ---- outputs
+    // ---- rendering helpers
+    function inline(s) {
+      return esc(s).replace(/\[sealed (sha256:[0-9a-f]{64})\]/g, '<span class="sealed">sealed $1</span>')
+        .replace(/(^|[^>a-z0-9])((?:sha256|ed25519):[0-9a-f]{64})/g, function (m, pre, h, off, str) { return /sealed $/.test(str.slice(0, off + pre.length)) ? m : pre + "<code>" + h + "</code>"; });
+    }
     function mdToHTML(md) {
       var out = [], inList = false;
-      function inline(s) {
-        return esc(s).replace(/\[sealed (sha256:[0-9a-f]{64})\]/g, '<span class="sealed" title="$1">sealed $1</span>')
-          .replace(/(sha256:[0-9a-f]{64}|ed25519:[0-9a-f]{64})/g, function (m, h, off, str) { return str.slice(Math.max(0, off - 21), off).indexOf('class="sealed"') >= 0 || str.slice(Math.max(0, off - 7), off) === "sealed " || str.slice(off - 7, off) === 'title="' ? m : "<code>" + m + "</code>"; });
-      }
       md.split("\n").forEach(function (l) {
         if (/^- /.test(l)) { if (!inList) { out.push("<ul>"); inList = true; } out.push("<li>" + inline(l.slice(2)) + "</li>"); return; }
         if (inList) { out.push("</ul>"); inList = false; }
@@ -2741,182 +2806,289 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
       if (inList) out.push("</ul>");
       return out.join("");
     }
+    function sentenceOf(b, c) { try { return UP.renderTemplate(b, TERMS[c.term].render, c.params); } catch (e) { return "(this clause’s values are incomplete)"; } }
+
+    // ---- main update
+    var cur = null;
     function update() {
-      var built = build(), ag = built.ag, h = ch(ag);
-      var data = { type: "Bundle", spec: UP.SPEC, terms: Object.keys(TERMS).map(function (k) { return TERMS[k]; }) };
-      if (!st.observer) data.disclosures = built.discs;
-      var b = new UP.Bundle(data);
+      var built = build(), ag = built.ag, h = ch(ag), b = bundleFor(built.discs);
+      cur = { ag: ag, discs: built.discs, h: h, b: b };
       var issues = UP.agreementIssues(b, ag);
-      var fpEl = $("pg-fp");
-      fpEl.innerHTML = fpHTML(h, st.prevHash, "Agreement fingerprint" + (st.prevHash && st.prevHash !== h ? " · changed" : ""));
-      $("pg-fpmini").innerHTML = fpHTML(h, st.prevHash, "Fingerprint").replace('class="lab"', 'class="lab" style="display:none"');
-      if (st.prevHash && st.prevHash !== h) flash(fpEl);
+      cur.issues = issues;
+      var changed = st.prevHash && st.prevHash !== h;
+      $("pg-fp").innerHTML = fpHTML(h, st.prevHash, "Agreement fingerprint" + (changed ? " · changed" : ""));
+      $("pg-fpmini").innerHTML = fpHTML(h, st.prevHash, "");
+      if (changed) flash($("pg-fp"));
       st.prevHash = h;
       $("pg-valid").innerHTML = issues.length ? '<span class="pill bad">' + issues.length + " problem" + (issues.length === 1 ? "" : "s") + "</span>" : '<span class="pill ok">Valid under A1, A6, A10, A13</span>';
-      var text = "";
-      try { text = UP.renderAgreement(b, ag); } catch (e) { text = "# " + (ag.label || "Agreement") + "\n\nThe text cannot be generated until the problems listed on the cover sheet are fixed (" + e.message + ")."; }
-      $("pg-contract").innerHTML = mdToHTML(text);
-      // cover sheet
-      var sigHtml;
-      if (!st.sigs) sigHtml = '<span class="muted">Not signed yet. Press “Sign as every party”.</span>';
-      else {
-        var now = ag.parties.map(function (p) { return p.party.key; });
-        sigHtml = st.sigs.map(function (s) {
-          var ok = UP.verifySig(s.key, s.sig, ag) && now.indexOf(s.key) >= 0;
-          return '<div class="s"><span style="color:' + (ok ? "#17804f" : "#c43535") + '">' + (ok ? "✓" : "✗") + "</span><span>" + esc(s.name) + " · " + (ok ? "verifies over " + short(h) + "…" : "signed " + short(st.signedHash) + "…, which is no longer this agreement") + "</span></div>";
-        }).join("");
-        if (st.signedHash !== h) sigHtml += '<p style="color:#c43535;font-size:0.85rem;margin-top:0.3rem">The agreement changed after signing, so these signatures no longer verify. Nothing about the old text can be reused.</p>';
-      }
-      var termsHtml = st.clauses.map(function (c, i) {
-        var t = TERMS[c.term], line = "";
-        try { line = UP.renderTemplate(b, t.render, ag.clauses[i].params); var m = line.match(/^[\s\S]*?[.!?](\s|$)/); line = m ? m[0] : line; } catch (e) { line = "(fill in this clause’s values)"; }
-        return "<li><b>" + esc(t.title) + ' · “' + esc(c.n) + '”</b>' + mdToHTML(line).replace(/^<p>|<\/p>$/g, "") + "</li>";
-      }).join("");
-      $("pg-cover").innerHTML = '<h5 style="margin-top:0">Cover sheet</h5><h4>' + esc(ag.label || "Untitled agreement") + "</h4>" +
-        '<dl><dt>Fingerprint</dt><dd class="meta">' + esc(h) + "</dd><dt>Spec</dt><dd>" + esc(UP.SPEC) + "</dd>" +
-        ag.parties.map(function (p) { return "<dt>" + esc(p.role) + "</dt><dd>" + esc(p.party.name) + '<div class="meta">' + esc(p.party.key.slice(0, 24)) + "…</div></dd>"; }).join("") +
-        "<dt>Status</dt><dd>" + (issues.length ? '<ul class="issues">' + issues.map(function (x) { return "<li>" + esc(x[0]) + " " + esc(RULES[x[0]] || "") + ": " + esc(x[1]) + "</li>"; }).join("") + "</ul>" : "Valid: built only from defined Terms, every value supplied by the parties, conflicts resolved.") + "</dd>" +
-        (built.discs.length ? "<dt>Sealed</dt><dd>" + built.discs.length + " value" + (built.discs.length === 1 ? "" : "s") + (st.observer ? ", hidden from you as an outsider" : ", visible to you as a party") + "</dd>" : "") +
-        '</dl><ul class="terms">' + (termsHtml || '<li class="muted">No Terms yet. Add one from the library.</li>') + '</ul><h5>Signatures</h5><div class="sigs">' + sigHtml + "</div>";
+      if (st.tab === "write") drawWrite(); else if (st.tab === "compare") drawCompare(); else drawHistory();
       $("pg-json").textContent = (function () { try { return UP.jcsString(ag); } catch (e) { return e.message; } })();
     }
+    function sigsHTML() {
+      if (!st.sigs) return '<span style="color:var(--paper-muted)">Not signed yet. Press “Sign as every party”.</span>';
+      var now = cur.ag.parties.map(function (p) { return p.party.key; });
+      var html = st.sigs.map(function (s) {
+        var ok = UP.verifySig(s.key, s.sig, cur.ag) && now.indexOf(s.key) >= 0;
+        return '<div class="s"><span style="color:' + (ok ? "#17804f" : "#c43535") + '">' + (ok ? "✓" : "✗") + "</span><span>" + esc(s.name) + " · " + (ok ? "verifies over " + short(cur.h) + "…" : "signed " + short(st.signedHash) + "…, which is no longer this agreement") + "</span></div>";
+      }).join("");
+      if (st.signedHash !== cur.h) html += '<p style="color:#c43535;font-size:0.85rem;margin-top:0.3rem">The agreement changed after signing, so these signatures no longer verify. See the Compare tab for exactly what changed.</p>';
+      return html;
+    }
+    function drawWrite() {
+      var ag = cur.ag, b = cur.b, issues = cur.issues, text;
+      try { text = UP.renderAgreement(b, ag); } catch (e) { text = "# " + (ag.label || "Agreement") + "\n\nThe text cannot be generated until the problems on the cover sheet are fixed (" + e.message + ")."; }
+      $("pg-contract").innerHTML = mdToHTML(text);
+      var termsHtml = ag.clauses.map(function (c) {
+        var t = TERMS[c.term], line = sentenceOf(b, c), m = line.match(/^[\s\S]*?[.!?](\s|$)/);
+        return "<li><b>" + esc(t.title) + " · “" + esc(c.n) + "”</b>" + inline(m ? m[0] : line) + "</li>";
+      }).join("");
+      $("pg-cover").innerHTML = '<h5 style="margin-top:0">Cover sheet</h5><h4>' + esc(ag.label || "Untitled agreement") + "</h4>" +
+        '<dl><dt>Fingerprint</dt><dd class="meta">' + esc(cur.h) + "</dd><dt>Spec</dt><dd>" + esc(UP.SPEC) + "</dd>" +
+        ag.parties.map(function (p) { return "<dt>" + esc(p.role) + "</dt><dd>" + esc(p.party.name) + '<div class="meta">' + esc(p.party.key.slice(0, 24)) + "…</div></dd>"; }).join("") +
+        "<dt>Status</dt><dd>" + (issues.length ? '<ul class="issues">' + issues.map(function (x) { return "<li>" + esc(x[0]) + " " + esc(RULES[x[0]] || "") + ": " + esc(x[1]) + "</li>"; }).join("") + "</ul>" : "Valid: built only from defined Terms, every value typed and supplied by the parties, conflicts resolved.") + "</dd>" +
+        (cur.discs.length ? "<dt>Sealed</dt><dd>" + cur.discs.length + " value" + (cur.discs.length === 1 ? "" : "s") + (st.observer ? ", hidden from you as an outsider" : ", visible to you as a party") + "</dd>" : "") +
+        '</dl><ul class="terms">' + (termsHtml || '<li style="color:var(--paper-muted)">No Terms yet. Add one from the library.</li>') + '</ul><h5>Signatures</h5><div class="sigs">' + sigsHTML() + "</div>";
+    }
+
+    // ---- compare
+    function words(s) { return s.split(/(\s+)/).filter(function (x) { return x.length; }); }
+    function wordDiff(a, b) {
+      var A = words(a), B = words(b), n = A.length, m = B.length, dp = [], i, j;
+      for (i = 0; i <= n; i++) { dp.push(new Array(m + 1).fill(0)); }
+      for (i = n - 1; i >= 0; i--) for (j = m - 1; j >= 0; j--) dp[i][j] = A[i] === B[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+      var out = ""; i = 0; j = 0;
+      while (i < n || j < m) {
+        if (i < n && j < m && A[i] === B[j]) { out += inline(A[i]); i++; j++; }
+        else if (j < m && (i >= n || dp[i][j + 1] >= dp[i + 1][j])) { out += "<ins>" + inline(B[j]) + "</ins>"; j++; }
+        else { out += "<del>" + inline(A[i]) + "</del>"; i++; }
+      }
+      return out.replace(/<\/ins>(\s*)<ins>/g, "$1").replace(/<\/del>(\s*)<del>/g, "$1");
+    }
+    function drawCompare() {
+      if (!st.base) { $("cmp-out").innerHTML = "<p>Load an example first.</p>"; return; }
+      var A = st.base.ag, B = cur.ag, hA = ch(A), hB = cur.h;
+      var b = bundleFor(st.base.discs.concat(cur.discs));
+      $("cmp-basenote").textContent = "Version A is " + st.base.note + ".";
+      var html = '<h5 style="margin-top:0">Compare versions</h5><div class="cmp-fps"><div class="cmp-row"><b>Version A</b><span>' + esc(hA) + '</span></div><div class="cmp-row"><b>Version B</b><span>' + fpHTML(hB, hA, "").replace(/class="flip"/g, 'style="background:#f6ead0;color:#6b4a06"') + "</span></div></div>";
+      if (hA === hB) html += "<p style=\"margin-top:0.8rem\">The two versions are identical, so they have the same fingerprint. Change anything in the editor to see the difference here.</p>";
+      else {
+        var changes = 0, body = "";
+        ["aggregator", "member", "supplier"].forEach(function (r) {
+          var pa = A.parties.filter(function (p) { return p.role === r; })[0], pb = B.parties.filter(function (p) { return p.role === r; })[0];
+          if (pa && !pb) { changes++; body += '<div class="cmp-clause"><b>Party: ' + r + '</b><span class="st removed">removed</span><p>' + esc(pa.party.name) + "</p></div>"; }
+          else if (!pa && pb) { changes++; body += '<div class="cmp-clause"><b>Party: ' + r + '</b><span class="st added">added</span><p>' + esc(pb.party.name) + "</p></div>"; }
+          else if (pa && pb && pa.party.key !== pb.party.key) { changes++; body += '<div class="cmp-clause"><b>Party: ' + r + '</b><span class="st changed">changed</span><p>' + wordDiff(pa.party.name, pb.party.name) + ' <span class="meta">(a different key)</span></p></div>'; }
+        });
+        if ((A.label || "") !== (B.label || "")) { changes++; body += '<div class="cmp-clause"><b>Label</b><span class="st changed">changed</span><p>' + wordDiff(A.label || "", B.label || "") + "</p></div>"; }
+        var names = B.clauses.map(function (c) { return c.n; }); A.clauses.forEach(function (c) { if (names.indexOf(c.n) < 0) names.push(c.n); });
+        names.forEach(function (n) {
+          var ca = A.clauses.filter(function (c) { return c.n === n; })[0], cb = B.clauses.filter(function (c) { return c.n === n; })[0];
+          var title = esc(TERMS[(cb || ca).term].title) + " · “" + esc(n) + "”";
+          if (ca && !cb) { changes++; body += '<div class="cmp-clause"><b>' + title + '</b><span class="st removed">removed</span><p><del>' + inline(sentenceOf(b, ca)) + "</del></p></div>"; return; }
+          if (!ca && cb) { changes++; body += '<div class="cmp-clause"><b>' + title + '</b><span class="st added">added</span><p><ins>' + inline(sentenceOf(b, cb)) + "</ins></p></div>"; return; }
+          if (UP.canonKey(ca) === UP.canonKey(cb)) return;
+          changes++;
+          var ps = [];
+          Object.keys(Object.assign({}, ca.params, cb.params)).forEach(function (p) {
+            if (UP.canonKey(ca.params[p]) !== UP.canonKey(cb.params[p])) ps.push('<span>' + esc(p) + ": <del>" + esc(JSON.stringify(ca.params[p])) + "</del> → <ins>" + esc(JSON.stringify(cb.params[p])) + "</ins></span>");
+          });
+          if (ca.term !== cb.term) ps.push("<span>Term: <del>" + esc(ca.term) + "</del> → <ins>" + esc(cb.term) + "</ins></span>");
+          if (UP.canonKey(ca.over || []) !== UP.canonKey(cb.over || [])) ps.push("<span>precedence: <del>" + esc((ca.over || []).join(", ") || "none") + "</del> → <ins>" + esc((cb.over || []).join(", ") || "none") + "</ins></span>");
+          body += '<div class="cmp-clause"><b>' + title + '</b><span class="st changed">changed</span><div class="cmp-params">' + ps.join("") + "</div><p>" + wordDiff(sentenceOf(b, ca), sentenceOf(b, cb)) + "</p></div>";
+        });
+        html += '<p style="margin-top:0.8rem"><b>' + changes + " change" + (changes === 1 ? "" : "s") + "</b> between A and B. Clauses are matched by name, values compared after canonical encoding, and the text below is generated from each version.</p>";
+        if (st.sigs && st.signedHash === hA) html += '<p style="color:#c43535">The signatures you made cover version A only. Version B needs every party to sign again.</p>';
+        html += body;
+      }
+      $("cmp-out").innerHTML = html;
+    }
+    $("cmp-base").addEventListener("click", function () { st.base = Object.assign(build(), { note: "the version you set at " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }); update(); });
+    $("cmp-amend").addEventListener("click", function () {
+      var did = false;
+      st.clauses.forEach(function (c) {
+        if (c.term === "UP:Admin-Fee" && /^0\.\d+$/.test(c.params.rate)) { c.params.rate = String(Math.round((Number(c.params.rate) + 0.005) * 10000) / 10000); did = true; }
+        if ((c.term === "UP:Fixed-Term" || c.term === "UP:Renewing-Term") && c.params.end) { c.params.end = UP.addPeriod(c.params.end, { unit: "year", count: 1 }); did = true; }
+      });
+      if (!did) st.clauses.push(newClause("UP:Notices"));
+      drawEditor(); update();
+    });
+
+    // ---- history
+    var histCache = { key: null, h: null };
+    function history() {
+      var key = cur.h + JSON.stringify(st.hist) + (st.observer ? "o" : "");
+      if (histCache.key === key) return histCache.h;
+      var built = build();
+      // The parties hold the disclosures, so the history is signed with them. An outsider sees the same chain without them.
+      var h = UP.play.history(built.ag, TERM_LIST, function (pub) { return keyByPub[pub]; }, Object.assign({ disclosures: built.discs }, st.hist));
+      if (!h.issues.length && st.observer && built.discs.length) { h.data = Object.assign({}, h.data, { disclosures: [] }); h.ev = new UP.Evaluator(new UP.Bundle(h.data)); }
+      histCache = { key: key, h: h };
+      return h;
+    }
+    function dayStr(t) { return t ? t.slice(0, 10) : "open-ended"; }
+    function drawHistory() {
+      var h = history(), out = $("hist-out");
+      if (h.issues.length) { out.innerHTML = "<h3>History</h3><p class=\"muted\" style=\"margin-top:0.4rem\">Fix the problems on the cover sheet first. An invalid agreement cannot be signed, so it has no history.</p>"; return; }
+      var g0 = h.ev.run(h.cid)[0];
+      if (!g0.accepted) { out.innerHTML = '<h3>History</h3><p style="margin-top:0.4rem">Every party signs on ' + dayStr(h.signAt) + ', but the engine rejects the signed agreement:</p><p style="color:var(--bad);margin-top:0.3rem">' + esc(g0.reason) + '</p><p class="muted" style="margin-top:0.4rem;font-size:0.88rem">A participation needs its parent agreement in the same bundle, which the Playground does not have. Try the master agreement or the overlay.</p>'; return; }
+      var t0 = UP.parseTime(h.signAt).getTime(), t1 = UP.parseTime(UP.addPeriod(h.horizon, { unit: "day", count: 60 })).getTime(), days = Math.round((t1 - t0) / 86400000);
+      if (st.asOf == null || st.asOf > days) st.asOf = Math.min(days, Math.round((UP.parseTime(UP.addPeriod(h.start, { unit: "month", count: 4 })).getTime() - t0) / 86400000));
+      var html = '<div class="clause-head"><h3>History</h3><span class="muted" style="font-size:0.82rem">Signed by every party on ' + dayStr(h.signAt) + " · chain " + esc(short(h.cid)) + "…</span></div>" +
+        '<div class="slider" style="margin:0.8rem 0"><label for="hist-at" class="muted" style="font-size:0.85rem">As of</label><input type="range" id="hist-at" min="0" max="' + days + '" value="' + st.asOf + '"><b class="mono" id="hist-date"></b></div>' +
+        '<div id="hist-asof"></div>';
+      if (h.reportClause) {
+        html += '<h3 style="margin-top:1.2rem;font-size:0.95rem">Sales reported under “' + esc(h.reportClause) + "”" + (h.feeClause ? " and the fee under “" + esc(h.feeClause) + "”" : "") + '</h3><p class="muted" style="font-size:0.84rem;margin:0.2rem 0 0.5rem">Type a period’s net sales. The supplier signs a report two days after the period ends. ' + (h.feeClause ? "The fee is computed by the engine from your rate and rounding. Tick “paid” and the supplier pays it three days before it is due, acknowledged by the aggregator." : "") + '</p><div class="periods" id="hist-periods"></div>';
+      } else html += '<p class="muted" style="margin-top:1rem;font-size:0.88rem">This agreement has no Sales-Reporting clause, so there are no reports to enter. Its term and other duties still play out above.</p>';
+      if (h.notes.length) html += '<p style="color:var(--bad);font-size:0.85rem;margin-top:0.5rem">' + h.notes.map(esc).join(" ") + "</p>";
+      html += '<h3 style="margin-top:1.2rem;font-size:0.95rem">Signed events</h3><div id="hist-log" style="display:grid;gap:0.3rem;margin-top:0.4rem"></div>';
+      out.innerHTML = html;
+      drawAsOf(h, t0);
+      if (h.reportClause) drawPeriods(h);
+      $("hist-log").innerHTML = ['<div class="mono" style="font-size:0.8rem">' + dayStr(h.signAt) + " · ✓ every party signs the agreement · " + esc(short(h.cid)) + "…</div>"].concat(h.log.map(function (l) {
+        return '<div class="mono" style="font-size:0.8rem;color:' + (l.accepted ? "inherit" : "var(--bad)") + '">' + dayStr(l.at) + " · " + (l.accepted ? "✓ " : "✗ ") + esc(l.what) + " · " + esc(short(l.hash)) + "…" + (l.accepted ? "" : " · " + esc(l.reason)) + "</div>";
+      })).join("");
+    }
+    function drawAsOf(h, t0) {
+      var t = UP.fmtTime(new Date(t0 + st.asOf * 86400000));
+      $("hist-date").textContent = dayStr(t);
+      var status = h.ev.status(h.cid, t), w = h.ev.window(h.cid, t);
+      var all = h.ev.obligations(h.cid, h.horizon), now = h.ev.obligations(h.cid, t), byKey = {};
+      now.forEach(function (o) { byKey[o.clause + o.period.start + (o.trigger || "")] = o; });
+      var clauses = []; all.forEach(function (o) { if (clauses.indexOf(o.clause) < 0) clauses.push(o.clause); });
+      var html = '<div class="controls" style="margin-bottom:0.7rem"><span class="pill ' + (status === "active" ? "ok" : "") + '">' + esc(status) + '</span><span class="muted" style="font-size:0.85rem">In force ' + dayStr(w[0]) + " to " + dayStr(w[1]) + "</span></div>";
+      html += '<div class="tl">' + (clauses.length ? clauses.map(function (cn) {
+        var ps = all.filter(function (o) { return o.clause === cn; });
+        return '<div class="tl-row"><span>' + esc(cn) + ' <span class="muted mono" style="font-size:0.72rem">' + esc(ps[0].duty) + '</span></span><div class="tl-bar">' + ps.map(function (o) {
+          var n = byKey[o.clause + o.period.start + (o.trigger || "")], cls = n ? n.status : "future";
+          var amt = n && typeof n.amount === "object" ? " · " + n.amount.currency + " " + n.amount.value : "";
+          return '<span class="' + cls + '" title="' + esc(dayStr(o.period.start) + " to " + dayStr(o.period.end) + ", due " + dayStr(o.due) + ": " + (n ? n.status + (n.late ? " (late)" : "") : "not yet arisen") + amt) + '"></span>';
+        }).join("") + "</div></div>";
+      }).join("") : '<p class="muted" style="font-size:0.88rem">No periodic duties in this agreement.</p>') + "</div>";
+      html += '<div class="legend" style="margin-top:0.6rem"><span><i style="background:color-mix(in srgb, var(--ok) 55%, var(--panel))"></i>discharged</span><span><i style="background:color-mix(in srgb, var(--accent) 25%, var(--panel))"></i>open</span><span><i style="background:color-mix(in srgb, var(--bad) 45%, var(--panel))"></i>overdue</span><span><i style="opacity:0.35"></i>not yet arisen</span><span>One block per period. Hover for dates and amounts.</span></div>';
+      $("hist-asof").innerHTML = html;
+    }
+    function drawPeriods(h) {
+      var fees = {}; if (h.feeClause) h.ev.obligations(h.cid, h.horizon).forEach(function (o) { if (o.clause === h.feeClause) fees[o.period.start] = o; });
+      var shown = st.histAll ? h.reportPeriods : h.reportPeriods.slice(0, 12);
+      $("hist-periods").innerHTML = shown.map(function (pd) {
+        var f = fees[pd.start], v = st.hist.reports[pd.start] || "", bad = v && UP.play.money(v) === null;
+        var owed = f ? (typeof f.amount === "object" ? f.amount.currency + " " + f.amount.value : f.amount === "sealed" ? "sealed" : "—") : "—";
+        return '<div class="period"><span class="mono">' + dayStr(pd.start) + '</span><input type="text" inputmode="decimal" data-rep="' + esc(pd.start) + '" value="' + esc(v) + '" placeholder="net sales, USD" aria-label="Net sales for the period starting ' + dayStr(pd.start) + '"' + (bad ? ' style="border-color:var(--bad)"' : "") + ">" +
+          '<span class="num">' + (h.feeClause ? "fee " + esc(owed) + (f && f.status === "discharged" ? ' <span class="pill ok">paid' + (f.late ? " late" : "") + "</span>" : "") : "") + "</span>" +
+          (h.feeClause ? '<label class="muted" style="font-size:0.82rem;display:flex;gap:0.3rem;align-items:center"><input type="checkbox" data-paid="' + esc(pd.start) + '"' + (st.hist.paid[pd.start] ? " checked" : "") + (f && typeof f.amount === "object" ? "" : " disabled") + "> paid</label>" : "<span></span>") + "</div>";
+      }).join("") + (h.reportPeriods.length > 12 ? '<button class="btn small" type="button" id="hist-more" style="justify-self:start;margin-top:0.4rem">' + (st.histAll ? "Show the first 12 periods" : "Show all " + h.reportPeriods.length + " periods") + "</button>" : "") || '<p class="muted">No reporting periods.</p>';
+    }
+    $("hist-out").addEventListener("input", function (e) {
+      if (e.target.id === "hist-at") { st.asOf = Number(e.target.value); drawAsOf(history(), UP.parseTime(history().signAt).getTime()); }
+    });
+    $("hist-out").addEventListener("click", function (e) { if (e.target.id === "hist-more") { st.histAll = !st.histAll; drawPeriods(history()); } });
+    $("hist-out").addEventListener("change", function (e) {
+      var t = e.target;
+      if (t.dataset.rep) { st.hist.reports[t.dataset.rep] = t.value; drawHistory(); }
+      else if (t.dataset.paid) { st.hist.paid[t.dataset.paid] = t.checked; drawHistory(); }
+    });
+
+    // ---- tabs and actions
+    var tabs = ["write", "compare", "history"];
+    function setTab(name) {
+      st.tab = name;
+      tabs.forEach(function (n) { $("tab-" + n).setAttribute("aria-selected", String(n === name)); $("panel-" + n).hidden = n !== name; });
+      update();
+    }
+    tabs.forEach(function (n) { $("tab-" + n).addEventListener("click", function () { setTab(n); }); });
+    document.querySelector('[role="tablist"]').addEventListener("keydown", function (e) {
+      var i = tabs.indexOf(st.tab);
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") { var n = tabs[(i + (e.key === "ArrowRight" ? 1 : 2)) % 3]; setTab(n); $("tab-" + n).focus(); e.preventDefault(); }
+    });
     $("pg-sign").addEventListener("click", function () {
-      var ag = build().ag;
-      st.sigs = ag.parties.map(function (p) { var k = keyFor(p.role, p.party.name); var s = k.signObj(ag); s.name = p.party.name; return s; });
-      st.signedHash = ch(ag); update();
+      var built = build(), ag = built.ag;
+      st.sigs = ag.parties.map(function (p) { var k = keyFor(p.role, p.party.name), s = k.signObj(ag); s.name = p.party.name; return s; });
+      st.signedHash = ch(ag);
+      st.base = Object.assign(built, { note: "the version you signed" });
+      update();
     });
     $("pg-observer").addEventListener("change", function () { st.observer = this.checked; update(); });
     preset("master");
-    return {};
   })();
 
-  // ======================================================================== Replay
-  var replay = (function () {
-    var RECORDED = [
-      { file: "conventional.trace.json", label: "Conventional GPO arrangement" },
-      { file: "conventional.tamper-supplier-fee.trace.json", label: "Fault: supplier copy has a changed fee" },
-      { file: "conventional.tamper-member-backdate.trace.json", label: "Fault: member copy has a backdated attestation" },
-      { file: "conventional.tamper-aggregator-missing-signature.trace.json", label: "Fault: aggregator copy is missing a signature" },
-      { file: "generative.trace.json", label: "Generative: agents under Mandates" },
-      { file: "confidential.trace.json", label: "Confidential: verification from hashes only" },
-      { file: "overlay.trace.json", label: "Overlay of an existing agreement" }
-    ];
-    var BASES = ["../examples/traces/", "examples/traces/", "traces/", ""];
-    var KIND = { propose: "P", accept: "A", attest: "T" }, KIND_NAME = { propose: "Proposal", accept: "Acceptance", attest: "Attestation" };
-    var trace = null, cur = 0, timer = null, checkWho = null, live = [], liveFlag = false;
-    function hue(pos) { return "var(--c" + (pos % 6) + ")"; }
-    function nm(k) { return (trace.parties && trace.parties[k]) || (k ? k.slice(0, 16) + "…" : ""); }
-    function amt(a) { if (a === "sealed") return '<span class="pill">sealed</span>'; if (typeof a === "string") return '<span class="muted">' + esc(a) + "</span>"; return a ? esc(a.currency + " " + a.value) : "—"; }
-    function fillPick() {
-      $("rp-pick").innerHTML = '<optgroup label="Recorded by the Python reference interpreter">' + RECORDED.map(function (s) { return '<option value="rec:' + esc(s.file) + '">' + esc(s.label) + "</option>"; }).join("") + "</optgroup>" +
-        (live.length ? '<optgroup label="Live runs from this page">' + live.map(function (l, i) { return '<option value="live:' + i + '">Live run ' + esc(l.seed) + "</option>"; }).join("") + "</optgroup>" : "");
+  // ======================================================================== Conformance
+  (function () {
+    if (CONF) {
+      var tiles = [
+        ["Tests passing", CONF.pytest ? fmtN(CONF.pytest.passed) : "—", CONF.pytest ? "of " + fmtN(CONF.pytest.passed + CONF.pytest.failed) + " in the suite, run " + CONF.run : "no recorded run", CONF.pytest && !CONF.pytest.failed],
+        ["Engines agree", CONF.js ? CONF.js.passed + " / " + CONF.js.total : "—", "Python and JavaScript, every trace, check, and rendering", CONF.js && CONF.js.passed === CONF.js.total],
+        ["Random seeds in CI", CONF.lab ? fmtN(CONF.lab.runs) : "—", CONF.lab ? CONF.lab.failures + " failures across eight invariants" : "", CONF.lab && !CONF.lab.failures],
+        ["Audit findings fixed", fmtN(CONF.audit.length), CONF.audit.filter(function (a) { return a.sev === "High"; }).length + " high severity, each with a regression test", true]
+      ];
+      $("cf-tiles").innerHTML = tiles.map(function (t) { return '<div class="tile' + (t[3] ? " good" : "") + '"><span class="eyebrow">' + esc(t[0]) + '</span><span class="v">' + esc(t[1]) + '</span><span class="s">' + esc(t[2]) + "</span></div>"; }).join("");
+      $("cf-files").innerHTML = CONF.files.map(function (f) { return "<tr><td><span class=\"mono\">" + esc(f.file) + '</span><div class="muted" style="font-size:0.78rem">' + esc(f.about || "") + '</div></td><td class="num">' + fmtN(f.tests) + "</td></tr>"; }).join("");
+      $("cf-audit").innerHTML = CONF.audit.map(function (a) { return '<tr><td class="mono">' + esc(a.id) + '</td><td><span class="sev ' + esc(a.sev) + '">' + esc(a.sev) + "</span></td><td>" + esc(a.title) + "</td></tr>"; }).join("");
+      $("cf-open").textContent = "Known limits: " + CONF.open + " items remain open in the audit, most importantly that both engines and the audit come from one team, so an independent review is still needed before 1.0. The JavaScript Ed25519 used on this page is not constant-time and signs only with public example seeds.";
     }
-    function fetchTrace(file) {
-      var i = 0;
-      function next() { if (i >= BASES.length) return Promise.reject(new Error("not found")); return fetch(BASES[i++] + file).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).catch(next); }
-      return next();
+    // in-browser lab
+    var prefix = Math.random().toString(36).slice(2, 6), worker = null, running = false, mode = "idle";
+    var S = { runs: 0, events: 0, attacks: 0, caught: 0, invOk: 0, invBad: 0, inv: {}, att: {} }, fails = store("up-playground-failures") || [];
+    var INV = UP.lab.INVARIANTS;
+    Object.keys(INV).forEach(function (k) { S.inv[k] = { ok: 0, bad: 0 }; });
+    Object.keys(UP.lab.ATTACKS).forEach(function (k) { S.att[k] = { n: 0, caught: 0, rules: {} }; });
+    var WORKER_MAIN = "var running=false,terms=null,prefix='',n=0;" +
+      "function strip(a){return a.map(function(x){var o={};for(var k in x)if(k!=='_data')o[k]=x[k];return o;});}" +
+      "function summ(r){return {seed:r.seed,cfg:r.cfg,invariants:r.invariants,attacks:strip(r.attacks),events:r.events,sigs:r.sigs,ms:r.ms};}" +
+      "function loop(){if(!running)return;var seed=prefix+'-'+(n++);var r;try{r=summ(UP.lab.runOne(seed,terms));}catch(e){r={seed:seed,invariants:[{id:'generator',ok:false,detail:String(e&&e.message)}],attacks:[],events:0,sigs:0,ms:0};}postMessage({type:'result',res:r});setTimeout(loop,0);}" +
+      "onmessage=function(e){var m=e.data;if(m.type==='init'){terms={};m.terms.forEach(function(t){terms[t.id]=t;});prefix=m.prefix;}" +
+      "if(m.type==='start'&&!running){running=true;loop();}if(m.type==='pause')running=false;};";
+    function startWorker() {
+      try {
+        var src = ["src-crypto", "src-engine", "src-lab"].map(function (id) { return $(id).textContent; }).join("\n;\n") + "\n" + WORKER_MAIN;
+        worker = new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })));
+        worker.onmessage = function (e) { if (e.data.type === "result") { mode = "worker"; onResult(e.data.res); } };
+        worker.onerror = function () { fallback(); };
+        worker.postMessage({ type: "init", terms: TERM_LIST, prefix: prefix });
+        worker.postMessage({ type: "start" });
+        mode = "starting";
+        setTimeout(function () { if (mode === "starting") fallback(); }, 8000);
+      } catch (e) { fallback(); }
     }
-    function pick(v) {
-      stop();
-      if (v.indexOf("live:") === 0) return load(live[Number(v.slice(5))].trace, true);
-      $("rp-event").innerHTML = '<p class="muted">Loading the recorded trace…</p>';
-      fetchTrace(v.slice(4)).then(function (t) { load(t, false); }).catch(function () {
-        trace = null; $("rp-train").innerHTML = ""; $("rp-legend").innerHTML = ""; $("rp-desc").textContent = "";
-        $("rp-event").innerHTML = '<p class="empty">This recorded trace could not be loaded here. Open explorer/index.html from the repository, next to examples/traces/. Live runs from the proving ground replay anywhere.</p>';
-        ["rp-evals", "rp-checks", "rp-derived"].forEach(function (id) { $(id).innerHTML = ""; });
-      });
+    var n = 0, timer = null;
+    function fallback() { if (worker) { try { worker.terminate(); } catch (e) { /* ignore */ } worker = null; } mode = "main"; mainLoop(); }
+    function mainLoop() {
+      clearTimeout(timer);
+      if (!running || mode !== "main") return;
+      var r = UP.lab.runOne(prefix + "-" + (n++), TERMS);
+      onResult({ seed: r.seed, invariants: r.invariants, attacks: r.attacks, events: r.events });
+      timer = setTimeout(mainLoop, 120);
     }
-    function load(t, isLive) {
-      trace = t; liveFlag = isLive; cur = 0;
-      checkWho = (t.evaluators.filter(function (e) { return e.tampered; })[0] || t.evaluators[0]).id;
-      $("rp-source").innerHTML = isLive ? '<span class="pill live">Live · computed in your browser</span>' : '<span class="pill">Recorded · Python reference interpreter</span>';
-      $("rp-desc").textContent = t.description || "";
-      $("rp-legend").innerHTML = t.chains.map(function (c) { return '<span style="--hue:' + hue(c.position) + '">' + esc(c.label) + "</span>"; }).join("") + '<span style="--hue:var(--bad)">rejected by an evaluator (dot) · evaluators disagree (dashed)</span>';
-      $("rp-train").innerHTML = t.steps.map(function (s, i) {
-        var e = s.event, rej = Object.keys(s.results).some(function (k) { return !s.results[k].accepted; });
-        return '<button type="button" class="eb' + (rej ? " rej" : "") + (s.consensus ? "" : " div") + '" style="--hue:' + hue(e.chain) + '" data-i="' + i + '" title="' + esc(e.description) + '"><span class="kd">' + KIND[e.kind] + "</span><span>" + esc(e.at.slice(5, 10)) + "<br>#" + i + "</span></button>";
+    function onResult(r) {
+      S.runs++; S.events += r.events;
+      r.invariants.forEach(function (x) { if (!S.inv[x.id]) S.inv[x.id] = { ok: 0, bad: 0 }; S.inv[x.id][x.ok ? "ok" : "bad"]++; S[x.ok ? "invOk" : "invBad"]++; });
+      r.attacks.forEach(function (a) { var s = S.att[a.attack]; s.n++; S.attacks++; if (a.detected) { s.caught++; S.caught++; s.rules[a.rule] = (s.rules[a.rule] || 0) + 1; } });
+      var bad = r.invariants.filter(function (x) { return !x.ok; });
+      if (bad.length) { fails.unshift({ seed: r.seed, failed: bad.map(function (b) { return b.id + ": " + b.detail; }) }); fails = fails.slice(0, 30); store("up-playground-failures", fails); }
+      paint();
+    }
+    function paint() {
+      $("lab-status").textContent = running ? "Running in your browser" + (mode === "main" ? " (on the page)" : "") : S.runs ? "Paused" : "Not running";
+      $("lab-status").classList.toggle("running", running);
+      $("lab-tiles").innerHTML = [["Runs", fmtN(S.runs), fmtN(S.events) + " events validated", false], ["Attacks caught", fmtN(S.caught), "of " + fmtN(S.attacks) + " attempted", S.attacks && S.caught === S.attacks],
+        ["Invariant checks", fmtN(S.invOk), "passed", S.invOk > 0], ["Failures", fmtN(S.invBad), "kept with their seeds", !S.invBad && S.runs > 0]].map(function (t, i) {
+        return '<div class="tile' + (i === 3 && S.invBad ? " alarm" : t[3] ? " good" : "") + '"><span class="eyebrow">' + t[0] + '</span><span class="v">' + t[1] + '</span><span class="s">' + t[2] + "</span></div>";
       }).join("");
-      go(0);
+      $("lab-inv").innerHTML = Object.keys(INV).map(function (k) { var s = S.inv[k]; return "<tr><td>" + esc(INV[k]) + '</td><td class="num">' + fmtN(s.ok) + '</td><td class="num" style="color:' + (s.bad ? "var(--bad)" : "inherit") + '">' + fmtN(s.bad) + "</td></tr>"; }).join("");
+      $("lab-att").innerHTML = Object.keys(S.att).map(function (k) {
+        var s = S.att[k], rules = Object.keys(s.rules).map(function (r) { return '<span class="pill">' + esc(ruleName(r)) + "</span>"; }).join(" ");
+        return "<tr><td>" + esc(UP.lab.ATTACKS[k].label) + '</td><td class="num">' + fmtN(s.caught) + " / " + fmtN(s.n) + "</td><td>" + (rules || '<span class="muted">—</span>') + "</td></tr>";
+      }).join("");
+      $("lab-fails").innerHTML = fails.length ? '<h3 style="margin-top:1rem;font-size:0.95rem;color:var(--bad)">Failures kept on this device</h3>' + fails.map(function (f) { return '<p class="mono" style="font-size:0.8rem;margin-top:0.3rem">seed ' + esc(f.seed) + ": " + f.failed.map(esc).join("; ") + "</p>"; }).join("") : "";
     }
-    function go(i) {
-      if (!trace) return;
-      cur = Math.max(0, Math.min(trace.steps.length - 1, i));
-      var bs = $("rp-train").children;
-      for (var k = 0; k < bs.length; k++) { bs[k].classList.toggle("cur", k === cur); bs[k].classList.toggle("future", k > cur); }
-      var cb = bs[cur]; if (cb) { var tr = $("rp-train"); var l = cb.offsetLeft - tr.offsetLeft; if (l < tr.scrollLeft || l > tr.scrollLeft + tr.clientWidth - 70) tr.scrollLeft = l - tr.clientWidth / 2; }
-      $("rp-count").textContent = "Event " + (cur + 1) + " of " + trace.steps.length;
-      var s = trace.steps[cur], e = s.event;
-      var mand = "";
-      if (e.mandate) {
-        var lim = [];
-        Object.keys(e.mandate.scope.claims || {}).forEach(function (c) { var b = e.mandate.scope.claims[c]; Object.keys(b).forEach(function (f) { if (!b[f].any) lim.push(c.split("/")[1] + " · " + f + ": " + JSON.stringify(b[f])); }); });
-        Object.keys(e.mandate.scope.terms || {}).forEach(function (t) { var b = e.mandate.scope.terms[t]; Object.keys(b).forEach(function (p) { if (!b[p].any) lim.push(t + " · " + p + ": " + JSON.stringify(b[p])); }); });
-        mand = "<dt>Mandate</dt><dd>Agent acting for " + esc(e.mandate.principal_name) + ", valid " + esc(e.mandate.not_before.slice(0, 10)) + " to " + esc(e.mandate.expires.slice(0, 10)) + (lim.length ? '<div class="muted" style="font-size:0.8rem">Limits: ' + lim.map(esc).join("; ") + "</div>" : "") + "</dd>";
-      }
-      $("rp-event").innerHTML = '<span class="eyebrow" style="color:' + hue(e.chain) + '">' + esc(e.chain_label) + " · event " + e.index + "</span><h3 style=\"margin-top:0.35rem\">" + esc(e.description) + "</h3>" +
-        '<dl class="kv"><dt>Kind</dt><dd>' + KIND_NAME[e.kind] + "</dd><dt>Time</dt><dd class=\"mono\">" + esc(e.at) + "</dd><dt>Author</dt><dd>" + esc(e.by_name) + "</dd>" +
-        "<dt>Signed by</dt><dd>" + e.signers.map(function (g) { return esc(g.name) + (g.mandate ? " (agent, under Mandate)" : ""); }).join("; ") + "</dd>" + mand +
-        '<dt>Event</dt><dd class="hash">' + esc(e.hash) + '</dd><dt>Builds on</dt><dd class="hash">' + esc(e.prev || "nothing (this event starts the chain)") + "</dd></dl>";
-      var counts = {};
-      trace.evaluators.forEach(function (ev) { var h = s.results[ev.id].world_hash; counts[h] = (counts[h] || 0) + 1; });
-      var major = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
-      $("rp-evals").innerHTML = "<h3>Independent evaluators</h3><p class=\"muted\" style=\"font-size:0.84rem;margin:0.3rem 0 0.6rem\">" + (s.consensus ? "All evaluators hold the same world fingerprint." : "The evaluators disagree. The copy that differs is identified at this exact event.") + '</p><div class="ev-list">' +
-        trace.evaluators.map(function (ev) {
-          var r = s.results[ev.id], same = r.world_hash === major;
-          return '<div class="ev-item' + (same ? "" : " bad") + '"><div class="clause-head"><b>' + esc(ev.name) + "</b>" + '<span class="pill ' + (r.accepted ? "ok" : "bad") + '">' + (r.accepted ? "accepted" : "rejected") + "</span></div>" +
-            (ev.tampered ? '<span style="color:var(--bad);font-size:0.8rem">' + esc(ev.tampered) + "</span>" : "") + (ev.hashes_only ? '<span class="muted" style="font-size:0.8rem">Holds no disclosures: sees only seals.</span>' : "") +
-            '<span class="hash" style="color:' + (same ? "var(--ok)" : "var(--bad)") + '">world ' + esc(short(r.world_hash)) + "…</span>" + (r.accepted ? "" : '<span style="font-size:0.82rem">' + esc(r.reason) + "</span>") + "</div>";
-        }).join("") + "</div>";
-      drawChecks(); drawDerived();
-    }
-    function drawChecks() {
-      var s = trace.steps[cur], r = s.results[checkWho];
-      $("rp-checks").innerHTML = "<h3>Validation</h3>" + '<div class="tabs">' + trace.evaluators.map(function (ev) { return '<button type="button" data-who="' + esc(ev.id) + '" class="' + (ev.id === checkWho ? "on" : "") + '">' + esc(ev.name) + "</button>"; }).join("") + "</div>" +
-        (r.checks.length ? r.checks.map(function (c) { return '<div class="chk"><span class="' + (c.passed ? "y" : "n") + '">' + (c.passed ? "✓" : "✗") + "</span><span>" + esc(c.reason) + '<br><span class="r">' + esc(c.rule) + " · " + esc(c.label) + "</span></span></div>"; }).join("") : '<p class="muted">' + esc(r.reason) + "</p>");
-    }
-    function drawDerived() {
-      var d = trace.steps[cur].results[checkWho].derived;
-      var html = "<h3>What follows, as of " + esc(d.at.slice(0, 10)) + "</h3><p class=\"muted\" style=\"font-size:0.82rem\">Statuses, tiers, prices, and obligations as " + esc((trace.evaluators.filter(function (e) { return e.id === checkWho; })[0] || {}).name) + " computes them.</p>";
-      (d.chains || []).forEach(function (c) {
-        html += '<div class="derived-chain"><div class="clause-head"><b style="color:' + hue(c.chain) + '">' + esc(c.label) + '</b><span class="pill">' + esc(c.status) + "</span></div>";
-        if (c.window) html += '<span class="muted" style="font-size:0.82rem">In force ' + esc((c.window.start || "").slice(0, 10)) + " to " + esc(c.window.end ? c.window.end.slice(0, 10) : "open-ended") + "</span>";
-        if (c.selections) html += Object.keys(c.selections).map(function (k) { return '<span style="font-size:0.85rem">Tier for ' + esc(nm(k)) + ": <b>" + esc(c.selections[k] || "none") + "</b></span>"; }).join("");
-        if (c.prices && c.prices.length) html += '<div class="scroll-x"><table><thead><tr><th>Item</th><th class="num">Price</th></tr></thead><tbody>' + c.prices.map(function (p) { return "<tr><td class=\"mono\">" + esc(p.item.scheme + " " + (typeof p.item.id === "string" ? p.item.id : "sealed")) + '</td><td class="num">' + amt(p.price) + "</td></tr>"; }).join("") + "</tbody></table></div>";
-        if (c.obligations && c.obligations.length) html += '<div class="scroll-x"><table><thead><tr><th>Duty</th><th>Period</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>' + c.obligations.map(function (o) {
-          var bad = o.status === "overdue";
-          return "<tr><td>" + esc(o.clause) + " · " + esc(o.duty) + '</td><td class="mono" style="white-space:nowrap">' + esc(o.period.start.slice(0, 10)) + (o.period.end !== o.period.start ? " → " + esc(o.period.end.slice(5, 10)) : "") + '</td><td class="num">' + (o.amount !== undefined ? amt(o.amount) : "—") + '</td><td><span class="pill ' + (o.status === "discharged" ? "ok" : bad ? "bad" : "") + '">' + esc(o.status) + (o.late ? " late" : "") + "</span></td></tr>";
-        }).join("") + "</tbody></table></div>";
-        html += "</div>";
-      });
-      $("rp-derived").innerHTML = html;
-    }
-    function stop() { clearInterval(timer); timer = null; $("rp-play").textContent = "Play"; }
-    function play() {
-      if (!trace) return;
-      if (cur >= trace.steps.length - 1) go(0);
-      $("rp-play").textContent = "Pause";
-      timer = setInterval(function () { if (cur >= trace.steps.length - 1) stop(); else go(cur + 1); }, Number($("rp-speed").value));
-    }
-    $("rp-train").addEventListener("click", function (e) { var b = e.target.closest(".eb"); if (b) { stop(); go(Number(b.dataset.i)); } });
-    $("rp-checks").addEventListener("click", function (e) { var b = e.target.closest("[data-who]"); if (b) { checkWho = b.dataset.who; drawChecks(); drawDerived(); } });
-    $("rp-play").addEventListener("click", function () { timer ? stop() : play(); });
-    $("rp-first").addEventListener("click", function () { stop(); go(0); });
-    $("rp-last").addEventListener("click", function () { stop(); go(trace ? trace.steps.length - 1 : 0); });
-    $("rp-prev").addEventListener("click", function () { stop(); go(cur - 1); });
-    $("rp-next").addEventListener("click", function () { stop(); go(cur + 1); });
-    $("rp-speed").addEventListener("change", function () { if (timer) { stop(); play(); } });
-    $("rp-pick").addEventListener("change", function () { pick(this.value); });
-    $("replay").addEventListener("keydown", function (e) {
-      if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
-      if (e.key === "ArrowRight") { stop(); go(cur + 1); e.preventDefault(); } else if (e.key === "ArrowLeft") { stop(); go(cur - 1); e.preventDefault(); }
+    $("lab-toggle").addEventListener("click", function () {
+      running = !running;
+      this.textContent = running ? "Pause" : "Resume";
+      if (running && mode === "idle") startWorker();
+      else if (mode === "worker" && worker) worker.postMessage({ type: running ? "start" : "pause" });
+      else if (mode === "main") mainLoop();
+      paint();
     });
-    fillPick(); pick($("rp-pick").value);
-    return {
-      loadLive: function (t, seed) {
-        live.unshift({ seed: seed, trace: t }); live = live.slice(0, 10); fillPick();
-        $("rp-pick").value = "live:0"; stop(); load(t, true);
-      }
-    };
+    paint();
   })();
 })();
 

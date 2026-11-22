@@ -37,7 +37,7 @@ Without Node.js, the JavaScript conformance and differential tests are skipped. 
 
 **A new or changed Term:** edit the source list in `tools/gen_terms.py` (never the generated `spec/06-terms/*.json` or `UP-*.md`), then regenerate. A changed definition has a new hash, which `spec/06-terms/README.md` lists. A Term must use only the six clause forms. If it cannot, that is a spec discussion first.
 
-**Interpreter or Explorer only:** keep both engines in step and keep `tests/test_js_conformance.py` passing.
+**Interpreter or Playground page only:** keep both engines in step and keep `tests/test_js_conformance.py` passing.
 
 ## Tests
 
