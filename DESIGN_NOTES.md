@@ -107,6 +107,14 @@ Each was tempting because a specific use case needs it, and was deferred per the
 - **Every clause form needed only the fields in the spec.** No Term in the library required special code, which supports the clause-form approach.
 - **Spec gap found:** the Duty form needs a `clause` on its `amount.base` so a fee can read another clause's reports. The spec text now says so.
 
+## 5b. A second engine, and how it is held to the first
+
+The Explorer computes its Playground and proving ground in the browser, so the interpreter was ported to JavaScript (`explorer/src/`), including dependency-free SHA-256, SHA-512, and Ed25519. Two implementations of one spec are a test of the spec: anything ambiguous shows up as a mismatch.
+
+- **Conformance.** `tools/dump_conformance.py` records every example trace, rendering, and simulation from Python. `tests/js_conformance.mjs` requires the JavaScript engine to reproduce all of them exactly, including every check, reason, state hash, and derived value. It passed on the first complete run with no spec changes, which is some evidence that the spec text is precise enough to implement twice.
+- **Proving ground.** `up-lab.js` generates random agreements from a seed (parties, tiers, items, prices, fee rate and rounding mode, monthly or quarterly reporting, tier changes, short, late, and skipped payments, optional agents under Mandates, optional sealing) and checks eight invariants: honest events accepted, determinism across four evaluators (one with every object's fields reordered), every tampered copy caught at the tampered event with history before it unchanged, Mandate bounds, sealed-observer agreement, fees against integer arithmetic, prices against the tier in force, and rendering bound to the fingerprint. Seven attack types are tried. `tests/js_lab.mjs` runs 60 fixed seeds in CI.
+- **What this does not prove.** Random runs explore the shapes the generator knows. They do not cover Terms the generator never uses (Audit, Termination-Cause, Price-Reference, Overlay, Purchase-Commitment) beyond the fixed examples, and they share the engine with the Playground, so a bug common to both engines would only be caught by the Python conformance check.
+
 ## 6. Open questions for the steward
 
 From the brief (asked, not decided). Each has a provisional assumption so drafting could continue, marked **[PROVISIONAL]** in the spec.

@@ -15,3 +15,9 @@ def test_js_engine_reproduces_python(tmp_path):
     subprocess.run([sys.executable, str(ROOT / "tools" / "dump_conformance.py"), str(fx)], check=True, capture_output=True)
     r = subprocess.run(["node", str(ROOT / "tests" / "js_conformance.mjs"), str(fx)], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is not installed")
+def test_generated_runs_pass_every_invariant():
+    r = subprocess.run(["node", str(ROOT / "tests" / "js_lab.mjs"), "60"], capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr

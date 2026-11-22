@@ -13,7 +13,8 @@ Universal Paper is a vocabulary, a grammar, and a set of validity rules. It is n
 | [schema/](schema/) | JSON Schemas for every primitive and for trace files |
 | [src/universal_paper/](src/universal_paper/) | Reference interpreter (library and CLI) |
 | [examples/](examples/) | Worked examples as full chains of signed events, plus traces |
-| [explorer/index.html](explorer/index.html) | Universal Paper Explorer, a visual player for trace files |
+| [explorer/index.html](explorer/index.html) | Universal Paper Explorer: scroll story, live proving ground, Playground, and trace replay (built from `explorer/src/`) |
+| [explorer/src/](explorer/src/) | The JavaScript second engine (`up-crypto.js`, `up-engine.js`), the proving ground (`up-lab.js`), and the page |
 | [tests/](tests/) | Tests for every axiom, transition rule, clause form, and determinism |
 
 ## Quick start
@@ -53,7 +54,14 @@ All parties, identifiers, prices, rates, quantities, and dates in the examples a
 
 ## Explorer
 
-Serve the repository and open the Explorer, for example `python3 -m http.server` then `http://localhost:8000/explorer/index.html`. Opened directly from disk, it asks you to pick a trace file from `examples/traces/` instead. It computes nothing itself; it only plays back what the interpreter wrote.
+Serve the repository and open the Explorer, for example `python3 -m http.server` then `http://localhost:8000/explorer/index.html`. It has four parts:
+
+- **Story**: a scroll-through of one clause becoming data, a fingerprint, a flipped fingerprint, and a caught edit, all computed live.
+- **Proving ground**: generates random agreements and histories from seeds, attacks copies of them, and checks eight invariants against independent arithmetic, until the page is closed. Any failing seed is kept and can be replayed.
+- **Playground**: pick parties, add Terms, set values, and watch the cover sheet, the full contract, and the fingerprint update. Sign, then edit, and the signatures stop verifying.
+- **Replay**: plays recorded traces from `examples/traces/` exactly as the Python interpreter wrote them. Live runs from the proving ground can be replayed too and are marked live.
+
+Everything live runs on a second, independent engine in JavaScript (`explorer/src/`). Before it is used, `tests/test_js_conformance.py` requires it to reproduce every example trace, rendering, and simulation byte for byte, and to pass every invariant on 60 fixed seeds. Rebuild the page after editing `explorer/src/` with `python3 tools/build_explorer.py`.
 
 ## Licenses
 

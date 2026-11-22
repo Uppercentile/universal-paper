@@ -315,6 +315,7 @@
     SPEC: "UP/0.1-draft", hex: hex, unhex: unhex, utf8: utf8, sha256: sha256, sha512: sha512,
     jcs: jcs, jcsString: jcsString, strip: strip, digest: digest, contentHash: contentHash,
     Key: Key, verifySig: verifySig, attach: attach, ed25519: { sign: sign, verify: verify, publicFromSecret: publicFromSecret },
+    clearVerifyCache: function () { verifyCache.clear(); },
     dec: dec, Dec: Dec, decStr: decStr, parseTime: parseTime, fmtTime: fmtTime, addPeriod: addPeriod, fmtPeriod: fmtPeriod,
     SEALED: SEALED, isSeal: isSeal, sealOf: sealOf, opens: opens, containsSeal: containsSeal
   });
