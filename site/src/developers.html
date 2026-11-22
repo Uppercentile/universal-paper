@@ -1563,8 +1563,8 @@ python -m pytest</pre></div></li>
   <div class="wrap g">
     <div class="head rise">
       <p class="eyebrow">Specification</p>
-      <h2 class="h2">A public, versioned spec, with its open questions listed</h2>
-      <p class="lede">Universal Paper is a working draft. Here's exactly where it stands, what the documents cover and what is still undecided. Nothing on this page is final until the steward's review closes these questions.</p>
+      <h2 class="h2">A public, versioned spec</h2>
+      <p class="lede">Universal Paper is a working draft. Here's exactly where it stands and what each document covers.</p>
     </div>
     <div class="spec">
       <div class="statuscard rise">
@@ -1572,10 +1572,10 @@ python -m pytest</pre></div></li>
           <dt>Version</dt><dd class="mono">UP/0.1-draft</dd>
           <dt>Maturity</dt><dd>Working draft</dd>
           <dt>Created by</dt><dd>Uppercentile, offered free to everyone</dd>
-          <dt>Steward</dt><dd>Uppercentile <span class="prov">provisional</span></dd>
+          <dt>Steward</dt><dd>Uppercentile</dd>
           <dt>Licenses</dt><dd>Spec CC BY 4.0 · Code Apache-2.0 · Examples CC0</dd>
           <dt>Changes</dt><dd>Public changelog and RFC process <span class="prov">provisional</span></dd>
-          <dt>Repository</dt><dd>Not public yet</dd>
+          <dt>Repository</dt><dd><a href="https://github.com/Uppercentile/universal-paper">github.com/Uppercentile/universal-paper</a></dd>
         </dl>
         <div class="track4">
           <ol aria-label="Maturity track"><li class="on">Working draft</li><li>Public review</li><li>Candidate</li><li>1.0</li></ol>
@@ -1593,16 +1593,6 @@ python -m pytest</pre></div></li>
           <div class="row"><span class="no">06</span><span>Initial Term library (16 Terms)</span><span class="f">06-terms/</span></div>
           <div class="row"><span class="no">07</span><span>Mapping guide: rosters, eligibility and X12</span><span class="f">07-mapping-guide.md</span></div>
           <div class="row"><span class="no">08</span><span>Neutrality charter</span><span class="f">08-neutrality-charter.md</span></div>
-        </div>
-        <div class="oq rise">
-          <h4 class="eyebrow">Open questions for the steward</h4>
-          <ol>
-            <li><b>Library emphasis.</b> Aggregator–supplier Terms, member participation, or both? Currently both.</li>
-            <li><b>Publishing name.</b> Uppercentile as steward and "Universal Paper" as the project name, for now.</li>
-            <li><b>Change process.</b> A public changelog and RFCs, with comment periods and decision rules still to set.</li>
-            <li><b>Roles.</b> Fixed at three in v0. The mapping guide suggests a distributor Role will be needed.</li>
-          </ol>
-          <p class="note">From DESIGN_NOTES.md §6</p>
         </div>
       </div>
     </div>
@@ -1626,7 +1616,7 @@ python -m pytest</pre></div></li>
       <details><summary>How do confidential prices stay private?</summary><div class="a"><p>A private value can be replaced by a Seal, a salted SHA-256 commitment. Hashes and signatures cover the sealed form, so a holder who sees nothing still reaches the same verdicts and State hashes. You disclose values only to the parties who need them.</p><p class="note">axiom A10 · examples/confidential</p></div></details>
       <details><summary>Can AI agents sign on our behalf?</summary><div class="a"><p>Yes, within limits. A Mandate gives an agent its own key and bounds on the kinds, Roles, Terms and values it may use. An out-of-bounds event is invalid on arrival for everyone.</p><p class="note">axiom A9 · examples/generative</p></div></details>
       <details><summary>How does it fit with EDI?</summary><div class="a"><p>Side by side. The mapping guide shows how rosters, eligibility files and the X12 845, 844, 849 and 867 sets correspond to events and projections. The main gap in v0 is the distributor Role, and it's documented.</p><p class="note">spec/07-mapping-guide.md</p></div></details>
-      <details><summary>Who governs the spec?</summary><div class="a"><p>Uppercentile is the current steward <span class="prov">provisional</span>. The neutrality charter commits the steward to publish its affiliations, keep the language value-neutral, and transfer stewardship to a neutral body once the language has users across segments. Governance details are still open questions.</p><p class="note">spec/08-neutrality-charter.md · DESIGN_NOTES.md §6</p></div></details>
+      <details><summary>Who governs the spec?</summary><div class="a"><p>Uppercentile is the current steward. The neutrality charter commits the steward to publish its affiliations, keep the language value-neutral, and transfer stewardship to a neutral body once the language has users across segments.</p><p class="note">spec/08-neutrality-charter.md</p></div></details>
       <details><summary>What's the license?</summary><div class="a"><p>Universal Paper was created by Uppercentile, which offers it to everyone for free under open licenses: the specification and Term library are CC BY 4.0, the reference code and schemas are Apache-2.0, and the example agreements are CC0. No account, fee or license key is ever required. Anyone can implement it: if your code produces the same hashes and verdicts, it speaks Universal Paper. <a href="/license/">Licenses in detail</a>.</p></div></details>
     </div>
   </div>
