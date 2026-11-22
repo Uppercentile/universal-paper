@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/universal-paper-mark-white-512.png">
+    <img src="assets/universal-paper-mark-black-512.png" alt="Universal Paper logo" width="120">
+  </picture>
+</p>
+
 # Universal Paper
 
 A first-order language for agreements between group purchasing organizations, suppliers, and members.

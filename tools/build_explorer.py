@@ -13,6 +13,7 @@ build is deterministic, so CI can check that the committed page is up to date.
 """
 from __future__ import annotations
 
+import base64
 import datetime
 import json
 import re
@@ -105,6 +106,9 @@ def build() -> str:
         "/*@@CONFORMANCE@@*/": json.dumps(conformance(), ensure_ascii=False).replace("</", "<\\/"),
         "/*@@APP@@*/": (SRC / "app.js").read_text(),
     }
+    for name in ("BLACK_96", "WHITE_96", "BLACK_64", "WHITE_64"):
+        png = (SRC / f"logo-{name.lower().replace('_', '-')}.png").read_bytes()
+        page = page.replace(f"@@LOGO_{name}@@", "data:image/png;base64," + base64.b64encode(png).decode())
     for k, v in parts.items():
         if "</script" in v.lower():
             raise SystemExit(f"{k} contains </script")

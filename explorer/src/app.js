@@ -142,8 +142,11 @@
       }
       // foundation
       el("rect", { x: 10, y: L.fy, width: L.W - 20, height: L.fh, rx: 12, fill: "var(--found)", stroke: "var(--found-line)" });
-      el("text", { x: L.labelX + 10, y: L.fy + 34, "class": "found-title" }, null, "Universal Paper");
-      el("text", { x: L.labelX + 10, y: L.fy + 54, "class": "found-sub" }, null, narrow ? "Terms · agreements · signed events · fingerprints" : "Terms · agreements · signed events · fingerprints, checked by every party’s own engine");
+      document.querySelectorAll(".mark .logo").forEach(function (img) {
+        el("image", { href: img.getAttribute("src"), x: L.labelX + 10, y: L.fy + 14, width: 30, height: 30, "class": img.classList.contains("on-dark") ? "on-dark" : "on-light" });
+      });
+      el("text", { x: L.labelX + 48, y: L.fy + 34, "class": "found-title" }, null, "Universal Paper");
+      el("text", { x: L.labelX + 10, y: L.fy + 62, "class": "found-sub" }, null, narrow ? "Terms · agreements · signed events · fingerprints" : "Terms · agreements · signed events · fingerprints, checked by every party’s own engine");
       L.dots = el("g", {});
       L.lanes.forEach(function (ln, i) {
         var lbl = trace.chains[i] ? trace.chains[i].label.replace(/ \(hypothetical\)$/, "").replace(/^Master agreement .*$/, "Master agreement").replace(/^Participation of Sample (\w+).*$/, "Participation: $1") : "";

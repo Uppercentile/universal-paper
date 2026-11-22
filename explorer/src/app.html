@@ -74,7 +74,11 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .band { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .band .wrap { display: flex; align-items: center; gap: 1rem; padding-block: 0.6rem; flex-wrap: wrap; }
 .mark { display: flex; align-items: center; gap: 0.55rem; font: 700 1rem/1 var(--f-display); text-decoration: none; color: var(--fg); }
-.mark svg { width: 22px; height: 22px; }
+.mark .logo { width: 28px; height: 28px; display: block; }
+.on-light { display: none !important; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .on-light { display: block !important; } :root:not([data-theme="dark"]) .on-dark { display: none !important; } }
+:root[data-theme="light"] .on-light { display: block !important; }
+:root[data-theme="light"] .on-dark { display: none !important; }
 .nav { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-left: auto; }
 .nav a { color: var(--muted); text-decoration: none; padding: 0.35rem 0.6rem; border-radius: 7px; font-size: 0.9rem; }
 .nav a:hover, .nav a.on { color: var(--fg); background: var(--panel-2); }
@@ -236,11 +240,14 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
+<link rel="icon" type="image/png" href="@@LOGO_BLACK_64@@" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" href="@@LOGO_WHITE_64@@" media="(prefers-color-scheme: dark)">
 <!--BODY-->
 <header class="band">
   <div class="wrap">
     <a class="mark" href="#top" aria-label="Universal Paper, top">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="14" height="19" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h6M8 11.5h6M8 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="17.5" cy="17.5" r="3.6" fill="var(--accent)"/></svg>
+      <img class="logo on-dark" src="@@LOGO_WHITE_96@@" alt="" width="28" height="28">
+      <img class="logo on-light" src="@@LOGO_BLACK_96@@" alt="" width="28" height="28">
       Universal Paper
     </a>
     <nav class="nav" aria-label="Sections">
