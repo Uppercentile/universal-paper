@@ -254,8 +254,23 @@
       apply: function (g, E, r, prev) { return resign(g, E, function (e) { e.at = t(ms(prev.at) - r.int(1, 30) * DAY); }); } },
     "dropped-signature": { label: "Required signature removed", pick: function (g, r) { return anyLater(g, r); },
       apply: function (g, E) { var by = E.by; E.sigs = E.sigs.filter(function (s) { return s.key !== by && !s.mandate; }); return E; } },
-    "wrong-history": { label: "Event rebuilt on a different history", pick: function (g, r) { var c = r.pick(g.data.chains.map(function (_, i) { return i; }).filter(function (i) { return g.data.chains[i].length > 2; })); return c == null ? null : { pos: c, index: r.int(2, g.data.chains[c].length - 1) }; },
-      apply: function (g, E, r) { var steps = g.w.ev.run(ch(g.data.chains[E.__pos][0])), older = steps[r.int(0, Math.max(0, E.__index - 2))].state; var e2 = resign(g, strip2(E), function (e) { e.prev = ch(older); }); return e2; } },
+    // Re-sign an event over an older State. The older State must differ from the event's real prev: a rejected
+    // event leaves the State unchanged, so "the State two steps back" can be the same State (seed hunt-266).
+    "wrong-history": { label: "Event rebuilt on a different history", pick: function (g, r) {
+        var opts = [];
+        g.data.chains.forEach(function (c, pos) {
+          if (c.length < 3) return;
+          var steps = g.w.ev.run(ch(c[0]));
+          for (var i = 2; i < c.length; i++) {
+            var olds = [], seen = {};
+            for (var k = 0; k < i - 1; k++) { var h = steps[k].state ? ch(steps[k].state) : null; if (h && h !== c[i].prev && !seen[h]) { seen[h] = 1; olds.push(h); } }
+            if (olds.length) opts.push({ pos: pos, index: i, olds: olds });
+          }
+        });
+        if (!opts.length) return null;
+        var o = r.pick(opts); return { pos: o.pos, index: o.index, older: r.pick(o.olds) };
+      },
+      apply: function (g, E, r, prev, tgt) { return resign(g, strip2(E), function (e) { e.prev = tgt.older; }); } },
     "impersonation": { label: "Outsider signs as a party", pick: function (g, r) { return anyLater(g, r); },
       apply: function (g, E, r) { var k = UP.Key.fromSeed("lab-outsider:" + r.hex(8)); var e2 = clone(E); delete e2.sigs; return UP.attach(e2, k.signObj(e2)); } },
     "cross-chain-replay": { label: "Signed event replayed on another chain", pick: function (g, r) { if (g.data.chains.length < 2) return null; var from = anyLater(g, r); var to = r.pick(g.data.chains.map(function (_, i) { return i; }).filter(function (i) { return i !== from.pos; })); return { pos: to, index: g.data.chains[to].length, from: from }; },
@@ -272,7 +287,7 @@
     if (name === "cross-chain-replay") chain.push(clone(data.chains[tgt.from.pos][tgt.from.index]));
     else {
       var E = clone(chain[tgt.index]); E.__pos = tgt.pos; E.__index = tgt.index;
-      var E2 = A.apply(g, E, r, chain[tgt.index - 1]); delete E2.__pos; delete E2.__index;
+      var E2 = A.apply(g, E, r, chain[tgt.index - 1], tgt); delete E2.__pos; delete E2.__index;
       chain[tgt.index] = E2;
     }
     var ev = new UP.Evaluator(new UP.Bundle(data)), steps = ev.run(ch(chain[0]));

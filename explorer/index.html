@@ -285,6 +285,24 @@ svg .logo-img { filter: var(--logo-filter, none); }
 .notes3 p { color: var(--ink-2); font-size: 0.95rem; }
 
 /* Playground */
+.simple { gap: 18px !important; padding: 22px !important; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: var(--r-pill); background: var(--bg-2); border: 1px solid var(--rule); }
+.seg button { border: 0; background: none; border-radius: var(--r-pill); padding: 7px 14px; cursor: pointer; font-size: 0.84rem; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.ctl { display: grid; gap: 8px; }
+.ctl > label, .ctl > .lab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.86rem; color: var(--ink-2); }
+.ctl output, .ctl .val { font: 300 1.7rem/1 var(--f-display); letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); }
+.ctl input[type=text] { background: var(--bg); border: 1px solid var(--rule-2); border-radius: var(--r-1); padding: 9px 11px; width: 100%; }
+.ctl .hint { font-size: 0.78rem; color: var(--ink-3); }
+.switch { display: flex; gap: 10px; align-items: center; font-size: 0.88rem; cursor: pointer; }
+.switch input { width: 18px; height: 18px; accent-color: var(--accent); }
+.advanced { border: 1px solid var(--rule); border-radius: var(--r-2); background: var(--surface); }
+.advanced > summary { cursor: pointer; padding: 14px 16px; font-size: 0.9rem; font-weight: 500; list-style: none; }
+.advanced > summary::-webkit-details-marker { display: none; }
+.advanced > summary::before { content: "+"; display: inline-block; width: 1.1em; color: var(--ink-3); }
+.advanced[open] > summary::before { content: "–"; }
+.advanced > .editor { padding: 0 12px 12px; }
 .pg { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 24px; align-items: start; }
 .editor { display: grid; gap: 12px; min-width: 0; }
 .editor .card { display: grid; gap: 10px; padding: 16px; border-radius: var(--r-2); }
@@ -496,10 +514,13 @@ footer .brand-mark { width: 32px; height: 32px; }
     <div class="sec-head">
       <span class="eyebrow">Playground</span>
       <h2 class="h2" id="h-pg">Write an agreement. Watch it fingerprint.</h2>
-      <p class="lead">Pick the parties, add Terms from the library, and set their values. The cover sheet, the contract, and the fingerprint update as you type. Compare two versions clause by clause, or sign it and play out a year of reports and payments. The values here are examples.</p>
+      <p class="lead">Change the fee, the length, or a name and watch the contract and its fingerprint update. Sign it, then change it again to see the signatures stop covering it. Compare versions, or play out a year of reports and payments. The values here are examples.</p>
     </div>
     <div class="pg">
-      <div class="editor"><div class="fpmini" id="pg-fpmini" aria-hidden="true"></div><div class="editor" id="pg-editor"></div></div>
+      <div class="editor"><div class="fpmini" id="pg-fpmini" aria-hidden="true"></div>
+        <div class="card simple" id="pg-simple"></div>
+        <details class="advanced" id="pg-advanced"><summary>Edit every clause <span class="muted">(advanced)</span></summary><div class="editor" id="pg-editor"></div></details>
+      </div>
       <div class="outputs">
         <div class="fpbar">
           <div class="fp" id="pg-fp"></div>
@@ -2355,8 +2376,23 @@ footer .brand-mark { width: 32px; height: 32px; }
       apply: function (g, E, r, prev) { return resign(g, E, function (e) { e.at = t(ms(prev.at) - r.int(1, 30) * DAY); }); } },
     "dropped-signature": { label: "Required signature removed", pick: function (g, r) { return anyLater(g, r); },
       apply: function (g, E) { var by = E.by; E.sigs = E.sigs.filter(function (s) { return s.key !== by && !s.mandate; }); return E; } },
-    "wrong-history": { label: "Event rebuilt on a different history", pick: function (g, r) { var c = r.pick(g.data.chains.map(function (_, i) { return i; }).filter(function (i) { return g.data.chains[i].length > 2; })); return c == null ? null : { pos: c, index: r.int(2, g.data.chains[c].length - 1) }; },
-      apply: function (g, E, r) { var steps = g.w.ev.run(ch(g.data.chains[E.__pos][0])), older = steps[r.int(0, Math.max(0, E.__index - 2))].state; var e2 = resign(g, strip2(E), function (e) { e.prev = ch(older); }); return e2; } },
+    // Re-sign an event over an older State. The older State must differ from the event's real prev: a rejected
+    // event leaves the State unchanged, so "the State two steps back" can be the same State (seed hunt-266).
+    "wrong-history": { label: "Event rebuilt on a different history", pick: function (g, r) {
+        var opts = [];
+        g.data.chains.forEach(function (c, pos) {
+          if (c.length < 3) return;
+          var steps = g.w.ev.run(ch(c[0]));
+          for (var i = 2; i < c.length; i++) {
+            var olds = [], seen = {};
+            for (var k = 0; k < i - 1; k++) { var h = steps[k].state ? ch(steps[k].state) : null; if (h && h !== c[i].prev && !seen[h]) { seen[h] = 1; olds.push(h); } }
+            if (olds.length) opts.push({ pos: pos, index: i, olds: olds });
+          }
+        });
+        if (!opts.length) return null;
+        var o = r.pick(opts); return { pos: o.pos, index: o.index, older: r.pick(o.olds) };
+      },
+      apply: function (g, E, r, prev, tgt) { return resign(g, strip2(E), function (e) { e.prev = tgt.older; }); } },
     "impersonation": { label: "Outsider signs as a party", pick: function (g, r) { return anyLater(g, r); },
       apply: function (g, E, r) { var k = UP.Key.fromSeed("lab-outsider:" + r.hex(8)); var e2 = clone(E); delete e2.sigs; return UP.attach(e2, k.signObj(e2)); } },
     "cross-chain-replay": { label: "Signed event replayed on another chain", pick: function (g, r) { if (g.data.chains.length < 2) return null; var from = anyLater(g, r); var to = r.pick(g.data.chains.map(function (_, i) { return i; }).filter(function (i) { return i !== from.pos; })); return { pos: to, index: g.data.chains[to].length, from: from }; },
@@ -2373,7 +2409,7 @@ footer .brand-mark { width: 32px; height: 32px; }
     if (name === "cross-chain-replay") chain.push(clone(data.chains[tgt.from.pos][tgt.from.index]));
     else {
       var E = clone(chain[tgt.index]); E.__pos = tgt.pos; E.__index = tgt.index;
-      var E2 = A.apply(g, E, r, chain[tgt.index - 1]); delete E2.__pos; delete E2.__index;
+      var E2 = A.apply(g, E, r, chain[tgt.index - 1], tgt); delete E2.__pos; delete E2.__index;
       chain[tgt.index] = E2;
     }
     var ev = new UP.Evaluator(new UP.Bundle(data)), steps = ev.run(ch(chain[0]));
@@ -2904,7 +2940,7 @@ footer .brand-mark { width: 32px; height: 32px; }
       ["aggregator", "supplier", "member"].forEach(function (r) { st.parties[r].on = p.roles.indexOf(r) >= 0; });
       p.terms.forEach(function (t) { st.clauses.push(newClause(t)); });
       st.sigs = null; st.signedHash = null; st.base = null; st.prevHash = null;
-      drawEditor(); update();
+      drawEditor(); drawSimple(); update();
       st.base = Object.assign(build(), { note: "the " + p.label.replace(" (example)", "").toLowerCase() + " as first loaded" });
       update();
     }
@@ -2953,9 +2989,42 @@ footer .brand-mark { width: 32px; height: 32px; }
       else body = '<textarea id="' + id + '" data-k="json" spellcheck="false">' + esc(JSON.stringify(v, null, 1)) + "</textarea>";
       return '<div class="field" data-ci="' + ci + '" data-p="' + esc(p) + '">' + head + body + '<span class="errmsg" hidden></span></div>';
     }
+    // ---- the simple panel: the few things a visitor is likely to try
+    function clauseOf(term) { return st.clauses.filter(function (c) { return c.term === term; })[0]; }
+    function termClause() { return clauseOf("UP:Fixed-Term") || clauseOf("UP:Renewing-Term"); }
+    function years(c) { return c && c.params.start && c.params.end ? Number(c.params.end.slice(0, 4)) - Number(c.params.start.slice(0, 4)) : null; }
+    function drawSimple() {
+      var fee = clauseOf("UP:Admin-Fee"), term = termClause(), y = years(term), cur = Object.keys(PRESETS).filter(function (k) { return PRESETS[k].label === st.label; })[0];
+      var rate = fee && !isNaN(Number(fee.params.rate)) ? Number(fee.params.rate) : null;
+      var html = '<div class="ctl"><span class="lab">Start from</span><div class="seg" role="group" aria-label="Example agreement">' +
+        Object.keys(PRESETS).map(function (k) { return '<button type="button" data-preset="' + k + '" aria-pressed="' + (k === cur) + '">' + esc({ master: "Master", participation: "Participation", overlay: "Overlay" }[k]) + "</button>"; }).join("") + "</div></div>";
+      if (fee) html += '<div class="ctl"><label for="s-rate">Administrative fee <output id="s-rate-out">' + (rate == null ? "—" : fmtPct(rate)) + "</output></label>" +
+        '<input type="range" id="s-rate" min="0.005" max="0.05" step="0.0025" value="' + (rate == null ? 0.02 : rate) + '"><span class="hint">Share of reported net sales the supplier pays the aggregator each month.</span></div>';
+      if (term && y != null) html += '<div class="ctl"><span class="lab">Length of the agreement <span class="val" id="s-years-out">' + y + " year" + (y === 1 ? "" : "s") + '</span></span><div class="seg" role="group" aria-label="Length in years">' +
+        [1, 2, 3, 5].map(function (n) { return '<button type="button" data-years="' + n + '" aria-pressed="' + (n === y) + '">' + n + " yr</button>"; }).join("") + "</div></div>";
+      html += '<div class="ctl"><label for="s-sup">Supplier’s name</label><input type="text" id="s-sup" value="' + esc(st.parties.supplier.name) + '" spellcheck="false"><span class="hint">A party’s name derives its example key, so a new name means a new party.</span></div>';
+      if (fee) html += '<label class="switch"><input type="checkbox" id="s-seal"' + (fee.sealed.rate ? " checked" : "") + '> Keep the fee rate confidential (sealed)</label><span class="hint" style="margin-top:-10px">Only its hash goes into the agreement. Tick “View as an outsider” to see what others see.</span>';
+      $("pg-simple").innerHTML = html;
+    }
+    function fmtPct(r) { return (Math.round(r * 10000) / 100).toString() + "%"; }
+    var simple = $("pg-simple");
+    simple.addEventListener("click", function (e) {
+      var t = e.target.closest("button"); if (!t) return;
+      if (t.dataset.preset) { preset(t.dataset.preset); return; }
+      if (t.dataset.years) { var c = termClause(); c.params.end = UP.addPeriod(c.params.start, { unit: "year", count: Number(t.dataset.years) }); afterSimple(); }
+    });
+    simple.addEventListener("input", function (e) {
+      var t = e.target;
+      if (t.id === "s-rate") { var f = clauseOf("UP:Admin-Fee"), v = String(Math.round(Number(t.value) * 10000) / 10000); f.params.rate = v; $("s-rate-out").textContent = fmtPct(Number(v)); afterSimple(true); }
+      else if (t.id === "s-sup") { st.parties.supplier.name = t.value; afterSimple(true); }
+    });
+    simple.addEventListener("change", function (e) {
+      if (e.target.id === "s-seal") { var f = clauseOf("UP:Admin-Fee"); f.sealed.rate = e.target.checked; afterSimple(true); }
+    });
+    function afterSimple(keepSimple) { drawEditor(); update(); if (!keepSimple) drawSimple(); }
+
     function drawEditor() {
-      var html = '<div class="card"><h3>Start from</h3><div class="controls">' +
-        Object.keys(PRESETS).map(function (k) { return '<button class="btn small" type="button" data-preset="' + k + '">' + esc(PRESETS[k].label.replace(" (example)", "")) + "</button>"; }).join("") + "</div>" +
+      var html = '<div class="card">' +
         '<div class="field"><span><label for="pg-label">Label</label></span><input type="text" id="pg-label" value="' + esc(st.label) + '"></div></div>';
       html += '<div class="card"><h3>Parties</h3>' + ["aggregator", "supplier", "member"].map(function (r) {
         return '<div class="field"><span><label for="pg-party-' + r + '">' + r + '</label><label style="display:flex;gap:0.3rem"><input type="checkbox" data-party-on="' + r + '"' + (st.parties[r].on ? " checked" : "") + "> include</label></span>" +
@@ -2987,6 +3056,7 @@ footer .brand-mark { width: 32px; height: 32px; }
       onInput(e);
     });
     ed.addEventListener("input", onInput);
+    ed.addEventListener("change", function () { drawSimple(); });
     function onInput(e) {
       var t = e.target;
       if (t.id === "pg-label") { st.label = t.value; return update(); }
@@ -3135,7 +3205,7 @@ footer .brand-mark { width: 32px; height: 32px; }
         if ((c.term === "UP:Fixed-Term" || c.term === "UP:Renewing-Term") && c.params.end) { c.params.end = UP.addPeriod(c.params.end, { unit: "year", count: 1 }); did = true; }
       });
       if (!did) st.clauses.push(newClause("UP:Notices"));
-      drawEditor(); update();
+      drawEditor(); drawSimple(); update();
     });
 
     // ---- history

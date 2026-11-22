@@ -136,6 +136,24 @@ svg .logo-img { filter: var(--logo-filter, none); }
 .notes3 p { color: var(--ink-2); font-size: 0.95rem; }
 
 /* Playground */
+.simple { gap: 18px !important; padding: 22px !important; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: var(--r-pill); background: var(--bg-2); border: 1px solid var(--rule); }
+.seg button { border: 0; background: none; border-radius: var(--r-pill); padding: 7px 14px; cursor: pointer; font-size: 0.84rem; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.ctl { display: grid; gap: 8px; }
+.ctl > label, .ctl > .lab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.86rem; color: var(--ink-2); }
+.ctl output, .ctl .val { font: 300 1.7rem/1 var(--f-display); letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); }
+.ctl input[type=text] { background: var(--bg); border: 1px solid var(--rule-2); border-radius: var(--r-1); padding: 9px 11px; width: 100%; }
+.ctl .hint { font-size: 0.78rem; color: var(--ink-3); }
+.switch { display: flex; gap: 10px; align-items: center; font-size: 0.88rem; cursor: pointer; }
+.switch input { width: 18px; height: 18px; accent-color: var(--accent); }
+.advanced { border: 1px solid var(--rule); border-radius: var(--r-2); background: var(--surface); }
+.advanced > summary { cursor: pointer; padding: 14px 16px; font-size: 0.9rem; font-weight: 500; list-style: none; }
+.advanced > summary::-webkit-details-marker { display: none; }
+.advanced > summary::before { content: "+"; display: inline-block; width: 1.1em; color: var(--ink-3); }
+.advanced[open] > summary::before { content: "–"; }
+.advanced > .editor { padding: 0 12px 12px; }
 .pg { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 24px; align-items: start; }
 .editor { display: grid; gap: 12px; min-width: 0; }
 .editor .card { display: grid; gap: 10px; padding: 16px; border-radius: var(--r-2); }
@@ -345,10 +363,13 @@ footer .brand-mark { width: 32px; height: 32px; }
     <div class="sec-head">
       <span class="eyebrow">Playground</span>
       <h2 class="h2" id="h-pg">Write an agreement. Watch it fingerprint.</h2>
-      <p class="lead">Pick the parties, add Terms from the library, and set their values. The cover sheet, the contract, and the fingerprint update as you type. Compare two versions clause by clause, or sign it and play out a year of reports and payments. The values here are examples.</p>
+      <p class="lead">Change the fee, the length, or a name and watch the contract and its fingerprint update. Sign it, then change it again to see the signatures stop covering it. Compare versions, or play out a year of reports and payments. The values here are examples.</p>
     </div>
     <div class="pg">
-      <div class="editor"><div class="fpmini" id="pg-fpmini" aria-hidden="true"></div><div class="editor" id="pg-editor"></div></div>
+      <div class="editor"><div class="fpmini" id="pg-fpmini" aria-hidden="true"></div>
+        <div class="card simple" id="pg-simple"></div>
+        <details class="advanced" id="pg-advanced"><summary>Edit every clause <span class="muted">(advanced)</span></summary><div class="editor" id="pg-editor"></div></details>
+      </div>
       <div class="outputs">
         <div class="fpbar">
           <div class="fp" id="pg-fp"></div>

@@ -322,7 +322,7 @@
       ["aggregator", "supplier", "member"].forEach(function (r) { st.parties[r].on = p.roles.indexOf(r) >= 0; });
       p.terms.forEach(function (t) { st.clauses.push(newClause(t)); });
       st.sigs = null; st.signedHash = null; st.base = null; st.prevHash = null;
-      drawEditor(); update();
+      drawEditor(); drawSimple(); update();
       st.base = Object.assign(build(), { note: "the " + p.label.replace(" (example)", "").toLowerCase() + " as first loaded" });
       update();
     }
@@ -371,9 +371,42 @@
       else body = '<textarea id="' + id + '" data-k="json" spellcheck="false">' + esc(JSON.stringify(v, null, 1)) + "</textarea>";
       return '<div class="field" data-ci="' + ci + '" data-p="' + esc(p) + '">' + head + body + '<span class="errmsg" hidden></span></div>';
     }
+    // ---- the simple panel: the few things a visitor is likely to try
+    function clauseOf(term) { return st.clauses.filter(function (c) { return c.term === term; })[0]; }
+    function termClause() { return clauseOf("UP:Fixed-Term") || clauseOf("UP:Renewing-Term"); }
+    function years(c) { return c && c.params.start && c.params.end ? Number(c.params.end.slice(0, 4)) - Number(c.params.start.slice(0, 4)) : null; }
+    function drawSimple() {
+      var fee = clauseOf("UP:Admin-Fee"), term = termClause(), y = years(term), cur = Object.keys(PRESETS).filter(function (k) { return PRESETS[k].label === st.label; })[0];
+      var rate = fee && !isNaN(Number(fee.params.rate)) ? Number(fee.params.rate) : null;
+      var html = '<div class="ctl"><span class="lab">Start from</span><div class="seg" role="group" aria-label="Example agreement">' +
+        Object.keys(PRESETS).map(function (k) { return '<button type="button" data-preset="' + k + '" aria-pressed="' + (k === cur) + '">' + esc({ master: "Master", participation: "Participation", overlay: "Overlay" }[k]) + "</button>"; }).join("") + "</div></div>";
+      if (fee) html += '<div class="ctl"><label for="s-rate">Administrative fee <output id="s-rate-out">' + (rate == null ? "—" : fmtPct(rate)) + "</output></label>" +
+        '<input type="range" id="s-rate" min="0.005" max="0.05" step="0.0025" value="' + (rate == null ? 0.02 : rate) + '"><span class="hint">Share of reported net sales the supplier pays the aggregator each month.</span></div>';
+      if (term && y != null) html += '<div class="ctl"><span class="lab">Length of the agreement <span class="val" id="s-years-out">' + y + " year" + (y === 1 ? "" : "s") + '</span></span><div class="seg" role="group" aria-label="Length in years">' +
+        [1, 2, 3, 5].map(function (n) { return '<button type="button" data-years="' + n + '" aria-pressed="' + (n === y) + '">' + n + " yr</button>"; }).join("") + "</div></div>";
+      html += '<div class="ctl"><label for="s-sup">Supplier’s name</label><input type="text" id="s-sup" value="' + esc(st.parties.supplier.name) + '" spellcheck="false"><span class="hint">A party’s name derives its example key, so a new name means a new party.</span></div>';
+      if (fee) html += '<label class="switch"><input type="checkbox" id="s-seal"' + (fee.sealed.rate ? " checked" : "") + '> Keep the fee rate confidential (sealed)</label><span class="hint" style="margin-top:-10px">Only its hash goes into the agreement. Tick “View as an outsider” to see what others see.</span>';
+      $("pg-simple").innerHTML = html;
+    }
+    function fmtPct(r) { return (Math.round(r * 10000) / 100).toString() + "%"; }
+    var simple = $("pg-simple");
+    simple.addEventListener("click", function (e) {
+      var t = e.target.closest("button"); if (!t) return;
+      if (t.dataset.preset) { preset(t.dataset.preset); return; }
+      if (t.dataset.years) { var c = termClause(); c.params.end = UP.addPeriod(c.params.start, { unit: "year", count: Number(t.dataset.years) }); afterSimple(); }
+    });
+    simple.addEventListener("input", function (e) {
+      var t = e.target;
+      if (t.id === "s-rate") { var f = clauseOf("UP:Admin-Fee"), v = String(Math.round(Number(t.value) * 10000) / 10000); f.params.rate = v; $("s-rate-out").textContent = fmtPct(Number(v)); afterSimple(true); }
+      else if (t.id === "s-sup") { st.parties.supplier.name = t.value; afterSimple(true); }
+    });
+    simple.addEventListener("change", function (e) {
+      if (e.target.id === "s-seal") { var f = clauseOf("UP:Admin-Fee"); f.sealed.rate = e.target.checked; afterSimple(true); }
+    });
+    function afterSimple(keepSimple) { drawEditor(); update(); if (!keepSimple) drawSimple(); }
+
     function drawEditor() {
-      var html = '<div class="card"><h3>Start from</h3><div class="controls">' +
-        Object.keys(PRESETS).map(function (k) { return '<button class="btn small" type="button" data-preset="' + k + '">' + esc(PRESETS[k].label.replace(" (example)", "")) + "</button>"; }).join("") + "</div>" +
+      var html = '<div class="card">' +
         '<div class="field"><span><label for="pg-label">Label</label></span><input type="text" id="pg-label" value="' + esc(st.label) + '"></div></div>';
       html += '<div class="card"><h3>Parties</h3>' + ["aggregator", "supplier", "member"].map(function (r) {
         return '<div class="field"><span><label for="pg-party-' + r + '">' + r + '</label><label style="display:flex;gap:0.3rem"><input type="checkbox" data-party-on="' + r + '"' + (st.parties[r].on ? " checked" : "") + "> include</label></span>" +
@@ -405,6 +438,7 @@
       onInput(e);
     });
     ed.addEventListener("input", onInput);
+    ed.addEventListener("change", function () { drawSimple(); });
     function onInput(e) {
       var t = e.target;
       if (t.id === "pg-label") { st.label = t.value; return update(); }
@@ -553,7 +587,7 @@
         if ((c.term === "UP:Fixed-Term" || c.term === "UP:Renewing-Term") && c.params.end) { c.params.end = UP.addPeriod(c.params.end, { unit: "year", count: 1 }); did = true; }
       });
       if (!did) st.clauses.push(newClause("UP:Notices"));
-      drawEditor(); update();
+      drawEditor(); drawSimple(); update();
     });
 
     // ---- history

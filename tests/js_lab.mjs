@@ -13,6 +13,13 @@ for (let i = 0; i < N; i++) {
   const r = UP.lab.runOne("ci-" + i, terms);
   for (const x of r.invariants) { seen[x.id] = (seen[x.id] || 0) + 1; if (!x.ok) { bad++; console.log(`FAIL seed ci-${i} ${x.id}: ${x.detail}`); } }
 }
+// Regressions: seeds where a rejected event left the State unchanged, so the "wrong history" attack could
+// re-sign an event over its real prev (a no-op the engine rightly accepted). Found by the in-browser checks.
+for (const seed of ["hunt-266", "hunt-318", "hunt-1152", "hunt-1491"]) {
+  const r = UP.lab.runOne(seed, terms, { attacks: 7 });
+  for (const x of r.invariants) if (!x.ok) { bad++; console.log(`FAIL regression seed ${seed} ${x.id}: ${x.detail}`); }
+  if (!r.attacks.some(a => a.attack === "wrong-history")) { bad++; console.log(`FAIL regression seed ${seed}: wrong-history attack not run`); }
+}
 const missing = Object.keys(UP.lab.INVARIANTS).filter(k => !seen[k]);
 if (missing.length) { bad++; console.log("never exercised: " + missing.join(", ")); }
 console.log(`${N} generated runs, ${bad} failures; invariant checks: ${JSON.stringify(seen)}`);
