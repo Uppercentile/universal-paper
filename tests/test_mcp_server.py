@@ -82,3 +82,15 @@ def test_server_lists_every_tool_as_read_only():
     for t in listed:
         ann = t.annotations
         assert getattr(ann, "read_only_hint", getattr(ann, "readOnlyHint", None)) is True
+
+
+def test_public_mode_refuses_paths_and_oversized_input(monkeypatch):
+    monkeypatch.setattr(m, "PUBLIC", True)
+    with pytest.raises(InputError, match="file paths"):
+        m.validate_bundle(str(EX / "conventional" / "bundle.json"))
+    assert m.validate_bundle(bundle("conventional"))["valid"]
+    monkeypatch.setattr(m, "MAX_INPUT_BYTES", 1000)
+    with pytest.raises(InputError, match="limit"):
+        m.validate_bundle(bundle("conventional"))
+    with pytest.raises(InputError, match="limit"):
+        m.hash_object("x" * 2000)

@@ -11,7 +11,9 @@ hand from the specification. Requires the optional dependency:  pip install 'uni
 from __future__ import annotations
 
 import functools
+import importlib
 import json
+import os
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -26,8 +28,13 @@ from .report import snapshot
 from .simulate import simulate
 
 EXAMPLES = ("conventional", "generative", "confidential", "overlay")
-EXAMPLES_DIR = Path(__file__).resolve().parents[2] / "examples"
+EXAMPLES_DIR = Path(os.environ.get("UP_EXAMPLES_DIR") or Path(__file__).resolve().parents[2] / "examples")
 EXAMPLES_URL = "https://universalpaper.org/examples/{name}/bundle.json"
+
+# Hosted ("public") mode: set by `up-mcp --public` or UP_MCP_PUBLIC=1. Callers are untrusted, so
+# file paths are refused, examples load only from this checkout, and inputs are size-limited.
+PUBLIC = os.environ.get("UP_MCP_PUBLIC", "") not in ("", "0", "false")
+MAX_INPUT_BYTES = int(os.environ.get("UP_MCP_MAX_BYTES", str(4 * 1024 * 1024)))
 
 INSTRUCTIONS = (
     f"Universal Paper ({SPEC}) is an open language for agreements between group purchasing "
@@ -38,14 +45,23 @@ INSTRUCTIONS = (
 )
 
 
+def _size_ok(x: Any) -> None:
+    if PUBLIC and len(json.dumps(x, ensure_ascii=False)) > MAX_INPUT_BYTES:
+        raise InputError(f"input is larger than this server's limit of {MAX_INPUT_BYTES} bytes; run up-mcp locally for big bundles")
+
+
 def _data(bundle: dict | str) -> dict:
     """A bundle given as an object, as JSON text, or as a path to a local JSON file."""
     if isinstance(bundle, dict):
+        _size_ok(bundle)
         return bundle
     if not isinstance(bundle, str):
         raise InputError("bundle must be a JSON object, JSON text, or a file path")
+    _size_ok(bundle)
     text = bundle.strip()
     if not text.startswith("{"):
+        if PUBLIC:
+            raise InputError("file paths are not accepted by the hosted server; pass the bundle as a JSON object or text")
         try:
             text = Path(text).expanduser().read_text(encoding="utf-8")
         except OSError as e:
@@ -105,6 +121,7 @@ def check_event(bundle: dict | str, event: dict) -> dict:
     ev = Evaluator(b)
     if not isinstance(event, dict):
         raise InputError("event must be a JSON object")
+    _size_ok(event)
     if "chain" in event:
         if event["chain"] not in b.chains:
             raise InputError("the event names a chain that is not in the bundle")
@@ -122,6 +139,7 @@ def simulate_events(bundle: dict | str, events: list[dict], at: str | None = Non
     """Run hypothetical, unsigned events forward. Mandate limits still apply."""
     if not isinstance(events, list):
         raise InputError("events must be a list")
+    _size_ok(events)
     return simulate(_data(bundle), events, at)
 
 
@@ -143,6 +161,7 @@ def render_text(bundle: dict | str, chain: int | None = None, hashes_only: bool 
 
 def hash_object(obj: Any) -> str:
     """The content hash (JCS + SHA-256, signatures stripped) of any JSON value."""
+    _size_ok(obj)
     return content_hash(obj)
 
 
@@ -171,6 +190,8 @@ def get_example(name: str) -> dict:
     local = EXAMPLES_DIR / name / "bundle.json"
     if local.is_file():
         return loads(local.read_text(encoding="utf-8"))
+    if PUBLIC:
+        raise InputError("examples are not available on this server; see https://universalpaper.org/examples/")
     with urllib.request.urlopen(EXAMPLES_URL.format(name=name), timeout=20) as r:  # noqa: S310 (fixed https URL)
         return loads(r.read().decode("utf-8"))
 
@@ -179,14 +200,20 @@ def get_example(name: str) -> dict:
 # MCP wiring
 # ---------------------------------------------------------------------------
 
-def build_server():
-    try:  # MCP Python SDK 2.x
-        from mcp.server.mcpserver import MCPServer as Server
-        from mcp.server.mcpserver.exceptions import ToolError
-    except ImportError:  # 1.x
+def build_server(public: bool | None = None):
+    global PUBLIC
+    if public is not None:
+        PUBLIC = public
+    # Imported dynamically: SDK 2.x names it MCPServer, 1.x FastMCP; both take the same calls used here.
+    Server: Any
+    ToolError: Any
+    try:
+        Server = importlib.import_module("mcp.server.mcpserver").MCPServer
+        ToolError = importlib.import_module("mcp.server.mcpserver.exceptions").ToolError
+    except ImportError:
         try:
-            from mcp.server.fastmcp import FastMCP as Server
-            from mcp.server.fastmcp.exceptions import ToolError
+            Server = importlib.import_module("mcp.server.fastmcp").FastMCP
+            ToolError = importlib.import_module("mcp.server.fastmcp.exceptions").ToolError
         except ImportError:
             raise SystemExit("up-mcp needs the MCP SDK:  pip install 'universal-paper[mcp]'") from None
 
@@ -237,8 +264,22 @@ def main() -> None:
 
     p = argparse.ArgumentParser(prog="up-mcp", description=f"Read-only Universal Paper MCP server ({SPEC}, v{__version__})")
     p.add_argument("--transport", choices=["stdio", "streamable-http"], default="stdio")
+    p.add_argument("--host", default=os.environ.get("HOST", "127.0.0.1"), help="HTTP bind address (default 127.0.0.1)")
+    p.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")), help="HTTP port (default $PORT or 8000)")
+    p.add_argument("--public", action="store_true", default=PUBLIC,
+                   help="hosted mode for untrusted callers: no file paths, size limits (also UP_MCP_PUBLIC=1)")
     a = p.parse_args()
-    build_server().run(transport=a.transport)
+    server = build_server(public=a.public)
+    if a.transport == "stdio":
+        server.run(transport="stdio")
+        return
+    if type(server).__name__ == "MCPServer":  # SDK 2.x takes HTTP options here; stateless JSON suits a scaled read-only server
+        server.run(transport="streamable-http", host=a.host, port=a.port, stateless_http=True, json_response=True,
+                   max_request_body_size=MAX_INPUT_BYTES + 65536)
+    else:  # SDK 1.x reads them from settings
+        server.settings.host, server.settings.port = a.host, a.port
+        server.settings.stateless_http, server.settings.json_response = True, True
+        server.run(transport="streamable-http")
 
 
 if __name__ == "__main__":

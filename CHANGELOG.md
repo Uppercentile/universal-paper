@@ -4,7 +4,9 @@ All notable changes to the specification, the Term library, and the reference im
 
 ## [Unreleased]
 
-Pre-release audit. Details and rationale for every item are in [AUDIT.md](AUDIT.md).
+## [0.1.0] - 2026-11-22
+
+First public release of the reference interpreter for the `UP/0.1-draft` specification (still a working draft, not yet reviewed by counsel). Includes the pre-release audit. Details and rationale for every item are in [AUDIT.md](AUDIT.md).
 
 ### Changed (Validity)
 
@@ -27,7 +29,7 @@ Pre-release audit. Details and rationale for every item are in [AUDIT.md](AUDIT.
 
 ### Added
 
-- `up-mcp`, a read-only MCP server over the reference interpreter (validate, derive, check an event, simulate under a Mandate, render, hash, Terms, examples). Optional dependency: `pip install 'universal-paper[mcp]'`.
+- `up-mcp`, a read-only MCP server over the reference interpreter (validate, derive, check an event, simulate under a Mandate, render, hash, Terms, examples). Optional dependency: `pip install 'universal-paper[mcp]'`. A `--public` mode and `deploy/mcp/` (Dockerfile, Fly.io config) host it over HTTP for untrusted callers.
 - Tests for all sixteen Terms and every claim type, cross-engine differential tests, Hypothesis fuzz tests, RFC 8032 vectors, CLI tests, and one regression test per audit finding.
 - Term definition hashes in `spec/06-terms/README.md`.
 - CI workflow, Dependabot, issue and pull request templates, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, ruff and mypy configuration, and package metadata.

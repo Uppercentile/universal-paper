@@ -89,6 +89,8 @@ To use it from Claude Code: `claude mcp add universal-paper -- up-mcp`. Other cl
 
 Bundles can be passed as JSON objects, JSON text, or local file paths.
 
+**Hosting it.** `up-mcp --transport streamable-http --public --host 0.0.0.0` serves the same tools over HTTP at `/mcp` for untrusted callers: file paths are refused and inputs are size-limited (`UP_MCP_MAX_BYTES`, default 4 MB). [`deploy/mcp/`](deploy/mcp/) has a Dockerfile and a Fly.io config; from the repository root run `fly deploy --config deploy/mcp/fly.toml --dockerfile deploy/mcp/Dockerfile`. The image runs on any container host (Cloud Run, Render, Railway) as well.
+
 ## Examples
 
 All parties, identifiers, prices, rates, quantities, and dates in the examples are **hypothetical**.

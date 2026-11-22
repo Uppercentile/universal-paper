@@ -1,0 +1,25 @@
+# Fly.io app for the hosted MCP server. Deploy from the repository root:
+#   fly apps create universal-paper-mcp        (first time; the name must be unique on Fly)
+#   fly deploy --config deploy/mcp/fly.toml --dockerfile deploy/mcp/Dockerfile
+app = "universal-paper-mcp"
+primary_region = "iad"
+
+[env]
+  UP_MCP_PUBLIC = "1"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 40
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
