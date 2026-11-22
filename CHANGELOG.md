@@ -27,6 +27,7 @@ Pre-release audit. Details and rationale for every item are in [AUDIT.md](AUDIT.
 
 ### Added
 
+- `up-mcp`, a read-only MCP server over the reference interpreter (validate, derive, check an event, simulate under a Mandate, render, hash, Terms, examples). Optional dependency: `pip install 'universal-paper[mcp]'`.
 - Tests for all sixteen Terms and every claim type, cross-engine differential tests, Hypothesis fuzz tests, RFC 8032 vectors, CLI tests, and one regression test per audit finding.
 - Term definition hashes in `spec/06-terms/README.md`.
 - CI workflow, Dependabot, issue and pull request templates, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, ruff and mypy configuration, and package metadata.

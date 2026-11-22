@@ -65,6 +65,30 @@ python -m pytest                                                        # the fu
 | `render` | Prints the human-readable agreement text, fixed by the agreement's hash. |
 | `trace` | Writes a trace file: every event, every check, and each evaluator's state hash. |
 
+## MCP server for agents
+
+`up-mcp` is a read-only [Model Context Protocol](https://modelcontextprotocol.io) server over the reference interpreter. It lets an agent check an agreement the same way every other party does, and test whether an action is within its Mandate before anyone signs. It holds no keys, signs nothing, and writes nothing.
+
+```sh
+pip install -e '.[mcp]'
+up-mcp                      # stdio; or: up-mcp --transport streamable-http
+```
+
+To use it from Claude Code: `claude mcp add universal-paper -- up-mcp`. Other clients take the same command in their MCP config, for example `{"mcpServers": {"universal-paper": {"command": "up-mcp"}}}`.
+
+| Tool | Does |
+|---|---|
+| `validate_bundle` | Checks every agreement and event against the axioms and says which rule rejected what. |
+| `derive_state` | Status, tiers, contract prices and obligations at a time. |
+| `check_event` | Dry-runs one signed event against its chain's current state. |
+| `simulate_events` | Runs hypothetical, unsigned events forward. Mandate limits still apply. |
+| `render_text` | The human-readable agreement text, fixed by its hash (optionally as an outsider sees it). |
+| `hash_object` | The content hash of any JSON value. |
+| `list_terms`, `explain_term` | The Term library: parameters, claims, rendering template, provenance and hash. |
+| `get_example` | One of the worked example bundles. |
+
+Bundles can be passed as JSON objects, JSON text, or local file paths.
+
 ## Examples
 
 All parties, identifiers, prices, rates, quantities, and dates in the examples are **hypothetical**.
