@@ -1,0 +1,62 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Purchase-Commitment",
+  "title": "Purchase commitment",
+  "params": {
+    "category": {
+      "type": "string",
+      "doc": "Description of the product category."
+    },
+    "share": {
+      "type": "Rate",
+      "doc": "Committed share of category purchases."
+    },
+    "period": {
+      "type": "Period",
+      "doc": "Measurement period."
+    },
+    "due": {
+      "type": "Period",
+      "doc": "Time after each period's end by which the attestation is due."
+    }
+  },
+  "forms": [
+    {
+      "form": "Duty",
+      "duty": "attest-compliance",
+      "obligor": "member",
+      "obligee": "supplier",
+      "trigger": {
+        "every": {
+          "param": "period"
+        },
+        "anchor": "window-start"
+      },
+      "due": {
+        "param": "due"
+      },
+      "discharge": {
+        "claim": "UP:Purchase-Commitment/met",
+        "ack": [
+          "supplier"
+        ]
+      }
+    }
+  ],
+  "claims": {
+    "UP:Purchase-Commitment/met": {
+      "data": {
+        "period": "{start: Time, end: Time}",
+        "basis": "string"
+      },
+      "doc": "The Member attests that it met the committed share for the period. Discharges the duty when acknowledged by the Supplier."
+    }
+  },
+  "render": "The Member commits to purchase under this Agreement at least {{share|rate}} of its purchases of {{category}} in each period of {{period|period}}, and attests whether it met that commitment within {{due|period}} after each period ends.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

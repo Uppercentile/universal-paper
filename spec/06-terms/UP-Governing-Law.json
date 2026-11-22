@@ -1,0 +1,24 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Governing-Law",
+  "title": "Governing law",
+  "params": {
+    "law": {
+      "type": "string",
+      "doc": "Governing law, e.g. a named jurisdiction."
+    },
+    "forum": {
+      "type": "string",
+      "doc": "Forum for disputes."
+    }
+  },
+  "forms": [],
+  "claims": {},
+  "render": "This Agreement is governed by the law of {{law}}. Disputes are resolved in {{forum}}.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

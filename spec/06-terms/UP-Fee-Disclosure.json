@@ -1,0 +1,52 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Fee-Disclosure",
+  "title": "Fee disclosure",
+  "params": {
+    "period": {
+      "type": "Period",
+      "doc": "Disclosure period."
+    },
+    "due": {
+      "type": "Period",
+      "doc": "Time after each period's end by which the disclosure is due."
+    }
+  },
+  "forms": [
+    {
+      "form": "Duty",
+      "duty": "disclose",
+      "obligor": "aggregator",
+      "obligee": "member",
+      "trigger": {
+        "every": {
+          "param": "period"
+        },
+        "anchor": "window-start"
+      },
+      "due": {
+        "param": "due"
+      },
+      "discharge": {
+        "claim": "UP:Fee-Disclosure/disclosed"
+      }
+    }
+  ],
+  "claims": {
+    "UP:Fee-Disclosure/disclosed": {
+      "data": {
+        "period": "{start: Time, end: Time}",
+        "received": "Amount",
+        "basis": "string"
+      },
+      "doc": "The Aggregator states the administrative fees it received from the Supplier for the period under the parent agreement, attributable to this Member where the parent agreement reports by participation."
+    }
+  },
+  "render": "For each period of {{period|period}}, the Aggregator discloses to the Member, in writing, the amount of administrative fees it received from the Supplier under the parent agreement for that period, within {{due|period}} after the period ends. This clause records a disclosure process. It makes no statement about whether any arrangement satisfies any law.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

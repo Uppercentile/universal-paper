@@ -1,0 +1,34 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Fixed-Term",
+  "title": "Term of agreement",
+  "params": {
+    "start": {
+      "type": "Time",
+      "doc": "First instant the Agreement is in force."
+    },
+    "end": {
+      "type": "Time",
+      "doc": "First instant the Agreement is no longer in force."
+    }
+  },
+  "forms": [
+    {
+      "form": "Window",
+      "start": {
+        "param": "start"
+      },
+      "end": {
+        "param": "end"
+      }
+    }
+  ],
+  "claims": {},
+  "render": "This Agreement is in force from {{start|time}} until {{end|time}}.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

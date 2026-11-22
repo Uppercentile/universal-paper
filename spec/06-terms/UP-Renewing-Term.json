@@ -1,0 +1,69 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Renewing-Term",
+  "title": "Term of agreement with renewal",
+  "params": {
+    "start": {
+      "type": "Time",
+      "doc": "First instant in force."
+    },
+    "end": {
+      "type": "Time",
+      "doc": "End of the initial term."
+    },
+    "renewal_period": {
+      "type": "Period",
+      "doc": "Length of each renewal."
+    },
+    "max_renewals": {
+      "type": "int",
+      "doc": "Maximum number of renewals."
+    },
+    "optout_roles": {
+      "type": "[Role]",
+      "doc": "Roles that may prevent the next renewal."
+    },
+    "optout_notice": {
+      "type": "Period",
+      "doc": "How long before a term ends an opt-out notice must be given."
+    }
+  },
+  "forms": [
+    {
+      "form": "Window",
+      "start": {
+        "param": "start"
+      },
+      "end": {
+        "param": "end"
+      },
+      "renew": {
+        "period": {
+          "param": "renewal_period"
+        },
+        "max": {
+          "param": "max_renewals"
+        },
+        "optout_roles": {
+          "param": "optout_roles"
+        },
+        "optout_notice": {
+          "param": "optout_notice"
+        }
+      }
+    }
+  ],
+  "claims": {
+    "UP:Renewing-Term/optout": {
+      "data": {},
+      "doc": "Notice that the Agreement will not renew at the end of the current term."
+    }
+  },
+  "render": "This Agreement is in force from {{start|time}} until {{end|time}}. It then renews for successive periods of {{renewal_period|period}}, up to {{max_renewals}} times, unless {{optout_roles|role}} gives notice of non-renewal at least {{optout_notice|period}} before the end of the then-current term.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

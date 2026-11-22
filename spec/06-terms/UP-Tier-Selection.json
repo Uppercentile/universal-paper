@@ -1,0 +1,58 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Tier-Selection",
+  "title": "Tier attestation and selection",
+  "params": {
+    "tiers_clause": {
+      "type": "string",
+      "doc": "Name of the Tiers clause in the parent Agreement."
+    },
+    "initial": {
+      "type": "string",
+      "doc": "Tier in effect before any selection."
+    },
+    "effective": {
+      "type": "\"on-ack\" | {next: Period}",
+      "doc": "When an acknowledged selection takes effect."
+    }
+  },
+  "forms": [
+    {
+      "form": "Selection",
+      "options": {
+        "from": {
+          "link": true,
+          "clause": {
+            "param": "tiers_clause"
+          }
+        }
+      },
+      "subject": "member",
+      "ack": [
+        "supplier"
+      ],
+      "effective": {
+        "param": "effective"
+      },
+      "initial": {
+        "param": "initial"
+      }
+    }
+  ],
+  "claims": {
+    "UP:Tier-Selection/selects": {
+      "data": {
+        "option": "string",
+        "basis": "string"
+      },
+      "doc": "The Member attests that it meets the conditions of the named tier, stating the basis."
+    }
+  },
+  "render": "The Member's tier is {{initial}} until changed under this clause. The Member may attest that it meets the conditions of another tier, stating the basis. The change takes effect when the Supplier acknowledges the attestation, {{effective|effective}}.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

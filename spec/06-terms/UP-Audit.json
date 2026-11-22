@@ -1,0 +1,88 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Audit",
+  "title": "Audit right",
+  "params": {
+    "auditor": {
+      "type": "Role",
+      "doc": "Role that may request an audit."
+    },
+    "auditee": {
+      "type": "Role",
+      "doc": "Role whose records are audited."
+    },
+    "response": {
+      "type": "Period",
+      "doc": "Time after a request by which records must be made available."
+    },
+    "max_requests": {
+      "type": "int",
+      "doc": "Maximum requests per limit period."
+    },
+    "per": {
+      "type": "Period",
+      "doc": "Limit period."
+    }
+  },
+  "forms": [
+    {
+      "form": "Duty",
+      "duty": "make-records-available",
+      "obligor": {
+        "param": "auditee"
+      },
+      "obligee": {
+        "param": "auditor"
+      },
+      "trigger": {
+        "on": "UP:Audit/request",
+        "by": [
+          {
+            "param": "auditor"
+          }
+        ],
+        "limit": {
+          "count": {
+            "param": "max_requests"
+          },
+          "per": {
+            "param": "per"
+          }
+        }
+      },
+      "due": {
+        "param": "response"
+      },
+      "discharge": {
+        "claim": "UP:Audit/available",
+        "ack": [
+          {
+            "param": "auditor"
+          }
+        ]
+      }
+    }
+  ],
+  "claims": {
+    "UP:Audit/request": {
+      "data": {
+        "scope": "string",
+        "lookback": "{start: Time, end: Time}"
+      },
+      "doc": "Request for an audit of records within the stated scope and time range."
+    },
+    "UP:Audit/available": {
+      "data": {
+        "request": "Hash"
+      },
+      "doc": "The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor."
+    }
+  },
+  "render": "{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement, up to {{max_requests}} times per {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

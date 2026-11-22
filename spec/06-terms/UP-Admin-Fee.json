@@ -1,0 +1,96 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Admin-Fee",
+  "title": "Administrative fee",
+  "params": {
+    "payer": {
+      "type": "Role",
+      "doc": "Role that pays the fee."
+    },
+    "payee": {
+      "type": "Role",
+      "doc": "Role that receives the fee."
+    },
+    "rate": {
+      "type": "Rate",
+      "doc": "Fee as a fraction of reported net sales."
+    },
+    "report_clause": {
+      "type": "string",
+      "doc": "Name of the Sales-Reporting clause whose reports form the base."
+    },
+    "period": {
+      "type": "Period",
+      "doc": "Fee period."
+    },
+    "due": {
+      "type": "Period",
+      "doc": "Time after each period's end by which the fee is due."
+    },
+    "rounding": {
+      "type": "Rounding",
+      "doc": "Rounding applied to each period's fee."
+    }
+  },
+  "forms": [
+    {
+      "form": "Duty",
+      "duty": "pay",
+      "obligor": {
+        "param": "payer"
+      },
+      "obligee": {
+        "param": "payee"
+      },
+      "trigger": {
+        "every": {
+          "param": "period"
+        },
+        "anchor": "window-start"
+      },
+      "due": {
+        "param": "due"
+      },
+      "discharge": {
+        "claim": "UP:Admin-Fee/paid",
+        "ack": [
+          {
+            "param": "payee"
+          }
+        ]
+      },
+      "amount": {
+        "rate": {
+          "param": "rate"
+        },
+        "base": {
+          "claim": "UP:Sales-Reporting/report",
+          "clause": {
+            "param": "report_clause"
+          },
+          "field": "total_net"
+        },
+        "rounding": {
+          "param": "rounding"
+        }
+      }
+    }
+  ],
+  "claims": {
+    "UP:Admin-Fee/paid": {
+      "data": {
+        "period": "{start: Time, end: Time}",
+        "amount": "Amount",
+        "reference": "string"
+      },
+      "doc": "The payer attests payment of the fee for the period. Discharges the duty when acknowledged by the payee."
+    }
+  },
+  "render": "For each period of {{period|period}}, {{payer|role}} pays {{payee|role}} an administrative fee equal to {{rate|rate}} of the net sales reported for that period, rounded {{rounding|rounding}}, within {{due|period}} after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

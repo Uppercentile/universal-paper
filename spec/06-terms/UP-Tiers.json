@@ -1,0 +1,36 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Tiers",
+  "title": "Tiered price schedule",
+  "params": {
+    "tiers": {
+      "type": "[{name: string, conditions: string}]",
+      "doc": "The tiers, in order, with descriptive qualification conditions."
+    },
+    "prices": {
+      "type": "[{item: Identifier, by: {<tier>: Amount}}]",
+      "doc": "Price of each Item in each tier."
+    }
+  },
+  "forms": [
+    {
+      "form": "Valuation",
+      "source": {
+        "table": {
+          "param": "prices"
+        },
+        "options": {
+          "param": "tiers"
+        }
+      }
+    }
+  ],
+  "claims": {},
+  "render": "The following tiers apply. {{#each tiers}}Tier {{name}}: {{conditions}}. {{/each}}The price of each Item in each tier is: {{#each prices}}{{item}}: {{by|amount}}. {{/each}}Whether a Member meets a tier's conditions is established by that Member's attestation and the Supplier's acknowledgment, as set out in the tier selection clause of the Member's participation.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

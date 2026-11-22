@@ -1,0 +1,64 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Termination-Cause",
+  "title": "Termination for cause",
+  "params": {
+    "holders": {
+      "type": "[Role]",
+      "doc": "Roles that may terminate for cause."
+    },
+    "cure_period": {
+      "type": "Period",
+      "doc": "Time allowed to cure after a breach notice."
+    },
+    "notice": {
+      "type": "Period",
+      "doc": "Time from termination notice to termination."
+    }
+  },
+  "forms": [
+    {
+      "form": "Exit",
+      "holders": {
+        "param": "holders"
+      },
+      "notice": {
+        "param": "notice"
+      },
+      "requires": {
+        "claim": "UP:Termination-Cause/breach",
+        "age": {
+          "param": "cure_period"
+        },
+        "unless": "UP:Termination-Cause/cured"
+      }
+    }
+  ],
+  "claims": {
+    "UP:Termination-Cause/breach": {
+      "data": {
+        "description": "string"
+      },
+      "doc": "Notice describing an alleged material breach."
+    },
+    "UP:Termination-Cause/cured": {
+      "data": {
+        "breach": "Hash"
+      },
+      "doc": "Statement that the breach identified by the referenced notice has been cured. Effective only when acknowledged by the party that gave the breach notice."
+    },
+    "UP:Termination-Cause/notice": {
+      "data": {
+        "breach": "Hash"
+      },
+      "doc": "Notice of termination for the referenced, uncured breach."
+    }
+  },
+  "render": "If a party commits a material breach, {{holders|role}} may give notice describing it. If the breach is not cured within {{cure_period|period}} of that notice, {{holders|role}} may terminate this Agreement by further notice, effective {{notice|period}} after that notice. A breach counts as cured only when the party that gave the breach notice acknowledges the cure.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

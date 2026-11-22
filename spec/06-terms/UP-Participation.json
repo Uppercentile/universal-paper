@@ -1,0 +1,31 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Participation",
+  "title": "Participation in an aggregator agreement",
+  "params": {
+    "parent": {
+      "type": "ChainId",
+      "doc": "The chain of the parent Agreement."
+    }
+  },
+  "forms": [
+    {
+      "form": "Link",
+      "parent": {
+        "param": "parent"
+      },
+      "bind": [
+        "aggregator",
+        "supplier"
+      ]
+    }
+  ],
+  "claims": {},
+  "render": "This Agreement is a participation under the agreement identified by {{parent}}. The Aggregator and the Supplier of that agreement are parties to this one in the same roles. This Agreement is in force only while that agreement is in force.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

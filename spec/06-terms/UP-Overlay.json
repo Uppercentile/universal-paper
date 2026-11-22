@@ -1,0 +1,32 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Overlay",
+  "title": "Overlay of an existing agreement",
+  "params": {
+    "document": {
+      "type": "Hash",
+      "doc": "SHA-256 hash of the existing contract document, as the parties hold it."
+    },
+    "document_title": {
+      "type": "string",
+      "doc": "Title of the existing contract. Sealable."
+    },
+    "document_date": {
+      "type": "Time",
+      "doc": "Date the existing contract was signed."
+    },
+    "governs": {
+      "type": "\"document\" | \"this-record\"",
+      "doc": "Which text controls if this record and the existing contract are inconsistent."
+    }
+  },
+  "forms": [],
+  "claims": {},
+  "render": "This record describes the agreement titled {{document_title}}, signed on {{document_date|time}}, whose document has the hash {{document}}. It does not amend or replace that agreement. If this record and that agreement are inconsistent, {{governs|governs}} controls.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

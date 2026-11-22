@@ -1,0 +1,61 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Price-Reference",
+  "title": "Price by reference to a price list",
+  "params": {
+    "items": {
+      "type": "[Identifier]",
+      "doc": "Items in scope."
+    },
+    "list_role": {
+      "type": "Role",
+      "doc": "Role that attests the reference price list."
+    },
+    "factor": {
+      "type": "Decimal",
+      "doc": "Multiplier applied to the reference price."
+    },
+    "rounding": {
+      "type": "Rounding",
+      "doc": "Rounding applied to the result."
+    }
+  },
+  "forms": [
+    {
+      "form": "Valuation",
+      "items": {
+        "param": "items"
+      },
+      "source": {
+        "reference": {
+          "claim": "UP:Price-Reference/list",
+          "role": {
+            "param": "list_role"
+          },
+          "factor": {
+            "param": "factor"
+          },
+          "rounding": {
+            "param": "rounding"
+          }
+        }
+      }
+    }
+  ],
+  "claims": {
+    "UP:Price-Reference/list": {
+      "data": {
+        "effective": "Time",
+        "prices": "[{item: Identifier, price: Amount}]"
+      },
+      "doc": "A reference price list, effective from the stated time."
+    }
+  },
+  "render": "The price of each Item in scope is its price in the most recent reference price list attested by {{list_role|role}} that is effective at the time of purchase, multiplied by {{factor}} and rounded {{rounding|rounding}}.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}

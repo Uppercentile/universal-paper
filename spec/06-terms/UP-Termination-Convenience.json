@@ -1,0 +1,39 @@
+{
+  "type": "TermDefinition",
+  "spec": "UP/0.1-draft",
+  "id": "UP:Termination-Convenience",
+  "title": "Termination for convenience",
+  "params": {
+    "holders": {
+      "type": "[Role]",
+      "doc": "Roles that may terminate."
+    },
+    "notice": {
+      "type": "Period",
+      "doc": "Time from notice to termination."
+    }
+  },
+  "forms": [
+    {
+      "form": "Exit",
+      "holders": {
+        "param": "holders"
+      },
+      "notice": {
+        "param": "notice"
+      }
+    }
+  ],
+  "claims": {
+    "UP:Termination-Convenience/notice": {
+      "data": {},
+      "doc": "Notice of termination."
+    }
+  },
+  "render": "{{holders|role}} may terminate this Agreement without cause by notice. Termination takes effect {{notice|period}} after the notice is given.",
+  "provenance": {
+    "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+    "reviewed_by": [],
+    "change_note": "Initial draft. Not yet reviewed by counsel from any segment."
+  }
+}
