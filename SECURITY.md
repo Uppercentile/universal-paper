@@ -30,7 +30,7 @@ The project is a pre-1.0 draft (`UP/0.1-draft`). Only the latest commit on `main
 ## Scope notes
 
 - Example keys and salts in `examples/` are derived from public seeds so the examples are reproducible. They are not secret and must never be used for anything real. Real keys and salts must be random (`Key.generate()`, `secrets.token_hex(32)`).
-- The Playground page (`explorer/index.html`) runs entirely in the browser and makes no network requests. Its JavaScript engine is a second implementation held to the Python reference by `tests/test_js_conformance.py` and `tests/test_differential.py`. It is a demonstration, not a wallet: do not paste real private keys into it.
+- The Playground page (`explorer/index.html`) runs entirely in the browser; its only network requests load web fonts. Its JavaScript engine is a second implementation held to the Python reference by `tests/test_js_conformance.py` and `tests/test_differential.py`. It is a demonstration, not a wallet: do not paste real private keys into it.
 - The JavaScript Ed25519 implementation is written for clarity and is not constant-time. It is fine for verifying public data. Do not use it to sign with real keys.
 
 The audit done before publication is in [AUDIT.md](AUDIT.md).

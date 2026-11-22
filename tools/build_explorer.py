@@ -99,6 +99,7 @@ def build() -> str:
     terms = [json.loads(p.read_text()) for p in sorted((ROOT / "spec" / "06-terms").glob("*.json"))]
     parts = {
         "/*@@TERMS@@*/": json.dumps(terms, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
+        "/*@@TOKENS@@*/": (SRC / "tokens.css").read_text(),
         "/*@@UP_CRYPTO@@*/": (SRC / "up-crypto.js").read_text(),
         "/*@@UP_ENGINE@@*/": (SRC / "up-engine.js").read_text(),
         "/*@@UP_LAB@@*/": (SRC / "up-lab.js").read_text(),

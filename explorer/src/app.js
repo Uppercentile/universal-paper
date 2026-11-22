@@ -24,12 +24,34 @@
   function flash(el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
 
   // ---- navigation highlight
+  // ---- theme toggle (a per-viewer convenience; the page works without storage)
+  (function () {
+    var root = document.documentElement, saved = store("up-theme");
+    if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+    $("theme-toggle").addEventListener("click", function () {
+      var dark = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var next = dark ? "light" : "dark"; root.setAttribute("data-theme", next); store("up-theme", next);
+    });
+  })();
+  // ---- one-shot reveals
+  (function () {
+    var els = document.querySelectorAll(".reveal");
+    if (reduceMotion || !("IntersectionObserver" in window)) { els.forEach(function (e) { e.classList.add("is-in"); }); return; }
+    var o = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-in"); o.unobserve(e.target); } }); }, { rootMargin: "0px 0px -10% 0px" });
+    els.forEach(function (e) { o.observe(e); });
+  })();
+  // ---- hero stats
+  (function () {
+    var st = [[TERM_LIST.length, "Terms in the library"], [13, "axioms"], ["2 → 1", "engines, one answer"]];
+    if (CONF && CONF.pytest) st.push([CONF.pytest.passed, "tests passing"]);
+    $("hero-stats").innerHTML = st.map(function (x) { return '<div class="stat"><b>' + esc(x[0]) + "</b><span>" + esc(x[1]) + "</span></div>"; }).join("");
+  })();
   var navLinks = document.querySelectorAll("[data-nav]");
   if ("IntersectionObserver" in window) {
     var navObs = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) navLinks.forEach(function (a) { a.classList.toggle("on", a.dataset.nav === e.target.id); }); });
     }, { rootMargin: "-45% 0px -50% 0px" });
-    ["vision", "playground", "conformance"].forEach(function (id) { navObs.observe($(id)); });
+    ["how", "vision", "playground", "conformance"].forEach(function (id) { navObs.observe($(id)); });
   }
 
   // ======================================================================== Intro demo
@@ -46,10 +68,11 @@
       var ag = agreement(rate), b = new UP.Bundle({ terms: [fee] });
       var text = UP.renderTemplate(b, fee.render, ag.clauses[0].params), pct = esc((Number(rate) * 100) + "%");
       $("d-text").innerHTML = esc(text).replace(pct, "<mark>" + pct + "</mark>");
-      var h = ch(ag);
-      $("d-fp").innerHTML = fpHTML(h, prevFp, "Agreement fingerprint" + (prevFp && prevFp !== h ? " · changed" : ""));
+      var h = ch(ag), base = rate === "0.02" ? null : ch(agreement("0.02"));
+      $("d-fp").innerHTML = fpHTML(h, base, "Agreement fingerprint" + (base ? " · changed" : ""));
       if (prevFp && prevFp !== h) flash($("d-fp"));
       prevFp = h;
+      $("hero-hash").innerHTML = "sha256:" + esc(h.slice(7, 15)) + "… <b>✓ same everywhere</b>";
       var E = { type: "Event", spec: UP.SPEC, kind: "propose", at: "2026-12-01T15:00:00Z", by: agg.public, body: { agreement: ag } };
       E = UP.attach(E, agg.signObj(E), sup.signObj(E));
       var T = clone(E); if (tampered) T.body.agreement.clauses[0].params.rate = rate === "0.02" ? "0.015" : "0.02";
@@ -61,8 +84,19 @@
           '<span class="h">' + (ok ? "state " + esc(ch(st.state)) : "no valid state") + "</span>" + (ok ? "" : '<span class="why">' + esc(st.reason) + "</span>") + "</div>";
       }).join("");
     }
-    $("d-toggle").addEventListener("click", function () { rate = rate === "0.02" ? "0.025" : "0.02"; this.textContent = rate === "0.02" ? "Change the fee" : "Change it back"; draw(); });
-    $("d-tamper").addEventListener("click", function () { tampered = !tampered; this.setAttribute("aria-pressed", String(tampered)); this.textContent = tampered ? "Restore the supplier’s copy" : "Edit the supplier’s copy after signing"; draw(); });
+    var scrolly = $("how-scrolly"), steps = scrolly.querySelectorAll(".scrolly-step");
+    function setStep(n) {
+      scrolly.dataset.step = n;
+      steps.forEach(function (st) { st.classList.toggle("is-active", Number(st.dataset.step) === n); });
+      var r = n >= 2 ? "0.025" : "0.02", t = n >= 4;
+      if (r !== rate || t !== tampered) { rate = r; tampered = t; draw(); }
+    }
+    if (reduceMotion || !("IntersectionObserver" in window)) { steps.forEach(function (st) { st.classList.add("is-active"); }); rate = "0.025"; tampered = true; scrolly.dataset.step = 4; }
+    else {
+      var so = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) setStep(Number(e.target.dataset.step)); }); }, { rootMargin: window.innerWidth <= 820 ? "-72% 0px -27% 0px" : "-50% 0px -50% 0px" });
+      steps.forEach(function (st) { so.observe(st); });
+      steps[0].classList.add("is-active");
+    }
     draw();
   })();
 
@@ -142,9 +176,7 @@
       }
       // foundation
       el("rect", { x: 10, y: L.fy, width: L.W - 20, height: L.fh, rx: 12, fill: "var(--found)", stroke: "var(--found-line)" });
-      document.querySelectorAll(".mark .logo").forEach(function (img) {
-        el("image", { href: img.getAttribute("src"), x: L.labelX + 10, y: L.fy + 14, width: 30, height: 30, "class": img.classList.contains("on-dark") ? "on-dark" : "on-light" });
-      });
+      el("image", { href: $("logo-src").getAttribute("src"), x: L.labelX + 10, y: L.fy + 14, width: 30, height: 30, "class": "logo-img" });
       el("text", { x: L.labelX + 48, y: L.fy + 34, "class": "found-title" }, null, "Universal Paper");
       el("text", { x: L.labelX + 10, y: L.fy + 62, "class": "found-sub" }, null, narrow ? "Terms · agreements · signed events · fingerprints" : "Terms · agreements · signed events · fingerprints, checked by every party’s own engine");
       L.dots = el("g", {});

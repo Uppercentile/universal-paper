@@ -62,9 +62,9 @@ All parties, identifiers, prices, rates, quantities, and dates in the examples a
 
 ## Playground page
 
-Open `explorer/index.html` in a browser. It is one self-contained file and makes no network requests. It has four parts:
+Open `explorer/index.html` in a browser. It is one self-contained file; apart from web fonts it makes no network requests. Its look follows the shared design tokens in `explorer/src/tokens.css`, also used by the developer explainer. It has four parts:
 
-- **A first look**: one fee clause, its fingerprint, and three systems holding copies of it. Change the fee and the fingerprint changes; edit one copy after signing and only that copy is rejected.
+- **How it works**: a scroll explainer that follows one fee clause from words to a fingerprint, signatures, and a caught edit, computed live. On a phone the visual pins at the top and the steps scroll under it.
 - **Vision**: an illustration of where Universal Paper could sit, under apps for contracting, procurement, pricing, and settlement, with agents acting for parties under Mandates. The apps are hypothetical. The events are not: each scenario is generated, signed, and checked by the engine in the page, including an agent action outside its Mandate that every party rejects.
 - **Playground**: pick parties, add Terms, set values, and watch the cover sheet, the contract, and the fingerprint update. **Compare** shows what changed between two versions, clause by clause and word by word, and whether existing signatures still cover it. **History** signs the agreement and plays it forward: enter monthly sales and payments and see the reports, fees, and the status of every duty on any date.
 - **Conformance**: the test suite by file, the audit findings, and a button that runs random agreements and attacks in the browser against eight invariants.
