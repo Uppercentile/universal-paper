@@ -23,11 +23,13 @@ classifiers = [
 dependencies = ["cryptography>=41"]
 
 [project.optional-dependencies]
-test = ["pytest>=7", "jsonschema>=4", "hypothesis>=6.100", "pytest-cov>=4"]
+test = ["pytest>=7", "jsonschema>=4", "hypothesis>=6.100", "pytest-cov>=4", "mcp>=1.2"]
+mcp = ["mcp>=1.2"]
 dev = ["universal-paper[test]", "ruff>=0.6", "mypy>=1.10"]
 
 [project.scripts]
 up = "universal_paper.__main__:main"
+up-mcp = "universal_paper.mcp_server:main"
 
 [build-system]
 requires = ["setuptools>=77"]
