@@ -2,23 +2,68 @@
 name = "universal-paper"
 version = "0.1.0.dev0"
 description = "Reference interpreter for Universal Paper, a first-order language for GPO agreements"
+readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
+license-files = ["LICENSE", "spec/LICENSE"]
+keywords = ["agreements", "contracts", "group purchasing", "GPO", "ricardian", "canonical json", "ed25519"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business",
+    "Topic :: Security :: Cryptography",
+]
 dependencies = ["cryptography>=41"]
 
 [project.optional-dependencies]
-test = ["pytest>=7", "jsonschema>=4"]
+test = ["pytest>=7", "jsonschema>=4", "hypothesis>=6.100", "pytest-cov>=4"]
+dev = ["universal-paper[test]", "ruff>=0.6", "mypy>=1.10"]
 
 [project.scripts]
 up = "universal_paper.__main__:main"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+universal_paper = ["terms.json", "py.typed"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "examples"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py311"
+extend-exclude = ["explorer"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+# Long lines, one-line argparse wiring, and short math names (l, I) are deliberate in this codebase.
+ignore = ["E501", "E702", "E741", "E731", "B905", "UP031"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["universal_paper"]
+known-local-folder = ["build_examples", "helpers", "oracle", "samples", "test_terms"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src/universal_paper"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+# The evaluator reads untrusted JSON and treats any exception as a rejection (engine.apply), so
+# many lookups are deliberately unguarded. Optional-narrowing errors are relaxed here only.
+module = "universal_paper.engine"
+disable_error_code = ["arg-type", "index", "operator", "union-attr", "assignment"]

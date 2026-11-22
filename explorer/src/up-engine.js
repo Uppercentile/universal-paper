@@ -199,6 +199,99 @@
     return issues;
   }
 
+  // ---- Value types (port of src/universal_paper/typecheck.py; reasons must match) ----
+  var TC_ATOMS = ["Time", "Period", "Decimal", "Rate", "Amount", "Identifier", "Hash", "ChainId", "Role", "Rounding", "string", "Name", "int"];
+  var TC_SEALABLE = ["Amount", "Rate", "Decimal", "string"];
+  var TC_UNITS = ["day", "month", "quarter", "year"], TC_MODES = ["half-even", "half-up", "down", "up"];
+  var TC_MAX_INT = 9007199254740991;
+  var tcCache = new Map();
+  function tcParse(text) {
+    if (typeof text !== "string") throw new Error("not a type");
+    if (tcCache.has(text)) return tcCache.get(text);
+    var re = / *(?:("[^"]*")|(<?[A-Za-z_][A-Za-z0-9_]*>?)|([\[\]{}:,|]))/y, toks = [], i = 0;
+    while (i < text.length) {
+      if (/^ *$/.test(text.slice(i))) break;
+      re.lastIndex = i; var m = re.exec(text);
+      if (!m) throw new Error("cannot read type");
+      toks.push(m[1] || m[2] || m[3]); i = re.lastIndex;
+    }
+    var pos = 0;
+    function peek() { return pos < toks.length ? toks[pos] : null; }
+    function take(exp) { var t = peek(); if (t === null || (exp !== undefined && t !== exp)) throw new Error("cannot read type"); pos++; return t; }
+    function union() { var alts = [atom()]; while (peek() === "|") { take("|"); alts.push(atom()); } return alts.length === 1 ? alts[0] : ["union", alts]; }
+    function atom() {
+      var t = take();
+      if (t[0] === '"') return ["lit", t.slice(1, -1)];
+      if (t === "[") { var inner = union(); take("]"); return ["list", inner]; }
+      if (t === "{") {
+        var k = take();
+        if (k[0] === "<" && k[k.length - 1] === ">") { take(":"); var v = union(); take("}"); return ["map", v]; }
+        var fields = [];
+        for (;;) {
+          if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(k)) throw new Error("cannot read type");
+          take(":"); fields.push([k, union()]);
+          if (peek() === ",") { take(","); k = take(); continue; }
+          take("}"); return ["record", fields];
+        }
+      }
+      if (TC_ATOMS.indexOf(t) >= 0) return ["atom", t];
+      throw new Error("unknown type");
+    }
+    var node = union();
+    if (pos !== toks.length) throw new Error("cannot read type");
+    tcCache.set(text, node);
+    return node;
+  }
+  function tcKnown(text) { try { tcParse(text); return typeof text === "string"; } catch (e) { return false; } }
+  function tcIsInt(v) { return typeof v === "number" && Number.isInteger(v); }
+  function tcDecOk(v) { return typeof v === "string" && v.length <= UP.MAX_DECIMAL_LEN && /^-?(0|[1-9][0-9]*)(\.[0-9]+)?$/.test(v); }
+  function tcKeysAre(v, names) { return isObj(v) && eq(sorted(Object.keys(v)), sorted(names)); }
+  function tcAtom(name, v, path) {
+    if (UP.isSeal(v)) return TC_SEALABLE.indexOf(name) >= 0 ? null : path + " is structural (" + name + ") and may not be sealed";
+    var ok, what;
+    if (name === "Time") { ok = (function () { try { UP.parseTime(v); return true; } catch (e) { return false; } })(); what = "a Time (YYYY-MM-DDThh:mm:ssZ)"; }
+    else if (name === "Period") { ok = tcKeysAre(v, ["unit", "count"]) && TC_UNITS.indexOf(v.unit) >= 0 && tcIsInt(v.count) && v.count >= 1 && v.count <= UP.MAX_PERIOD_COUNT; what = "a Period (unit day, month, quarter or year; count from 1 to " + UP.MAX_PERIOD_COUNT + ")"; }
+    else if (name === "Decimal" || name === "Rate") { ok = tcDecOk(v); what = "a Decimal string of at most " + UP.MAX_DECIMAL_LEN + " characters"; }
+    else if (name === "Amount") { ok = tcKeysAre(v, ["value", "currency"]) && tcDecOk(v.value) && typeof v.currency === "string" && /^[A-Z]{3}$/.test(v.currency); what = "an Amount ({value: Decimal, currency: three-letter code})"; }
+    else if (name === "Identifier") { ok = tcKeysAre(v, ["scheme", "id"]) && typeof v.scheme === "string" && v.scheme !== "" && ((typeof v.id === "string" && v.id !== "") || UP.isSeal(v.id)); what = "an Identifier ({scheme: string, id: string})"; }
+    else if (name === "Hash" || name === "ChainId") { ok = typeof v === "string" && /^sha256:[0-9a-f]{64}$/.test(v); what = "a hash (sha256: and 64 lowercase hex digits)"; }
+    else if (name === "Role") { ok = typeof v === "string" && ROLES.indexOf(v) >= 0; what = "a role"; }
+    else if (name === "Rounding") { ok = tcKeysAre(v, ["scale", "mode"]) && tcIsInt(v.scale) && v.scale >= 0 && v.scale <= UP.MAX_ROUNDING_SCALE && TC_MODES.indexOf(v.mode) >= 0; what = "a Rounding (scale from 0 to " + UP.MAX_ROUNDING_SCALE + "; mode half-even, half-up, down or up)"; }
+    else if (name === "string") { ok = typeof v === "string"; what = "a string"; }
+    else if (name === "Name") { ok = typeof v === "string" && v !== ""; what = "a non-empty name"; }
+    else { ok = tcIsInt(v) && v >= 0 && v <= TC_MAX_INT; what = "a non-negative integer"; }
+    return ok ? null : path + " must be " + what;
+  }
+  function tcCheck(node, v, path) {
+    var kind = node[0], i, err;
+    if (kind === "atom") return tcAtom(node[1], v, path);
+    if (UP.isSeal(v)) return path + " is structural and may not be sealed";
+    if (kind === "lit") return v === node[1] ? null : path + ' must be "' + node[1] + '"';
+    if (kind === "list") {
+      if (!Array.isArray(v)) return path + " must be a list";
+      for (i = 0; i < v.length; i++) { err = tcCheck(node[1], v[i], path + "[" + i + "]"); if (err) return err; }
+      return null;
+    }
+    if (kind === "map") {
+      if (!isObj(v) || !Object.keys(v).length) return path + " must be a non-empty object";
+      var ks = sorted(Object.keys(v));
+      for (i = 0; i < ks.length; i++) {
+        if (ks[i] === "") return path + " has an empty key";
+        err = tcCheck(node[1], v[ks[i]], path + "." + ks[i]); if (err) return err;
+      }
+      return null;
+    }
+    if (kind === "record") {
+      var names = node[1].map(function (f) { return f[0]; });
+      if (!tcKeysAre(v, names)) return path + " must have exactly the fields " + names.join(", ");
+      for (i = 0; i < node[1].length; i++) { err = tcCheck(node[1][i][1], v[node[1][i][0]], path + "." + node[1][i][0]); if (err) return err; }
+      return null;
+    }
+    for (i = 0; i < node[1].length; i++) if (tcCheck(node[1][i], v, path) === null) return null;
+    return path + " does not match any allowed form";
+  }
+  function typeCheck(text, v, path) { return tcCheck(tcParse(text), v, path === undefined ? "value" : path); }
+
   // ---- Validation (A1, A6, A10, A13) ------------------------------------------------
   function termIssues(t) {
     var issues = [];
@@ -207,6 +300,12 @@
     Object.keys(ps).forEach(function (name) {
       var extra = Object.keys(ps[name]).filter(function (k) { return k !== "type" && k !== "doc"; });
       if (extra.length) issues.push("parameter " + repr(name) + " declares " + repr(sorted(extra)) + "; only 'type' and 'doc' are allowed (A6: no defaults)");
+      if (!tcKnown(get(ps[name], "type", null))) issues.push("parameter " + repr(name) + " has an unrecognized type " + repr(get(ps[name], "type", null)));
+    });
+    var cl = get(t, "claims", {});
+    Object.keys(cl).forEach(function (ctype) {
+      var dd = get(cl[ctype], "data", {});
+      Object.keys(dd).forEach(function (fname) { if (!tcKnown(dd[fname])) issues.push("claim " + ctype + " field " + repr(fname) + " has an unrecognized type " + repr(dd[fname])); });
     });
     get(t, "forms", []).forEach(function (f) { if (FORMS.indexOf(get(f, "form")) < 0) issues.push("unknown clause form " + repr(get(f, "form"))); });
     return issues;
@@ -223,7 +322,7 @@
     if (uniq(order.map(canonKey)).length !== order.length) out.push(["A1", "a party is listed twice in the same role"]);
     order.forEach(function (rk) {
       if (ROLES.indexOf(rk[0]) < 0) out.push(["A1", "unknown role " + repr(rk[0])]);
-      if (!(typeof rk[1] === "string" && rk[1].indexOf("ed25519:") === 0 && rk[1].length === 72)) out.push(["A1", "malformed party key " + repr(rk[1])]);
+      if (!UP.validKey(rk[1])) out.push(["A1", "malformed party key " + repr(rk[1])]);
     });
     var names = get(ag, "clauses", []).map(function (c) { return get(c, "n"); });
     if (uniq(names).length !== names.length) out.push(["A1", "clause names are not unique"]);
@@ -241,8 +340,12 @@
       Object.keys(cp).forEach(function (pname) {
         var pval = cp[pname], ptype = get(get(get(t, "params", {}), pname, {}), "type", "");
         if (UP.containsSeal(pval) && STRUCTURAL_TYPES.indexOf(ptype) >= 0) out.push(["A10", "clause " + repr(get(c, "n")) + ": parameter " + repr(pname) + " (" + ptype + ") is structural and may not be sealed"]);
-        if (ptype === "Role" && ROLES.indexOf(pval) < 0) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pval) + " is not a role"]);
-        if (ptype === "[Role]" && !(Array.isArray(pval) && pval.every(function (r) { return ROLES.indexOf(r) >= 0; }))) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pname) + " must be a list of roles"]);
+        else if (ptype === "Role" && ROLES.indexOf(pval) < 0) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pval) + " is not a role"]);
+        else if (ptype === "[Role]" && !(Array.isArray(pval) && pval.every(function (r) { return ROLES.indexOf(r) >= 0; }))) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pname) + " must be a list of roles"]);
+        else if (has(get(t, "params", {}), pname) && tcKnown(ptype)) {
+          var terr = typeCheck(ptype, pval, pname);
+          if (terr) out.push(["A1", "clause " + repr(get(c, "n")) + ": parameter " + terr]);
+        }
       });
       get(t, "forms", []).forEach(function (f) { if (get(f, "form") === "Window") windows++; if (get(f, "form") === "Link") links++; });
     });
@@ -285,6 +388,8 @@
   }
   function mandateCoverage(b, m, agentKey, E, ctx) {
     if (get(m, "type") !== "Mandate") return [false, "the referenced object is not a Mandate"];
+    if (!(UP.validKey(get(m, "principal", null)) && UP.validKey(get(m, "agent", null)) && typeCheck("Time", get(m, "not_before", null)) === null && typeCheck("Time", get(m, "expires", null)) === null))
+      return [false, "the Mandate is malformed (its keys or validity times are not well formed)"];
     var psig = get(m, "sigs", []).filter(function (s) { return get(s, "key") === get(m, "principal"); });
     if (!psig.length || !UP.verifySig(m.principal, psig[0].sig, m)) return [false, "the Mandate is not validly signed by its principal"];
     if (get(m, "agent") !== agentKey) return [false, "the signing key is not the Mandate's agent"];
@@ -458,7 +563,11 @@
       S2 = clone(S);
     }
     var pending = { event: eh, agreement: ch(ag), signed: sorted(Array.from(P.keys()).filter(function (k) { return required.has(k); })) };
-    if (has(body, "expires")) pending.expires = body.expires;
+    if (has(body, "expires")) {
+      ck.check("propose-expires", "R-propose", typeCheck("Time", body.expires) === null,
+        "The proposal's expiry is a well-formed time.", "The proposal's expiry is not a well-formed time.");
+      pending.expires = body.expires;
+    }
     S2.pending = pending;
     S2 = this._advance(S2, E, eh);
     return this._maybeExecute(S2, E, ck);
@@ -558,6 +667,10 @@
     var declF = sorted(Object.keys(get(decl, "data", {})));
     ck.check("attest-data", "R-attest", isObj(data) && eq(sorted(Object.keys(data)), declF), "The claim's data has exactly the fields its Term defines.",
       "The claim's data fields " + (isObj(data) ? repr(sorted(Object.keys(data))) : str(data)) + " do not match " + repr(declF) + ".");
+    var dtypes = get(decl, "data", {}), bad = null, dn = Object.keys(dtypes);
+    for (var di = 0; di < dn.length && bad === null; di++)
+      bad = tcKnown(dtypes[dn[di]]) ? typeCheck(dtypes[dn[di]], data[dn[di]], dn[di]) : dn[di] + " has an unrecognized type";
+    ck.check("attest-data-types", "R-attest", bad === null, "Each data field has the type its Term declares.", "The claim's data does not match its Term: " + bad + ".");
     var rules = this._claimRules(cur, cname), allowed = rules[0].get(ctype) || new Set();
     var mine = inter(rolesOf(cur, E.by), allowed);
     ck.check("attest-role", "A7", mine.size > 0, "The author holds a role allowed to make this claim (" + sorted(mine).join(", ") + ").",
@@ -638,11 +751,12 @@
       start = w.form.start; end = w.form.end;
       var r = get(w.form, "renew", null);
       if (truthy(r)) {
-        var optouts = get(get(S.facts, w.name, {}), "claims", []).filter(function (c) { return c.type === w.tid + "/optout"; }), n = 0;
+        // e_k = end + k x period, each computed directly from end (spec/04-inference.md §2, §3.1).
+        var optouts = get(get(S.facts, w.name, {}), "claims", []).filter(function (c) { return c.type === w.tid + "/optout"; }), n = 0, e00 = end;
         while (end <= t && (get(r, "max", null) === null || n < Number(r.max))) {
           var e0 = end;
           if (optouts.some(function (c) { return addPeriod(c.at, r.optout_notice) <= e0; })) break;
-          end = addPeriod(end, r.period); n++;
+          n++; end = addPeriod(e00, r.period, n);
         }
       }
     }
@@ -1047,7 +1161,7 @@
 
   Object.assign(UP, {
     ROLES: ROLES, FORMS: FORMS, AXIOM_LABELS: AXIOM_LABELS, Bundle: Bundle, Evaluator: Evaluator, Checks: Checks,
-    clauseForms: clauseForms, agreementIssues: agreementIssues, termIssues: termIssues, precedenceIssues: precedenceIssues,
+    clauseForms: clauseForms, agreementIssues: agreementIssues, typeCheck: typeCheck, typeKnown: tcKnown, termIssues: termIssues, precedenceIssues: precedenceIssues,
     mandateCoverage: mandateCoverage, snapshot: snapshot, renderAgreement: renderAgreement, renderTemplate: renderTemplate,
     simulate: simulate, makeTrace: makeTrace, describe: describe, checkJson: checkJson, canonKey: canonKey, repr: repr, partyKeys: partyKeys, keysWithRole: keysWithRole
   });

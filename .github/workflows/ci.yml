@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }} / Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+        node: ["22"]
+        include:
+          - python: "3.13"
+            node: "20"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install
+        run: python -m pip install -e '.[test]'
+      - name: Tests (Python reference, JavaScript conformance, differential and fuzz tests)
+        run: python -m pytest -q --cov=universal_paper --cov-branch --cov-report=term-missing:skip-covered
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python -m pip install -e '.[dev]'
+      - name: Ruff
+        run: ruff check src tests tools examples
+      - name: Mypy
+        run: mypy
+      - name: JavaScript syntax
+        run: for f in explorer/src/*.js; do node --check "$f"; done
+
+  reproducible:
+    name: Generated files are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python -m pip install -e .
+      - name: Regenerate Term library, examples, traces, and the Explorer
+        run: |
+          python tools/gen_terms.py
+          python examples/build_examples.py
+          python tools/build_explorer.py
+      - name: Nothing changed
+        run: git diff --exit-code

@@ -19,6 +19,12 @@
     var out = '"';
     for (var i = 0; i < s.length; i++) {
       var c = s.charCodeAt(i), ch = s[i];
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        var lo = i + 1 < s.length ? s.charCodeAt(i + 1) : 0;
+        if (lo < 0xDC00 || lo > 0xDFFF) throw canonErr("strings must not contain lone surrogates");
+        out += ch + s[i + 1]; i++; continue;
+      }
+      if (c >= 0xDC00 && c <= 0xDFFF) throw canonErr("strings must not contain lone surrogates");
       if (ch === '"') out += '\\"';
       else if (ch === "\\") out += "\\\\";
       else if (c === 8) out += "\\b";
@@ -43,7 +49,9 @@
     if (typeof v === "string") return jstr(v);
     if (Array.isArray(v)) return "[" + v.map(jcsString).join(",") + "]";
     if (typeof v === "object") {
-      var keys = Object.keys(v).sort();
+      var keys = Object.keys(v);
+      keys.forEach(function (k) { if (!/^[\x00-\x7f]*$/.test(k)) throw canonErr("object keys must be ASCII (spec/01-domain.md §1.1)"); });
+      keys.sort();
       return "{" + keys.map(function (k) { return jstr(k) + ":" + jcsString(v[k]); }).join(",") + "}";
     }
     throw canonErr("unsupported type: " + typeof v);
@@ -212,11 +220,25 @@
     if (mandate) e.mandate = mandate;
     return e;
   };
+  // Strict verification (spec/01-domain.md §1.3), identical to src/universal_paper/crypto.py:
+  // lowercase hex, canonical key and R encodings (y < p), key not of small order, S < L.
+  var KEY_RE = /^ed25519:[0-9a-f]{64}$/, SIG_RE = /^[0-9a-f]{128}$/;
+  var SMALL_ORDER_Y = [0n, 1n, P - 1n,
+    0x05FC536D880238B13933C6D305ACDFD5F098EFF289F4C345B027B2C28F95E826n,
+    0x7A03AC9277FDC74EC6CC392CFA53202A0F67100D760B3CBA4FD84D3D706A17C7n];
+  function yOf(b) { return leInt(b) & ((1n << 255n) - 1n); }
+  function validKey(pub) {
+    if (typeof pub !== "string" || !KEY_RE.test(pub)) return false;
+    var y = yOf(unhex(pub.slice(8)));
+    return y < P && SMALL_ORDER_Y.indexOf(y) < 0;
+  }
   function verifySig(pub, sigHex, obj) {
     try {
-      if (typeof pub !== "string" || pub.indexOf("ed25519:") !== 0 || pub.length !== 72) return false;
-      if (typeof sigHex !== "string" || !/^[0-9a-f]{128}$/.test(sigHex)) return false;
-      return verify(unhex(pub.slice(8)), digest(obj), unhex(sigHex));
+      if (!validKey(pub)) return false;
+      if (typeof sigHex !== "string" || !SIG_RE.test(sigHex)) return false;
+      var sig = unhex(sigHex);
+      if (yOf(sig.slice(0, 32)) >= P || leInt(sig.slice(32)) >= Q) return false;
+      return verify(unhex(pub.slice(8)), digest(obj), sig);
     } catch (e) { return false; }
   }
   function attach(obj) {
@@ -228,9 +250,10 @@
 
   // ---- Decimal (exact, BigInt-scaled) ---------------------------------------
   var DEC_RE = /^-?(0|[1-9][0-9]*)(\.[0-9]+)?$/;
+  var MAX_DECIMAL_LEN = 64, MAX_PERIOD_COUNT = 10000, MAX_ROUNDING_SCALE = 18;
   function Dec(i, s) { this.i = i; this.s = s; }
   function dec(str) {
-    if (typeof str !== "string" || !DEC_RE.test(str)) throw new Error("not a Decimal string: " + JSON.stringify(str));
+    if (typeof str !== "string" || str.length > MAX_DECIMAL_LEN || !DEC_RE.test(str)) throw new Error("not a Decimal string: " + JSON.stringify(str));
     var neg = str[0] === "-", body = neg ? str.slice(1) : str, parts = body.split(".");
     var frac = parts[1] || "", i = BigInt(parts[0] + frac);
     return new Dec(neg ? -i : i, frac.length);
@@ -246,7 +269,10 @@
     return (neg ? "-" : "") + s;
   };
   Dec.prototype.round = function (rounding) {
-    var scale = Number(rounding.scale), mode = rounding.mode;
+    var scale = rounding.scale, mode = rounding.mode;
+    if (!(typeof scale === "number" && Number.isInteger(scale) && scale >= 0 && scale <= MAX_ROUNDING_SCALE))
+      throw new Error("rounding scale must be an integer from 0 to " + MAX_ROUNDING_SCALE);
+    if (["half-even", "half-up", "down", "up"].indexOf(mode) < 0) throw new Error("bad rounding mode " + mode);
     if (scale >= this.s) return new Dec(this.i * 10n ** BigInt(scale - this.s), scale);
     var f = 10n ** BigInt(this.s - scale), neg = this.i < 0n, a = neg ? -this.i : this.i;
     var q = a / f, r = a % f, twice = r * 2n;
@@ -262,28 +288,36 @@
   function decStr(d) { return d.isZero() ? new Dec(0n, d.s).toString() : d.toString(); }
 
   // ---- Time and Period -------------------------------------------------------
-  var TIME_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z$/;
+  var TIME_RE = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z$/;
+  // Date.UTC maps years 0-99 to 1900-1999, so dates are built with setUTCFullYear.
+  function utc(y, mo, d, h, mi, s) { var r = new Date(0); r.setUTCFullYear(y, mo, d); r.setUTCHours(h, mi, s, 0); return r; }
   function parseTime(s) {
     var m = typeof s === "string" && TIME_RE.exec(s);
     if (!m) throw new Error("not a UP Time: " + JSON.stringify(s));
-    var t = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
-    var d = new Date(t);
-    if (d.getUTCDate() !== +m[3] || d.getUTCMonth() !== +m[2] - 1) throw new Error("not a UP Time: " + JSON.stringify(s));
+    var y = +m[1], mo = +m[2], da = +m[3], h = +m[4], mi = +m[5], se = +m[6];
+    var d = utc(y, mo - 1, da, h, mi, se);
+    if (y < 1 || mo < 1 || mo > 12 || h > 23 || mi > 59 || se > 59 || d.getUTCDate() !== da || d.getUTCMonth() !== mo - 1)
+      throw new Error("not a UP Time: " + JSON.stringify(s));
     return d;
   }
   function pad(n, w) { n = String(n); while (n.length < w) n = "0" + n; return n; }
   function fmtTime(d) {
+    var y = d.getUTCFullYear();
+    if (!(y >= 1 && y <= 9999)) throw new Error("time out of range");
     return pad(d.getUTCFullYear(), 4) + "-" + pad(d.getUTCMonth() + 1, 2) + "-" + pad(d.getUTCDate(), 2) + "T" +
       pad(d.getUTCHours(), 2) + ":" + pad(d.getUTCMinutes(), 2) + ":" + pad(d.getUTCSeconds(), 2) + "Z";
   }
   function addMonths(d, n) {
     var m = d.getUTCMonth() + n, y = d.getUTCFullYear() + Math.floor(m / 12); m = ((m % 12) + 12) % 12;
-    var last = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
-    return new Date(Date.UTC(y, m, Math.min(d.getUTCDate(), last), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
+    var last = utc(y, m + 1, 0, 0, 0, 0).getUTCDate();
+    return utc(y, m, Math.min(d.getUTCDate(), last), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
   }
   function addPeriod(t, p, k) {
     if (k === undefined) k = 1;
-    var d = parseTime(t), n = Number(p.count) * k, u = p.unit, r;
+    var d = parseTime(t), count = p.count, u = p.unit, r;
+    if (!(typeof count === "number" && Number.isInteger(count) && count >= 1 && count <= MAX_PERIOD_COUNT))
+      throw new Error("period count must be an integer from 1 to " + MAX_PERIOD_COUNT);
+    var n = count * k;
     if (u === "day") r = new Date(d.getTime() + n * 86400000);
     else if (u === "month") r = addMonths(d, n);
     else if (u === "quarter") r = addMonths(d, 3 * n);
@@ -300,7 +334,7 @@
   var SEALED = { sealed: true, toString: function () { return "sealed"; } };
   function isSeal(x) { return !!x && typeof x === "object" && !Array.isArray(x) && Object.keys(x).length === 1 && typeof x.seal === "string"; }
   function sealOf(value, salt) {
-    if (typeof salt !== "string" || salt.length !== 64) throw new Error("salt must be 64 hex characters");
+    if (typeof salt !== "string" || !/^[0-9a-f]{64}$/.test(salt)) throw new Error("salt must be 64 hex characters");
     return { seal: "sha256:" + hex(sha256(jcs({ salt: salt, value: value }))) };
   }
   function opens(d, seal) { try { return sealOf(d.value, d.salt).seal === seal.seal && d.seal === seal.seal; } catch (e) { return false; } }
@@ -314,7 +348,8 @@
   Object.assign(UP, {
     SPEC: "UP/0.1-draft", hex: hex, unhex: unhex, utf8: utf8, sha256: sha256, sha512: sha512,
     jcs: jcs, jcsString: jcsString, strip: strip, digest: digest, contentHash: contentHash,
-    Key: Key, verifySig: verifySig, attach: attach, ed25519: { sign: sign, verify: verify, publicFromSecret: publicFromSecret },
+    Key: Key, verifySig: verifySig, validKey: validKey,
+    MAX_DECIMAL_LEN: MAX_DECIMAL_LEN, MAX_PERIOD_COUNT: MAX_PERIOD_COUNT, MAX_ROUNDING_SCALE: MAX_ROUNDING_SCALE, attach: attach, ed25519: { sign: sign, verify: verify, publicFromSecret: publicFromSecret },
     clearVerifyCache: function () { verifyCache.clear(); },
     dec: dec, Dec: Dec, decStr: decStr, parseTime: parseTime, fmtTime: fmtTime, addPeriod: addPeriod, fmtPeriod: fmtPeriod,
     SEALED: SEALED, isSeal: isSeal, sealOf: sealOf, opens: opens, containsSeal: containsSeal

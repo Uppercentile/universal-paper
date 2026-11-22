@@ -3,11 +3,16 @@
 The JSON files are the canonical machine definitions. The markdown files are
 readable views of the same data. Run: python3 tools/gen_terms.py
 """
-import json, pathlib
+import json
+import pathlib
+import sys
 
 SPEC = "UP/0.1-draft"
 P = lambda n: {"param": n}
-OUT = pathlib.Path(__file__).resolve().parent.parent / "spec" / "06-terms"
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+OUT = ROOT / "spec" / "06-terms"
+sys.path.insert(0, str(ROOT / "src"))
+from universal_paper.canon import content_hash  # noqa: E402
 
 TERMS = [
  dict(id="UP:Fixed-Term", title="Term of agreement", family="Term and renewal",
@@ -70,7 +75,7 @@ TERMS = [
 
  dict(id="UP:Tiers", title="Tiered price schedule", family="Tiers and pricing",
   purpose="Lists named tiers, describes the conditions for each, and sets a price for each Item in each tier.",
-  params={"tiers": ("[{name: string, conditions: string}]", "The tiers, in order, with descriptive qualification conditions."),
+  params={"tiers": ("[{name: Name, conditions: string}]", "The tiers, in order, with descriptive qualification conditions."),
           "prices": ("[{item: Identifier, by: {<tier>: Amount}}]", "Price of each Item in each tier.")},
   forms=[{"form": "Valuation", "source": {"table": P("prices"), "options": P("tiers")}}],
   claims={},
@@ -81,12 +86,12 @@ TERMS = [
 
  dict(id="UP:Tier-Selection", title="Tier attestation and selection", family="Tiers and attestation",
   purpose="Lets the Member attest that it qualifies for a tier; the selection takes effect when the Supplier acknowledges it.",
-  params={"tiers_clause": ("string", "Name of the Tiers clause in the parent Agreement."),
-          "initial": ("string", "Tier in effect before any selection."),
+  params={"tiers_clause": ("Name", "Name of the Tiers clause in the parent Agreement."),
+          "initial": ("Name", "Tier in effect before any selection."),
           "effective": ("\"on-ack\" | {next: Period}", "When an acknowledged selection takes effect.")},
   forms=[{"form": "Selection", "options": {"from": {"link": True, "clause": P("tiers_clause")}},
           "subject": "member", "ack": ["supplier"], "effective": P("effective"), "initial": P("initial")}],
-  claims={"selects": ({"option": "string", "basis": "string"}, "The Member attests that it meets the conditions of the named tier, stating the basis.")},
+  claims={"selects": ({"option": "Name", "basis": "string"}, "The Member attests that it meets the conditions of the named tier, stating the basis.")},
   render=("The Member's tier is {{initial}} until changed under this clause. The Member may attest that it meets "
           "the conditions of another tier, stating the basis. The change takes effect when the Supplier acknowledges "
           "the attestation, {{effective|effective}}.")),
@@ -125,7 +130,7 @@ TERMS = [
   params={"payer": ("Role", "Role that pays the fee."),
           "payee": ("Role", "Role that receives the fee."),
           "rate": ("Rate", "Fee as a fraction of reported net sales."),
-          "report_clause": ("string", "Name of the Sales-Reporting clause whose reports form the base."),
+          "report_clause": ("Name", "Name of the Sales-Reporting clause whose reports form the base."),
           "period": ("Period", "Fee period."),
           "due": ("Period", "Time after each period's end by which the fee is due."),
           "rounding": ("Rounding", "Rounding applied to each period's fee.")},
@@ -253,17 +258,24 @@ def md(t, d):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    rows = []
+    rows, hashes, packaged = [], [], []
     for t in TERMS:
         d = definition(t)
         fn, text = md(t, d)
         (OUT / f"{fn}.md").write_text(text)
         (OUT / f"{fn}.json").write_text(json.dumps(d, indent=2) + "\n")
+        packaged.append(d)
         forms = ", ".join(sorted({f["form"] for f in d["forms"]})) or "none"
         rows.append(f'| [{t["id"]}]({fn}.md) | {t["family"]} | {forms} | {t["purpose"]} |')
+        hashes.append(f'| `{t["id"]}` | `{content_hash(d)}` |')
+    packaged.sort(key=lambda d: d["id"])
+    (ROOT / "src" / "universal_paper" / "terms.json").write_text(json.dumps(packaged, indent=1, ensure_ascii=False) + "\n")
     readme = OUT / "README.md"
     head = readme.read_text().split("<!-- table -->")[0] if readme.exists() else ""
-    readme.write_text(head + "<!-- table -->\n\n| Term | Family | Forms | Purpose |\n|---|---|---|---|\n" + "\n".join(rows) + "\n")
+    readme.write_text(head + "<!-- table -->\n\n| Term | Family | Forms | Purpose |\n|---|---|---|---|\n" + "\n".join(rows) + "\n"
+                      + "\n## Definition hashes\n\nA Clause pins its Term by this hash (`def`). It is `hash()` of the JSON file "
+                      + "(spec/01-domain.md §1.2). `tests/test_terms.py` recomputes every one.\n\n"
+                      + "| Term | Definition hash |\n|---|---|\n" + "\n".join(hashes) + "\n")
 
 if __name__ == "__main__":
     main()

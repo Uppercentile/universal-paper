@@ -1,17 +1,17 @@
 {
   "chains": [
     {
-      "chain_id": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+      "chain_id": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
       "label": "Master agreement (hypothetical)",
       "position": 0
     },
     {
-      "chain_id": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+      "chain_id": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
       "label": "Participation of Hypothetical Community Hospital",
       "position": 1
     },
     {
-      "chain_id": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+      "chain_id": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
       "label": "Participation of Sample Regional Clinic",
       "position": 2
     }
@@ -46,7 +46,7 @@
           {
             "chain": 0,
             "label": "Master agreement (hypothetical)",
-            "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+            "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
             "status": "proposed"
           },
           {
@@ -71,7 +71,7 @@
             "label": "Master agreement (hypothetical)",
             "obligations": [
               {
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "reporting",
                 "discharged_at": "2027-02-10T12:00:00Z",
                 "due": "2027-02-16T00:00:00Z",
@@ -92,7 +92,7 @@
                 "status": "discharged"
               },
               {
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "reporting",
                 "discharged_at": "2027-03-10T12:00:00Z",
                 "due": "2027-03-16T00:00:00Z",
@@ -113,7 +113,7 @@
                 "status": "discharged"
               },
               {
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "reporting",
                 "discharged_at": "2027-04-10T12:00:00Z",
                 "due": "2027-04-16T00:00:00Z",
@@ -138,7 +138,7 @@
                   "currency": "USD",
                   "value": "61.00"
                 },
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "fee",
                 "discharged_at": "2027-02-21T12:00:00Z",
                 "due": "2027-03-03T00:00:00Z",
@@ -163,7 +163,7 @@
                   "currency": "USD",
                   "value": "62.13"
                 },
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "fee",
                 "discharged_at": "2027-03-26T12:00:00Z",
                 "due": "2027-03-31T00:00:00Z",
@@ -188,7 +188,7 @@
                   "currency": "USD",
                   "value": "66.43"
                 },
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "fee",
                 "due": "2027-05-01T00:00:00Z",
                 "duty": "pay",
@@ -207,7 +207,7 @@
                 "status": "open"
               }
             ],
-            "state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+            "state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
             "status": "active",
             "window": {
               "end": "2028-01-01T00:00:00Z",
@@ -219,7 +219,7 @@
             "label": "Participation of Hypothetical Community Hospital",
             "obligations": [
               {
-                "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                 "clause": "disclosure",
                 "discharged_at": "2027-04-20T12:00:00Z",
                 "due": "2027-05-05T00:00:00Z",
@@ -275,7 +275,7 @@
             "selections": {
               "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
             },
-            "state_hash": "sha256:63efffbfa110bc0351611b56325966e5b3e6e4fa0c32bb2d3197e9b463d89a96",
+            "state_hash": "sha256:9eae1b0be4affe58cd0c22652e1db20d3d670f521e0808690334cdc27a1a9b76",
             "status": "active",
             "window": {
               "end": "2028-01-01T00:00:00Z",
@@ -287,7 +287,7 @@
             "label": "Participation of Sample Regional Clinic",
             "obligations": [
               {
-                "chain": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                "chain": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                 "clause": "disclosure",
                 "due": "2027-05-11T00:00:00Z",
                 "duty": "disclose",
@@ -341,7 +341,7 @@
             "selections": {
               "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
             },
-            "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+            "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
             "status": "active",
             "window": {
               "end": "2028-01-01T00:00:00Z",
@@ -358,7 +358,7 @@
             "label": "Master agreement (hypothetical)",
             "obligations": [
               {
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "reporting",
                 "discharged_at": "2027-02-10T12:00:00Z",
                 "due": "2027-02-16T00:00:00Z",
@@ -379,7 +379,7 @@
                 "status": "discharged"
               },
               {
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "reporting",
                 "discharged_at": "2027-03-10T12:00:00Z",
                 "due": "2027-03-16T00:00:00Z",
@@ -400,7 +400,7 @@
                 "status": "discharged"
               },
               {
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "reporting",
                 "discharged_at": "2027-04-10T12:00:00Z",
                 "due": "2027-04-16T00:00:00Z",
@@ -425,7 +425,7 @@
                   "currency": "USD",
                   "value": "61.00"
                 },
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "fee",
                 "discharged_at": "2027-02-21T12:00:00Z",
                 "due": "2027-03-03T00:00:00Z",
@@ -450,7 +450,7 @@
                   "currency": "USD",
                   "value": "62.13"
                 },
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "fee",
                 "discharged_at": "2027-03-26T12:00:00Z",
                 "due": "2027-03-31T00:00:00Z",
@@ -475,7 +475,7 @@
                   "currency": "USD",
                   "value": "66.43"
                 },
-                "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                 "clause": "fee",
                 "due": "2027-05-01T00:00:00Z",
                 "duty": "pay",
@@ -494,7 +494,7 @@
                 "status": "open"
               }
             ],
-            "state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+            "state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
             "status": "active",
             "window": {
               "end": "2028-01-01T00:00:00Z",
@@ -506,7 +506,7 @@
             "label": "Participation of Hypothetical Community Hospital",
             "obligations": [
               {
-                "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                 "clause": "disclosure",
                 "discharged_at": "2027-04-20T12:00:00Z",
                 "due": "2027-05-05T00:00:00Z",
@@ -562,7 +562,7 @@
             "selections": {
               "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
             },
-            "state_hash": "sha256:63efffbfa110bc0351611b56325966e5b3e6e4fa0c32bb2d3197e9b463d89a96",
+            "state_hash": "sha256:9eae1b0be4affe58cd0c22652e1db20d3d670f521e0808690334cdc27a1a9b76",
             "status": "active",
             "window": {
               "end": "2028-01-01T00:00:00Z",
@@ -574,7 +574,7 @@
             "label": "Participation of Sample Regional Clinic",
             "obligations": [
               {
-                "chain": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                "chain": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                 "clause": "disclosure",
                 "due": "2027-05-11T00:00:00Z",
                 "duty": "disclose",
@@ -628,7 +628,7 @@
             "selections": {
               "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
             },
-            "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+            "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
             "status": "active",
             "window": {
               "end": "2028-01-01T00:00:00Z",
@@ -680,7 +680,7 @@
                 "term": "UP:Renewing-Term"
               },
               {
-                "def": "sha256:cd0f44c7971fc2370e510efe478c354b791b17f1c9a10165aa80b1d78cd3aeb0",
+                "def": "sha256:d93331fba3ba3e376b1e9b40ee1ea9dedecdc1db8da49981aaa4ce56bbc39f70",
                 "n": "tiers",
                 "params": {
                   "prices": [
@@ -780,7 +780,7 @@
                 "term": "UP:Sales-Reporting"
               },
               {
-                "def": "sha256:7794f7872d6cef305839b2fdc7b7e9f2916e71f20cde4bdac95321848e21a85e",
+                "def": "sha256:86262a69a7bfba34d47e0f3052aecb541702abea12286e098e60333fa1e24168",
                 "n": "fee",
                 "params": {
                   "due": {
@@ -889,7 +889,7 @@
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Hypothetical Health Purchasing Alliance proposes “Master agreement (hypothetical)”.",
-        "hash": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "hash": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "index": 0,
         "kind": "propose",
         "prev": null,
@@ -905,7 +905,7 @@
       "results": {
         "aggregator": {
           "accepted": true,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -991,18 +991,18 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+          "event_hash": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
           "reason": "",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -1088,18 +1088,18 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+          "event_hash": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
           "reason": "",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -1185,14 +1185,14 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+          "event_hash": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
           "reason": "",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         }
       },
       "step": 0
@@ -1202,17 +1202,17 @@
       "event": {
         "at": "2026-12-05T10:00:00Z",
         "body": {
-          "target": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be"
+          "target": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
         "by_name": "Example Medical Supply Co.",
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Example Medical Supply Co. signs the proposed “Master agreement (hypothetical)”.",
-        "hash": "sha256:d989ae37594c54257686b6bcb954720a02b6255e40f5d592d424e123881d6fd8",
+        "hash": "sha256:242fd82d6697437f9a151a1dbbc2af4aea4adf46a0a1a8930fc5ae0cdc1863c9",
         "index": 1,
         "kind": "accept",
-        "prev": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+        "prev": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -1225,7 +1225,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -1262,18 +1262,18 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:d989ae37594c54257686b6bcb954720a02b6255e40f5d592d424e123881d6fd8",
+          "event_hash": "sha256:242fd82d6697437f9a151a1dbbc2af4aea4adf46a0a1a8930fc5ae0cdc1863c9",
           "reason": "The event carries no signatures.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+          "chain_state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
           "checks": [
             {
               "id": "envelope",
@@ -1366,7 +1366,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "executed",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -1375,13 +1375,13 @@
               }
             ]
           },
-          "event_hash": "sha256:d989ae37594c54257686b6bcb954720a02b6255e40f5d592d424e123881d6fd8",
+          "event_hash": "sha256:242fd82d6697437f9a151a1dbbc2af4aea4adf46a0a1a8930fc5ae0cdc1863c9",
           "reason": "",
-          "world_hash": "sha256:18edc3fdcd9dc8528e77d216708f7cc6049d4a00af753458c8c1a0c605a4699a"
+          "world_hash": "sha256:1177d89de4327a71e0795529e3791796bcb827217f8e7612dd10638635d0b89d"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+          "chain_state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
           "checks": [
             {
               "id": "envelope",
@@ -1474,7 +1474,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "executed",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -1483,9 +1483,9 @@
               }
             ]
           },
-          "event_hash": "sha256:d989ae37594c54257686b6bcb954720a02b6255e40f5d592d424e123881d6fd8",
+          "event_hash": "sha256:242fd82d6697437f9a151a1dbbc2af4aea4adf46a0a1a8930fc5ae0cdc1863c9",
           "reason": "",
-          "world_hash": "sha256:18edc3fdcd9dc8528e77d216708f7cc6049d4a00af753458c8c1a0c605a4699a"
+          "world_hash": "sha256:1177d89de4327a71e0795529e3791796bcb827217f8e7612dd10638635d0b89d"
         }
       },
       "step": 1
@@ -1501,12 +1501,12 @@
                 "def": "sha256:b4702b4663f074fff69b20fa34d5eaf46e5c26d1912365cc9288f159e5889701",
                 "n": "participation",
                 "params": {
-                  "parent": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be"
+                  "parent": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb"
                 },
                 "term": "UP:Participation"
               },
               {
-                "def": "sha256:b6428925befec7c2267083b0664c08c2b7700f93f570f0ef3219c4b61b516d75",
+                "def": "sha256:caca2ea12ee3bdab2d1c22cd36ffa18970e3e65991a60b9ca0724982f0e710e5",
                 "n": "tier",
                 "params": {
                   "effective": "on-ack",
@@ -1611,7 +1611,7 @@
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Hypothetical Community Hospital proposes “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "hash": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "index": 0,
         "kind": "propose",
         "prev": null,
@@ -1720,7 +1720,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -1731,13 +1731,13 @@
               }
             ]
           },
-          "event_hash": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+          "event_hash": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
           "reason": "The parent agreement is not executed at this time.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:42353c215aa093bc12364cd56107ee0c47da5392a61345d0fb78efd3c83793f7",
+          "chain_state_hash": "sha256:0f3d43dc7cb3f2fd5a3f7422c1cf4cd077b2e18e7ecc8b02463316a2f22cda6f",
           "checks": [
             {
               "id": "envelope",
@@ -1851,7 +1851,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -1861,18 +1861,18 @@
               {
                 "chain": 1,
                 "label": "Participation of Hypothetical Community Hospital",
-                "state_hash": "sha256:42353c215aa093bc12364cd56107ee0c47da5392a61345d0fb78efd3c83793f7",
+                "state_hash": "sha256:0f3d43dc7cb3f2fd5a3f7422c1cf4cd077b2e18e7ecc8b02463316a2f22cda6f",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+          "event_hash": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
           "reason": "",
-          "world_hash": "sha256:5665caeb9560900614b40c6c9f1d5922637848d8812ae4928fa87eb68985829e"
+          "world_hash": "sha256:b16002ac774bec34ec1fad77439a99ab8f1d486cafd9edd683cf59c959b5db9e"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:42353c215aa093bc12364cd56107ee0c47da5392a61345d0fb78efd3c83793f7",
+          "chain_state_hash": "sha256:0f3d43dc7cb3f2fd5a3f7422c1cf4cd077b2e18e7ecc8b02463316a2f22cda6f",
           "checks": [
             {
               "id": "envelope",
@@ -1986,7 +1986,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -1996,14 +1996,14 @@
               {
                 "chain": 1,
                 "label": "Participation of Hypothetical Community Hospital",
-                "state_hash": "sha256:42353c215aa093bc12364cd56107ee0c47da5392a61345d0fb78efd3c83793f7",
+                "state_hash": "sha256:0f3d43dc7cb3f2fd5a3f7422c1cf4cd077b2e18e7ecc8b02463316a2f22cda6f",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+          "event_hash": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
           "reason": "",
-          "world_hash": "sha256:5665caeb9560900614b40c6c9f1d5922637848d8812ae4928fa87eb68985829e"
+          "world_hash": "sha256:b16002ac774bec34ec1fad77439a99ab8f1d486cafd9edd683cf59c959b5db9e"
         }
       },
       "step": 2
@@ -2013,17 +2013,17 @@
       "event": {
         "at": "2027-01-04T13:00:00Z",
         "body": {
-          "target": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d"
+          "target": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
         "by_name": "Hypothetical Health Purchasing Alliance",
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Hypothetical Health Purchasing Alliance signs the proposed “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:0d0e9ebaf3da823b1b49811775103099745b5d8daab34b5847addb52b8807472",
+        "hash": "sha256:e8bcf7222045f3c674ed7947e89a4cb1da5ee45af7188b3e7c3f8f0f65edc1f9",
         "index": 1,
         "kind": "accept",
-        "prev": "sha256:42353c215aa093bc12364cd56107ee0c47da5392a61345d0fb78efd3c83793f7",
+        "prev": "sha256:0f3d43dc7cb3f2fd5a3f7422c1cf4cd077b2e18e7ecc8b02463316a2f22cda6f",
         "signers": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
@@ -2059,7 +2059,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -2070,13 +2070,13 @@
               }
             ]
           },
-          "event_hash": "sha256:0d0e9ebaf3da823b1b49811775103099745b5d8daab34b5847addb52b8807472",
+          "event_hash": "sha256:e8bcf7222045f3c674ed7947e89a4cb1da5ee45af7188b3e7c3f8f0f65edc1f9",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:4856f934a6740a5c3cd92a626bfd974e1ef1edbaa3faa38b3f1afa8efae30c2c",
+          "chain_state_hash": "sha256:247afdbd365316638b126e7d11143c3c709a8f1678264fda1026b086ef5ed92d",
           "checks": [
             {
               "id": "envelope",
@@ -2169,7 +2169,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2179,18 +2179,18 @@
               {
                 "chain": 1,
                 "label": "Participation of Hypothetical Community Hospital",
-                "state_hash": "sha256:4856f934a6740a5c3cd92a626bfd974e1ef1edbaa3faa38b3f1afa8efae30c2c",
+                "state_hash": "sha256:247afdbd365316638b126e7d11143c3c709a8f1678264fda1026b086ef5ed92d",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:0d0e9ebaf3da823b1b49811775103099745b5d8daab34b5847addb52b8807472",
+          "event_hash": "sha256:e8bcf7222045f3c674ed7947e89a4cb1da5ee45af7188b3e7c3f8f0f65edc1f9",
           "reason": "",
-          "world_hash": "sha256:549258f49fe7f4083e63d7f7376e88458bd2283f3f27edd77679ed46cac83c9c"
+          "world_hash": "sha256:5c5e83026437fde6143291486fb94d5411cdd4188e885032ef9bcf10958ab758"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:4856f934a6740a5c3cd92a626bfd974e1ef1edbaa3faa38b3f1afa8efae30c2c",
+          "chain_state_hash": "sha256:247afdbd365316638b126e7d11143c3c709a8f1678264fda1026b086ef5ed92d",
           "checks": [
             {
               "id": "envelope",
@@ -2283,7 +2283,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2293,14 +2293,14 @@
               {
                 "chain": 1,
                 "label": "Participation of Hypothetical Community Hospital",
-                "state_hash": "sha256:4856f934a6740a5c3cd92a626bfd974e1ef1edbaa3faa38b3f1afa8efae30c2c",
+                "state_hash": "sha256:247afdbd365316638b126e7d11143c3c709a8f1678264fda1026b086ef5ed92d",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:0d0e9ebaf3da823b1b49811775103099745b5d8daab34b5847addb52b8807472",
+          "event_hash": "sha256:e8bcf7222045f3c674ed7947e89a4cb1da5ee45af7188b3e7c3f8f0f65edc1f9",
           "reason": "",
-          "world_hash": "sha256:549258f49fe7f4083e63d7f7376e88458bd2283f3f27edd77679ed46cac83c9c"
+          "world_hash": "sha256:5c5e83026437fde6143291486fb94d5411cdd4188e885032ef9bcf10958ab758"
         }
       },
       "step": 3
@@ -2310,17 +2310,17 @@
       "event": {
         "at": "2027-01-04T16:00:00Z",
         "body": {
-          "target": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d"
+          "target": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
         "by_name": "Example Medical Supply Co.",
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Example Medical Supply Co. signs the proposed “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:d3e65bebbd64d6c3acbcae04e1f8efdd89a941fb8b36ae1f967e33abae0de0cb",
+        "hash": "sha256:b466370c383ecd75399df0248e6c9a63999377c1d8abc76085e6793ea59d74a3",
         "index": 2,
         "kind": "accept",
-        "prev": "sha256:4856f934a6740a5c3cd92a626bfd974e1ef1edbaa3faa38b3f1afa8efae30c2c",
+        "prev": "sha256:247afdbd365316638b126e7d11143c3c709a8f1678264fda1026b086ef5ed92d",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -2356,7 +2356,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -2367,13 +2367,13 @@
               }
             ]
           },
-          "event_hash": "sha256:d3e65bebbd64d6c3acbcae04e1f8efdd89a941fb8b36ae1f967e33abae0de0cb",
+          "event_hash": "sha256:b466370c383ecd75399df0248e6c9a63999377c1d8abc76085e6793ea59d74a3",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:600bbc4055067878c4e508fd30a39ee9821546e1ed49b60ade57623cd8859e78",
+          "chain_state_hash": "sha256:cb39ca96b90e15321861803535a37ee1f56375f4a9dece4846be6cb429a3092e",
           "checks": [
             {
               "id": "envelope",
@@ -2494,7 +2494,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2539,7 +2539,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "C"
                 },
-                "state_hash": "sha256:600bbc4055067878c4e508fd30a39ee9821546e1ed49b60ade57623cd8859e78",
+                "state_hash": "sha256:cb39ca96b90e15321861803535a37ee1f56375f4a9dece4846be6cb429a3092e",
                 "status": "executed",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2548,13 +2548,13 @@
               }
             ]
           },
-          "event_hash": "sha256:d3e65bebbd64d6c3acbcae04e1f8efdd89a941fb8b36ae1f967e33abae0de0cb",
+          "event_hash": "sha256:b466370c383ecd75399df0248e6c9a63999377c1d8abc76085e6793ea59d74a3",
           "reason": "",
-          "world_hash": "sha256:f8038659074120a2a8aa825bcd5ad0e4df3e71a1ce623f8da41ac6526b83006c"
+          "world_hash": "sha256:04d5574b48466a75e82a27bfd56b3819968cb16943d74c289f8f0b96204a0a4c"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:600bbc4055067878c4e508fd30a39ee9821546e1ed49b60ade57623cd8859e78",
+          "chain_state_hash": "sha256:cb39ca96b90e15321861803535a37ee1f56375f4a9dece4846be6cb429a3092e",
           "checks": [
             {
               "id": "envelope",
@@ -2675,7 +2675,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2720,7 +2720,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "C"
                 },
-                "state_hash": "sha256:600bbc4055067878c4e508fd30a39ee9821546e1ed49b60ade57623cd8859e78",
+                "state_hash": "sha256:cb39ca96b90e15321861803535a37ee1f56375f4a9dece4846be6cb429a3092e",
                 "status": "executed",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2729,9 +2729,9 @@
               }
             ]
           },
-          "event_hash": "sha256:d3e65bebbd64d6c3acbcae04e1f8efdd89a941fb8b36ae1f967e33abae0de0cb",
+          "event_hash": "sha256:b466370c383ecd75399df0248e6c9a63999377c1d8abc76085e6793ea59d74a3",
           "reason": "",
-          "world_hash": "sha256:f8038659074120a2a8aa825bcd5ad0e4df3e71a1ce623f8da41ac6526b83006c"
+          "world_hash": "sha256:04d5574b48466a75e82a27bfd56b3819968cb16943d74c289f8f0b96204a0a4c"
         }
       },
       "step": 4
@@ -2755,10 +2755,10 @@
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Hypothetical Community Hospital attests qualification for tier B under “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:074784182d09c3168197326543a8530a8014bf57e606aafccc9d8d3c3f15552b",
+        "hash": "sha256:1b77e967919267a89ec659375c7eb8de9f3fabe657b97cad9da3452387a683d3",
         "index": 3,
         "kind": "attest",
-        "prev": "sha256:600bbc4055067878c4e508fd30a39ee9821546e1ed49b60ade57623cd8859e78",
+        "prev": "sha256:cb39ca96b90e15321861803535a37ee1f56375f4a9dece4846be6cb429a3092e",
         "signers": [
           {
             "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
@@ -2794,7 +2794,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -2805,13 +2805,13 @@
               }
             ]
           },
-          "event_hash": "sha256:074784182d09c3168197326543a8530a8014bf57e606aafccc9d8d3c3f15552b",
+          "event_hash": "sha256:1b77e967919267a89ec659375c7eb8de9f3fabe657b97cad9da3452387a683d3",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:8e490e5784f063346c7e5c6e6c47def0bc61bf7852e6a1cd64b55b9703fa1a2a",
+          "chain_state_hash": "sha256:dc3cf9aa0bb7c02f75c005fd1af3f62f18e29579cbf7466a8c9b1baee3d91e9c",
           "checks": [
             {
               "id": "envelope",
@@ -2891,6 +2891,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -2911,7 +2918,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2956,7 +2963,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "C"
                 },
-                "state_hash": "sha256:8e490e5784f063346c7e5c6e6c47def0bc61bf7852e6a1cd64b55b9703fa1a2a",
+                "state_hash": "sha256:dc3cf9aa0bb7c02f75c005fd1af3f62f18e29579cbf7466a8c9b1baee3d91e9c",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -2965,13 +2972,13 @@
               }
             ]
           },
-          "event_hash": "sha256:074784182d09c3168197326543a8530a8014bf57e606aafccc9d8d3c3f15552b",
+          "event_hash": "sha256:1b77e967919267a89ec659375c7eb8de9f3fabe657b97cad9da3452387a683d3",
           "reason": "",
-          "world_hash": "sha256:0070969a6e6b04d6081b5e3fbb18fb6ba56bb9c0e5bc4a542f0004df5e09f691"
+          "world_hash": "sha256:ee1c2b30ada0536ea71b50cb7768e95cf79069a2737c7fdb8cc2558ced195d5c"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:8e490e5784f063346c7e5c6e6c47def0bc61bf7852e6a1cd64b55b9703fa1a2a",
+          "chain_state_hash": "sha256:dc3cf9aa0bb7c02f75c005fd1af3f62f18e29579cbf7466a8c9b1baee3d91e9c",
           "checks": [
             {
               "id": "envelope",
@@ -3051,6 +3058,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -3071,7 +3085,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3116,7 +3130,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "C"
                 },
-                "state_hash": "sha256:8e490e5784f063346c7e5c6e6c47def0bc61bf7852e6a1cd64b55b9703fa1a2a",
+                "state_hash": "sha256:dc3cf9aa0bb7c02f75c005fd1af3f62f18e29579cbf7466a8c9b1baee3d91e9c",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3125,9 +3139,9 @@
               }
             ]
           },
-          "event_hash": "sha256:074784182d09c3168197326543a8530a8014bf57e606aafccc9d8d3c3f15552b",
+          "event_hash": "sha256:1b77e967919267a89ec659375c7eb8de9f3fabe657b97cad9da3452387a683d3",
           "reason": "",
-          "world_hash": "sha256:0070969a6e6b04d6081b5e3fbb18fb6ba56bb9c0e5bc4a542f0004df5e09f691"
+          "world_hash": "sha256:ee1c2b30ada0536ea71b50cb7768e95cf79069a2737c7fdb8cc2558ced195d5c"
         }
       },
       "step": 5
@@ -3137,17 +3151,17 @@
       "event": {
         "at": "2027-01-07T15:00:00Z",
         "body": {
-          "target": "sha256:074784182d09c3168197326543a8530a8014bf57e606aafccc9d8d3c3f15552b"
+          "target": "sha256:1b77e967919267a89ec659375c7eb8de9f3fabe657b97cad9da3452387a683d3"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
         "by_name": "Example Medical Supply Co.",
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Example Medical Supply Co. acknowledges Hypothetical Community Hospital’s UP:Tier-Selection claim under “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:dffcd8d320cd5d04432e7d2ac2cb6795153a1d0aea8e9a35d646eead3526d383",
+        "hash": "sha256:1d6827060dd5fa1eb54ac38cf7e7f6bf5ba77eefea3e7abee7c1fa50ca132cf6",
         "index": 4,
         "kind": "accept",
-        "prev": "sha256:8e490e5784f063346c7e5c6e6c47def0bc61bf7852e6a1cd64b55b9703fa1a2a",
+        "prev": "sha256:dc3cf9aa0bb7c02f75c005fd1af3f62f18e29579cbf7466a8c9b1baee3d91e9c",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -3183,7 +3197,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -3194,13 +3208,13 @@
               }
             ]
           },
-          "event_hash": "sha256:dffcd8d320cd5d04432e7d2ac2cb6795153a1d0aea8e9a35d646eead3526d383",
+          "event_hash": "sha256:1d6827060dd5fa1eb54ac38cf7e7f6bf5ba77eefea3e7abee7c1fa50ca132cf6",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+          "chain_state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
           "checks": [
             {
               "id": "envelope",
@@ -3286,7 +3300,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3331,7 +3345,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3340,13 +3354,13 @@
               }
             ]
           },
-          "event_hash": "sha256:dffcd8d320cd5d04432e7d2ac2cb6795153a1d0aea8e9a35d646eead3526d383",
+          "event_hash": "sha256:1d6827060dd5fa1eb54ac38cf7e7f6bf5ba77eefea3e7abee7c1fa50ca132cf6",
           "reason": "",
-          "world_hash": "sha256:1810e645eac1577738193a58a927f32df3c6a20bc77a1e716fc6443db9b4f9c9"
+          "world_hash": "sha256:9bbf9094f2f2513c09a3e3dab37373dc87ce437ef4fc939eb1339182a9ac3621"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+          "chain_state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
           "checks": [
             {
               "id": "envelope",
@@ -3432,7 +3446,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3477,7 +3491,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3486,9 +3500,9 @@
               }
             ]
           },
-          "event_hash": "sha256:dffcd8d320cd5d04432e7d2ac2cb6795153a1d0aea8e9a35d646eead3526d383",
+          "event_hash": "sha256:1d6827060dd5fa1eb54ac38cf7e7f6bf5ba77eefea3e7abee7c1fa50ca132cf6",
           "reason": "",
-          "world_hash": "sha256:1810e645eac1577738193a58a927f32df3c6a20bc77a1e716fc6443db9b4f9c9"
+          "world_hash": "sha256:9bbf9094f2f2513c09a3e3dab37373dc87ce437ef4fc939eb1339182a9ac3621"
         }
       },
       "step": 6
@@ -3504,12 +3518,12 @@
                 "def": "sha256:b4702b4663f074fff69b20fa34d5eaf46e5c26d1912365cc9288f159e5889701",
                 "n": "participation",
                 "params": {
-                  "parent": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be"
+                  "parent": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb"
                 },
                 "term": "UP:Participation"
               },
               {
-                "def": "sha256:b6428925befec7c2267083b0664c08c2b7700f93f570f0ef3219c4b61b516d75",
+                "def": "sha256:caca2ea12ee3bdab2d1c22cd36ffa18970e3e65991a60b9ca0724982f0e710e5",
                 "n": "tier",
                 "params": {
                   "effective": "on-ack",
@@ -3614,7 +3628,7 @@
         "chain": 2,
         "chain_label": "Participation of Sample Regional Clinic",
         "description": "Sample Regional Clinic proposes “Participation of Sample Regional Clinic”.",
-        "hash": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+        "hash": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
         "index": 0,
         "kind": "propose",
         "prev": null,
@@ -3723,7 +3737,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -3740,13 +3754,13 @@
               }
             ]
           },
-          "event_hash": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+          "event_hash": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
           "reason": "The parent agreement is not executed at this time.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:2848ba439745c27aa019bb54876c397f5dc657b02fb907b4efe8e89bb1156495",
+          "chain_state_hash": "sha256:8fe143a71495ad347ae35b34dfc176f48b374e236ff50b3d8b5ae7c86a390113",
           "checks": [
             {
               "id": "envelope",
@@ -3860,7 +3874,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3905,7 +3919,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -3915,18 +3929,18 @@
               {
                 "chain": 2,
                 "label": "Participation of Sample Regional Clinic",
-                "state_hash": "sha256:2848ba439745c27aa019bb54876c397f5dc657b02fb907b4efe8e89bb1156495",
+                "state_hash": "sha256:8fe143a71495ad347ae35b34dfc176f48b374e236ff50b3d8b5ae7c86a390113",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+          "event_hash": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
           "reason": "",
-          "world_hash": "sha256:8c10f2b7dccaafdbfb428711895c6472386fbcd310a8efed6582a005e4b363a5"
+          "world_hash": "sha256:6a39fed44f146fb7c6427eee8f71cb1f8324459a6b59005fc840c3d9e1630f86"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:2848ba439745c27aa019bb54876c397f5dc657b02fb907b4efe8e89bb1156495",
+          "chain_state_hash": "sha256:8fe143a71495ad347ae35b34dfc176f48b374e236ff50b3d8b5ae7c86a390113",
           "checks": [
             {
               "id": "envelope",
@@ -4040,7 +4054,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4085,7 +4099,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4095,14 +4109,14 @@
               {
                 "chain": 2,
                 "label": "Participation of Sample Regional Clinic",
-                "state_hash": "sha256:2848ba439745c27aa019bb54876c397f5dc657b02fb907b4efe8e89bb1156495",
+                "state_hash": "sha256:8fe143a71495ad347ae35b34dfc176f48b374e236ff50b3d8b5ae7c86a390113",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+          "event_hash": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
           "reason": "",
-          "world_hash": "sha256:8c10f2b7dccaafdbfb428711895c6472386fbcd310a8efed6582a005e4b363a5"
+          "world_hash": "sha256:6a39fed44f146fb7c6427eee8f71cb1f8324459a6b59005fc840c3d9e1630f86"
         }
       },
       "step": 7
@@ -4112,17 +4126,17 @@
       "event": {
         "at": "2027-01-10T13:00:00Z",
         "body": {
-          "target": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68"
+          "target": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
         "by_name": "Hypothetical Health Purchasing Alliance",
         "chain": 2,
         "chain_label": "Participation of Sample Regional Clinic",
         "description": "Hypothetical Health Purchasing Alliance signs the proposed “Participation of Sample Regional Clinic”.",
-        "hash": "sha256:54c1ad9bca05316a07cbc3755ab4d85abf72c0290ef0633e242f2c52361960b5",
+        "hash": "sha256:2085f71b6c738c4a272b2c0996ad0e34d6be99b43db492f7ead9c9ab4759f6c0",
         "index": 1,
         "kind": "accept",
-        "prev": "sha256:2848ba439745c27aa019bb54876c397f5dc657b02fb907b4efe8e89bb1156495",
+        "prev": "sha256:8fe143a71495ad347ae35b34dfc176f48b374e236ff50b3d8b5ae7c86a390113",
         "signers": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
@@ -4158,7 +4172,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -4175,13 +4189,13 @@
               }
             ]
           },
-          "event_hash": "sha256:54c1ad9bca05316a07cbc3755ab4d85abf72c0290ef0633e242f2c52361960b5",
+          "event_hash": "sha256:2085f71b6c738c4a272b2c0996ad0e34d6be99b43db492f7ead9c9ab4759f6c0",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:c8dea59d06cdf389ee05db45dc53873e7ff675230da8bc4775c8756dd96167e0",
+          "chain_state_hash": "sha256:b3a739a2a1d58af8904ce4d2b6a9fa9f43c51f7c3cebcbd1de1e87e9398871c6",
           "checks": [
             {
               "id": "envelope",
@@ -4274,7 +4288,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4319,7 +4333,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4329,18 +4343,18 @@
               {
                 "chain": 2,
                 "label": "Participation of Sample Regional Clinic",
-                "state_hash": "sha256:c8dea59d06cdf389ee05db45dc53873e7ff675230da8bc4775c8756dd96167e0",
+                "state_hash": "sha256:b3a739a2a1d58af8904ce4d2b6a9fa9f43c51f7c3cebcbd1de1e87e9398871c6",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:54c1ad9bca05316a07cbc3755ab4d85abf72c0290ef0633e242f2c52361960b5",
+          "event_hash": "sha256:2085f71b6c738c4a272b2c0996ad0e34d6be99b43db492f7ead9c9ab4759f6c0",
           "reason": "",
-          "world_hash": "sha256:ad13a033206fd57cc8acab28315084dd7718e43f1751354a00a41e43f32dfe08"
+          "world_hash": "sha256:713bf3879e521cf346441d70588758db316f51d031c999e27d8c569095101cfa"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:c8dea59d06cdf389ee05db45dc53873e7ff675230da8bc4775c8756dd96167e0",
+          "chain_state_hash": "sha256:b3a739a2a1d58af8904ce4d2b6a9fa9f43c51f7c3cebcbd1de1e87e9398871c6",
           "checks": [
             {
               "id": "envelope",
@@ -4433,7 +4447,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4478,7 +4492,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4488,14 +4502,14 @@
               {
                 "chain": 2,
                 "label": "Participation of Sample Regional Clinic",
-                "state_hash": "sha256:c8dea59d06cdf389ee05db45dc53873e7ff675230da8bc4775c8756dd96167e0",
+                "state_hash": "sha256:b3a739a2a1d58af8904ce4d2b6a9fa9f43c51f7c3cebcbd1de1e87e9398871c6",
                 "status": "proposed"
               }
             ]
           },
-          "event_hash": "sha256:54c1ad9bca05316a07cbc3755ab4d85abf72c0290ef0633e242f2c52361960b5",
+          "event_hash": "sha256:2085f71b6c738c4a272b2c0996ad0e34d6be99b43db492f7ead9c9ab4759f6c0",
           "reason": "",
-          "world_hash": "sha256:ad13a033206fd57cc8acab28315084dd7718e43f1751354a00a41e43f32dfe08"
+          "world_hash": "sha256:713bf3879e521cf346441d70588758db316f51d031c999e27d8c569095101cfa"
         }
       },
       "step": 8
@@ -4505,17 +4519,17 @@
       "event": {
         "at": "2027-01-10T16:00:00Z",
         "body": {
-          "target": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68"
+          "target": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
         "by_name": "Example Medical Supply Co.",
         "chain": 2,
         "chain_label": "Participation of Sample Regional Clinic",
         "description": "Example Medical Supply Co. signs the proposed “Participation of Sample Regional Clinic”.",
-        "hash": "sha256:29a5b1a35191176ce3d3fe6aeba8df874d298d34e59eb5baeb4faaaa564b24a1",
+        "hash": "sha256:9e418e8f27db0daefb0776816235bc37947e3563780cab1318892766c3de2a19",
         "index": 2,
         "kind": "accept",
-        "prev": "sha256:c8dea59d06cdf389ee05db45dc53873e7ff675230da8bc4775c8756dd96167e0",
+        "prev": "sha256:b3a739a2a1d58af8904ce4d2b6a9fa9f43c51f7c3cebcbd1de1e87e9398871c6",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -4551,7 +4565,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -4568,13 +4582,13 @@
               }
             ]
           },
-          "event_hash": "sha256:29a5b1a35191176ce3d3fe6aeba8df874d298d34e59eb5baeb4faaaa564b24a1",
+          "event_hash": "sha256:9e418e8f27db0daefb0776816235bc37947e3563780cab1318892766c3de2a19",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:daa8031af3aa2185d9d4ac9f8b8e5a9c504200bb05fb39917bc7abd237d1d405",
+          "chain_state_hash": "sha256:946ec3d3cab69f2b66370de38b501cf5e08647f14a31e754f7ec18a2558b5ebe",
           "checks": [
             {
               "id": "envelope",
@@ -4695,7 +4709,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4740,7 +4754,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4785,7 +4799,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "C"
                 },
-                "state_hash": "sha256:daa8031af3aa2185d9d4ac9f8b8e5a9c504200bb05fb39917bc7abd237d1d405",
+                "state_hash": "sha256:946ec3d3cab69f2b66370de38b501cf5e08647f14a31e754f7ec18a2558b5ebe",
                 "status": "executed",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4794,13 +4808,13 @@
               }
             ]
           },
-          "event_hash": "sha256:29a5b1a35191176ce3d3fe6aeba8df874d298d34e59eb5baeb4faaaa564b24a1",
+          "event_hash": "sha256:9e418e8f27db0daefb0776816235bc37947e3563780cab1318892766c3de2a19",
           "reason": "",
-          "world_hash": "sha256:fdec4beb598efc629dd8ea356208fb855e90494d8c39177365fc48ba8a00969b"
+          "world_hash": "sha256:b5b2ea0913737840afaa23960e4c7d0ee75d9ce0ef52563f96246a9ab3861cf8"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:daa8031af3aa2185d9d4ac9f8b8e5a9c504200bb05fb39917bc7abd237d1d405",
+          "chain_state_hash": "sha256:946ec3d3cab69f2b66370de38b501cf5e08647f14a31e754f7ec18a2558b5ebe",
           "checks": [
             {
               "id": "envelope",
@@ -4921,7 +4935,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -4966,7 +4980,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5011,7 +5025,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "C"
                 },
-                "state_hash": "sha256:daa8031af3aa2185d9d4ac9f8b8e5a9c504200bb05fb39917bc7abd237d1d405",
+                "state_hash": "sha256:946ec3d3cab69f2b66370de38b501cf5e08647f14a31e754f7ec18a2558b5ebe",
                 "status": "executed",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5020,9 +5034,9 @@
               }
             ]
           },
-          "event_hash": "sha256:29a5b1a35191176ce3d3fe6aeba8df874d298d34e59eb5baeb4faaaa564b24a1",
+          "event_hash": "sha256:9e418e8f27db0daefb0776816235bc37947e3563780cab1318892766c3de2a19",
           "reason": "",
-          "world_hash": "sha256:fdec4beb598efc629dd8ea356208fb855e90494d8c39177365fc48ba8a00969b"
+          "world_hash": "sha256:b5b2ea0913737840afaa23960e4c7d0ee75d9ce0ef52563f96246a9ab3861cf8"
         }
       },
       "step": 9
@@ -5046,10 +5060,10 @@
         "chain": 2,
         "chain_label": "Participation of Sample Regional Clinic",
         "description": "Sample Regional Clinic attests qualification for tier A under “Participation of Sample Regional Clinic”.",
-        "hash": "sha256:b331ac746f2bccbdc0681e8614a715a8f58cdca7a95acf0e2255ef82b0857ec5",
+        "hash": "sha256:1c589b42fb7a9863dff7a59c6ff29ddebe2a6b5f25bb83478ce68d70d5f89f50",
         "index": 3,
         "kind": "attest",
-        "prev": "sha256:daa8031af3aa2185d9d4ac9f8b8e5a9c504200bb05fb39917bc7abd237d1d405",
+        "prev": "sha256:946ec3d3cab69f2b66370de38b501cf5e08647f14a31e754f7ec18a2558b5ebe",
         "signers": [
           {
             "key": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
@@ -5090,7 +5104,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -5107,13 +5121,13 @@
               }
             ]
           },
-          "event_hash": "sha256:b331ac746f2bccbdc0681e8614a715a8f58cdca7a95acf0e2255ef82b0857ec5",
+          "event_hash": "sha256:1c589b42fb7a9863dff7a59c6ff29ddebe2a6b5f25bb83478ce68d70d5f89f50",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+          "chain_state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
           "checks": [
             {
               "id": "envelope",
@@ -5200,6 +5214,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -5227,7 +5248,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5272,7 +5293,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5317,7 +5338,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5326,13 +5347,13 @@
               }
             ]
           },
-          "event_hash": "sha256:b331ac746f2bccbdc0681e8614a715a8f58cdca7a95acf0e2255ef82b0857ec5",
+          "event_hash": "sha256:1c589b42fb7a9863dff7a59c6ff29ddebe2a6b5f25bb83478ce68d70d5f89f50",
           "reason": "",
-          "world_hash": "sha256:e5e06e8dfc11dba4d17d492096b81abc168364dffb31742cdb905ac312f6f22f"
+          "world_hash": "sha256:8a1a8a5980d53e40df32f7ed44490ad4153a053f883e02ad756daec60b255011"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+          "chain_state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
           "checks": [
             {
               "id": "envelope",
@@ -5419,6 +5440,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -5446,7 +5474,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+                "state_hash": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5491,7 +5519,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5536,7 +5564,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5545,9 +5573,9 @@
               }
             ]
           },
-          "event_hash": "sha256:b331ac746f2bccbdc0681e8614a715a8f58cdca7a95acf0e2255ef82b0857ec5",
+          "event_hash": "sha256:1c589b42fb7a9863dff7a59c6ff29ddebe2a6b5f25bb83478ce68d70d5f89f50",
           "reason": "",
-          "world_hash": "sha256:e5e06e8dfc11dba4d17d492096b81abc168364dffb31742cdb905ac312f6f22f"
+          "world_hash": "sha256:8a1a8a5980d53e40df32f7ed44490ad4153a053f883e02ad756daec60b255011"
         }
       },
       "step": 10
@@ -5570,7 +5598,7 @@
                     "currency": "USD",
                     "value": "940.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "100"
                 },
                 {
@@ -5582,7 +5610,7 @@
                     "currency": "USD",
                     "value": "435.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "20"
                 },
                 {
@@ -5594,7 +5622,7 @@
                     "currency": "USD",
                     "value": "455.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "50"
                 },
                 {
@@ -5606,7 +5634,7 @@
                     "currency": "USD",
                     "value": "1220.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "400"
                 }
               ],
@@ -5627,10 +5655,10 @@
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Example Medical Supply Co. reports sales for the period under “Master agreement (hypothetical)”.",
-        "hash": "sha256:0647c16d5762fce9c307eb9c31bba1fce6d74457b69606027b7ef4a5a002e569",
+        "hash": "sha256:6ad452a445d594ffceb2ea383a7e262fe0535691b2ef4d44eb768c59edfa2499",
         "index": 2,
         "kind": "attest",
-        "prev": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+        "prev": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -5643,7 +5671,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -5666,7 +5694,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -5683,13 +5711,13 @@
               }
             ]
           },
-          "event_hash": "sha256:0647c16d5762fce9c307eb9c31bba1fce6d74457b69606027b7ef4a5a002e569",
+          "event_hash": "sha256:6ad452a445d594ffceb2ea383a7e262fe0535691b2ef4d44eb768c59edfa2499",
           "reason": "The event does not reference the current state hash: it was built on a different history.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+          "chain_state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
           "checks": [
             {
               "id": "envelope",
@@ -5769,6 +5797,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -5784,7 +5819,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -5809,7 +5844,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -5828,7 +5863,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+                "state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5873,7 +5908,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5918,7 +5953,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -5927,13 +5962,13 @@
               }
             ]
           },
-          "event_hash": "sha256:0647c16d5762fce9c307eb9c31bba1fce6d74457b69606027b7ef4a5a002e569",
+          "event_hash": "sha256:6ad452a445d594ffceb2ea383a7e262fe0535691b2ef4d44eb768c59edfa2499",
           "reason": "",
-          "world_hash": "sha256:701c8f825b379d7ff6145a623c0619a82678f20eeb4c2db2a89a613ca0602a7b"
+          "world_hash": "sha256:c85be43ee64c8d417886856fe940597dfd737a5f1892741e3470de4c1059d48e"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+          "chain_state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
           "checks": [
             {
               "id": "envelope",
@@ -6013,6 +6048,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -6028,7 +6070,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -6053,7 +6095,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -6072,7 +6114,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+                "state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6117,7 +6159,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+                "state_hash": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6162,7 +6204,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6171,9 +6213,9 @@
               }
             ]
           },
-          "event_hash": "sha256:0647c16d5762fce9c307eb9c31bba1fce6d74457b69606027b7ef4a5a002e569",
+          "event_hash": "sha256:6ad452a445d594ffceb2ea383a7e262fe0535691b2ef4d44eb768c59edfa2499",
           "reason": "",
-          "world_hash": "sha256:701c8f825b379d7ff6145a623c0619a82678f20eeb4c2db2a89a613ca0602a7b"
+          "world_hash": "sha256:c85be43ee64c8d417886856fe940597dfd737a5f1892741e3470de4c1059d48e"
         }
       },
       "step": 11
@@ -6197,10 +6239,10 @@
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Hypothetical Community Hospital attests qualification for tier A under “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:09307e06a52cfd4ea5bf01e7cb8d20654cffe88b6feda63b7ed3490e260ff2ce",
+        "hash": "sha256:611e2494482a07e9058a51a379aa5e670863895f6823fa06c8cca7aef574b423",
         "index": 5,
         "kind": "attest",
-        "prev": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+        "prev": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
         "signers": [
           {
             "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
@@ -6236,7 +6278,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -6253,13 +6295,13 @@
               }
             ]
           },
-          "event_hash": "sha256:09307e06a52cfd4ea5bf01e7cb8d20654cffe88b6feda63b7ed3490e260ff2ce",
+          "event_hash": "sha256:611e2494482a07e9058a51a379aa5e670863895f6823fa06c8cca7aef574b423",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:f149824efd90e323845eac061a51fab77afeb96c71ddf0735a76de56f8068b7c",
+          "chain_state_hash": "sha256:af9cf3de3dc42454938a2116597e093026f1efa5560dceaa02fe17735c643e1a",
           "checks": [
             {
               "id": "envelope",
@@ -6339,6 +6381,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -6361,7 +6410,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -6386,7 +6435,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -6405,7 +6454,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+                "state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6450,7 +6499,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:f149824efd90e323845eac061a51fab77afeb96c71ddf0735a76de56f8068b7c",
+                "state_hash": "sha256:af9cf3de3dc42454938a2116597e093026f1efa5560dceaa02fe17735c643e1a",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6495,7 +6544,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6504,13 +6553,13 @@
               }
             ]
           },
-          "event_hash": "sha256:09307e06a52cfd4ea5bf01e7cb8d20654cffe88b6feda63b7ed3490e260ff2ce",
+          "event_hash": "sha256:611e2494482a07e9058a51a379aa5e670863895f6823fa06c8cca7aef574b423",
           "reason": "",
-          "world_hash": "sha256:eba00ebbadf56b9fed54e47e6ad97a9774c177316171e35071ccef58f2514c55"
+          "world_hash": "sha256:c07660f75df840214ee2f49459fab1e02b9e55d2b8b159fef6eae6c4b781c5a5"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:f149824efd90e323845eac061a51fab77afeb96c71ddf0735a76de56f8068b7c",
+          "chain_state_hash": "sha256:af9cf3de3dc42454938a2116597e093026f1efa5560dceaa02fe17735c643e1a",
           "checks": [
             {
               "id": "envelope",
@@ -6590,6 +6639,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -6612,7 +6668,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -6637,7 +6693,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -6656,7 +6712,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+                "state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6701,7 +6757,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "B"
                 },
-                "state_hash": "sha256:f149824efd90e323845eac061a51fab77afeb96c71ddf0735a76de56f8068b7c",
+                "state_hash": "sha256:af9cf3de3dc42454938a2116597e093026f1efa5560dceaa02fe17735c643e1a",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6746,7 +6802,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -6755,9 +6811,9 @@
               }
             ]
           },
-          "event_hash": "sha256:09307e06a52cfd4ea5bf01e7cb8d20654cffe88b6feda63b7ed3490e260ff2ce",
+          "event_hash": "sha256:611e2494482a07e9058a51a379aa5e670863895f6823fa06c8cca7aef574b423",
           "reason": "",
-          "world_hash": "sha256:eba00ebbadf56b9fed54e47e6ad97a9774c177316171e35071ccef58f2514c55"
+          "world_hash": "sha256:c07660f75df840214ee2f49459fab1e02b9e55d2b8b159fef6eae6c4b781c5a5"
         }
       },
       "step": 12
@@ -6767,17 +6823,17 @@
       "event": {
         "at": "2027-02-16T09:00:00Z",
         "body": {
-          "target": "sha256:09307e06a52cfd4ea5bf01e7cb8d20654cffe88b6feda63b7ed3490e260ff2ce"
+          "target": "sha256:611e2494482a07e9058a51a379aa5e670863895f6823fa06c8cca7aef574b423"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
         "by_name": "Example Medical Supply Co.",
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Example Medical Supply Co. acknowledges Hypothetical Community Hospital’s UP:Tier-Selection claim under “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:20f8869c719f571281fec09c2cbe55331d49f5b6e138e3a45d964e27a15e0c01",
+        "hash": "sha256:48ea0269b2bfc61ccfda723dac5dd13a19efd04f17e33c06afd468962e4c14af",
         "index": 6,
         "kind": "accept",
-        "prev": "sha256:f149824efd90e323845eac061a51fab77afeb96c71ddf0735a76de56f8068b7c",
+        "prev": "sha256:af9cf3de3dc42454938a2116597e093026f1efa5560dceaa02fe17735c643e1a",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -6813,7 +6869,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -6830,13 +6886,13 @@
               }
             ]
           },
-          "event_hash": "sha256:20f8869c719f571281fec09c2cbe55331d49f5b6e138e3a45d964e27a15e0c01",
+          "event_hash": "sha256:48ea0269b2bfc61ccfda723dac5dd13a19efd04f17e33c06afd468962e4c14af",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+          "chain_state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
           "checks": [
             {
               "id": "envelope",
@@ -6924,7 +6980,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -6949,7 +7005,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -6968,7 +7024,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+                "state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7013,7 +7069,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7058,7 +7114,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7067,13 +7123,13 @@
               }
             ]
           },
-          "event_hash": "sha256:20f8869c719f571281fec09c2cbe55331d49f5b6e138e3a45d964e27a15e0c01",
+          "event_hash": "sha256:48ea0269b2bfc61ccfda723dac5dd13a19efd04f17e33c06afd468962e4c14af",
           "reason": "",
-          "world_hash": "sha256:f3a1b82eae7289cb55826a2520e1a621d4b6457d2645d4a3276fcf28de4b1cbd"
+          "world_hash": "sha256:af19163d515b5aac58705a1696d5753a1331e8f5c78979ed363c7716dd0338e8"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+          "chain_state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
           "checks": [
             {
               "id": "envelope",
@@ -7161,7 +7217,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -7186,7 +7242,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -7205,7 +7261,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+                "state_hash": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7250,7 +7306,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7295,7 +7351,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7304,9 +7360,9 @@
               }
             ]
           },
-          "event_hash": "sha256:20f8869c719f571281fec09c2cbe55331d49f5b6e138e3a45d964e27a15e0c01",
+          "event_hash": "sha256:48ea0269b2bfc61ccfda723dac5dd13a19efd04f17e33c06afd468962e4c14af",
           "reason": "",
-          "world_hash": "sha256:f3a1b82eae7289cb55826a2520e1a621d4b6457d2645d4a3276fcf28de4b1cbd"
+          "world_hash": "sha256:af19163d515b5aac58705a1696d5753a1331e8f5c78979ed363c7716dd0338e8"
         }
       },
       "step": 13
@@ -7337,10 +7393,10 @@
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Example Medical Supply Co. attests payment of the administrative fee under “Master agreement (hypothetical)”.",
-        "hash": "sha256:abe368d557d38dba42319ad822225a32cb9238d900893126658ee363f2415f6e",
+        "hash": "sha256:1a065cd31fa7b3995aab2a8145eb853bf5b6ec8dd61425fa987c2c7cf8b95915",
         "index": 3,
         "kind": "attest",
-        "prev": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+        "prev": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -7353,7 +7409,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -7376,7 +7432,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -7393,13 +7449,13 @@
               }
             ]
           },
-          "event_hash": "sha256:abe368d557d38dba42319ad822225a32cb9238d900893126658ee363f2415f6e",
+          "event_hash": "sha256:1a065cd31fa7b3995aab2a8145eb853bf5b6ec8dd61425fa987c2c7cf8b95915",
           "reason": "The event does not reference the current state hash: it was built on a different history.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:ec9191a118e6dec0c1613475d87e7635e3ec339abdaedfc050e7dc3e3c567f87",
+          "chain_state_hash": "sha256:1855dc47e305330db725f1f1933e78f0e75410836f8e6a6496f6a22906a04797",
           "checks": [
             {
               "id": "envelope",
@@ -7479,6 +7535,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -7494,7 +7557,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -7519,7 +7582,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -7538,7 +7601,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:ec9191a118e6dec0c1613475d87e7635e3ec339abdaedfc050e7dc3e3c567f87",
+                "state_hash": "sha256:1855dc47e305330db725f1f1933e78f0e75410836f8e6a6496f6a22906a04797",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7583,7 +7646,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7628,7 +7691,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7637,13 +7700,13 @@
               }
             ]
           },
-          "event_hash": "sha256:abe368d557d38dba42319ad822225a32cb9238d900893126658ee363f2415f6e",
+          "event_hash": "sha256:1a065cd31fa7b3995aab2a8145eb853bf5b6ec8dd61425fa987c2c7cf8b95915",
           "reason": "",
-          "world_hash": "sha256:ed4d0ce9bcf9338749548c7f4604276c7d68f8a00cc0b45ecb9890d4b39a0af3"
+          "world_hash": "sha256:9d60f0540c6ebb14cf31e516c9a0537c65bf17b224775d1d3133815f483909fc"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:ec9191a118e6dec0c1613475d87e7635e3ec339abdaedfc050e7dc3e3c567f87",
+          "chain_state_hash": "sha256:1855dc47e305330db725f1f1933e78f0e75410836f8e6a6496f6a22906a04797",
           "checks": [
             {
               "id": "envelope",
@@ -7723,6 +7786,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -7738,7 +7808,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -7763,7 +7833,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-03T00:00:00Z",
                     "duty": "pay",
@@ -7782,7 +7852,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:ec9191a118e6dec0c1613475d87e7635e3ec339abdaedfc050e7dc3e3c567f87",
+                "state_hash": "sha256:1855dc47e305330db725f1f1933e78f0e75410836f8e6a6496f6a22906a04797",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7827,7 +7897,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7872,7 +7942,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -7881,9 +7951,9 @@
               }
             ]
           },
-          "event_hash": "sha256:abe368d557d38dba42319ad822225a32cb9238d900893126658ee363f2415f6e",
+          "event_hash": "sha256:1a065cd31fa7b3995aab2a8145eb853bf5b6ec8dd61425fa987c2c7cf8b95915",
           "reason": "",
-          "world_hash": "sha256:ed4d0ce9bcf9338749548c7f4604276c7d68f8a00cc0b45ecb9890d4b39a0af3"
+          "world_hash": "sha256:9d60f0540c6ebb14cf31e516c9a0537c65bf17b224775d1d3133815f483909fc"
         }
       },
       "step": 14
@@ -7893,17 +7963,17 @@
       "event": {
         "at": "2027-02-21T12:00:00Z",
         "body": {
-          "target": "sha256:abe368d557d38dba42319ad822225a32cb9238d900893126658ee363f2415f6e"
+          "target": "sha256:1a065cd31fa7b3995aab2a8145eb853bf5b6ec8dd61425fa987c2c7cf8b95915"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
         "by_name": "Hypothetical Health Purchasing Alliance",
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Hypothetical Health Purchasing Alliance acknowledges Example Medical Supply Co.’s UP:Admin-Fee claim under “Master agreement (hypothetical)”.",
-        "hash": "sha256:f870b82bb22749a70a2d8a1b3eb57caa6fd00e856c6e10973113fb62ddb3dcc8",
+        "hash": "sha256:403669434697bc6f661652f12ac45da60140bc0cea87dc04469798489c1850f0",
         "index": 4,
         "kind": "accept",
-        "prev": "sha256:ec9191a118e6dec0c1613475d87e7635e3ec339abdaedfc050e7dc3e3c567f87",
+        "prev": "sha256:1855dc47e305330db725f1f1933e78f0e75410836f8e6a6496f6a22906a04797",
         "signers": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
@@ -7916,7 +7986,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -7939,7 +8009,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -7956,13 +8026,13 @@
               }
             ]
           },
-          "event_hash": "sha256:f870b82bb22749a70a2d8a1b3eb57caa6fd00e856c6e10973113fb62ddb3dcc8",
+          "event_hash": "sha256:403669434697bc6f661652f12ac45da60140bc0cea87dc04469798489c1850f0",
           "reason": "The event does not reference the current state hash: it was built on a different history.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:5fbd0d99d9928ec356f0c390a343a77434268587dde92051eea95fa9b23c8417",
+          "chain_state_hash": "sha256:c24baa43a60c170b748bbdbf8deddb97e964888d8d1d17edf548ca68000a4aaa",
           "checks": [
             {
               "id": "envelope",
@@ -8050,7 +8120,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -8075,7 +8145,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -8096,7 +8166,7 @@
                     "status": "discharged"
                   }
                 ],
-                "state_hash": "sha256:5fbd0d99d9928ec356f0c390a343a77434268587dde92051eea95fa9b23c8417",
+                "state_hash": "sha256:c24baa43a60c170b748bbdbf8deddb97e964888d8d1d17edf548ca68000a4aaa",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8141,7 +8211,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8186,7 +8256,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8195,13 +8265,13 @@
               }
             ]
           },
-          "event_hash": "sha256:f870b82bb22749a70a2d8a1b3eb57caa6fd00e856c6e10973113fb62ddb3dcc8",
+          "event_hash": "sha256:403669434697bc6f661652f12ac45da60140bc0cea87dc04469798489c1850f0",
           "reason": "",
-          "world_hash": "sha256:55eceb2dbecc11eb8326641e8d7196c73f4ab70bc60b53b02ccd0451d05b8ff7"
+          "world_hash": "sha256:206c1d38602a08e61af28c3b5516efcda192995e80a5aa70d24cf00b7c7f03cd"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:5fbd0d99d9928ec356f0c390a343a77434268587dde92051eea95fa9b23c8417",
+          "chain_state_hash": "sha256:c24baa43a60c170b748bbdbf8deddb97e964888d8d1d17edf548ca68000a4aaa",
           "checks": [
             {
               "id": "envelope",
@@ -8289,7 +8359,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -8314,7 +8384,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -8335,7 +8405,7 @@
                     "status": "discharged"
                   }
                 ],
-                "state_hash": "sha256:5fbd0d99d9928ec356f0c390a343a77434268587dde92051eea95fa9b23c8417",
+                "state_hash": "sha256:c24baa43a60c170b748bbdbf8deddb97e964888d8d1d17edf548ca68000a4aaa",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8380,7 +8450,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8425,7 +8495,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8434,9 +8504,9 @@
               }
             ]
           },
-          "event_hash": "sha256:f870b82bb22749a70a2d8a1b3eb57caa6fd00e856c6e10973113fb62ddb3dcc8",
+          "event_hash": "sha256:403669434697bc6f661652f12ac45da60140bc0cea87dc04469798489c1850f0",
           "reason": "",
-          "world_hash": "sha256:55eceb2dbecc11eb8326641e8d7196c73f4ab70bc60b53b02ccd0451d05b8ff7"
+          "world_hash": "sha256:206c1d38602a08e61af28c3b5516efcda192995e80a5aa70d24cf00b7c7f03cd"
         }
       },
       "step": 15
@@ -8459,7 +8529,7 @@
                     "currency": "USD",
                     "value": "376.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "40"
                 },
                 {
@@ -8471,7 +8541,7 @@
                     "currency": "USD",
                     "value": "546.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "60"
                 },
                 {
@@ -8483,7 +8553,7 @@
                     "currency": "USD",
                     "value": "525.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "25"
                 },
                 {
@@ -8495,7 +8565,7 @@
                     "currency": "USD",
                     "value": "500.50"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "55"
                 },
                 {
@@ -8507,7 +8577,7 @@
                     "currency": "USD",
                     "value": "1159.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "380"
                 }
               ],
@@ -8528,10 +8598,10 @@
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Example Medical Supply Co. reports sales for the period under “Master agreement (hypothetical)”.",
-        "hash": "sha256:2245a0d74eadf64038bb6bd3f634349f56061cd60fa0a7aeb6e13c8da4d1347b",
+        "hash": "sha256:ffed0913f675b027de70ba2b5922bab09353dd64918d42fb659ab2d4cc2427df",
         "index": 5,
         "kind": "attest",
-        "prev": "sha256:5fbd0d99d9928ec356f0c390a343a77434268587dde92051eea95fa9b23c8417",
+        "prev": "sha256:c24baa43a60c170b748bbdbf8deddb97e964888d8d1d17edf548ca68000a4aaa",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -8544,7 +8614,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -8567,7 +8637,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -8584,13 +8654,13 @@
               }
             ]
           },
-          "event_hash": "sha256:2245a0d74eadf64038bb6bd3f634349f56061cd60fa0a7aeb6e13c8da4d1347b",
+          "event_hash": "sha256:ffed0913f675b027de70ba2b5922bab09353dd64918d42fb659ab2d4cc2427df",
           "reason": "The event does not reference the current state hash: it was built on a different history.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:01792d1cc2e6adabe319dd57f2f0e1f1cb640642553304fe17cececd3b22907a",
+          "chain_state_hash": "sha256:4042eb1780e2da0c7ec48648b55d642b7ef78652653e9f70049820b754e6241f",
           "checks": [
             {
               "id": "envelope",
@@ -8670,6 +8740,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -8685,7 +8762,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -8706,7 +8783,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -8731,7 +8808,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -8756,7 +8833,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-31T00:00:00Z",
                     "duty": "pay",
@@ -8775,7 +8852,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:01792d1cc2e6adabe319dd57f2f0e1f1cb640642553304fe17cececd3b22907a",
+                "state_hash": "sha256:4042eb1780e2da0c7ec48648b55d642b7ef78652653e9f70049820b754e6241f",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8820,7 +8897,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8865,7 +8942,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -8874,13 +8951,13 @@
               }
             ]
           },
-          "event_hash": "sha256:2245a0d74eadf64038bb6bd3f634349f56061cd60fa0a7aeb6e13c8da4d1347b",
+          "event_hash": "sha256:ffed0913f675b027de70ba2b5922bab09353dd64918d42fb659ab2d4cc2427df",
           "reason": "",
-          "world_hash": "sha256:67ee979eaaeddc3f0215d4d76f01b8788dfd2d3d03042177a2ca8964525ab589"
+          "world_hash": "sha256:86e3bd189e48cd9095fb5abcabe243546fb6f6ed1befeec21f003c6e3f4b71e6"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:01792d1cc2e6adabe319dd57f2f0e1f1cb640642553304fe17cececd3b22907a",
+          "chain_state_hash": "sha256:4042eb1780e2da0c7ec48648b55d642b7ef78652653e9f70049820b754e6241f",
           "checks": [
             {
               "id": "envelope",
@@ -8960,6 +9037,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -8975,7 +9059,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -8996,7 +9080,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -9021,7 +9105,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -9046,7 +9130,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-31T00:00:00Z",
                     "duty": "pay",
@@ -9065,7 +9149,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:01792d1cc2e6adabe319dd57f2f0e1f1cb640642553304fe17cececd3b22907a",
+                "state_hash": "sha256:4042eb1780e2da0c7ec48648b55d642b7ef78652653e9f70049820b754e6241f",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9110,7 +9194,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9155,7 +9239,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9164,9 +9248,9 @@
               }
             ]
           },
-          "event_hash": "sha256:2245a0d74eadf64038bb6bd3f634349f56061cd60fa0a7aeb6e13c8da4d1347b",
+          "event_hash": "sha256:ffed0913f675b027de70ba2b5922bab09353dd64918d42fb659ab2d4cc2427df",
           "reason": "",
-          "world_hash": "sha256:67ee979eaaeddc3f0215d4d76f01b8788dfd2d3d03042177a2ca8964525ab589"
+          "world_hash": "sha256:86e3bd189e48cd9095fb5abcabe243546fb6f6ed1befeec21f003c6e3f4b71e6"
         }
       },
       "step": 16
@@ -9197,10 +9281,10 @@
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Example Medical Supply Co. attests payment of the administrative fee under “Master agreement (hypothetical)”.",
-        "hash": "sha256:19ee0a43c0c1510d9bc5c5c1a825e471d2016f7d45d7d094f52a2eec4ab9564e",
+        "hash": "sha256:41805b5448c22a00acbc077fa8b6bc1cc534bb1f6ecf794440f28705888f4228",
         "index": 6,
         "kind": "attest",
-        "prev": "sha256:01792d1cc2e6adabe319dd57f2f0e1f1cb640642553304fe17cececd3b22907a",
+        "prev": "sha256:4042eb1780e2da0c7ec48648b55d642b7ef78652653e9f70049820b754e6241f",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -9213,7 +9297,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -9236,7 +9320,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -9253,13 +9337,13 @@
               }
             ]
           },
-          "event_hash": "sha256:19ee0a43c0c1510d9bc5c5c1a825e471d2016f7d45d7d094f52a2eec4ab9564e",
+          "event_hash": "sha256:41805b5448c22a00acbc077fa8b6bc1cc534bb1f6ecf794440f28705888f4228",
           "reason": "The event does not reference the current state hash: it was built on a different history.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:3da56f06dd7b3594ec2eb909e942651951546772254930026395b03a49d5e91e",
+          "chain_state_hash": "sha256:0deb28d69ea581f18962deb152018527e4b4d960f1f610b8520bd72766695eb6",
           "checks": [
             {
               "id": "envelope",
@@ -9339,6 +9423,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -9354,7 +9445,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -9375,7 +9466,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -9400,7 +9491,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -9425,7 +9516,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-31T00:00:00Z",
                     "duty": "pay",
@@ -9444,7 +9535,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:3da56f06dd7b3594ec2eb909e942651951546772254930026395b03a49d5e91e",
+                "state_hash": "sha256:0deb28d69ea581f18962deb152018527e4b4d960f1f610b8520bd72766695eb6",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9489,7 +9580,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9534,7 +9625,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9543,13 +9634,13 @@
               }
             ]
           },
-          "event_hash": "sha256:19ee0a43c0c1510d9bc5c5c1a825e471d2016f7d45d7d094f52a2eec4ab9564e",
+          "event_hash": "sha256:41805b5448c22a00acbc077fa8b6bc1cc534bb1f6ecf794440f28705888f4228",
           "reason": "",
-          "world_hash": "sha256:39cca2442f07bfdaa6cf0438998597f7c1251a8362ce2ed74c357ac8bce6ca72"
+          "world_hash": "sha256:4c98c576a261a0f01108333cbd907febc51669e4698397f25d590f7131e6160d"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:3da56f06dd7b3594ec2eb909e942651951546772254930026395b03a49d5e91e",
+          "chain_state_hash": "sha256:0deb28d69ea581f18962deb152018527e4b4d960f1f610b8520bd72766695eb6",
           "checks": [
             {
               "id": "envelope",
@@ -9629,6 +9720,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -9644,7 +9742,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -9665,7 +9763,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -9690,7 +9788,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -9715,7 +9813,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-03-31T00:00:00Z",
                     "duty": "pay",
@@ -9734,7 +9832,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:3da56f06dd7b3594ec2eb909e942651951546772254930026395b03a49d5e91e",
+                "state_hash": "sha256:0deb28d69ea581f18962deb152018527e4b4d960f1f610b8520bd72766695eb6",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9779,7 +9877,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9824,7 +9922,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -9833,9 +9931,9 @@
               }
             ]
           },
-          "event_hash": "sha256:19ee0a43c0c1510d9bc5c5c1a825e471d2016f7d45d7d094f52a2eec4ab9564e",
+          "event_hash": "sha256:41805b5448c22a00acbc077fa8b6bc1cc534bb1f6ecf794440f28705888f4228",
           "reason": "",
-          "world_hash": "sha256:39cca2442f07bfdaa6cf0438998597f7c1251a8362ce2ed74c357ac8bce6ca72"
+          "world_hash": "sha256:4c98c576a261a0f01108333cbd907febc51669e4698397f25d590f7131e6160d"
         }
       },
       "step": 17
@@ -9845,17 +9943,17 @@
       "event": {
         "at": "2027-03-26T12:00:00Z",
         "body": {
-          "target": "sha256:19ee0a43c0c1510d9bc5c5c1a825e471d2016f7d45d7d094f52a2eec4ab9564e"
+          "target": "sha256:41805b5448c22a00acbc077fa8b6bc1cc534bb1f6ecf794440f28705888f4228"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
         "by_name": "Hypothetical Health Purchasing Alliance",
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Hypothetical Health Purchasing Alliance acknowledges Example Medical Supply Co.’s UP:Admin-Fee claim under “Master agreement (hypothetical)”.",
-        "hash": "sha256:0e97cacc4569cec17f763514907cbe9bfcb70d4aaeefbbe15bf99c8a45fbb92a",
+        "hash": "sha256:e7c756014c6a608db331459cdf337c7f80d6c2bffab7cdf38a71bfb0d70481be",
         "index": 7,
         "kind": "accept",
-        "prev": "sha256:3da56f06dd7b3594ec2eb909e942651951546772254930026395b03a49d5e91e",
+        "prev": "sha256:0deb28d69ea581f18962deb152018527e4b4d960f1f610b8520bd72766695eb6",
         "signers": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
@@ -9868,7 +9966,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -9891,7 +9989,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -9908,13 +10006,13 @@
               }
             ]
           },
-          "event_hash": "sha256:0e97cacc4569cec17f763514907cbe9bfcb70d4aaeefbbe15bf99c8a45fbb92a",
+          "event_hash": "sha256:e7c756014c6a608db331459cdf337c7f80d6c2bffab7cdf38a71bfb0d70481be",
           "reason": "The event does not reference the current state hash: it was built on a different history.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:89845772bda44c0a370f7db67b24dbf3706c3a971f501176032f56925cf41455",
+          "chain_state_hash": "sha256:07838bdabf2e050ff5e2c8d8926d230e090979c02b93a82af7a3c3ecb06b1e15",
           "checks": [
             {
               "id": "envelope",
@@ -10002,7 +10100,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -10023,7 +10121,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -10048,7 +10146,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -10073,7 +10171,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-03-26T12:00:00Z",
                     "due": "2027-03-31T00:00:00Z",
@@ -10094,7 +10192,7 @@
                     "status": "discharged"
                   }
                 ],
-                "state_hash": "sha256:89845772bda44c0a370f7db67b24dbf3706c3a971f501176032f56925cf41455",
+                "state_hash": "sha256:07838bdabf2e050ff5e2c8d8926d230e090979c02b93a82af7a3c3ecb06b1e15",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10139,7 +10237,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10184,7 +10282,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10193,13 +10291,13 @@
               }
             ]
           },
-          "event_hash": "sha256:0e97cacc4569cec17f763514907cbe9bfcb70d4aaeefbbe15bf99c8a45fbb92a",
+          "event_hash": "sha256:e7c756014c6a608db331459cdf337c7f80d6c2bffab7cdf38a71bfb0d70481be",
           "reason": "",
-          "world_hash": "sha256:8f8660f324778b4f6ebb92d95400cfb40bc5350b3a3aaae843eadc552e6e40fc"
+          "world_hash": "sha256:3a4f45cdea97c6828f44c945c9bf9f8d79cee38a41e453f438771aa260df40e6"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:89845772bda44c0a370f7db67b24dbf3706c3a971f501176032f56925cf41455",
+          "chain_state_hash": "sha256:07838bdabf2e050ff5e2c8d8926d230e090979c02b93a82af7a3c3ecb06b1e15",
           "checks": [
             {
               "id": "envelope",
@@ -10287,7 +10385,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -10308,7 +10406,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -10333,7 +10431,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -10358,7 +10456,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-03-26T12:00:00Z",
                     "due": "2027-03-31T00:00:00Z",
@@ -10379,7 +10477,7 @@
                     "status": "discharged"
                   }
                 ],
-                "state_hash": "sha256:89845772bda44c0a370f7db67b24dbf3706c3a971f501176032f56925cf41455",
+                "state_hash": "sha256:07838bdabf2e050ff5e2c8d8926d230e090979c02b93a82af7a3c3ecb06b1e15",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10424,7 +10522,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10469,7 +10567,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10478,9 +10576,9 @@
               }
             ]
           },
-          "event_hash": "sha256:0e97cacc4569cec17f763514907cbe9bfcb70d4aaeefbbe15bf99c8a45fbb92a",
+          "event_hash": "sha256:e7c756014c6a608db331459cdf337c7f80d6c2bffab7cdf38a71bfb0d70481be",
           "reason": "",
-          "world_hash": "sha256:8f8660f324778b4f6ebb92d95400cfb40bc5350b3a3aaae843eadc552e6e40fc"
+          "world_hash": "sha256:3a4f45cdea97c6828f44c945c9bf9f8d79cee38a41e453f438771aa260df40e6"
         }
       },
       "step": 18
@@ -10503,7 +10601,7 @@
                     "currency": "USD",
                     "value": "1001.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "110"
                 },
                 {
@@ -10515,7 +10613,7 @@
                     "currency": "USD",
                     "value": "630.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "30"
                 },
                 {
@@ -10527,7 +10625,7 @@
                     "currency": "USD",
                     "value": "409.50"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "45"
                 },
                 {
@@ -10539,7 +10637,7 @@
                     "currency": "USD",
                     "value": "1281.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "420"
                 }
               ],
@@ -10560,10 +10658,10 @@
         "chain": 0,
         "chain_label": "Master agreement (hypothetical)",
         "description": "Example Medical Supply Co. reports sales for the period under “Master agreement (hypothetical)”.",
-        "hash": "sha256:68b6d6b8d9b91dd50527f5e20bc70292a76d87369e9a0d2074e45f0b988387ec",
+        "hash": "sha256:b4b0219c07132940717aab6f95026e698f3d923e7c9962363833d0c89789724b",
         "index": 8,
         "kind": "attest",
-        "prev": "sha256:89845772bda44c0a370f7db67b24dbf3706c3a971f501176032f56925cf41455",
+        "prev": "sha256:07838bdabf2e050ff5e2c8d8926d230e090979c02b93a82af7a3c3ecb06b1e15",
         "signers": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
@@ -10576,7 +10674,7 @@
       "results": {
         "aggregator": {
           "accepted": false,
-          "chain_state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+          "chain_state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
           "checks": [
             {
               "id": "envelope",
@@ -10599,7 +10697,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -10616,13 +10714,13 @@
               }
             ]
           },
-          "event_hash": "sha256:68b6d6b8d9b91dd50527f5e20bc70292a76d87369e9a0d2074e45f0b988387ec",
+          "event_hash": "sha256:b4b0219c07132940717aab6f95026e698f3d923e7c9962363833d0c89789724b",
           "reason": "The event does not reference the current state hash: it was built on a different history.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+          "chain_state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
           "checks": [
             {
               "id": "envelope",
@@ -10702,6 +10800,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -10717,7 +10822,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -10738,7 +10843,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -10759,7 +10864,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-04-10T12:00:00Z",
                     "due": "2027-04-16T00:00:00Z",
@@ -10784,7 +10889,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -10809,7 +10914,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-03-26T12:00:00Z",
                     "due": "2027-03-31T00:00:00Z",
@@ -10834,7 +10939,7 @@
                       "currency": "USD",
                       "value": "66.43"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-05-01T00:00:00Z",
                     "duty": "pay",
@@ -10853,7 +10958,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+                "state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10865,7 +10970,7 @@
                 "label": "Participation of Hypothetical Community Hospital",
                 "obligations": [
                   {
-                    "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                    "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                     "clause": "disclosure",
                     "due": "2027-05-05T00:00:00Z",
                     "duty": "disclose",
@@ -10919,7 +11024,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10964,7 +11069,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -10973,13 +11078,13 @@
               }
             ]
           },
-          "event_hash": "sha256:68b6d6b8d9b91dd50527f5e20bc70292a76d87369e9a0d2074e45f0b988387ec",
+          "event_hash": "sha256:b4b0219c07132940717aab6f95026e698f3d923e7c9962363833d0c89789724b",
           "reason": "",
-          "world_hash": "sha256:9b707f72b0f60a3d1e522621115526640dacbd35129fe07257c6cb7bc7996da1"
+          "world_hash": "sha256:a2c0e7fe71864a0324a0abe4f45c895db650b6e14bab96a9aaf39bf02cb95ed9"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+          "chain_state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
           "checks": [
             {
               "id": "envelope",
@@ -11059,6 +11164,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -11074,7 +11186,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -11095,7 +11207,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -11116,7 +11228,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-04-10T12:00:00Z",
                     "due": "2027-04-16T00:00:00Z",
@@ -11141,7 +11253,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -11166,7 +11278,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-03-26T12:00:00Z",
                     "due": "2027-03-31T00:00:00Z",
@@ -11191,7 +11303,7 @@
                       "currency": "USD",
                       "value": "66.43"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-05-01T00:00:00Z",
                     "duty": "pay",
@@ -11210,7 +11322,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+                "state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -11222,7 +11334,7 @@
                 "label": "Participation of Hypothetical Community Hospital",
                 "obligations": [
                   {
-                    "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                    "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                     "clause": "disclosure",
                     "due": "2027-05-05T00:00:00Z",
                     "duty": "disclose",
@@ -11276,7 +11388,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+                "state_hash": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -11321,7 +11433,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -11330,9 +11442,9 @@
               }
             ]
           },
-          "event_hash": "sha256:68b6d6b8d9b91dd50527f5e20bc70292a76d87369e9a0d2074e45f0b988387ec",
+          "event_hash": "sha256:b4b0219c07132940717aab6f95026e698f3d923e7c9962363833d0c89789724b",
           "reason": "",
-          "world_hash": "sha256:9b707f72b0f60a3d1e522621115526640dacbd35129fe07257c6cb7bc7996da1"
+          "world_hash": "sha256:a2c0e7fe71864a0324a0abe4f45c895db650b6e14bab96a9aaf39bf02cb95ed9"
         }
       },
       "step": 19
@@ -11363,10 +11475,10 @@
         "chain": 1,
         "chain_label": "Participation of Hypothetical Community Hospital",
         "description": "Hypothetical Health Purchasing Alliance discloses administrative fees received under “Participation of Hypothetical Community Hospital”.",
-        "hash": "sha256:56d47e0c23ebe238c693b5a6e86fcd4f9860b1ffe84516bf0cea148a47f67e37",
+        "hash": "sha256:45b991155b95c6c1ac426e3bdbbeb5904a6437b3d869c5d70e426467d25c9e70",
         "index": 7,
         "kind": "attest",
-        "prev": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+        "prev": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
         "signers": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
@@ -11402,7 +11514,7 @@
               {
                 "chain": 0,
                 "label": "Master agreement (hypothetical)",
-                "state_hash": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+                "state_hash": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
                 "status": "proposed"
               },
               {
@@ -11419,13 +11531,13 @@
               }
             ]
           },
-          "event_hash": "sha256:56d47e0c23ebe238c693b5a6e86fcd4f9860b1ffe84516bf0cea148a47f67e37",
+          "event_hash": "sha256:45b991155b95c6c1ac426e3bdbbeb5904a6437b3d869c5d70e426467d25c9e70",
           "reason": "This event continues a chain that has no valid starting event in this copy, so it cannot apply.",
-          "world_hash": "sha256:9bf097122f110e3cd14fe4879694091117dfb575b8033639fc895cfdd40ed944"
+          "world_hash": "sha256:8ff473043312fbc1fff1a457cf452f0d0a956ad77a2168b9d496922ac95d3f3c"
         },
         "member": {
           "accepted": true,
-          "chain_state_hash": "sha256:63efffbfa110bc0351611b56325966e5b3e6e4fa0c32bb2d3197e9b463d89a96",
+          "chain_state_hash": "sha256:9eae1b0be4affe58cd0c22652e1db20d3d670f521e0808690334cdc27a1a9b76",
           "checks": [
             {
               "id": "envelope",
@@ -11505,6 +11617,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -11520,7 +11639,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -11541,7 +11660,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -11562,7 +11681,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-04-10T12:00:00Z",
                     "due": "2027-04-16T00:00:00Z",
@@ -11587,7 +11706,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -11612,7 +11731,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-03-26T12:00:00Z",
                     "due": "2027-03-31T00:00:00Z",
@@ -11637,7 +11756,7 @@
                       "currency": "USD",
                       "value": "66.43"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-05-01T00:00:00Z",
                     "duty": "pay",
@@ -11656,7 +11775,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+                "state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -11668,7 +11787,7 @@
                 "label": "Participation of Hypothetical Community Hospital",
                 "obligations": [
                   {
-                    "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                    "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                     "clause": "disclosure",
                     "discharged_at": "2027-04-20T12:00:00Z",
                     "due": "2027-05-05T00:00:00Z",
@@ -11724,7 +11843,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:63efffbfa110bc0351611b56325966e5b3e6e4fa0c32bb2d3197e9b463d89a96",
+                "state_hash": "sha256:9eae1b0be4affe58cd0c22652e1db20d3d670f521e0808690334cdc27a1a9b76",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -11736,7 +11855,7 @@
                 "label": "Participation of Sample Regional Clinic",
                 "obligations": [
                   {
-                    "chain": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                    "chain": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                     "clause": "disclosure",
                     "due": "2027-05-11T00:00:00Z",
                     "duty": "disclose",
@@ -11790,7 +11909,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -11799,13 +11918,13 @@
               }
             ]
           },
-          "event_hash": "sha256:56d47e0c23ebe238c693b5a6e86fcd4f9860b1ffe84516bf0cea148a47f67e37",
+          "event_hash": "sha256:45b991155b95c6c1ac426e3bdbbeb5904a6437b3d869c5d70e426467d25c9e70",
           "reason": "",
-          "world_hash": "sha256:ac151ff648f73b688c1608f592bceb5f7092a4f84460d072386c6db264aa1446"
+          "world_hash": "sha256:8ae225933392fb2c4cfed9ac8244439aedb031eb4c4c9c2b0b6591e7479dfe09"
         },
         "supplier": {
           "accepted": true,
-          "chain_state_hash": "sha256:63efffbfa110bc0351611b56325966e5b3e6e4fa0c32bb2d3197e9b463d89a96",
+          "chain_state_hash": "sha256:9eae1b0be4affe58cd0c22652e1db20d3d670f521e0808690334cdc27a1a9b76",
           "checks": [
             {
               "id": "envelope",
@@ -11885,6 +12004,13 @@
               "rule": "R-attest"
             },
             {
+              "id": "attest-data-types",
+              "label": "Rule: attest",
+              "passed": true,
+              "reason": "Each data field has the type its Term declares.",
+              "rule": "R-attest"
+            },
+            {
               "id": "attest-role",
               "label": "Role symmetry",
               "passed": true,
@@ -11900,7 +12026,7 @@
                 "label": "Master agreement (hypothetical)",
                 "obligations": [
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-02-10T12:00:00Z",
                     "due": "2027-02-16T00:00:00Z",
@@ -11921,7 +12047,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-03-10T12:00:00Z",
                     "due": "2027-03-16T00:00:00Z",
@@ -11942,7 +12068,7 @@
                     "status": "discharged"
                   },
                   {
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "reporting",
                     "discharged_at": "2027-04-10T12:00:00Z",
                     "due": "2027-04-16T00:00:00Z",
@@ -11967,7 +12093,7 @@
                       "currency": "USD",
                       "value": "61.00"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-02-21T12:00:00Z",
                     "due": "2027-03-03T00:00:00Z",
@@ -11992,7 +12118,7 @@
                       "currency": "USD",
                       "value": "62.13"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "discharged_at": "2027-03-26T12:00:00Z",
                     "due": "2027-03-31T00:00:00Z",
@@ -12017,7 +12143,7 @@
                       "currency": "USD",
                       "value": "66.43"
                     },
-                    "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+                    "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
                     "clause": "fee",
                     "due": "2027-05-01T00:00:00Z",
                     "duty": "pay",
@@ -12036,7 +12162,7 @@
                     "status": "open"
                   }
                 ],
-                "state_hash": "sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144",
+                "state_hash": "sha256:dcedbfcaf67081f19955e387ed70d5b9f30bdfd3f41476ee46e358d4129516fa",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -12048,7 +12174,7 @@
                 "label": "Participation of Hypothetical Community Hospital",
                 "obligations": [
                   {
-                    "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                    "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                     "clause": "disclosure",
                     "discharged_at": "2027-04-20T12:00:00Z",
                     "due": "2027-05-05T00:00:00Z",
@@ -12104,7 +12230,7 @@
                 "selections": {
                   "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07": "A"
                 },
-                "state_hash": "sha256:63efffbfa110bc0351611b56325966e5b3e6e4fa0c32bb2d3197e9b463d89a96",
+                "state_hash": "sha256:9eae1b0be4affe58cd0c22652e1db20d3d670f521e0808690334cdc27a1a9b76",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -12116,7 +12242,7 @@
                 "label": "Participation of Sample Regional Clinic",
                 "obligations": [
                   {
-                    "chain": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                    "chain": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                     "clause": "disclosure",
                     "due": "2027-05-11T00:00:00Z",
                     "duty": "disclose",
@@ -12170,7 +12296,7 @@
                 "selections": {
                   "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8": "A"
                 },
-                "state_hash": "sha256:869941a1928ba86342041381727eaa0205b9ba56c7369778b09dad61b8cdd1e6",
+                "state_hash": "sha256:09df870d2c837a9a08982ebac880a8906156f033c13d5eca1e9314f7b303ca39",
                 "status": "active",
                 "window": {
                   "end": "2028-01-01T00:00:00Z",
@@ -12179,9 +12305,9 @@
               }
             ]
           },
-          "event_hash": "sha256:56d47e0c23ebe238c693b5a6e86fcd4f9860b1ffe84516bf0cea148a47f67e37",
+          "event_hash": "sha256:45b991155b95c6c1ac426e3bdbbeb5904a6437b3d869c5d70e426467d25c9e70",
           "reason": "",
-          "world_hash": "sha256:ac151ff648f73b688c1608f592bceb5f7092a4f84460d072386c6db264aa1446"
+          "world_hash": "sha256:8ae225933392fb2c4cfed9ac8244439aedb031eb4c4c9c2b0b6591e7479dfe09"
         }
       },
       "step": 20

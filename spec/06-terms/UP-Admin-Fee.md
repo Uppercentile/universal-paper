@@ -11,7 +11,7 @@ Requires a payer role to pay a payee role a fee computed as a stated rate of rep
 | `payer` | `Role` | Role that pays the fee. |
 | `payee` | `Role` | Role that receives the fee. |
 | `rate` | `Rate` | Fee as a fraction of reported net sales. |
-| `report_clause` | `string` | Name of the Sales-Reporting clause whose reports form the base. |
+| `report_clause` | `Name` | Name of the Sales-Reporting clause whose reports form the base. |
 | `period` | `Period` | Fee period. |
 | `due` | `Period` | Time after each period's end by which the fee is due. |
 | `rounding` | `Rounding` | Rounding applied to each period's fee. |

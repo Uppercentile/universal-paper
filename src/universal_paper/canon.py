@@ -13,6 +13,9 @@ class CanonError(ValueError):
 
 def _str(s: str) -> str:
     out = ['"']
+    if any(0xD800 <= ord(ch) <= 0xDFFF for ch in s):
+        # RFC 8785 relies on I-JSON (RFC 7493), which forbids lone surrogates.
+        raise CanonError("strings must not contain lone surrogates")
     for ch in s:
         o = ord(ch)
         if ch == '"':
@@ -49,7 +52,11 @@ def _ser(v: Any, parts: list[str]) -> None:
             raise CanonError(f"integer out of range: {v}")
         parts.append(str(v))
     elif isinstance(v, float):
-        raise CanonError("non-integer JSON numbers are not allowed; use a Decimal string")
+        # JSON does not distinguish 100 from 100.0 or 1e2, and JavaScript cannot tell them
+        # apart after parsing, so an integral number is canonicalized as that integer.
+        if v != v or v in (float("inf"), float("-inf")) or not v.is_integer():
+            raise CanonError("non-integer JSON numbers are not allowed; use a Decimal string")
+        _ser(int(v), parts)
     elif isinstance(v, str):
         parts.append(_str(v))
     elif isinstance(v, (list, tuple)):
@@ -60,10 +67,13 @@ def _ser(v: Any, parts: list[str]) -> None:
             _ser(x, parts)
         parts.append("]")
     elif isinstance(v, dict):
-        parts.append("{")
-        for i, k in enumerate(sorted(v, key=lambda k: k.encode("utf-16-be"))):
+        for k in v:
             if not isinstance(k, str):
                 raise CanonError("object keys must be strings")
+            if not k.isascii():
+                raise CanonError("object keys must be ASCII (spec/01-domain.md §1.1)")
+        parts.append("{")
+        for i, k in enumerate(sorted(v, key=lambda k: k.encode("utf-16-be"))):
             if i:
                 parts.append(",")
             parts.append(_str(k))
@@ -80,6 +90,21 @@ def jcs(v: Any) -> bytes:
     return "".join(parts).encode("utf-8")
 
 
+def normalize(v: Any) -> Any:
+    """Turn integral floats (from JSON text such as 100.0 or 1e2) into ints, recursively.
+
+    Bundles are normalized on load so the evaluator sees numbers exactly as the JavaScript
+    engine does. Non-integral floats are left alone; canonicalization rejects them.
+    """
+    if isinstance(v, float) and v == v and v not in (float("inf"), float("-inf")) and v.is_integer():
+        return int(v)
+    if isinstance(v, dict):
+        return {k: normalize(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [normalize(x) for x in v]
+    return v
+
+
 def strip(o: dict) -> dict:
     return {k: v for k, v in o.items() if k != "sigs"}
 
@@ -94,6 +119,7 @@ def content_hash(o: Any) -> str:
 
 
 def hash_bytes(h: str) -> bytes:
-    if not (isinstance(h, str) and h.startswith("sha256:") and len(h) == 71):
+    if not (isinstance(h, str) and h.startswith("sha256:") and len(h) == 71
+            and all(c in "0123456789abcdef" for c in h[7:])):
         raise CanonError(f"not a hash: {h!r}")
     return bytes.fromhex(h[7:])

@@ -8,8 +8,8 @@ Lets the Member attest that it qualifies for a tier; the selection takes effect 
 
 | Name | Type | Meaning |
 |---|---|---|
-| `tiers_clause` | `string` | Name of the Tiers clause in the parent Agreement. |
-| `initial` | `string` | Tier in effect before any selection. |
+| `tiers_clause` | `Name` | Name of the Tiers clause in the parent Agreement. |
+| `initial` | `Name` | Tier in effect before any selection. |
 | `effective` | `"on-ack" | {next: Period}` | When an acknowledged selection takes effect. |
 
 No parameter has a default value (A6).
@@ -46,7 +46,7 @@ No parameter has a default value (A6).
 
 | Claim type | Data | Meaning |
 |---|---|---|
-| `UP:Tier-Selection/selects` | `{"option": "string", "basis": "string"}` | The Member attests that it meets the conditions of the named tier, stating the basis. |
+| `UP:Tier-Selection/selects` | `{"option": "Name", "basis": "string"}` | The Member attests that it meets the conditions of the named tier, stating the basis. |
 
 ## Human rendering
 

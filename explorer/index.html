@@ -384,7 +384,7 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
   <p>Universal Paper is an open draft specification (CC BY 4.0) with reference code (Apache-2.0). All parties, identifiers, prices, and rates shown are hypothetical. The JavaScript engine on this page is a second implementation that must reproduce every recorded Python trace exactly before it ships.</p>
 </footer>
 
-<script id="terms-json" type="application/json">[{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Admin-Fee","title":"Administrative fee","params":{"payer":{"type":"Role","doc":"Role that pays the fee."},"payee":{"type":"Role","doc":"Role that receives the fee."},"rate":{"type":"Rate","doc":"Fee as a fraction of reported net sales."},"report_clause":{"type":"string","doc":"Name of the Sales-Reporting clause whose reports form the base."},"period":{"type":"Period","doc":"Fee period."},"due":{"type":"Period","doc":"Time after each period's end by which the fee is due."},"rounding":{"type":"Rounding","doc":"Rounding applied to each period's fee."}},"forms":[{"form":"Duty","duty":"pay","obligor":{"param":"payer"},"obligee":{"param":"payee"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Admin-Fee/paid","ack":[{"param":"payee"}]},"amount":{"rate":{"param":"rate"},"base":{"claim":"UP:Sales-Reporting/report","clause":{"param":"report_clause"},"field":"total_net"},"rounding":{"param":"rounding"}}}],"claims":{"UP:Admin-Fee/paid":{"data":{"period":"{start: Time, end: Time}","amount":"Amount","reference":"string"},"doc":"The payer attests payment of the fee for the period. Discharges the duty when acknowledged by the payee."}},"render":"For each period of {{period|period}}, {{payer|role}} pays {{payee|role}} an administrative fee equal to {{rate|rate}} of the net sales reported for that period, rounded {{rounding|rounding}}, within {{due|period}} after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Audit","title":"Audit right","params":{"auditor":{"type":"Role","doc":"Role that may request an audit."},"auditee":{"type":"Role","doc":"Role whose records are audited."},"response":{"type":"Period","doc":"Time after a request by which records must be made available."},"max_requests":{"type":"int","doc":"Maximum requests per limit period."},"per":{"type":"Period","doc":"Limit period."}},"forms":[{"form":"Duty","duty":"make-records-available","obligor":{"param":"auditee"},"obligee":{"param":"auditor"},"trigger":{"on":"UP:Audit/request","by":[{"param":"auditor"}],"limit":{"count":{"param":"max_requests"},"per":{"param":"per"}}},"due":{"param":"response"},"discharge":{"claim":"UP:Audit/available","ack":[{"param":"auditor"}]}}],"claims":{"UP:Audit/request":{"data":{"scope":"string","lookback":"{start: Time, end: Time}"},"doc":"Request for an audit of records within the stated scope and time range."},"UP:Audit/available":{"data":{"request":"Hash"},"doc":"The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor."}},"render":"{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fee-Disclosure","title":"Fee disclosure","params":{"period":{"type":"Period","doc":"Disclosure period."},"due":{"type":"Period","doc":"Time after each period's end by which the disclosure is due."}},"forms":[{"form":"Duty","duty":"disclose","obligor":"aggregator","obligee":"member","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Fee-Disclosure/disclosed"}}],"claims":{"UP:Fee-Disclosure/disclosed":{"data":{"period":"{start: Time, end: Time}","received":"Amount","basis":"string"},"doc":"The Aggregator states the administrative fees it received from the Supplier for the period under the parent agreement, attributable to this Member where the parent agreement reports by participation."}},"render":"For each period of {{period|period}}, the Aggregator discloses to the Member, in writing, the amount of administrative fees it received from the Supplier under the parent agreement for that period, within {{due|period}} after the period ends. This clause records a disclosure process. It makes no statement about whether any arrangement satisfies any law.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fixed-Term","title":"Term of agreement","params":{"start":{"type":"Time","doc":"First instant the Agreement is in force."},"end":{"type":"Time","doc":"First instant the Agreement is no longer in force."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"}}],"claims":{},"render":"This Agreement is in force from {{start|time}} until {{end|time}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Governing-Law","title":"Governing law","params":{"law":{"type":"string","doc":"Governing law, e.g. a named jurisdiction."},"forum":{"type":"string","doc":"Forum for disputes."}},"forms":[],"claims":{},"render":"This Agreement is governed by the law of {{law}}. Disputes are resolved in {{forum}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Notices","title":"Notices","params":{},"forms":[],"claims":{},"render":"Any notice under this Agreement is given by a signed attestation recorded on this Agreement's chain of events, and is given at the time stated in that attestation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Overlay","title":"Overlay of an existing agreement","params":{"document":{"type":"Hash","doc":"SHA-256 hash of the existing contract document, as the parties hold it."},"document_title":{"type":"string","doc":"Title of the existing contract. Sealable."},"document_date":{"type":"Time","doc":"Date the existing contract was signed."},"governs":{"type":"\"document\" | \"this-record\"","doc":"Which text controls if this record and the existing contract are inconsistent."}},"forms":[],"claims":{},"render":"This record describes the agreement titled {{document_title}}, signed on {{document_date|time}}, whose document has the hash {{document}}. It does not amend or replace that agreement. If this record and that agreement are inconsistent, {{governs|governs}} controls.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Participation","title":"Participation in an aggregator agreement","params":{"parent":{"type":"ChainId","doc":"The chain of the parent Agreement."}},"forms":[{"form":"Link","parent":{"param":"parent"},"bind":["aggregator","supplier"]}],"claims":{},"render":"This Agreement is a participation under the agreement identified by {{parent}}. The Aggregator and the Supplier of that agreement are parties to this one in the same roles. This Agreement is in force only while that agreement is in force.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Price-Reference","title":"Price by reference to a price list","params":{"items":{"type":"[Identifier]","doc":"Items in scope."},"list_role":{"type":"Role","doc":"Role that attests the reference price list."},"factor":{"type":"Decimal","doc":"Multiplier applied to the reference price."},"rounding":{"type":"Rounding","doc":"Rounding applied to the result."}},"forms":[{"form":"Valuation","items":{"param":"items"},"source":{"reference":{"claim":"UP:Price-Reference/list","role":{"param":"list_role"},"factor":{"param":"factor"},"rounding":{"param":"rounding"}}}}],"claims":{"UP:Price-Reference/list":{"data":{"effective":"Time","prices":"[{item: Identifier, price: Amount}]"},"doc":"A reference price list, effective from the stated time."}},"render":"The price of each Item in scope is its price in the most recent reference price list attested by {{list_role|role}} that is effective at the time of purchase, multiplied by {{factor}} and rounded {{rounding|rounding}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Purchase-Commitment","title":"Purchase commitment","params":{"category":{"type":"string","doc":"Description of the product category."},"share":{"type":"Rate","doc":"Committed share of category purchases."},"period":{"type":"Period","doc":"Measurement period."},"due":{"type":"Period","doc":"Time after each period's end by which the attestation is due."}},"forms":[{"form":"Duty","duty":"attest-compliance","obligor":"member","obligee":"supplier","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Purchase-Commitment/met","ack":["supplier"]}}],"claims":{"UP:Purchase-Commitment/met":{"data":{"period":"{start: Time, end: Time}","basis":"string"},"doc":"The Member attests that it met the committed share for the period. Discharges the duty when acknowledged by the Supplier."}},"render":"The Member commits to purchase under this Agreement at least {{share|rate}} of its purchases of {{category}} in each period of {{period|period}}, and attests whether it met that commitment within {{due|period}} after each period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Renewing-Term","title":"Term of agreement with renewal","params":{"start":{"type":"Time","doc":"First instant in force."},"end":{"type":"Time","doc":"End of the initial term."},"renewal_period":{"type":"Period","doc":"Length of each renewal."},"max_renewals":{"type":"int","doc":"Maximum number of renewals."},"optout_roles":{"type":"[Role]","doc":"Roles that may prevent the next renewal."},"optout_notice":{"type":"Period","doc":"How long before a term ends an opt-out notice must be given."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"},"renew":{"period":{"param":"renewal_period"},"max":{"param":"max_renewals"},"optout_roles":{"param":"optout_roles"},"optout_notice":{"param":"optout_notice"}}}],"claims":{"UP:Renewing-Term/optout":{"data":{},"doc":"Notice that the Agreement will not renew at the end of the current term."}},"render":"This Agreement is in force from {{start|time}} until {{end|time}}. It then renews for successive periods of {{renewal_period|period}}, up to {{max_renewals}} times, unless {{optout_roles|role}} gives notice of non-renewal at least {{optout_notice|period}} before the end of the then-current term.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Sales-Reporting","title":"Sales reporting","params":{"reporter":{"type":"Role","doc":"Role that reports."},"recipient":{"type":"Role","doc":"Role that receives the report."},"period":{"type":"Period","doc":"Reporting period."},"due":{"type":"Period","doc":"Time after each period's end by which the report is due."}},"forms":[{"form":"Duty","duty":"report","obligor":{"param":"reporter"},"obligee":{"param":"recipient"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Sales-Reporting/report"}}],"claims":{"UP:Sales-Reporting/report":{"data":{"period":"{start: Time, end: Time}","lines":"[{participation: ChainId, item: Identifier, quantity: Decimal, net: Amount}]","total_net":"Amount"},"doc":"Sales for one period, by participation and Item, with the total net sales."}},"render":"{{reporter|role}} reports to {{recipient|role}} the sales made under this Agreement in each reporting period of {{period|period}}, by Member participation and Item, within {{due|period}} after the period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Cause","title":"Termination for cause","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate for cause."},"cure_period":{"type":"Period","doc":"Time allowed to cure after a breach notice."},"notice":{"type":"Period","doc":"Time from termination notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"},"requires":{"claim":"UP:Termination-Cause/breach","age":{"param":"cure_period"},"unless":"UP:Termination-Cause/cured"}}],"claims":{"UP:Termination-Cause/breach":{"data":{"description":"string"},"doc":"Notice describing an alleged material breach."},"UP:Termination-Cause/cured":{"data":{"breach":"Hash"},"doc":"Statement that the breach identified by the referenced notice has been cured. Effective only when acknowledged by the party that gave the breach notice."},"UP:Termination-Cause/notice":{"data":{"breach":"Hash"},"doc":"Notice of termination for the referenced, uncured breach."}},"render":"If a party commits a material breach, {{holders|role}} may give notice describing it. If the breach is not cured within {{cure_period|period}} of that notice, {{holders|role}} may terminate this Agreement by further notice, effective {{notice|period}} after that notice. A breach counts as cured only when the party that gave the breach notice acknowledges the cure.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Convenience","title":"Termination for convenience","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate."},"notice":{"type":"Period","doc":"Time from notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"}}],"claims":{"UP:Termination-Convenience/notice":{"data":{},"doc":"Notice of termination."}},"render":"{{holders|role}} may terminate this Agreement without cause by notice. Termination takes effect {{notice|period}} after the notice is given.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tier-Selection","title":"Tier attestation and selection","params":{"tiers_clause":{"type":"string","doc":"Name of the Tiers clause in the parent Agreement."},"initial":{"type":"string","doc":"Tier in effect before any selection."},"effective":{"type":"\"on-ack\" | {next: Period}","doc":"When an acknowledged selection takes effect."}},"forms":[{"form":"Selection","options":{"from":{"link":true,"clause":{"param":"tiers_clause"}}},"subject":"member","ack":["supplier"],"effective":{"param":"effective"},"initial":{"param":"initial"}}],"claims":{"UP:Tier-Selection/selects":{"data":{"option":"string","basis":"string"},"doc":"The Member attests that it meets the conditions of the named tier, stating the basis."}},"render":"The Member's tier is {{initial}} until changed under this clause. The Member may attest that it meets the conditions of another tier, stating the basis. The change takes effect when the Supplier acknowledges the attestation, {{effective|effective}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tiers","title":"Tiered price schedule","params":{"tiers":{"type":"[{name: string, conditions: string}]","doc":"The tiers, in order, with descriptive qualification conditions."},"prices":{"type":"[{item: Identifier, by: {<tier>: Amount}}]","doc":"Price of each Item in each tier."}},"forms":[{"form":"Valuation","source":{"table":{"param":"prices"},"options":{"param":"tiers"}}}],"claims":{},"render":"The following tiers apply. {{#each tiers}}Tier {{name}}: {{conditions}}. {{/each}}The price of each Item in each tier is: {{#each prices}}{{item}}: {{by|amount}}. {{/each}}Whether a Member meets a tier's conditions is established by that Member's attestation and the Supplier's acknowledgment, as set out in the tier selection clause of the Member's participation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}}]</script>
+<script id="terms-json" type="application/json">[{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Admin-Fee","title":"Administrative fee","params":{"payer":{"type":"Role","doc":"Role that pays the fee."},"payee":{"type":"Role","doc":"Role that receives the fee."},"rate":{"type":"Rate","doc":"Fee as a fraction of reported net sales."},"report_clause":{"type":"Name","doc":"Name of the Sales-Reporting clause whose reports form the base."},"period":{"type":"Period","doc":"Fee period."},"due":{"type":"Period","doc":"Time after each period's end by which the fee is due."},"rounding":{"type":"Rounding","doc":"Rounding applied to each period's fee."}},"forms":[{"form":"Duty","duty":"pay","obligor":{"param":"payer"},"obligee":{"param":"payee"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Admin-Fee/paid","ack":[{"param":"payee"}]},"amount":{"rate":{"param":"rate"},"base":{"claim":"UP:Sales-Reporting/report","clause":{"param":"report_clause"},"field":"total_net"},"rounding":{"param":"rounding"}}}],"claims":{"UP:Admin-Fee/paid":{"data":{"period":"{start: Time, end: Time}","amount":"Amount","reference":"string"},"doc":"The payer attests payment of the fee for the period. Discharges the duty when acknowledged by the payee."}},"render":"For each period of {{period|period}}, {{payer|role}} pays {{payee|role}} an administrative fee equal to {{rate|rate}} of the net sales reported for that period, rounded {{rounding|rounding}}, within {{due|period}} after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Audit","title":"Audit right","params":{"auditor":{"type":"Role","doc":"Role that may request an audit."},"auditee":{"type":"Role","doc":"Role whose records are audited."},"response":{"type":"Period","doc":"Time after a request by which records must be made available."},"max_requests":{"type":"int","doc":"Maximum requests per limit period."},"per":{"type":"Period","doc":"Limit period."}},"forms":[{"form":"Duty","duty":"make-records-available","obligor":{"param":"auditee"},"obligee":{"param":"auditor"},"trigger":{"on":"UP:Audit/request","by":[{"param":"auditor"}],"limit":{"count":{"param":"max_requests"},"per":{"param":"per"}}},"due":{"param":"response"},"discharge":{"claim":"UP:Audit/available","ack":[{"param":"auditor"}]}}],"claims":{"UP:Audit/request":{"data":{"scope":"string","lookback":"{start: Time, end: Time}"},"doc":"Request for an audit of records within the stated scope and time range."},"UP:Audit/available":{"data":{"request":"Hash"},"doc":"The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor."}},"render":"{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fee-Disclosure","title":"Fee disclosure","params":{"period":{"type":"Period","doc":"Disclosure period."},"due":{"type":"Period","doc":"Time after each period's end by which the disclosure is due."}},"forms":[{"form":"Duty","duty":"disclose","obligor":"aggregator","obligee":"member","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Fee-Disclosure/disclosed"}}],"claims":{"UP:Fee-Disclosure/disclosed":{"data":{"period":"{start: Time, end: Time}","received":"Amount","basis":"string"},"doc":"The Aggregator states the administrative fees it received from the Supplier for the period under the parent agreement, attributable to this Member where the parent agreement reports by participation."}},"render":"For each period of {{period|period}}, the Aggregator discloses to the Member, in writing, the amount of administrative fees it received from the Supplier under the parent agreement for that period, within {{due|period}} after the period ends. This clause records a disclosure process. It makes no statement about whether any arrangement satisfies any law.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fixed-Term","title":"Term of agreement","params":{"start":{"type":"Time","doc":"First instant the Agreement is in force."},"end":{"type":"Time","doc":"First instant the Agreement is no longer in force."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"}}],"claims":{},"render":"This Agreement is in force from {{start|time}} until {{end|time}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Governing-Law","title":"Governing law","params":{"law":{"type":"string","doc":"Governing law, e.g. a named jurisdiction."},"forum":{"type":"string","doc":"Forum for disputes."}},"forms":[],"claims":{},"render":"This Agreement is governed by the law of {{law}}. Disputes are resolved in {{forum}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Notices","title":"Notices","params":{},"forms":[],"claims":{},"render":"Any notice under this Agreement is given by a signed attestation recorded on this Agreement's chain of events, and is given at the time stated in that attestation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Overlay","title":"Overlay of an existing agreement","params":{"document":{"type":"Hash","doc":"SHA-256 hash of the existing contract document, as the parties hold it."},"document_title":{"type":"string","doc":"Title of the existing contract. Sealable."},"document_date":{"type":"Time","doc":"Date the existing contract was signed."},"governs":{"type":"\"document\" | \"this-record\"","doc":"Which text controls if this record and the existing contract are inconsistent."}},"forms":[],"claims":{},"render":"This record describes the agreement titled {{document_title}}, signed on {{document_date|time}}, whose document has the hash {{document}}. It does not amend or replace that agreement. If this record and that agreement are inconsistent, {{governs|governs}} controls.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Participation","title":"Participation in an aggregator agreement","params":{"parent":{"type":"ChainId","doc":"The chain of the parent Agreement."}},"forms":[{"form":"Link","parent":{"param":"parent"},"bind":["aggregator","supplier"]}],"claims":{},"render":"This Agreement is a participation under the agreement identified by {{parent}}. The Aggregator and the Supplier of that agreement are parties to this one in the same roles. This Agreement is in force only while that agreement is in force.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Price-Reference","title":"Price by reference to a price list","params":{"items":{"type":"[Identifier]","doc":"Items in scope."},"list_role":{"type":"Role","doc":"Role that attests the reference price list."},"factor":{"type":"Decimal","doc":"Multiplier applied to the reference price."},"rounding":{"type":"Rounding","doc":"Rounding applied to the result."}},"forms":[{"form":"Valuation","items":{"param":"items"},"source":{"reference":{"claim":"UP:Price-Reference/list","role":{"param":"list_role"},"factor":{"param":"factor"},"rounding":{"param":"rounding"}}}}],"claims":{"UP:Price-Reference/list":{"data":{"effective":"Time","prices":"[{item: Identifier, price: Amount}]"},"doc":"A reference price list, effective from the stated time."}},"render":"The price of each Item in scope is its price in the most recent reference price list attested by {{list_role|role}} that is effective at the time of purchase, multiplied by {{factor}} and rounded {{rounding|rounding}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Purchase-Commitment","title":"Purchase commitment","params":{"category":{"type":"string","doc":"Description of the product category."},"share":{"type":"Rate","doc":"Committed share of category purchases."},"period":{"type":"Period","doc":"Measurement period."},"due":{"type":"Period","doc":"Time after each period's end by which the attestation is due."}},"forms":[{"form":"Duty","duty":"attest-compliance","obligor":"member","obligee":"supplier","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Purchase-Commitment/met","ack":["supplier"]}}],"claims":{"UP:Purchase-Commitment/met":{"data":{"period":"{start: Time, end: Time}","basis":"string"},"doc":"The Member attests that it met the committed share for the period. Discharges the duty when acknowledged by the Supplier."}},"render":"The Member commits to purchase under this Agreement at least {{share|rate}} of its purchases of {{category}} in each period of {{period|period}}, and attests whether it met that commitment within {{due|period}} after each period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Renewing-Term","title":"Term of agreement with renewal","params":{"start":{"type":"Time","doc":"First instant in force."},"end":{"type":"Time","doc":"End of the initial term."},"renewal_period":{"type":"Period","doc":"Length of each renewal."},"max_renewals":{"type":"int","doc":"Maximum number of renewals."},"optout_roles":{"type":"[Role]","doc":"Roles that may prevent the next renewal."},"optout_notice":{"type":"Period","doc":"How long before a term ends an opt-out notice must be given."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"},"renew":{"period":{"param":"renewal_period"},"max":{"param":"max_renewals"},"optout_roles":{"param":"optout_roles"},"optout_notice":{"param":"optout_notice"}}}],"claims":{"UP:Renewing-Term/optout":{"data":{},"doc":"Notice that the Agreement will not renew at the end of the current term."}},"render":"This Agreement is in force from {{start|time}} until {{end|time}}. It then renews for successive periods of {{renewal_period|period}}, up to {{max_renewals}} times, unless {{optout_roles|role}} gives notice of non-renewal at least {{optout_notice|period}} before the end of the then-current term.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Sales-Reporting","title":"Sales reporting","params":{"reporter":{"type":"Role","doc":"Role that reports."},"recipient":{"type":"Role","doc":"Role that receives the report."},"period":{"type":"Period","doc":"Reporting period."},"due":{"type":"Period","doc":"Time after each period's end by which the report is due."}},"forms":[{"form":"Duty","duty":"report","obligor":{"param":"reporter"},"obligee":{"param":"recipient"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Sales-Reporting/report"}}],"claims":{"UP:Sales-Reporting/report":{"data":{"period":"{start: Time, end: Time}","lines":"[{participation: ChainId, item: Identifier, quantity: Decimal, net: Amount}]","total_net":"Amount"},"doc":"Sales for one period, by participation and Item, with the total net sales."}},"render":"{{reporter|role}} reports to {{recipient|role}} the sales made under this Agreement in each reporting period of {{period|period}}, by Member participation and Item, within {{due|period}} after the period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Cause","title":"Termination for cause","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate for cause."},"cure_period":{"type":"Period","doc":"Time allowed to cure after a breach notice."},"notice":{"type":"Period","doc":"Time from termination notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"},"requires":{"claim":"UP:Termination-Cause/breach","age":{"param":"cure_period"},"unless":"UP:Termination-Cause/cured"}}],"claims":{"UP:Termination-Cause/breach":{"data":{"description":"string"},"doc":"Notice describing an alleged material breach."},"UP:Termination-Cause/cured":{"data":{"breach":"Hash"},"doc":"Statement that the breach identified by the referenced notice has been cured. Effective only when acknowledged by the party that gave the breach notice."},"UP:Termination-Cause/notice":{"data":{"breach":"Hash"},"doc":"Notice of termination for the referenced, uncured breach."}},"render":"If a party commits a material breach, {{holders|role}} may give notice describing it. If the breach is not cured within {{cure_period|period}} of that notice, {{holders|role}} may terminate this Agreement by further notice, effective {{notice|period}} after that notice. A breach counts as cured only when the party that gave the breach notice acknowledges the cure.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Convenience","title":"Termination for convenience","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate."},"notice":{"type":"Period","doc":"Time from notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"}}],"claims":{"UP:Termination-Convenience/notice":{"data":{},"doc":"Notice of termination."}},"render":"{{holders|role}} may terminate this Agreement without cause by notice. Termination takes effect {{notice|period}} after the notice is given.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tier-Selection","title":"Tier attestation and selection","params":{"tiers_clause":{"type":"Name","doc":"Name of the Tiers clause in the parent Agreement."},"initial":{"type":"Name","doc":"Tier in effect before any selection."},"effective":{"type":"\"on-ack\" | {next: Period}","doc":"When an acknowledged selection takes effect."}},"forms":[{"form":"Selection","options":{"from":{"link":true,"clause":{"param":"tiers_clause"}}},"subject":"member","ack":["supplier"],"effective":{"param":"effective"},"initial":{"param":"initial"}}],"claims":{"UP:Tier-Selection/selects":{"data":{"option":"Name","basis":"string"},"doc":"The Member attests that it meets the conditions of the named tier, stating the basis."}},"render":"The Member's tier is {{initial}} until changed under this clause. The Member may attest that it meets the conditions of another tier, stating the basis. The change takes effect when the Supplier acknowledges the attestation, {{effective|effective}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tiers","title":"Tiered price schedule","params":{"tiers":{"type":"[{name: Name, conditions: string}]","doc":"The tiers, in order, with descriptive qualification conditions."},"prices":{"type":"[{item: Identifier, by: {<tier>: Amount}}]","doc":"Price of each Item in each tier."}},"forms":[{"form":"Valuation","source":{"table":{"param":"prices"},"options":{"param":"tiers"}}}],"claims":{},"render":"The following tiers apply. {{#each tiers}}Tier {{name}}: {{conditions}}. {{/each}}The price of each Item in each tier is: {{#each prices}}{{item}}: {{by|amount}}. {{/each}}Whether a Member meets a tier's conditions is established by that Member's attestation and the Supplier's acknowledgment, as set out in the tier selection clause of the Member's participation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}}]</script>
 <script id="src-crypto">/* Universal Paper — JavaScript engine, part 1: canonical JSON, SHA-256/512, Ed25519, decimals, time.
  * A second, independent implementation of spec/01-domain.md §1–3 and spec/04-inference.md §2, §6.
  * No dependencies. Works in browsers and in Node. Licensed Apache-2.0. */
@@ -406,6 +406,12 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     var out = '"';
     for (var i = 0; i < s.length; i++) {
       var c = s.charCodeAt(i), ch = s[i];
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        var lo = i + 1 < s.length ? s.charCodeAt(i + 1) : 0;
+        if (lo < 0xDC00 || lo > 0xDFFF) throw canonErr("strings must not contain lone surrogates");
+        out += ch + s[i + 1]; i++; continue;
+      }
+      if (c >= 0xDC00 && c <= 0xDFFF) throw canonErr("strings must not contain lone surrogates");
       if (ch === '"') out += '\\"';
       else if (ch === "\\") out += "\\\\";
       else if (c === 8) out += "\\b";
@@ -430,7 +436,9 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     if (typeof v === "string") return jstr(v);
     if (Array.isArray(v)) return "[" + v.map(jcsString).join(",") + "]";
     if (typeof v === "object") {
-      var keys = Object.keys(v).sort();
+      var keys = Object.keys(v);
+      keys.forEach(function (k) { if (!/^[\x00-\x7f]*$/.test(k)) throw canonErr("object keys must be ASCII (spec/01-domain.md §1.1)"); });
+      keys.sort();
       return "{" + keys.map(function (k) { return jstr(k) + ":" + jcsString(v[k]); }).join(",") + "}";
     }
     throw canonErr("unsupported type: " + typeof v);
@@ -599,11 +607,25 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     if (mandate) e.mandate = mandate;
     return e;
   };
+  // Strict verification (spec/01-domain.md §1.3), identical to src/universal_paper/crypto.py:
+  // lowercase hex, canonical key and R encodings (y < p), key not of small order, S < L.
+  var KEY_RE = /^ed25519:[0-9a-f]{64}$/, SIG_RE = /^[0-9a-f]{128}$/;
+  var SMALL_ORDER_Y = [0n, 1n, P - 1n,
+    0x05FC536D880238B13933C6D305ACDFD5F098EFF289F4C345B027B2C28F95E826n,
+    0x7A03AC9277FDC74EC6CC392CFA53202A0F67100D760B3CBA4FD84D3D706A17C7n];
+  function yOf(b) { return leInt(b) & ((1n << 255n) - 1n); }
+  function validKey(pub) {
+    if (typeof pub !== "string" || !KEY_RE.test(pub)) return false;
+    var y = yOf(unhex(pub.slice(8)));
+    return y < P && SMALL_ORDER_Y.indexOf(y) < 0;
+  }
   function verifySig(pub, sigHex, obj) {
     try {
-      if (typeof pub !== "string" || pub.indexOf("ed25519:") !== 0 || pub.length !== 72) return false;
-      if (typeof sigHex !== "string" || !/^[0-9a-f]{128}$/.test(sigHex)) return false;
-      return verify(unhex(pub.slice(8)), digest(obj), unhex(sigHex));
+      if (!validKey(pub)) return false;
+      if (typeof sigHex !== "string" || !SIG_RE.test(sigHex)) return false;
+      var sig = unhex(sigHex);
+      if (yOf(sig.slice(0, 32)) >= P || leInt(sig.slice(32)) >= Q) return false;
+      return verify(unhex(pub.slice(8)), digest(obj), sig);
     } catch (e) { return false; }
   }
   function attach(obj) {
@@ -615,9 +637,10 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
 
   // ---- Decimal (exact, BigInt-scaled) ---------------------------------------
   var DEC_RE = /^-?(0|[1-9][0-9]*)(\.[0-9]+)?$/;
+  var MAX_DECIMAL_LEN = 64, MAX_PERIOD_COUNT = 10000, MAX_ROUNDING_SCALE = 18;
   function Dec(i, s) { this.i = i; this.s = s; }
   function dec(str) {
-    if (typeof str !== "string" || !DEC_RE.test(str)) throw new Error("not a Decimal string: " + JSON.stringify(str));
+    if (typeof str !== "string" || str.length > MAX_DECIMAL_LEN || !DEC_RE.test(str)) throw new Error("not a Decimal string: " + JSON.stringify(str));
     var neg = str[0] === "-", body = neg ? str.slice(1) : str, parts = body.split(".");
     var frac = parts[1] || "", i = BigInt(parts[0] + frac);
     return new Dec(neg ? -i : i, frac.length);
@@ -633,7 +656,10 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     return (neg ? "-" : "") + s;
   };
   Dec.prototype.round = function (rounding) {
-    var scale = Number(rounding.scale), mode = rounding.mode;
+    var scale = rounding.scale, mode = rounding.mode;
+    if (!(typeof scale === "number" && Number.isInteger(scale) && scale >= 0 && scale <= MAX_ROUNDING_SCALE))
+      throw new Error("rounding scale must be an integer from 0 to " + MAX_ROUNDING_SCALE);
+    if (["half-even", "half-up", "down", "up"].indexOf(mode) < 0) throw new Error("bad rounding mode " + mode);
     if (scale >= this.s) return new Dec(this.i * 10n ** BigInt(scale - this.s), scale);
     var f = 10n ** BigInt(this.s - scale), neg = this.i < 0n, a = neg ? -this.i : this.i;
     var q = a / f, r = a % f, twice = r * 2n;
@@ -649,28 +675,36 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
   function decStr(d) { return d.isZero() ? new Dec(0n, d.s).toString() : d.toString(); }
 
   // ---- Time and Period -------------------------------------------------------
-  var TIME_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z$/;
+  var TIME_RE = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z$/;
+  // Date.UTC maps years 0-99 to 1900-1999, so dates are built with setUTCFullYear.
+  function utc(y, mo, d, h, mi, s) { var r = new Date(0); r.setUTCFullYear(y, mo, d); r.setUTCHours(h, mi, s, 0); return r; }
   function parseTime(s) {
     var m = typeof s === "string" && TIME_RE.exec(s);
     if (!m) throw new Error("not a UP Time: " + JSON.stringify(s));
-    var t = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
-    var d = new Date(t);
-    if (d.getUTCDate() !== +m[3] || d.getUTCMonth() !== +m[2] - 1) throw new Error("not a UP Time: " + JSON.stringify(s));
+    var y = +m[1], mo = +m[2], da = +m[3], h = +m[4], mi = +m[5], se = +m[6];
+    var d = utc(y, mo - 1, da, h, mi, se);
+    if (y < 1 || mo < 1 || mo > 12 || h > 23 || mi > 59 || se > 59 || d.getUTCDate() !== da || d.getUTCMonth() !== mo - 1)
+      throw new Error("not a UP Time: " + JSON.stringify(s));
     return d;
   }
   function pad(n, w) { n = String(n); while (n.length < w) n = "0" + n; return n; }
   function fmtTime(d) {
+    var y = d.getUTCFullYear();
+    if (!(y >= 1 && y <= 9999)) throw new Error("time out of range");
     return pad(d.getUTCFullYear(), 4) + "-" + pad(d.getUTCMonth() + 1, 2) + "-" + pad(d.getUTCDate(), 2) + "T" +
       pad(d.getUTCHours(), 2) + ":" + pad(d.getUTCMinutes(), 2) + ":" + pad(d.getUTCSeconds(), 2) + "Z";
   }
   function addMonths(d, n) {
     var m = d.getUTCMonth() + n, y = d.getUTCFullYear() + Math.floor(m / 12); m = ((m % 12) + 12) % 12;
-    var last = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
-    return new Date(Date.UTC(y, m, Math.min(d.getUTCDate(), last), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
+    var last = utc(y, m + 1, 0, 0, 0, 0).getUTCDate();
+    return utc(y, m, Math.min(d.getUTCDate(), last), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
   }
   function addPeriod(t, p, k) {
     if (k === undefined) k = 1;
-    var d = parseTime(t), n = Number(p.count) * k, u = p.unit, r;
+    var d = parseTime(t), count = p.count, u = p.unit, r;
+    if (!(typeof count === "number" && Number.isInteger(count) && count >= 1 && count <= MAX_PERIOD_COUNT))
+      throw new Error("period count must be an integer from 1 to " + MAX_PERIOD_COUNT);
+    var n = count * k;
     if (u === "day") r = new Date(d.getTime() + n * 86400000);
     else if (u === "month") r = addMonths(d, n);
     else if (u === "quarter") r = addMonths(d, 3 * n);
@@ -687,7 +721,7 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
   var SEALED = { sealed: true, toString: function () { return "sealed"; } };
   function isSeal(x) { return !!x && typeof x === "object" && !Array.isArray(x) && Object.keys(x).length === 1 && typeof x.seal === "string"; }
   function sealOf(value, salt) {
-    if (typeof salt !== "string" || salt.length !== 64) throw new Error("salt must be 64 hex characters");
+    if (typeof salt !== "string" || !/^[0-9a-f]{64}$/.test(salt)) throw new Error("salt must be 64 hex characters");
     return { seal: "sha256:" + hex(sha256(jcs({ salt: salt, value: value }))) };
   }
   function opens(d, seal) { try { return sealOf(d.value, d.salt).seal === seal.seal && d.seal === seal.seal; } catch (e) { return false; } }
@@ -701,7 +735,8 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
   Object.assign(UP, {
     SPEC: "UP/0.1-draft", hex: hex, unhex: unhex, utf8: utf8, sha256: sha256, sha512: sha512,
     jcs: jcs, jcsString: jcsString, strip: strip, digest: digest, contentHash: contentHash,
-    Key: Key, verifySig: verifySig, attach: attach, ed25519: { sign: sign, verify: verify, publicFromSecret: publicFromSecret },
+    Key: Key, verifySig: verifySig, validKey: validKey,
+    MAX_DECIMAL_LEN: MAX_DECIMAL_LEN, MAX_PERIOD_COUNT: MAX_PERIOD_COUNT, MAX_ROUNDING_SCALE: MAX_ROUNDING_SCALE, attach: attach, ed25519: { sign: sign, verify: verify, publicFromSecret: publicFromSecret },
     clearVerifyCache: function () { verifyCache.clear(); },
     dec: dec, Dec: Dec, decStr: decStr, parseTime: parseTime, fmtTime: fmtTime, addPeriod: addPeriod, fmtPeriod: fmtPeriod,
     SEALED: SEALED, isSeal: isSeal, sealOf: sealOf, opens: opens, containsSeal: containsSeal
@@ -910,6 +945,99 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     return issues;
   }
 
+  // ---- Value types (port of src/universal_paper/typecheck.py; reasons must match) ----
+  var TC_ATOMS = ["Time", "Period", "Decimal", "Rate", "Amount", "Identifier", "Hash", "ChainId", "Role", "Rounding", "string", "Name", "int"];
+  var TC_SEALABLE = ["Amount", "Rate", "Decimal", "string"];
+  var TC_UNITS = ["day", "month", "quarter", "year"], TC_MODES = ["half-even", "half-up", "down", "up"];
+  var TC_MAX_INT = 9007199254740991;
+  var tcCache = new Map();
+  function tcParse(text) {
+    if (typeof text !== "string") throw new Error("not a type");
+    if (tcCache.has(text)) return tcCache.get(text);
+    var re = / *(?:("[^"]*")|(<?[A-Za-z_][A-Za-z0-9_]*>?)|([\[\]{}:,|]))/y, toks = [], i = 0;
+    while (i < text.length) {
+      if (/^ *$/.test(text.slice(i))) break;
+      re.lastIndex = i; var m = re.exec(text);
+      if (!m) throw new Error("cannot read type");
+      toks.push(m[1] || m[2] || m[3]); i = re.lastIndex;
+    }
+    var pos = 0;
+    function peek() { return pos < toks.length ? toks[pos] : null; }
+    function take(exp) { var t = peek(); if (t === null || (exp !== undefined && t !== exp)) throw new Error("cannot read type"); pos++; return t; }
+    function union() { var alts = [atom()]; while (peek() === "|") { take("|"); alts.push(atom()); } return alts.length === 1 ? alts[0] : ["union", alts]; }
+    function atom() {
+      var t = take();
+      if (t[0] === '"') return ["lit", t.slice(1, -1)];
+      if (t === "[") { var inner = union(); take("]"); return ["list", inner]; }
+      if (t === "{") {
+        var k = take();
+        if (k[0] === "<" && k[k.length - 1] === ">") { take(":"); var v = union(); take("}"); return ["map", v]; }
+        var fields = [];
+        for (;;) {
+          if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(k)) throw new Error("cannot read type");
+          take(":"); fields.push([k, union()]);
+          if (peek() === ",") { take(","); k = take(); continue; }
+          take("}"); return ["record", fields];
+        }
+      }
+      if (TC_ATOMS.indexOf(t) >= 0) return ["atom", t];
+      throw new Error("unknown type");
+    }
+    var node = union();
+    if (pos !== toks.length) throw new Error("cannot read type");
+    tcCache.set(text, node);
+    return node;
+  }
+  function tcKnown(text) { try { tcParse(text); return typeof text === "string"; } catch (e) { return false; } }
+  function tcIsInt(v) { return typeof v === "number" && Number.isInteger(v); }
+  function tcDecOk(v) { return typeof v === "string" && v.length <= UP.MAX_DECIMAL_LEN && /^-?(0|[1-9][0-9]*)(\.[0-9]+)?$/.test(v); }
+  function tcKeysAre(v, names) { return isObj(v) && eq(sorted(Object.keys(v)), sorted(names)); }
+  function tcAtom(name, v, path) {
+    if (UP.isSeal(v)) return TC_SEALABLE.indexOf(name) >= 0 ? null : path + " is structural (" + name + ") and may not be sealed";
+    var ok, what;
+    if (name === "Time") { ok = (function () { try { UP.parseTime(v); return true; } catch (e) { return false; } })(); what = "a Time (YYYY-MM-DDThh:mm:ssZ)"; }
+    else if (name === "Period") { ok = tcKeysAre(v, ["unit", "count"]) && TC_UNITS.indexOf(v.unit) >= 0 && tcIsInt(v.count) && v.count >= 1 && v.count <= UP.MAX_PERIOD_COUNT; what = "a Period (unit day, month, quarter or year; count from 1 to " + UP.MAX_PERIOD_COUNT + ")"; }
+    else if (name === "Decimal" || name === "Rate") { ok = tcDecOk(v); what = "a Decimal string of at most " + UP.MAX_DECIMAL_LEN + " characters"; }
+    else if (name === "Amount") { ok = tcKeysAre(v, ["value", "currency"]) && tcDecOk(v.value) && typeof v.currency === "string" && /^[A-Z]{3}$/.test(v.currency); what = "an Amount ({value: Decimal, currency: three-letter code})"; }
+    else if (name === "Identifier") { ok = tcKeysAre(v, ["scheme", "id"]) && typeof v.scheme === "string" && v.scheme !== "" && ((typeof v.id === "string" && v.id !== "") || UP.isSeal(v.id)); what = "an Identifier ({scheme: string, id: string})"; }
+    else if (name === "Hash" || name === "ChainId") { ok = typeof v === "string" && /^sha256:[0-9a-f]{64}$/.test(v); what = "a hash (sha256: and 64 lowercase hex digits)"; }
+    else if (name === "Role") { ok = typeof v === "string" && ROLES.indexOf(v) >= 0; what = "a role"; }
+    else if (name === "Rounding") { ok = tcKeysAre(v, ["scale", "mode"]) && tcIsInt(v.scale) && v.scale >= 0 && v.scale <= UP.MAX_ROUNDING_SCALE && TC_MODES.indexOf(v.mode) >= 0; what = "a Rounding (scale from 0 to " + UP.MAX_ROUNDING_SCALE + "; mode half-even, half-up, down or up)"; }
+    else if (name === "string") { ok = typeof v === "string"; what = "a string"; }
+    else if (name === "Name") { ok = typeof v === "string" && v !== ""; what = "a non-empty name"; }
+    else { ok = tcIsInt(v) && v >= 0 && v <= TC_MAX_INT; what = "a non-negative integer"; }
+    return ok ? null : path + " must be " + what;
+  }
+  function tcCheck(node, v, path) {
+    var kind = node[0], i, err;
+    if (kind === "atom") return tcAtom(node[1], v, path);
+    if (UP.isSeal(v)) return path + " is structural and may not be sealed";
+    if (kind === "lit") return v === node[1] ? null : path + ' must be "' + node[1] + '"';
+    if (kind === "list") {
+      if (!Array.isArray(v)) return path + " must be a list";
+      for (i = 0; i < v.length; i++) { err = tcCheck(node[1], v[i], path + "[" + i + "]"); if (err) return err; }
+      return null;
+    }
+    if (kind === "map") {
+      if (!isObj(v) || !Object.keys(v).length) return path + " must be a non-empty object";
+      var ks = sorted(Object.keys(v));
+      for (i = 0; i < ks.length; i++) {
+        if (ks[i] === "") return path + " has an empty key";
+        err = tcCheck(node[1], v[ks[i]], path + "." + ks[i]); if (err) return err;
+      }
+      return null;
+    }
+    if (kind === "record") {
+      var names = node[1].map(function (f) { return f[0]; });
+      if (!tcKeysAre(v, names)) return path + " must have exactly the fields " + names.join(", ");
+      for (i = 0; i < node[1].length; i++) { err = tcCheck(node[1][i][1], v[node[1][i][0]], path + "." + node[1][i][0]); if (err) return err; }
+      return null;
+    }
+    for (i = 0; i < node[1].length; i++) if (tcCheck(node[1][i], v, path) === null) return null;
+    return path + " does not match any allowed form";
+  }
+  function typeCheck(text, v, path) { return tcCheck(tcParse(text), v, path === undefined ? "value" : path); }
+
   // ---- Validation (A1, A6, A10, A13) ------------------------------------------------
   function termIssues(t) {
     var issues = [];
@@ -918,6 +1046,12 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     Object.keys(ps).forEach(function (name) {
       var extra = Object.keys(ps[name]).filter(function (k) { return k !== "type" && k !== "doc"; });
       if (extra.length) issues.push("parameter " + repr(name) + " declares " + repr(sorted(extra)) + "; only 'type' and 'doc' are allowed (A6: no defaults)");
+      if (!tcKnown(get(ps[name], "type", null))) issues.push("parameter " + repr(name) + " has an unrecognized type " + repr(get(ps[name], "type", null)));
+    });
+    var cl = get(t, "claims", {});
+    Object.keys(cl).forEach(function (ctype) {
+      var dd = get(cl[ctype], "data", {});
+      Object.keys(dd).forEach(function (fname) { if (!tcKnown(dd[fname])) issues.push("claim " + ctype + " field " + repr(fname) + " has an unrecognized type " + repr(dd[fname])); });
     });
     get(t, "forms", []).forEach(function (f) { if (FORMS.indexOf(get(f, "form")) < 0) issues.push("unknown clause form " + repr(get(f, "form"))); });
     return issues;
@@ -934,7 +1068,7 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     if (uniq(order.map(canonKey)).length !== order.length) out.push(["A1", "a party is listed twice in the same role"]);
     order.forEach(function (rk) {
       if (ROLES.indexOf(rk[0]) < 0) out.push(["A1", "unknown role " + repr(rk[0])]);
-      if (!(typeof rk[1] === "string" && rk[1].indexOf("ed25519:") === 0 && rk[1].length === 72)) out.push(["A1", "malformed party key " + repr(rk[1])]);
+      if (!UP.validKey(rk[1])) out.push(["A1", "malformed party key " + repr(rk[1])]);
     });
     var names = get(ag, "clauses", []).map(function (c) { return get(c, "n"); });
     if (uniq(names).length !== names.length) out.push(["A1", "clause names are not unique"]);
@@ -952,8 +1086,12 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
       Object.keys(cp).forEach(function (pname) {
         var pval = cp[pname], ptype = get(get(get(t, "params", {}), pname, {}), "type", "");
         if (UP.containsSeal(pval) && STRUCTURAL_TYPES.indexOf(ptype) >= 0) out.push(["A10", "clause " + repr(get(c, "n")) + ": parameter " + repr(pname) + " (" + ptype + ") is structural and may not be sealed"]);
-        if (ptype === "Role" && ROLES.indexOf(pval) < 0) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pval) + " is not a role"]);
-        if (ptype === "[Role]" && !(Array.isArray(pval) && pval.every(function (r) { return ROLES.indexOf(r) >= 0; }))) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pname) + " must be a list of roles"]);
+        else if (ptype === "Role" && ROLES.indexOf(pval) < 0) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pval) + " is not a role"]);
+        else if (ptype === "[Role]" && !(Array.isArray(pval) && pval.every(function (r) { return ROLES.indexOf(r) >= 0; }))) out.push(["A1", "clause " + repr(get(c, "n")) + ": " + repr(pname) + " must be a list of roles"]);
+        else if (has(get(t, "params", {}), pname) && tcKnown(ptype)) {
+          var terr = typeCheck(ptype, pval, pname);
+          if (terr) out.push(["A1", "clause " + repr(get(c, "n")) + ": parameter " + terr]);
+        }
       });
       get(t, "forms", []).forEach(function (f) { if (get(f, "form") === "Window") windows++; if (get(f, "form") === "Link") links++; });
     });
@@ -996,6 +1134,8 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
   }
   function mandateCoverage(b, m, agentKey, E, ctx) {
     if (get(m, "type") !== "Mandate") return [false, "the referenced object is not a Mandate"];
+    if (!(UP.validKey(get(m, "principal", null)) && UP.validKey(get(m, "agent", null)) && typeCheck("Time", get(m, "not_before", null)) === null && typeCheck("Time", get(m, "expires", null)) === null))
+      return [false, "the Mandate is malformed (its keys or validity times are not well formed)"];
     var psig = get(m, "sigs", []).filter(function (s) { return get(s, "key") === get(m, "principal"); });
     if (!psig.length || !UP.verifySig(m.principal, psig[0].sig, m)) return [false, "the Mandate is not validly signed by its principal"];
     if (get(m, "agent") !== agentKey) return [false, "the signing key is not the Mandate's agent"];
@@ -1169,7 +1309,11 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
       S2 = clone(S);
     }
     var pending = { event: eh, agreement: ch(ag), signed: sorted(Array.from(P.keys()).filter(function (k) { return required.has(k); })) };
-    if (has(body, "expires")) pending.expires = body.expires;
+    if (has(body, "expires")) {
+      ck.check("propose-expires", "R-propose", typeCheck("Time", body.expires) === null,
+        "The proposal's expiry is a well-formed time.", "The proposal's expiry is not a well-formed time.");
+      pending.expires = body.expires;
+    }
     S2.pending = pending;
     S2 = this._advance(S2, E, eh);
     return this._maybeExecute(S2, E, ck);
@@ -1269,6 +1413,10 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
     var declF = sorted(Object.keys(get(decl, "data", {})));
     ck.check("attest-data", "R-attest", isObj(data) && eq(sorted(Object.keys(data)), declF), "The claim's data has exactly the fields its Term defines.",
       "The claim's data fields " + (isObj(data) ? repr(sorted(Object.keys(data))) : str(data)) + " do not match " + repr(declF) + ".");
+    var dtypes = get(decl, "data", {}), bad = null, dn = Object.keys(dtypes);
+    for (var di = 0; di < dn.length && bad === null; di++)
+      bad = tcKnown(dtypes[dn[di]]) ? typeCheck(dtypes[dn[di]], data[dn[di]], dn[di]) : dn[di] + " has an unrecognized type";
+    ck.check("attest-data-types", "R-attest", bad === null, "Each data field has the type its Term declares.", "The claim's data does not match its Term: " + bad + ".");
     var rules = this._claimRules(cur, cname), allowed = rules[0].get(ctype) || new Set();
     var mine = inter(rolesOf(cur, E.by), allowed);
     ck.check("attest-role", "A7", mine.size > 0, "The author holds a role allowed to make this claim (" + sorted(mine).join(", ") + ").",
@@ -1349,11 +1497,12 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
       start = w.form.start; end = w.form.end;
       var r = get(w.form, "renew", null);
       if (truthy(r)) {
-        var optouts = get(get(S.facts, w.name, {}), "claims", []).filter(function (c) { return c.type === w.tid + "/optout"; }), n = 0;
+        // e_k = end + k x period, each computed directly from end (spec/04-inference.md §2, §3.1).
+        var optouts = get(get(S.facts, w.name, {}), "claims", []).filter(function (c) { return c.type === w.tid + "/optout"; }), n = 0, e00 = end;
         while (end <= t && (get(r, "max", null) === null || n < Number(r.max))) {
           var e0 = end;
           if (optouts.some(function (c) { return addPeriod(c.at, r.optout_notice) <= e0; })) break;
-          end = addPeriod(end, r.period); n++;
+          n++; end = addPeriod(e00, r.period, n);
         }
       }
     }
@@ -1758,7 +1907,7 @@ footer { padding-block: 3rem; color: var(--muted); font-size: 0.85rem; }
 
   Object.assign(UP, {
     ROLES: ROLES, FORMS: FORMS, AXIOM_LABELS: AXIOM_LABELS, Bundle: Bundle, Evaluator: Evaluator, Checks: Checks,
-    clauseForms: clauseForms, agreementIssues: agreementIssues, termIssues: termIssues, precedenceIssues: precedenceIssues,
+    clauseForms: clauseForms, agreementIssues: agreementIssues, typeCheck: typeCheck, typeKnown: tcKnown, termIssues: termIssues, precedenceIssues: precedenceIssues,
     mandateCoverage: mandateCoverage, snapshot: snapshot, renderAgreement: renderAgreement, renderTemplate: renderTemplate,
     simulate: simulate, makeTrace: makeTrace, describe: describe, checkJson: checkJson, canonKey: canonKey, repr: repr, partyKeys: partyKeys, keysWithRole: keysWithRole
   });

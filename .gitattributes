@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+# Generated files: rebuilt by tools/gen_terms.py, examples/build_examples.py and tools/build_explorer.py.
+# CI fails if they are out of date. Collapsed in GitHub diffs.
+explorer/index.html linguist-generated=true
+examples/**/bundle*.json linguist-generated=true
+examples/traces/*.json linguist-generated=true
+spec/06-terms/*.json linguist-generated=true
+spec/06-terms/UP-*.md linguist-generated=true
+src/universal_paper/terms.json linguist-generated=true

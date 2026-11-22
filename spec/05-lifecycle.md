@@ -48,7 +48,7 @@ Each rule lists who must sign and what must be true. "Must sign" always means a 
 |---|---|
 | Must sign | The author. The author must be a Party in `body.agreement`. |
 | Preconditions | `S = ∅`. `Valid(body.agreement)` (A1, A6). If the Agreement has a Link clause, the parent chain is in the Bundle, is executed, and the Link's role binding holds ([04-inference §3.6](04-inference.md#36-link)). |
-| Effect | `chain = hash(E)`, `status = proposed`, `agreement = hash(body.agreement)`, `pending = { event: hash(E), agreement, signed: [keys that signed E], expires }`. If `signed` already covers every required signer, execute immediately (§2.3 effect). |
+| Effect | If `body.expires` is present it must be a Time (01-domain §2). `chain = hash(E)`, `status = proposed`, `agreement = hash(body.agreement)`, `pending = { event: hash(E), agreement, signed: [keys that signed E], expires }`. If `signed` already covers every required signer, execute immediately (§2.3 effect). |
 
 ### 2.2 `propose`, amendment
 

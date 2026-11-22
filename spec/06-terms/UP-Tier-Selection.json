@@ -5,11 +5,11 @@
   "title": "Tier attestation and selection",
   "params": {
     "tiers_clause": {
-      "type": "string",
+      "type": "Name",
       "doc": "Name of the Tiers clause in the parent Agreement."
     },
     "initial": {
-      "type": "string",
+      "type": "Name",
       "doc": "Tier in effect before any selection."
     },
     "effective": {
@@ -43,7 +43,7 @@
   "claims": {
     "UP:Tier-Selection/selects": {
       "data": {
-        "option": "string",
+        "option": "Name",
         "basis": "string"
       },
       "doc": "The Member attests that it meets the conditions of the named tier, stating the basis."

@@ -1,7 +1,7 @@
 import pytest
 
 from universal_paper.canon import CanonError, content_hash, jcs
-from universal_paper.values import add_period, opens, round_dec, dec, seal_of
+from universal_paper.values import add_period, dec, opens, round_dec, seal_of
 
 
 def test_jcs_sorts_keys_and_has_no_whitespace():

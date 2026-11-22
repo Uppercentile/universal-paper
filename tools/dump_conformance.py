@@ -13,13 +13,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path[:0] = [str(ROOT / "src"), str(ROOT / "examples")]
 
-import build_examples  # noqa: E402
 import universal_paper.trace as trace_mod  # noqa: E402
 from universal_paper.canon import content_hash  # noqa: E402
 from universal_paper.crypto import Key  # noqa: E402
 from universal_paper.engine import Bundle, Evaluator, agreement_issues  # noqa: E402
 from universal_paper.render import render_agreement  # noqa: E402
 from universal_paper.simulate import simulate  # noqa: E402
+
+import build_examples  # noqa: E402
 
 
 def main(out: str) -> None:

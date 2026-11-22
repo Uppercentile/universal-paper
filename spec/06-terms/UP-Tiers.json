@@ -5,7 +5,7 @@
   "title": "Tiered price schedule",
   "params": {
     "tiers": {
-      "type": "[{name: string, conditions: string}]",
+      "type": "[{name: Name, conditions: string}]",
       "doc": "The tiers, in order, with descriptive qualification conditions."
     },
     "prices": {

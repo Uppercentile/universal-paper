@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+from collections.abc import Sequence
 from pathlib import Path
 
 from . import SPEC
@@ -13,12 +14,18 @@ from .engine import Bundle, Evaluator
 from .values import seal_of
 
 TERMS_DIR = Path(__file__).resolve().parents[2] / "spec" / "06-terms"
+# The Term library ships inside the package too, so an installed copy works outside the repository.
+# tools/gen_terms.py writes it; tests/test_terms.py checks it equals spec/06-terms/.
+PACKAGED_TERMS = Path(__file__).resolve().parent / "terms.json"
 
 
-def load_terms(directory: Path = TERMS_DIR) -> dict[str, dict]:
+def load_terms(directory: Path | None = None) -> dict[str, dict]:
+    if directory is None:
+        terms = json.loads(PACKAGED_TERMS.read_text(encoding="utf-8"))
+        return {t["id"]: t for t in terms}
     out = {}
     for p in sorted(directory.glob("*.json")):
-        t = json.loads(p.read_text())
+        t = json.loads(p.read_text(encoding="utf-8"))
         out[t["id"]] = t
     return out
 
@@ -34,7 +41,7 @@ class Actor:
         return self.key.public
 
     def party(self) -> dict:
-        p = {"key": self.pub, "name": self.name}
+        p: dict = {"key": self.pub, "name": self.name}
         if self.ids:
             p["ids"] = self.ids
         return p
@@ -59,7 +66,7 @@ class World:
         return c
 
     def agreement(self, parties: list[tuple[str, Actor]], clauses: list[dict], label: str) -> dict:
-        ps = sorted(({"role": r, "party": a.party()} for r, a in parties), key=lambda p: (p["role"], p["party"]["key"]))
+        ps: list[dict] = sorted(({"role": r, "party": a.party()} for r, a in parties), key=lambda p: (p["role"], p["party"]["key"]))
         return {"type": "Agreement", "spec": SPEC, "parties": ps, "clauses": clauses, "label": label}
 
     def seal(self, value, label: str) -> dict:
@@ -101,7 +108,7 @@ class World:
         return ev.state_at(self.chain_id(pos))
 
     def event(self, pos: int | None, kind: str, by: Actor, at: str, body: dict,
-              cosigners: list[Actor] = (), agent: tuple[Key, str] | None = None,
+              cosigners: Sequence[Actor] = (), agent: tuple[Key, str] | None = None,
               expect: bool = True) -> tuple[int, str]:
         """Append a signed event. pos=None starts a new chain. agent=(agent key, mandate hash) signs for `by`."""
         E = {"type": "Event", "spec": SPEC, "kind": kind, "at": at, "by": by.pub, "body": body}

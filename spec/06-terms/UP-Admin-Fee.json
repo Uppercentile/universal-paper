@@ -17,7 +17,7 @@
       "doc": "Fee as a fraction of reported net sales."
     },
     "report_clause": {
-      "type": "string",
+      "type": "Name",
       "doc": "Name of the Sales-Reporting clause whose reports form the base."
     },
     "period": {

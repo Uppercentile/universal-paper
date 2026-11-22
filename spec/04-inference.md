@@ -56,7 +56,7 @@ Each form is described by its fields. In a TermDefinition, a field holds either 
 
 An Agreement MUST contain at most one Window clause. Without one, its window is `[executed_at, ∞)`.
 
-**End at time t.** Let `e₀ = end`. While `eₖ ≤ t`, renewal is defined, fewer than `max` renewals have occurred, and no party holding an `optout_roles` role has attested the claim `<term>/optout` on this chain with `at ≤ eₖ − optout_notice`: set `eₖ₊₁ = eₖ + period`. The window end is the last `eₖ`, or `S.ends_at` if that is earlier.
+**End at time t.** Let `e₀ = end`. While `eₖ ≤ t`, renewal is defined, fewer than `max` renewals have occurred, and no party holding an `optout_roles` role has attested the claim `<term>/optout` on this chain with `at ≤ eₖ − optout_notice`: set `eₖ₊₁ = end + (k + 1) × period`, computed directly from `end` as in §2 (so a term ending on 31 January renews to 28 February and then 31 March, never 28 March). The window end is the last `eₖ`, or `S.ends_at` if that is earlier.
 
 ### 3.2 Exit
 
@@ -156,7 +156,7 @@ Nothing happens at expiry. No Event is needed or allowed. `Active(A, t)` becomes
 
 ## 6. Arithmetic
 
-- All arithmetic on Decimals is exact.
+- All arithmetic on Decimals is exact. (An implementation must not use a fixed-precision context, such as a 28-digit decimal default, for any intermediate sum or product.)
 - A computation rounds **only** where a form says so, using a **Rounding** parameter `{ scale: int, mode: "half-even" | "half-up" | "down" | "up" }`. There is no default rounding (A6).
 - Adding Amounts of different currencies is ⊥. The core does no currency conversion.
 - Any operation with a `sealed` input yields `sealed` (see `reveal` in 02).

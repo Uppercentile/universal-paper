@@ -8,7 +8,7 @@ Lists named tiers, describes the conditions for each, and sets a price for each 
 
 | Name | Type | Meaning |
 |---|---|---|
-| `tiers` | `[{name: string, conditions: string}]` | The tiers, in order, with descriptive qualification conditions. |
+| `tiers` | `[{name: Name, conditions: string}]` | The tiers, in order, with descriptive qualification conditions. |
 | `prices` | `[{item: Identifier, by: {<tier>: Amount}}]` | Price of each Item in each tier. |
 
 No parameter has a default value (A6).

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -14,8 +15,39 @@ from .simulate import simulate
 from .trace import make_trace
 
 
-def _load(p: str) -> dict:
-    return json.loads(Path(p).read_text())
+class InputError(Exception):
+    pass
+
+
+def _pairs(pairs: list) -> dict:
+    out: dict = {}
+    for k, v in pairs:
+        if k in out:
+            raise InputError(f"duplicate object key {k!r} (I-JSON, RFC 7493, forbids duplicates)")
+        out[k] = v
+    return out
+
+
+def _constant(name: str):
+    raise InputError(f"{name} is not valid JSON")
+
+
+def loads(text: str):
+    """Strict JSON: no duplicate keys and no NaN or Infinity (RFC 8785 relies on I-JSON)."""
+    return json.loads(text, object_pairs_hook=_pairs, parse_constant=_constant)
+
+
+def _load(p: str):
+    try:
+        text = Path(p).read_text(encoding="utf-8")
+    except OSError as e:
+        raise InputError(f"cannot read {p}: {e.strerror or e}") from None
+    except UnicodeDecodeError:
+        raise InputError(f"{p} is not UTF-8 text") from None
+    try:
+        return loads(text)
+    except json.JSONDecodeError as e:
+        raise InputError(f"{p} is not valid JSON: {e}") from None
 
 
 def _out(obj, path: str | None = None) -> None:
@@ -27,15 +59,20 @@ def _out(obj, path: str | None = None) -> None:
 
 
 def _latest(b: Bundle) -> str:
-    return max(E["at"] for ch in b.chain_list for E in ch)
+    times = [E["at"] for ch in b.chain_list for E in ch if isinstance(E, dict) and isinstance(E.get("at"), str)]
+    if not times:
+        raise InputError("the bundle has no events")
+    return max(times)
 
 
 def _pos(b: Bundle, chain: str | None) -> list[int]:
     if chain is None:
         return list(range(len(b.chain_list)))
-    if chain.isdigit():
+    if chain.isdigit() and int(chain) < len(b.chain_list):
         return [int(chain)]
-    return [b.chain_pos[chain]]
+    if chain in b.chain_pos:
+        return [b.chain_pos[chain]]
+    raise InputError(f"no chain {chain!r} in the bundle")
 
 
 def cmd_validate(a) -> int:
@@ -56,8 +93,10 @@ def cmd_validate(a) -> int:
     for h, ag in sorted(b.agreements.items()):
         for rule, why in agreement_issues(b, ag):
             print(f"agreement {h}: {rule}: {why}")
+    for cid in sorted(set(b.forks)):
+        print(f"INVALID BUNDLE: chain {cid} appears more than once (two versions of one chain)")
     print(f"\n{bad} event(s) rejected." if bad else "\nEvery event is valid.")
-    return 2 if bad else 0
+    return 2 if bad or b.forks else 0
 
 
 def cmd_apply(a) -> int:
@@ -72,6 +111,9 @@ def cmd_apply(a) -> int:
         S = Evaluator(b).state_at(E["chain"])
     else:
         S = None
+        if isinstance(E, dict) and content_hash(E) in b.chains:
+            print("this genesis event already starts a chain in the bundle", file=sys.stderr)
+            return 2
     S2, checks, reason = Evaluator(b).apply(S, E)
     _out({"accepted": S2 is not None, "reason": reason, "checks": [c.to_json() for c in checks],
           "state": S2, "state_hash": content_hash(S2) if S2 else None})
@@ -147,7 +189,17 @@ def main(argv=None) -> int:
     s.set_defaults(f=cmd_trace)
     s = sub.add_parser("hash", help="print the content hash of a JSON object"); s.add_argument("file"); s.set_defaults(f=cmd_hash)
     a = p.parse_args(argv)
-    return a.f(a)
+    try:
+        return a.f(a)
+    except InputError as e:
+        print(f"up: error: {e}", file=sys.stderr)
+        return 1
+    except Exception as e:  # malformed input must never end in a traceback
+        if os.environ.get("UP_DEBUG"):
+            raise
+        print(f"up: error: the input could not be processed ({type(e).__name__}: {e}). "
+              "Set UP_DEBUG=1 to see the traceback.", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

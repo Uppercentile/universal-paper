@@ -1,9 +1,9 @@
 import json
 
-from build_examples import ITEMS, conventional, generative, main as build_all, tamper_drop_signature, tamper_fee_rate
-from helpers import MEM, SUP
 from universal_paper.simulate import simulate
 from universal_paper.trace import make_trace
+
+from build_examples import conventional, generative, tamper_drop_signature, tamper_fee_rate
 
 
 def test_simulation_runs_hypothetical_tier_change_forward():
@@ -63,6 +63,7 @@ def test_tampered_evaluator_diverges_and_others_agree():
 
 def test_shipped_traces_validate_against_schema():
     import glob
+
     import jsonschema
     tr = json.load(open("schema/trace.schema.json"))
     files = glob.glob("examples/traces/*.trace.json")
@@ -73,6 +74,7 @@ def test_shipped_traces_validate_against_schema():
 
 def test_states_and_bundles_validate_against_schema():
     import jsonschema
+
     from universal_paper.engine import Evaluator
     up = json.load(open("schema/universal-paper.schema.json"))
     w, _, _ = conventional()

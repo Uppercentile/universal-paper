@@ -27,7 +27,7 @@
                 "term": "UP:Fixed-Term"
               },
               {
-                "def": "sha256:cd0f44c7971fc2370e510efe478c354b791b17f1c9a10165aa80b1d78cd3aeb0",
+                "def": "sha256:d93331fba3ba3e376b1e9b40ee1ea9dedecdc1db8da49981aaa4ce56bbc39f70",
                 "n": "tiers",
                 "params": {
                   "prices": [
@@ -95,7 +95,7 @@
                 "term": "UP:Sales-Reporting"
               },
               {
-                "def": "sha256:7794f7872d6cef305839b2fdc7b7e9f2916e71f20cde4bdac95321848e21a85e",
+                "def": "sha256:86262a69a7bfba34d47e0f3052aecb541702abea12286e098e60333fa1e24168",
                 "n": "fee",
                 "params": {
                   "due": {
@@ -144,11 +144,11 @@
         "sigs": [
           {
             "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
-            "sig": "a2711b9baddf430da3c3f08f1e27f6116a5cee9f14f3f2388d9d9680b8777b85a5c6dfdc8ef30edc14d5be1f49c05a04a4d81a5778e05ddbec55a4bfadaafb0a"
+            "sig": "4e5fb2a5b749b0ea561a1dc2e945d8148dc02a301bac000150b95c99c5a714552d548ddccc4edaf4c52ee49cb3b1971298cc6205f9289f6b2519c56bca0aca0e"
           },
           {
             "key": "ed25519:93a178ab73e3af7b0715587143b9a2795460a9b4d9e0ba92081a09e008ea3db9",
-            "sig": "d656119c5c168e7c2e8a11f4fba68f36ade496dcb6fe994e58d0b4a8ae3dfa0877e9e7010c3ec0418da5185f85292fb1e9b7d2e6aad059701af7b888aa012e06"
+            "sig": "0c3a7b49ae6250a145aa8790b5bc73dc9f185f2e94d34e8d73f629e797dc3879e467fbbb81fdfbcc3f1fbf12f8343f7f9b5b733273223f81538062c885fa0a08"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -187,13 +187,13 @@
           }
         },
         "by": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
-        "chain": "sha256:438e2a5a8787dcb0c01c6200d3bcfa52825410710adf381cc6790fac82f0984e",
+        "chain": "sha256:6392b9d707a42838bb8b3820ed8131495c1703a80b26f06cd27a4d5415196340",
         "kind": "attest",
-        "prev": "sha256:67ae8a22a09195d244bc9baca67cf6e93ba744d4c57c0810d5a23aaf82cd7b51",
+        "prev": "sha256:2f35bee242a3086aa850c70b70468df6551bb3fdd08de9297ddaa92b065152e0",
         "sigs": [
           {
             "key": "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93",
-            "sig": "cdab762ade2d17ec95536e1e32a2606fe079b45f0d88d84aa48b6e3152b43d9bd14abed2a7175b46dc569a426a134a25460915d935f15edd9978f43679395f00"
+            "sig": "104307783ade41fb00bc640d723e196132803df4ceb9bd4096a80131254f24011d6a13e2ecf6de623259c9f9ecd36b522456503493e1bc5a8e9773f1027b980f"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -283,7 +283,7 @@
         },
         "report_clause": {
           "doc": "Name of the Sales-Reporting clause whose reports form the base.",
-          "type": "string"
+          "type": "Name"
         },
         "rounding": {
           "doc": "Rounding applied to each period's fee.",
@@ -453,7 +453,7 @@
         },
         "tiers": {
           "doc": "The tiers, in order, with descriptive qualification conditions.",
-          "type": "[{name: string, conditions: string}]"
+          "type": "[{name: Name, conditions: string}]"
         }
       },
       "provenance": {

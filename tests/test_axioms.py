@@ -2,16 +2,14 @@
 import copy
 import json
 
-import pytest
-
-from build_examples import conventional, generative, master_clauses
-from helpers import AGG, MEM, OTHER, SUP, ev, master, participation, raw
 from universal_paper.build import World
 from universal_paper.canon import content_hash
 from universal_paper.engine import agreement_issues, term_issues
 from universal_paper.render import render_agreement
 from universal_paper.values import SEALED
 
+from build_examples import conventional, generative, master_clauses
+from helpers import AGG, OTHER, SUP, ev, master, participation, raw
 
 # A1 Composition -------------------------------------------------------------
 

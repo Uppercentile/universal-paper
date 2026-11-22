@@ -1,10 +1,11 @@
 """Derived-value snapshots: statuses, tiers, prices, and obligations at a time."""
 from __future__ import annotations
 
-from .canon import content_hash
-from .engine import Evaluator, clause_forms, keys_with_role, _val_items
-from .values import SEALED
 import json
+
+from .canon import content_hash
+from .engine import Evaluator, _val_items, clause_forms, keys_with_role
+from .values import SEALED
 
 
 def _amt(x):

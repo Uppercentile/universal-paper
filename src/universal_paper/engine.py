@@ -8,20 +8,21 @@ from __future__ import annotations
 
 import copy
 import json
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from decimal import Decimal
-from typing import Any, Iterable
+from typing import Any
 
-from . import SPEC
-from .canon import content_hash
-from .crypto import verify
+from . import SPEC, typecheck
+from .canon import content_hash, normalize
+from .crypto import valid_key, verify
 from .values import (
-    CTX,
     SEALED,
     add_period,
     contains_seal,
     dec,
     dec_str,
+    dmul,
+    dsum,
     is_seal,
     opens,
     parse_time,
@@ -100,15 +101,19 @@ class Bundle:
     """Everything an evaluator needs, and nothing else (spec/01-domain.md §12)."""
 
     def __init__(self, data: dict):
+        data = normalize(data)
         self.data = data
         self.terms = {content_hash(t): t for t in data.get("terms", [])}
         self.mandates = {content_hash(m): m for m in data.get("mandates", [])}
         self.chain_list: list[list[dict]] = [list(c) for c in data.get("chains", [])]
         self.chains: dict[str, list[dict]] = {}
         self.chain_pos: dict[str, int] = {}
+        self.forks: list[str] = []  # ChainIds that appear more than once (spec/01-domain.md §12)
         for i, c in enumerate(self.chain_list):
             if c:
                 cid = content_hash(c[0])
+                if cid in self.chains:
+                    self.forks.append(cid)
                 self.chains[cid] = c
                 self.chain_pos[cid] = i
         self.disclosures: dict[str, dict] = {}
@@ -322,6 +327,12 @@ def term_issues(t: dict) -> list[str]:
         extra = set(decl) - {"type", "doc"}
         if extra:
             issues.append(f"parameter {name!r} declares {sorted(extra)}; only 'type' and 'doc' are allowed (A6: no defaults)")
+        if not typecheck.known(decl.get("type")):
+            issues.append(f"parameter {name!r} has an unrecognized type {decl.get('type')!r}")
+    for ctype, cdecl in t.get("claims", {}).items():
+        for fname, ftype in cdecl.get("data", {}).items():
+            if not typecheck.known(ftype):
+                issues.append(f"claim {ctype} field {fname!r} has an unrecognized type {ftype!r}")
     for f in t.get("forms", []):
         if f.get("form") not in FORMS:
             issues.append(f"unknown clause form {f.get('form')!r}")
@@ -346,7 +357,7 @@ def agreement_issues(bundle: Bundle, ag: dict) -> list[tuple[str, str]]:
     for r, k in order:
         if r not in ROLES:
             out.append(("A1", f"unknown role {r!r}"))
-        if not (isinstance(k, str) and k.startswith("ed25519:") and len(k) == 72):
+        if not valid_key(k):
             out.append(("A1", f"malformed party key {k!r}"))
     names = [c.get("n") for c in ag.get("clauses", [])]
     if len(set(names)) != len(names):
@@ -372,10 +383,14 @@ def agreement_issues(bundle: Bundle, ag: dict) -> list[tuple[str, str]]:
             ptype = t.get("params", {}).get(pname, {}).get("type", "")
             if contains_seal(pval) and ptype in STRUCTURAL_TYPES:
                 out.append(("A10", f"clause {c.get('n')!r}: parameter {pname!r} ({ptype}) is structural and may not be sealed"))
-            if ptype == "Role" and pval not in ROLES:
+            elif ptype == "Role" and pval not in ROLES:
                 out.append(("A1", f"clause {c.get('n')!r}: {pval!r} is not a role"))
-            if ptype == "[Role]" and not (isinstance(pval, list) and all(r in ROLES for r in pval)):
+            elif ptype == "[Role]" and not (isinstance(pval, list) and all(r in ROLES for r in pval)):
                 out.append(("A1", f"clause {c.get('n')!r}: {pname!r} must be a list of roles"))
+            elif pname in t.get("params", {}) and typecheck.known(ptype):
+                err = typecheck.check(ptype, pval, pname)
+                if err:
+                    out.append(("A1", f"clause {c.get('n')!r}: parameter {err}"))
         for f in t.get("forms", []):
             windows += f.get("form") == "Window"
             links += f.get("form") == "Link"
@@ -430,6 +445,9 @@ def mandate_coverage(bundle: Bundle, m: dict, agent_key: str, E: dict, ctx: dict
     """ctx: {'agreement': Agreement whose roles apply, 'proposal': Agreement or None, 'claim': claim or None, 'chain': ChainId or None}"""
     if m.get("type") != "Mandate":
         return False, "the referenced object is not a Mandate"
+    if not (valid_key(m.get("principal")) and valid_key(m.get("agent"))
+            and typecheck.check("Time", m.get("not_before")) is None and typecheck.check("Time", m.get("expires")) is None):
+        return False, "the Mandate is malformed (its keys or validity times are not well formed)"
     psig = [s for s in m.get("sigs", []) if s.get("key") == m.get("principal")]
     if not psig or not verify(m["principal"], psig[0]["sig"], m):
         return False, "the Mandate is not validly signed by its principal"
@@ -666,6 +684,9 @@ class Evaluator:
             S2 = copy.deepcopy(S)
         pending = {"event": eh, "agreement": content_hash(ag), "signed": sorted(k for k in P if k in required)}
         if "expires" in body:
+            ck.check("propose-expires", "R-propose", typecheck.check("Time", body["expires"]) is None,
+                     "The proposal's expiry is a well-formed time.",
+                     "The proposal's expiry is not a well-formed time.")
             pending["expires"] = body["expires"]
         S2["pending"] = pending
         S2 = self._advance(S2, E, eh)
@@ -755,7 +776,6 @@ class Evaluator:
         """For a clause: claim type -> roles that may attest it; claim type -> roles whose ack it needs."""
         attest: dict[str, set[str]] = {}
         ack: dict[str, set[str]] = {}
-        clause = find_clause(ag, cname)
         for cf in clause_forms(self.b, ag):
             if cf.name != cname:
                 continue
@@ -803,6 +823,12 @@ class Evaluator:
         ck.check("attest-data", "R-attest", isinstance(data, dict) and set(data) == set(decl.get("data", {})),
                  "The claim's data has exactly the fields its Term defines.",
                  f"The claim's data fields {sorted(data) if isinstance(data, dict) else data} do not match {sorted(decl.get('data', {}))}.")
+        bad = next((err for fname, ftype in decl.get("data", {}).items()
+                    for err in [typecheck.check(ftype, data[fname], fname) if typecheck.known(ftype) else f"{fname} has an unrecognized type"]
+                    if err), None)
+        ck.check("attest-data-types", "R-attest", bad is None,
+                 "Each data field has the type its Term declares.",
+                 f"The claim's data does not match its Term: {bad}.")
         attest_roles, ack_roles = self._claim_rules(cur, cname)
         allowed = attest_roles.get(ctype, set())
         mine = roles_of(cur, E["by"]) & allowed
@@ -900,13 +926,14 @@ class Evaluator:
             start, end = w.form["start"], w.form["end"]
             r = w.form.get("renew")
             if r:
+                # e_k = end + k x period, each computed directly from end (spec/04-inference.md §2, §3.1).
                 optouts = [c for c in S["facts"].get(w.name, {}).get("claims", []) if c["type"] == f"{w.tid}/optout"]
-                n = 0
+                e0, n = end, 0
                 while end <= t and (r.get("max") is None or n < int(r["max"])):
                     if any(add_period(c["at"], r["optout_notice"]) <= end for c in optouts):
                         break
-                    end = add_period(end, r["period"])
                     n += 1
+                    end = add_period(e0, r["period"], n)
         if S.get("ends_at") and (end is None or S["ends_at"] < end):
             end = S["ends_at"]
         return start, end
@@ -1024,7 +1051,7 @@ class Evaluator:
         price, factor = self.b.reveal(entry["price"]), self.b.reveal(ref["factor"])
         if price is SEALED or factor is SEALED:
             return SEALED
-        v = round_dec(dec(price["value"]) * dec(factor), ref["rounding"])
+        v = round_dec(dmul(dec(price["value"]), dec(factor)), ref["rounding"])
         return {"value": dec_str(v), "currency": price["currency"]}
 
     def price(self, pid: str, item: dict, t: str):
@@ -1098,8 +1125,8 @@ class Evaluator:
                 else:
                     curs = {v["currency"] for v in vals}
                     if len(curs) == 1:
-                        total = sum((dec(v["value"]) for v in vals), Decimal(0))
-                        owed = {"value": dec_str(round_dec(CTX.multiply(total, dec(rate)), a["rounding"])), "currency": curs.pop()}
+                        total = dsum(dec(v["value"]) for v in vals)
+                        owed = {"value": dec_str(round_dec(dmul(total, dec(rate)), a["rounding"])), "currency": curs.pop()}
             com["amount"] = "sealed" if owed is SEALED else owed if owed else "no base reported yet"
         dis = f["discharge"]
         ack_roles = set(as_list(dis.get("ack", [])))

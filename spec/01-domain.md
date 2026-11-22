@@ -28,9 +28,11 @@ Every object is a JSON object. Its **canonical form** is its serialization under
 
 To keep canonical forms identical across languages:
 
-- JSON numbers MAY appear only as integers in the range −(2⁵³−1) to 2⁵³−1. Every other number (prices, rates, quantities with fractions) is a **Decimal** string (§2).
+- JSON numbers MAY appear only as integers in the range −(2⁵³−1) to 2⁵³−1. Every other number (prices, rates, quantities with fractions) is a **Decimal** string (§2). As in RFC 8785, a number is a value, not a spelling: `100`, `100.0` and `1e2` are the same integer and canonicalize as `100`. A number with a fractional part, NaN, or Infinity is invalid.
 - Object keys are ASCII.
+- Strings MUST NOT contain unpaired surrogates (I-JSON, RFC 7493, on which RFC 8785 relies).
 - `null` is not used. An absent optional field is omitted.
+- A JSON text with a duplicate key in one object is invalid. (The reference CLI rejects such files when it reads them.)
 
 ### 1.2 Content hash
 
@@ -48,7 +50,14 @@ Confidential values are always hashed in their **sealed** form (§3). The hash o
 - A **signature** is an Ed25519 signature (RFC 8032) whose message is the **32 raw bytes** of the SHA-256 digest inside `hash(o)`.
 - Signatures are attached in a top-level `sigs` array of `{ "key": PublicKey, "sig": "<lowercase-hex 64 bytes>", "mandate"?: Hash }`, sorted by `key`. `mandate` is present when the signer is an agent acting under a Mandate (§10).
 
-A signature is valid iff it verifies under its key for the hash of the object it is attached to.
+A signature is valid iff it verifies under its key for the hash of the object it is attached to, under these **strict** rules, which every implementation applies identically:
+
+1. The key matches `ed25519:[0-9a-f]{64}` and the signature matches `[0-9a-f]{128}` (lowercase only, no whitespace).
+2. The key is canonically encoded (its y-coordinate is less than p = 2²⁵⁵ − 19) and is **not of small order**. The eight points of order dividing 8 have the y-coordinates 0, 1, p − 1, and the two values listed in `src/universal_paper/crypto.py`. A key that is one of them would let anyone produce "signatures" that verify, so it is never a valid Party or agent key, and an Agreement that lists one is invalid (A1).
+3. R (the first 32 bytes of the signature) is canonically encoded (y < p), and S (the last 32 bytes, little-endian) is less than the group order L.
+4. The verification equation is the cofactorless one of RFC 8032 §5.1.7: [S]B = R + [k]A.
+
+Without these rules, two correct Ed25519 libraries can disagree about edge-case signatures, and two evaluators would then disagree about validity (A4).
 
 ---
 
@@ -56,18 +65,33 @@ A signature is valid iff it verifies under its key for the hash of the object it
 
 | Type | Form | Notes |
 |---|---|---|
-| Hash | `"sha256:<64 hex>"` | §1.2 |
+| Hash | `"sha256:<64 lowercase hex>"` | §1.2 |
 | PublicKey | `"ed25519:<64 hex>"` | §1.3 |
-| Time | RFC 3339 UTC, second precision, `Z` suffix, e.g. `"2027-01-01T00:00:00Z"` | No time zones or fractional seconds |
-| Decimal | String matching `-?(0\|[1-9][0-9]*)(\.[0-9]+)?` | No exponent, no leading `+` |
-| Amount | `{ "value": Decimal, "currency": "<ISO 4217 code>" }` | |
+| Time | RFC 3339 UTC, second precision, `Z` suffix, e.g. `"2027-01-01T00:00:00Z"` | Years 0001 to 9999. A real calendar date and a time of 00:00:00 to 23:59:59. ASCII digits only. No time zones or fractional seconds |
+| Decimal | String matching `-?(0\|[1-9][0-9]*)(\.[0-9]+)?`, at most 64 characters | No exponent, no leading `+`, ASCII digits only |
+| Amount | `{ "value": Decimal, "currency": "<ISO 4217 code>" }` | Currency is three uppercase ASCII letters |
 | Rate | Decimal, as a fraction (`"0.025"` is two and a half percent) | |
-| Period | `{ "unit": "day"\|"month"\|"quarter"\|"year", "count": int ≥ 1 }` | Arithmetic in [04-inference §2](04-inference.md#2-time-and-period-arithmetic) |
-| Rounding | `{ "scale": int, "mode": "half-even"\|"half-up"\|"down"\|"up" }` | No default ([04-inference §6](04-inference.md#6-arithmetic)) |
+| Period | `{ "unit": "day"\|"month"\|"quarter"\|"year", "count": int }` | count from 1 to 10 000. Arithmetic in [04-inference §2](04-inference.md#2-time-and-period-arithmetic) |
+| Rounding | `{ "scale": int, "mode": "half-even"\|"half-up"\|"down"\|"up" }` | scale from 0 to 18. No default ([04-inference §6](04-inference.md#6-arithmetic)) |
+| int | A JSON integer from 0 to 2⁵³ − 1 | Counts such as `max_renewals` |
+| string | Any JSON string | Free text. Sealable |
+| Name | A non-empty string that other fields refer to | Clause names, option (tier) names. Structural, never sealed |
 | **Identifier** | `{ "scheme": string, "id": string }` | See below |
 | ClaimType | `"<Term id>/<name>"` | e.g. `"UP:Tier-Selection/selects"` |
 | ChainId | Hash | The hash of a chain's genesis Event (§8.3) |
 | **Seal** | `{ "seal": "sha256:<64 hex>" }` | §3 |
+
+### Type expressions
+
+Term parameters (`params.<name>.type`) and claim data fields (`claims.<type>.data.<field>`) declare their types with a small expression language, which every evaluator parses the same way:
+
+- a type name from the table above (`Time`, `Period`, `Decimal`, `Rate`, `Amount`, `Identifier`, `Hash`, `ChainId`, `Role`, `Rounding`, `string`, `Name`, `int`);
+- `[T]`, a list of T;
+- `{a: T, b: U}`, an object with exactly those fields;
+- `{<k>: T}`, a non-empty object whose keys are chosen by the parties (for example tier names) and whose values are T;
+- `"x" | T | …`, one of several alternatives, where `"x"` is a literal string.
+
+A value has a type only if it matches it exactly (no extra or missing fields). A Seal may stand in place of an `Amount`, `Rate`, `Decimal`, `string`, or an Identifier's `id`, and nowhere else (§3.3). A TermDefinition that uses an unrecognized type expression is invalid (A1).
 
 ### Identifier
 
@@ -112,7 +136,7 @@ Only values that are commercially sensitive and that no validity check depends o
 
 | May be sealed | May not be sealed (structural) |
 |---|---|
-| Amount, Rate, Decimal quantities, free-text strings (descriptions, bases, conditions), Identifier `id`s inside claim data and Agreement parameters | Roles, PublicKeys, Times, Periods, Hashes, ChainIds, ClaimTypes, clause names, Term ids, option names, Event kinds, and every field of a Mandate's scope other than its bounds |
+| Amount, Rate, Decimal quantities, free-text strings (descriptions, bases, conditions), Identifier `id`s inside claim data and Agreement parameters | Roles, PublicKeys, Times, Periods, Roundings, ints, Hashes, ChainIds, ClaimTypes, Names (clause names, option names), Term ids, Event kinds, and every field of a Mandate's scope other than its bounds |
 
 This split is what makes [A10](03-axioms.md) achievable: every validity check reads only structural fields. Values that depend on sealed fields (a price, a fee amount, whether a payment covered it) are **computed values**. An evaluator without the Disclosure reports them as `sealed`, and still agrees with everyone on validity and on the State hash.
 
@@ -328,7 +352,7 @@ A signed, bounded grant of authority from a Party (the **principal**) to an **ag
 
 **Coverage.** A Mandate M covers a signature on Event E iff all six rules hold:
 
-1. M is signed by `M.principal`, and the signing key is `M.agent`.
+1. M is well formed (`principal` and `agent` are valid keys under §1.3, `not_before` and `expires` are Times), M is signed by `M.principal`, and the signing key is `M.agent`.
 2. `M.not_before ≤ E.at < M.expires`.
 3. `E.kind ∈ M.scope.kinds`, the principal holds a Role in `M.scope.roles` in the relevant Agreement, and if `chains` is present, E's chain is listed (a genesis `propose` is covered only when `chains` is absent).
 4. For `propose`, and for `accept` of a proposal: every Clause of the proposed Agreement uses a Term listed in `terms`, and **every** parameter of that Clause has a Bound in M that its value satisfies. A parameter with no Bound is not covered. Use `{ "any": true }` to allow any value.
@@ -378,4 +402,4 @@ The self-contained unit for offline verification. A container, not a primitive.
 }
 ```
 
-A Bundle MUST include every chain that an included chain links to. Two holders of the same chains may hold different `disclosures`. They still agree on validity and every State hash. Given a Bundle and this spec, an evaluator needs nothing else: no network, no registry, no permission.
+A Bundle MUST include every chain that an included chain links to. Each chain appears in `chains` once. Two entries whose first Events are identical have the same ChainId, so they are two versions of one chain (a fork, which A3 rules out): such a Bundle is invalid, and an evaluator reports it instead of choosing one. Two holders of the same chains may hold different `disclosures`. They still agree on validity and every State hash. Given a Bundle and this spec, an evaluator needs nothing else: no network, no registry, no permission.

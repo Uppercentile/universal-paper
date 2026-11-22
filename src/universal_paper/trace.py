@@ -24,9 +24,10 @@ def _names(b: Bundle) -> dict[str, str]:
 
 
 def describe(E: dict, b: Bundle, names: dict[str, str], chain_label: str) -> str:
-    who = names.get(E.get("by"), E.get("by", "?")[:16])
+    by = str(E.get("by", "?"))
+    who = names.get(by, by[:16])
     agent = next((s for s in E.get("sigs", []) if "mandate" in s), None)
-    via = f" (through its agent)" if agent else ""
+    via = " (through its agent)" if agent else ""
     kind, body = E.get("kind"), E.get("body", {})
     if kind == "propose":
         ag = body.get("agreement", {})
@@ -66,7 +67,6 @@ def make_trace(reference: dict, evaluators: list[dict], meta: dict, final_at: st
     evaluators: [{id, name, data, tampered?, hashes_only?}], each evaluating its own copy independently."""
     ref = Bundle(reference)
     names = _names(ref)
-    ref_ev = Evaluator(ref)
     order = sorted(((E["at"], pos, i) for pos, ch in enumerate(ref.chain_list) for i, E in enumerate(ch)))
     labels = {}
     for pos, ch in enumerate(ref.chain_list):
@@ -81,7 +81,7 @@ def make_trace(reference: dict, evaluators: list[dict], meta: dict, final_at: st
 
     processed: dict[int, int] = {}
     steps = []
-    for n, (at, pos, i) in enumerate(order):
+    for n, (_at, pos, i) in enumerate(order):
         E = ref.chain_list[pos][i]
         processed[pos] = i
         agent_sig = next((s for s in E.get("sigs", []) if "mandate" in s), None)
@@ -101,7 +101,7 @@ def make_trace(reference: dict, evaluators: list[dict], meta: dict, final_at: st
                                     "principal_name": names.get(m["principal"], ""), "agent": m["agent"],
                                     "not_before": m["not_before"], "expires": m["expires"], "scope": m["scope"]}
         results = {}
-        for e, b, ev, runs in evs:
+        for e, _b, ev, runs in evs:
             st = runs[pos][i] if pos < len(runs) and i < len(runs[pos]) else None
             chain_hashes = []
             for p in range(len(ref.chain_list)):

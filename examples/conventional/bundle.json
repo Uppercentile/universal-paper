@@ -29,7 +29,7 @@
                 "term": "UP:Renewing-Term"
               },
               {
-                "def": "sha256:cd0f44c7971fc2370e510efe478c354b791b17f1c9a10165aa80b1d78cd3aeb0",
+                "def": "sha256:d93331fba3ba3e376b1e9b40ee1ea9dedecdc1db8da49981aaa4ce56bbc39f70",
                 "n": "tiers",
                 "params": {
                   "prices": [
@@ -129,7 +129,7 @@
                 "term": "UP:Sales-Reporting"
               },
               {
-                "def": "sha256:7794f7872d6cef305839b2fdc7b7e9f2916e71f20cde4bdac95321848e21a85e",
+                "def": "sha256:86262a69a7bfba34d47e0f3052aecb541702abea12286e098e60333fa1e24168",
                 "n": "fee",
                 "params": {
                   "due": {
@@ -238,7 +238,7 @@
         "sigs": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-            "sig": "33bbaaef6af4750a8b49e600f44629911f9ff4faf0212d63f7de6b4b3c6de5255fd3abb54ad17fdef15969a33c454d064801d5da89348c6518b060d17ea6c707"
+            "sig": "a239a17abb59fc9018b16162fb3429570c17c33fc9f5a25701696a090118cf1771cc8e228916c1317bec076bc59d92cc2aa6976b50e278c014ccbc802e43f700"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -247,16 +247,16 @@
       {
         "at": "2026-12-05T10:00:00Z",
         "body": {
-          "target": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be"
+          "target": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "accept",
-        "prev": "sha256:56eb3b283c61ff16b1131587dd3ef2adf199fa6d838bae030db3d5ff3435f4e3",
+        "prev": "sha256:773fbda90ed8c3992be0967e55abadc4109b9022abd689cf11a5e62709e9e68e",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "9b320d90f90f0e212292ef34089ef1d3a8ec753bc3422723c93f06b88a52adb0c48e92b57e35449ba9ef49a805d667a7a2a8cef1102584ff11fd887038f9bc0d"
+            "sig": "930b9daa3a9aeed3351a8c1af9ee590235fab5d0b7b2d9e6e999f0366efaaf82ac66cb073bfc0239a0bbe87250cd4bdb8fadb1d14e1a05b24db4f10380463c03"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -278,7 +278,7 @@
                     "currency": "USD",
                     "value": "940.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "100"
                 },
                 {
@@ -290,7 +290,7 @@
                     "currency": "USD",
                     "value": "435.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "20"
                 },
                 {
@@ -302,7 +302,7 @@
                     "currency": "USD",
                     "value": "455.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "50"
                 },
                 {
@@ -314,7 +314,7 @@
                     "currency": "USD",
                     "value": "1220.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "400"
                 }
               ],
@@ -331,13 +331,13 @@
           }
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "attest",
-        "prev": "sha256:e4b9de1920c30e1d851bc9a9e00c98dd7cc6c654f489e8a06014e752fde102aa",
+        "prev": "sha256:ddadd3448f6286da0395971368d713cdfbdad33eab77561b624453b95d08b4a5",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "4fc5be48491c73fc598ddfc4f653709be0af60863473c536315e0ff47598a498c30a99f752f641e03030b7b42dbdfec5c1dc93f1bce0166596a9f8ba28016d0a"
+            "sig": "c0139109319537028662f5e299761ca71cd27d2b41de662a10ca6561c0ba36a749ff3745e0112da177b6d6c1089d5a32cef70636d06ff2a3ffe71fb374cf4409"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -363,13 +363,13 @@
           }
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "attest",
-        "prev": "sha256:d3172753d5966f6c252e6f7544e343b9293f81585f731423558784123048f181",
+        "prev": "sha256:125fb4e3f9dc3d5cec416574cfcdf5600845742047b5cbf7385c8f55a652d8d2",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "df716e1513656b4f69b2862226977eb753aa126fb20e1e845903dce9ca5abb3e1853e85e0c43786aa7327f7c39e5246e394a4b33bf1cdb67c3fd574d6f0c6c0d"
+            "sig": "8aa036d1366139508eebad4b0de075f92bcbe17adee6c2d2e327e9fedc37b02e067113da09455a2aca8b1d85418605b481b86cffc84bd4ef1983876600765905"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -378,16 +378,16 @@
       {
         "at": "2027-02-21T12:00:00Z",
         "body": {
-          "target": "sha256:abe368d557d38dba42319ad822225a32cb9238d900893126658ee363f2415f6e"
+          "target": "sha256:1a065cd31fa7b3995aab2a8145eb853bf5b6ec8dd61425fa987c2c7cf8b95915"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "accept",
-        "prev": "sha256:ec9191a118e6dec0c1613475d87e7635e3ec339abdaedfc050e7dc3e3c567f87",
+        "prev": "sha256:1855dc47e305330db725f1f1933e78f0e75410836f8e6a6496f6a22906a04797",
         "sigs": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-            "sig": "05fda4117124561d602497edcf356e2d8fb1b297e6002dd2f24fd6aa8fbd9983f5fdb500ed1d102c8ab2a4ab764ccced3ed5e957746151a289bb05c00e19b00e"
+            "sig": "9f6b35d4d3805efbf568fe95672a246b5e56bec4520aab30132b1d819ef7ce230d125685dafaa0e6bcf6c2b935834268109469b84482590e4c4b1e11a73c870e"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -409,7 +409,7 @@
                     "currency": "USD",
                     "value": "376.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "40"
                 },
                 {
@@ -421,7 +421,7 @@
                     "currency": "USD",
                     "value": "546.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "60"
                 },
                 {
@@ -433,7 +433,7 @@
                     "currency": "USD",
                     "value": "525.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "25"
                 },
                 {
@@ -445,7 +445,7 @@
                     "currency": "USD",
                     "value": "500.50"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "55"
                 },
                 {
@@ -457,7 +457,7 @@
                     "currency": "USD",
                     "value": "1159.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "380"
                 }
               ],
@@ -474,13 +474,13 @@
           }
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "attest",
-        "prev": "sha256:5fbd0d99d9928ec356f0c390a343a77434268587dde92051eea95fa9b23c8417",
+        "prev": "sha256:c24baa43a60c170b748bbdbf8deddb97e964888d8d1d17edf548ca68000a4aaa",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "b566a7aeb31ec038e76d60c32a332cec6faaf567d4fc96df1c34d4552013ebbcddf802680d71527c0266566fcf8de973a7153439fcda54a55df07ea1826d250e"
+            "sig": "6de34abc0daf3aa4e96a961af2e5cb170a9a7204672ce1894cf093e4852329d43ae29a584395e5bb7f17943d0313e54399d5bfa27e741dcb0489d55e1f71b709"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -506,13 +506,13 @@
           }
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "attest",
-        "prev": "sha256:01792d1cc2e6adabe319dd57f2f0e1f1cb640642553304fe17cececd3b22907a",
+        "prev": "sha256:4042eb1780e2da0c7ec48648b55d642b7ef78652653e9f70049820b754e6241f",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "a85fdef117bffc45fc7e5f92dfc77fe875e49d309d9c5f79360671ce60c74f7bcc7a7da51f28bb51ccebb841a26f34684988964d06f08860c8f9a03babaf670b"
+            "sig": "cbc922aec5361bdbe8194682260ecff071e2b7e8f15e449c46a34742a983fd52540b8c0699733185a2dd0a45b7d90d023d82bfa762323026b7253fed2c2cf906"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -521,16 +521,16 @@
       {
         "at": "2027-03-26T12:00:00Z",
         "body": {
-          "target": "sha256:19ee0a43c0c1510d9bc5c5c1a825e471d2016f7d45d7d094f52a2eec4ab9564e"
+          "target": "sha256:41805b5448c22a00acbc077fa8b6bc1cc534bb1f6ecf794440f28705888f4228"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "accept",
-        "prev": "sha256:3da56f06dd7b3594ec2eb909e942651951546772254930026395b03a49d5e91e",
+        "prev": "sha256:0deb28d69ea581f18962deb152018527e4b4d960f1f610b8520bd72766695eb6",
         "sigs": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-            "sig": "805783f9b7653aff8b058e391752384cd06725b46954f67aa5b4113968cae79781717b50e5c03a876725a00789e5f6f02cef36538425739e169a2397feb4e308"
+            "sig": "f3cd4fb8a2cc0040771f60ae9bbc6e6647456f284f2de1c964115a4317733fb1b63cea3f1426bdbd2922306014098379ef9b08c930802c27f0cdf01ebcb4f70a"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -552,7 +552,7 @@
                     "currency": "USD",
                     "value": "1001.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "110"
                 },
                 {
@@ -564,7 +564,7 @@
                     "currency": "USD",
                     "value": "630.00"
                   },
-                  "participation": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+                  "participation": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
                   "quantity": "30"
                 },
                 {
@@ -576,7 +576,7 @@
                     "currency": "USD",
                     "value": "409.50"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "45"
                 },
                 {
@@ -588,7 +588,7 @@
                     "currency": "USD",
                     "value": "1281.00"
                   },
-                  "participation": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+                  "participation": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
                   "quantity": "420"
                 }
               ],
@@ -605,13 +605,13 @@
           }
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be",
+        "chain": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
         "kind": "attest",
-        "prev": "sha256:89845772bda44c0a370f7db67b24dbf3706c3a971f501176032f56925cf41455",
+        "prev": "sha256:07838bdabf2e050ff5e2c8d8926d230e090979c02b93a82af7a3c3ecb06b1e15",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "167408a9659798b53a1ef0a05286ab47aeaf3ee78e7e7b8fce7c4c6e790be7456334eee8e0fa17affc8318dd35a79298cd66cc0845c891a6543d176b2d6be703"
+            "sig": "01f20ad10e55823baae4f9cef803b45e919adc780eb93017bb34468d7405903853a69c6d588e3fae2143efb0265144790d2f8b0e36072e7fd9ca1ae9aab1b207"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -628,12 +628,12 @@
                 "def": "sha256:b4702b4663f074fff69b20fa34d5eaf46e5c26d1912365cc9288f159e5889701",
                 "n": "participation",
                 "params": {
-                  "parent": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be"
+                  "parent": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb"
                 },
                 "term": "UP:Participation"
               },
               {
-                "def": "sha256:b6428925befec7c2267083b0664c08c2b7700f93f570f0ef3219c4b61b516d75",
+                "def": "sha256:caca2ea12ee3bdab2d1c22cd36ffa18970e3e65991a60b9ca0724982f0e710e5",
                 "n": "tier",
                 "params": {
                   "effective": "on-ack",
@@ -738,7 +738,7 @@
         "sigs": [
           {
             "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-            "sig": "6761703b515ec75f2a8b3a240de824fcb3f3c0949782479c067b028e821e0d46b4a5493a6a412e5cdeb04d9f8088b214e58c419fa5d635c031fef451b6fb5e0e"
+            "sig": "afa3a893d69632e37ef3215cd61488e7cd512bd4b44742bccefc24e16e1a9c5b7db70f5f091b6318da4beb4000c0a8fc8381f2b0bb8fc3ac168d57d5ef4bc508"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -747,16 +747,16 @@
       {
         "at": "2027-01-04T13:00:00Z",
         "body": {
-          "target": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d"
+          "target": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-        "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "kind": "accept",
-        "prev": "sha256:42353c215aa093bc12364cd56107ee0c47da5392a61345d0fb78efd3c83793f7",
+        "prev": "sha256:0f3d43dc7cb3f2fd5a3f7422c1cf4cd077b2e18e7ecc8b02463316a2f22cda6f",
         "sigs": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-            "sig": "96367926b77980d338058dd9b0e0fac3c8e339b80158b62e95b3dd109502b1bea1547a71b980a16f8f4a37845585a45e887175f671802a292486b1a48b535700"
+            "sig": "4160d3707c353a7ea3c8db14f626b265d42039163d2de7503c1e2120e6a2699fcae321ba8ffa5a6b7e1cc170fbfcc51c98f3f7bb4aaec305d0be6052a405ee0d"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -765,16 +765,16 @@
       {
         "at": "2027-01-04T16:00:00Z",
         "body": {
-          "target": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d"
+          "target": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "kind": "accept",
-        "prev": "sha256:4856f934a6740a5c3cd92a626bfd974e1ef1edbaa3faa38b3f1afa8efae30c2c",
+        "prev": "sha256:247afdbd365316638b126e7d11143c3c709a8f1678264fda1026b086ef5ed92d",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "7d15ce7bfe106d34712c68c929783256eb8c82c9a8b31694c22bd57aa65d5feb61f7df2c7c1f2cdc119958a84f7b355b18f40b0ead232537d83bf4608561e106"
+            "sig": "c9d37155c5c2a81b7b3303a08d442f0199b88bbcd1d276fc899dd28682ee8087f4fac8eb9714f09abdd257ada71a1e5f3f3f572c500397c74bfc225377143402"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -793,13 +793,13 @@
           }
         },
         "by": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-        "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "kind": "attest",
-        "prev": "sha256:600bbc4055067878c4e508fd30a39ee9821546e1ed49b60ade57623cd8859e78",
+        "prev": "sha256:cb39ca96b90e15321861803535a37ee1f56375f4a9dece4846be6cb429a3092e",
         "sigs": [
           {
             "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-            "sig": "301a03ff7d953e8ba939a74196941d4e9f0d4dd0c642ec0a61e38f051a1b51d6286ddf328600c1a9289ffcc4d331bc56d643a7b930079f763d3210387e17dc07"
+            "sig": "53549cf1177cd91b78c559223d8a89250541f308557bfaf6b59dd55b16aa7c08af8d012ae7228fc36ffb06d188779c173ac8ae3af5f2878925c5b78864d59e05"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -808,16 +808,16 @@
       {
         "at": "2027-01-07T15:00:00Z",
         "body": {
-          "target": "sha256:074784182d09c3168197326543a8530a8014bf57e606aafccc9d8d3c3f15552b"
+          "target": "sha256:1b77e967919267a89ec659375c7eb8de9f3fabe657b97cad9da3452387a683d3"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "kind": "accept",
-        "prev": "sha256:8e490e5784f063346c7e5c6e6c47def0bc61bf7852e6a1cd64b55b9703fa1a2a",
+        "prev": "sha256:dc3cf9aa0bb7c02f75c005fd1af3f62f18e29579cbf7466a8c9b1baee3d91e9c",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "c5f9f8d20a4fd462641bd9e0f9d93ebbff6b9bcc7ee2f54e037b51dab0c2a1fd3451839e2ff41984ab16e6aa5bca0794de1750891d5b7fb8ef4ce4a1688bd400"
+            "sig": "eabd577135c8dc07a73de35cf60a82a4157949d6c5d314a2fe06a2aeb475d90349c1526d9b1bd255705249b0a33717dc8acb0bffaf39717c0662df3c10906606"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -836,13 +836,13 @@
           }
         },
         "by": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-        "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "kind": "attest",
-        "prev": "sha256:4120881fc2ece93350dc006d155a426bf0fc7353d82d1b681eb18012322e540c",
+        "prev": "sha256:4baf71a06137b512e85d217346c4a9376ac992ef75d056ef6f67fe7c1f081a97",
         "sigs": [
           {
             "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-            "sig": "3738b71b3b1d535055d14dfd811391f196038e24ea024ae9d02f1aaf0fc70d922555502e205cf61fc27cb9777f134ccfd22959055eb6fb08d2f7ebd2313d3106"
+            "sig": "69ce440357ab8a1a55e2edc738255ecb411b9b1395ecb2b1bca02a33e8d1a84637d6296e32feeda595b64f65f9dfac2e61c6c59813444c944fde4308aed4330b"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -851,16 +851,16 @@
       {
         "at": "2027-02-16T09:00:00Z",
         "body": {
-          "target": "sha256:09307e06a52cfd4ea5bf01e7cb8d20654cffe88b6feda63b7ed3490e260ff2ce"
+          "target": "sha256:611e2494482a07e9058a51a379aa5e670863895f6823fa06c8cca7aef574b423"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "kind": "accept",
-        "prev": "sha256:f149824efd90e323845eac061a51fab77afeb96c71ddf0735a76de56f8068b7c",
+        "prev": "sha256:af9cf3de3dc42454938a2116597e093026f1efa5560dceaa02fe17735c643e1a",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "f61166044157b77eff6b129ec5cd6ccf391619227085262bcab56822976d8f40c7c4fa2f1de83272970f2cc4fc72a6a6b9f2d8c97e5760b436e62c26c882d607"
+            "sig": "e27a6d338eb8305d050f0e3936bbc3cb6ffd06f9ae390e0dd177dd42a131bfa4f024ce2ed03209464939f05cbcdef3aed96f3f9baca0bec881bb91ec33eb6f08"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -886,13 +886,13 @@
           }
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-        "chain": "sha256:7ee62d05ebec713c341e197d247c12fd24b2c0194afb4442f40fc3d6348ac62d",
+        "chain": "sha256:66c4a315768e55874ab69d2c6890d3a93f28ccdc5c2cdd91ae42b5ac655c24be",
         "kind": "attest",
-        "prev": "sha256:8ce410c487c80a9adbf754b0d5de969f0a565e272ddbfef8ce1a97977fb05b79",
+        "prev": "sha256:d450674ef4204394954019e3eb2d6fe9a779cf87da6dbf8489b7c12305a2cbad",
         "sigs": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-            "sig": "4f6b548cab15c432532b4d8ced22906471b15e17e18506547aa0a2aba0284ca35f2bc8075635bacfac96f437a405343a2bd1b849cd688c6489c21e2410bbbc01"
+            "sig": "ea9788de98410c819898dd4e79ab8374d8f3458a6d74212d3f76944feee07294f5fb5593cf1a9ef123b6f362230369d3c6e7363020bb4c56ff28ec86e1ee300a"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -909,12 +909,12 @@
                 "def": "sha256:b4702b4663f074fff69b20fa34d5eaf46e5c26d1912365cc9288f159e5889701",
                 "n": "participation",
                 "params": {
-                  "parent": "sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be"
+                  "parent": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb"
                 },
                 "term": "UP:Participation"
               },
               {
-                "def": "sha256:b6428925befec7c2267083b0664c08c2b7700f93f570f0ef3219c4b61b516d75",
+                "def": "sha256:caca2ea12ee3bdab2d1c22cd36ffa18970e3e65991a60b9ca0724982f0e710e5",
                 "n": "tier",
                 "params": {
                   "effective": "on-ack",
@@ -1019,7 +1019,7 @@
         "sigs": [
           {
             "key": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
-            "sig": "601da188b5c724373cf39c9a5ed7e03f881e2a5d8d7e02f06d2bafdb2de6a0fcc74f297cd180916ce76dd7552cbe6cb2b5e5a6a35582a34926ad54d41f000c08"
+            "sig": "6f1213ce66e531dce2072e8aeb978fbf826fc6df54b3f79068ac3327b9fba9d30d3237d7bb5d825c459ba2a6f52543e5d835fdea59d26283f52c48e1a89d9908"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -1028,16 +1028,16 @@
       {
         "at": "2027-01-10T13:00:00Z",
         "body": {
-          "target": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68"
+          "target": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-        "chain": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+        "chain": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
         "kind": "accept",
-        "prev": "sha256:2848ba439745c27aa019bb54876c397f5dc657b02fb907b4efe8e89bb1156495",
+        "prev": "sha256:8fe143a71495ad347ae35b34dfc176f48b374e236ff50b3d8b5ae7c86a390113",
         "sigs": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-            "sig": "3507e7c42379664f68534061d5aa51527bcdefaa2c1760e414ee78ac0d4762631e1827ef3fac4d36e783db9a8f381356dff6a610317db3edbba1639f7d3f1d06"
+            "sig": "18541da1bf0f93f2519cf91d212c9a9ef2fe13338d592c8fc77c6703dc44e895d05ad87854e85f7f86a1901fb0e33112073b551ab0f650f214297402282cf601"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -1046,16 +1046,16 @@
       {
         "at": "2027-01-10T16:00:00Z",
         "body": {
-          "target": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68"
+          "target": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+        "chain": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
         "kind": "accept",
-        "prev": "sha256:c8dea59d06cdf389ee05db45dc53873e7ff675230da8bc4775c8756dd96167e0",
+        "prev": "sha256:b3a739a2a1d58af8904ce4d2b6a9fa9f43c51f7c3cebcbd1de1e87e9398871c6",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "786f115a9b359e3b513d5dfa213f1172d42102a8bdcbf08380356c47a5ab542092c3eb8df96e25f0420b1cc407c842d79f464e6bb0891b5547e21f0baba0350a"
+            "sig": "f50996cc4bf2e4c50dc9c5966823628f41a420ac020389c887c56287abc0e7de4992302f96300a228ab3bbf375a5d09515937081ca36dda67c1c9cbd77ac050d"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -1074,17 +1074,17 @@
           }
         },
         "by": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
-        "chain": "sha256:8099ec5f4d013adc4fa13cc650925a5ff2a125fc3833e8e6b48f98026b550b68",
+        "chain": "sha256:3127d8a971c58ff1068fd91951155d1776dbcfc27ab8e993db7f749682cafd20",
         "kind": "attest",
-        "prev": "sha256:daa8031af3aa2185d9d4ac9f8b8e5a9c504200bb05fb39917bc7abd237d1d405",
+        "prev": "sha256:946ec3d3cab69f2b66370de38b501cf5e08647f14a31e754f7ec18a2558b5ebe",
         "sigs": [
           {
             "key": "ed25519:2fcceea115362ee7f3eed44d1f13e2ca80b11dac20e44a2572ac5d69a74bc1a8",
-            "sig": "464c81834b37b84620845d45f517a916c6561f7a5e2cae74cc3df624727afaeb2ccd8145a7440b5bd9099154628c5868334db82db1e91bb0c3541a77f9ac8f04"
+            "sig": "a8fc57ddf0aebd7c6c19e970eab97ebbfe3610fe1f6e6bb9881685b4ef02ba722c3f8bf90aa90d4b0623a72120f99a348db2be88c99765cad59985b5f8d4ad0b"
           },
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "5e95d1996726124f87b7d27aba50441e466812f6aad89cdaa52bfb1cbde3f10249ce67650e0b6b2390488ae2aefcb532cfdddf8c8d99cda2daa81ce4717fbd07"
+            "sig": "246477680e6b6f851ce0df63313f0e27dfd109c2d2566b3962b2a52165b5aa97ee9da1e4300ec209865f5d2ccf7c22cd1e99405e47a0cbded93288d0aff6cd0b"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -1174,7 +1174,7 @@
         },
         "report_clause": {
           "doc": "Name of the Sales-Reporting clause whose reports form the base.",
-          "type": "string"
+          "type": "Name"
         },
         "rounding": {
           "doc": "Rounding applied to each period's fee.",
@@ -1612,7 +1612,7 @@
         "UP:Tier-Selection/selects": {
           "data": {
             "basis": "string",
-            "option": "string"
+            "option": "Name"
           },
           "doc": "The Member attests that it meets the conditions of the named tier, stating the basis."
         }
@@ -1648,11 +1648,11 @@
         },
         "initial": {
           "doc": "Tier in effect before any selection.",
-          "type": "string"
+          "type": "Name"
         },
         "tiers_clause": {
           "doc": "Name of the Tiers clause in the parent Agreement.",
-          "type": "string"
+          "type": "Name"
         }
       },
       "provenance": {
@@ -1688,7 +1688,7 @@
         },
         "tiers": {
           "doc": "The tiers, in order, with descriptive qualification conditions.",
-          "type": "[{name: string, conditions: string}]"
+          "type": "[{name: Name, conditions: string}]"
         }
       },
       "provenance": {

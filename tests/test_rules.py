@@ -1,10 +1,10 @@
 """Transition rules (spec/05-lifecycle.md) and clause forms (spec/04-inference.md §3)."""
-import copy
+
+from universal_paper.build import World
+from universal_paper.canon import content_hash
 
 from build_examples import DAYS, ITEMS, USD, conventional, master_clauses, overlay, period
 from helpers import AGG, MEM, OTHER, SUP, ev, master, participation, raw
-from universal_paper.build import World
-from universal_paper.canon import content_hash
 
 OPT = {"claim": {"type": "UP:Renewing-Term/optout", "clause": "term", "data": {}}}
 

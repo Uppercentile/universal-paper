@@ -4,15 +4,24 @@ from __future__ import annotations
 import calendar
 import hashlib
 import re
-from datetime import datetime, timedelta, timezone
-from decimal import ROUND_DOWN, ROUND_HALF_EVEN, ROUND_HALF_UP, ROUND_UP, Context, Decimal
+from datetime import UTC, datetime, timedelta
+from decimal import MAX_EMAX, MAX_PREC, MIN_EMIN, ROUND_DOWN, ROUND_HALF_EVEN, ROUND_HALF_UP, ROUND_UP, Context, Decimal
 from typing import Any
 
 from .canon import jcs
 
-CTX = Context(prec=200)
-DEC_RE = re.compile(r"^-?(0|[1-9][0-9]*)(\.[0-9]+)?$")
-TIME_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+# Exact arithmetic (spec/04-inference.md §6): with the maximum precision, addition and
+# multiplication of Decimals never round. Rounding happens only in round_dec.
+CTX = Context(prec=MAX_PREC, Emax=MAX_EMAX, Emin=MIN_EMIN)
+# ASCII-only patterns anchored with \Z: Python's \d also matches non-ASCII digits, and $
+# also matches before a trailing newline. The JavaScript engine uses the same patterns.
+DEC_RE = re.compile(r"-?(0|[1-9][0-9]*)(\.[0-9]+)?\Z")
+TIME_RE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\Z")
+SALT_RE = re.compile(r"[0-9a-f]{64}\Z")
+# Bounds that keep every computation small and identical across implementations (spec/01-domain.md §2).
+MAX_DECIMAL_LEN = 64
+MAX_PERIOD_COUNT = 10000
+MAX_ROUNDING_SCALE = 18
 
 
 class Sealed:
@@ -35,7 +44,7 @@ SEALED = Sealed()
 # ---- Decimal ---------------------------------------------------------------
 
 def dec(s: str) -> Decimal:
-    if not isinstance(s, str) or not DEC_RE.match(s):
+    if not isinstance(s, str) or len(s) > MAX_DECIMAL_LEN or not DEC_RE.match(s):
         raise ValueError(f"not a Decimal string: {s!r}")
     return Decimal(s)
 
@@ -50,8 +59,22 @@ def dec_str(d: Decimal) -> str:
 ROUNDING_MODES = {"half-even": ROUND_HALF_EVEN, "half-up": ROUND_HALF_UP, "down": ROUND_DOWN, "up": ROUND_UP}
 
 
+def dmul(a: Decimal, b: Decimal) -> Decimal:
+    return CTX.multiply(a, b)
+
+
+def dsum(xs) -> Decimal:
+    total = Decimal(0)
+    for x in xs:
+        total = CTX.add(total, x)
+    return total
+
+
 def round_dec(d: Decimal, rounding: dict) -> Decimal:
-    q = Decimal(1).scaleb(-int(rounding["scale"]))
+    scale = rounding["scale"]
+    if not (isinstance(scale, int) and not isinstance(scale, bool) and 0 <= scale <= MAX_ROUNDING_SCALE):
+        raise ValueError(f"rounding scale must be an integer from 0 to {MAX_ROUNDING_SCALE}")
+    q = Decimal(1).scaleb(-scale)
     return d.quantize(q, rounding=ROUNDING_MODES[rounding["mode"]], context=CTX)
 
 
@@ -60,11 +83,17 @@ def round_dec(d: Decimal, rounding: dict) -> Decimal:
 def parse_time(s: str) -> datetime:
     if not isinstance(s, str) or not TIME_RE.match(s):
         raise ValueError(f"not a UP Time: {s!r}")
-    return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    try:
+        return datetime(int(s[0:4]), int(s[5:7]), int(s[8:10]), int(s[11:13]), int(s[14:16]), int(s[17:19]),
+                        tzinfo=UTC)
+    except ValueError:
+        raise ValueError(f"not a UP Time: {s!r}") from None
 
 
 def fmt_time(d: datetime) -> str:
-    return d.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # Not strftime: on common platforms %Y does not zero-pad years before 1000.
+    d = d.astimezone(UTC)
+    return f"{d.year:04d}-{d.month:02d}-{d.day:02d}T{d.hour:02d}:{d.minute:02d}:{d.second:02d}Z"
 
 
 def _add_months(d: datetime, n: int) -> datetime:
@@ -78,7 +107,10 @@ def _add_months(d: datetime, n: int) -> datetime:
 def add_period(t: str, p: dict, k: int = 1) -> str:
     """t + k×p, computed directly (never by repeated addition)."""
     d = parse_time(t)
-    n = int(p["count"]) * k
+    count = p["count"]
+    if not (isinstance(count, int) and not isinstance(count, bool) and 1 <= count <= MAX_PERIOD_COUNT):
+        raise ValueError(f"period count must be an integer from 1 to {MAX_PERIOD_COUNT}")
+    n = count * k
     unit = p["unit"]
     if unit == "day":
         r = d + timedelta(days=n)
@@ -106,7 +138,7 @@ def is_seal(x: Any) -> bool:
 
 
 def seal_of(value: Any, salt: str) -> dict:
-    if not (isinstance(salt, str) and len(salt) == 64):
+    if not (isinstance(salt, str) and SALT_RE.match(salt)):
         raise ValueError("salt must be 64 hex characters")
     return {"seal": "sha256:" + hashlib.sha256(jcs({"salt": salt, "value": value})).hexdigest()}
 

@@ -1,14 +1,13 @@
 """Small worlds for tests. All values are hypothetical."""
 from __future__ import annotations
 
-import copy
-
-from build_examples import DAYS, ITEMS, MONTH, PRICES, R2, USD, master_clauses, participation_clauses, period, report_data
 from universal_paper import SPEC
 from universal_paper.build import Actor, World
 from universal_paper.canon import content_hash
 from universal_paper.crypto import attach
 from universal_paper.engine import Evaluator
+
+from build_examples import master_clauses, participation_clauses
 
 AGG = Actor("Test Aggregator")
 SUP = Actor("Test Supplier")
