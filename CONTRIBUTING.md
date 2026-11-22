@@ -2,7 +2,7 @@
 
 Thank you for helping. Universal Paper is a language first and software second, so contributions to the specification count as much as code.
 
-By contributing you agree that your contributions to `spec/` are licensed under [CC BY 4.0](spec/LICENSE) and everything else under [Apache-2.0](LICENSE). Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+By contributing you agree that your contributions to `spec/` and other documentation are licensed under [CC BY 4.0](spec/LICENSE), new example agreements and traces in `examples/` are dedicated to the public domain under [CC0 1.0](examples/LICENSE), and everything else is licensed under [Apache-2.0](LICENSE). You keep your copyright; everyone gets the same free terms. Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Ground rules
 

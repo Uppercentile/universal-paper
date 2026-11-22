@@ -6,7 +6,7 @@ Shared infrastructure for competitors works only if none of them owns it. A trad
 
 ## 1. No one owns the language
 
-Universal Paper is a language, like a unit of measure or a bookkeeping method. No party owns it. The specification is published under CC BY 4.0 and the reference code under Apache-2.0. Anyone may use, implement, extend, or fork either, for any purpose, without permission or payment.
+Universal Paper is a language, like a unit of measure or a bookkeeping method. No party owns it. Uppercentile created it and offers it to everyone for free. The specification is published under CC BY 4.0, the reference code under Apache-2.0, and the example agreements under CC0 1.0. Anyone may use, implement, extend, or fork either, for any purpose, without permission or payment.
 
 ## 2. The core carries no commercial interest
 
@@ -21,7 +21,7 @@ The steward maintains the specification on behalf of everyone who uses it. The s
 
 - The steward publishes, and keeps current, a statement of its commercial affiliations with any GPO, supplier, member, distributor, or technology vendor, and of any product it offers that builds on Universal Paper.
 - Anyone who proposes or reviews a change discloses affiliations relevant to that change.
-- Current steward: **Uppercentile** (per the project brief). **[PROVISIONAL: the name the spec is published under is open question 2]** Affiliation statement: *to be published by the steward.*
+- Current steward: **Uppercentile**, which created Universal Paper and publishes the specification. Affiliation statement: *to be published by the steward.*
 
 ## 4. Changes go through a public, versioned process
 

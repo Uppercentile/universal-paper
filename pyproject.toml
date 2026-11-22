@@ -5,7 +5,8 @@ description = "Reference interpreter for Universal Paper, a first-order language
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
-license-files = ["LICENSE", "spec/LICENSE"]
+authors = [{ name = "Uppercentile" }]
+license-files = ["LICENSE", "NOTICE", "spec/LICENSE"]
 keywords = ["agreements", "contracts", "group purchasing", "GPO", "ricardian", "canonical json", "ed25519"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -41,6 +42,12 @@ universal_paper = ["terms.json", "py.typed"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "examples"]
+
+[project.urls]
+Homepage = "https://universalpaper.org"
+Documentation = "https://universalpaper.org/spec/"
+Source = "https://github.com/Uppercentile/universal-paper"
+Issues = "https://github.com/Uppercentile/universal-paper/issues"
 
 [tool.ruff]
 line-length = 140

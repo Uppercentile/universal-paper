@@ -1,0 +1,24 @@
+Universal Paper
+https://universalpaper.org
+
+Copyright 2026 Uppercentile
+
+Universal Paper was created by Uppercentile, which offers it to everyone for
+free under open licenses:
+
+  - Specification, Term library and documentation (spec/, DESIGN_NOTES.md,
+    and the text of the website in site/): Creative Commons Attribution 4.0
+    International (CC BY 4.0). See spec/LICENSE.
+  - Code, JSON Schemas, tools, tests and test vectors (src/, explorer/,
+    schema/, tools/, tests/, site/*.py): Apache License, Version 2.0.
+    See LICENSE.
+  - Example agreements, bundles and traces (examples/): CC0 1.0 Universal
+    public domain dedication. See examples/LICENSE.
+
+No account, fee or license key is required to use, implement or build on
+Universal Paper.
+
+This product includes no third-party code. The Python reference interpreter
+depends at runtime on the "cryptography" package (Apache-2.0 or BSD-3-Clause).
+Web pages load the Inter, Inter Tight, JetBrains Mono and Source Serif 4
+fonts from Google Fonts (SIL Open Font License 1.1).

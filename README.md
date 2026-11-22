@@ -11,6 +11,8 @@ A first-order language for agreements between group purchasing organizations, su
 
 Universal Paper is a vocabulary, a grammar, and a set of validity rules. It is not an application. Anyone can verify an agreement written in it, offline, from the specification alone. The code here is a reference implementation of the language, never the language itself.
 
+**Website:** [universalpaper.org](https://universalpaper.org) · [Playground](https://universalpaper.org/#playground) · [FAQ](https://universalpaper.org/faq/)
+
 **Status:** `UP/0.1-draft`. Working draft, not yet reviewed by counsel. Until 1.0, changes to the spec may change what is valid and the hashes of Term definitions. Open questions are listed in [DESIGN_NOTES.md](DESIGN_NOTES.md#6-open-questions-for-the-steward). The pre-release audit is in [AUDIT.md](AUDIT.md).
 
 | Path | What it is |
@@ -22,6 +24,7 @@ Universal Paper is a vocabulary, a grammar, and a set of validity rules. It is n
 | [examples/](examples/) | Worked examples as full chains of signed events, plus traces |
 | [explorer/index.html](explorer/index.html) | Universal Paper Playground: an ecosystem view, the Playground (write, compare, history), and conformance (built from `explorer/src/`) |
 | [explorer/src/](explorer/src/) | The JavaScript second engine (`up-crypto.js`, `up-engine.js`), the random-run lab (`up-lab.js`), the history player (`up-play.js`), and the page |
+| [site/](site/) | The universalpaper.org website build (`python3 site/build_site.py`), deployed to GitHub Pages |
 | [tests/](tests/) | Tests for every axiom, transition rule, clause form, and Term, plus cross-engine differential and fuzz tests |
 | [AUDIT.md](AUDIT.md) | Pre-release audit: findings, fixes, and what remains open |
 
@@ -90,5 +93,12 @@ Contributions to the specification and the code are welcome: see [CONTRIBUTING.m
 
 ## Licenses
 
-- Specification (`spec/`): [CC BY 4.0](spec/LICENSE)
-- Code: [Apache-2.0](LICENSE)
+Universal Paper was created by [Uppercentile](https://uppercentile.com), which offers it to the market for free. Anyone may use, implement, extend, fork, and build commercial products on it, without permission or payment. No account, fee, or license key is ever required.
+
+| What | License |
+|---|---|
+| Specification, Term library, and documentation (`spec/`, `DESIGN_NOTES.md`, website text) | [CC BY 4.0](spec/LICENSE) |
+| Code, JSON Schemas, tools, tests, and test vectors | [Apache-2.0](LICENSE) (see [NOTICE](NOTICE)) |
+| Example agreements, bundles, and traces (`examples/`) | [CC0 1.0](examples/LICENSE) (public domain) |
+
+To credit the specification: *"Universal Paper" specification by Uppercentile, https://universalpaper.org, licensed under CC BY 4.0.* Details: [universalpaper.org/license](https://universalpaper.org/license/). Uppercentile is the specification's steward, not its owner; see the [neutrality charter](spec/08-neutrality-charter.md).
