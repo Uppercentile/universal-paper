@@ -673,6 +673,8 @@ footer .status { display: inline-flex; align-items: center; gap: 8px; } footer .
 .docs { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; }
 .docs .row { display: grid; grid-template-columns: 4.6em minmax(0, 1fr) auto; gap: 12px; padding: 11px 18px; border-bottom: 1px solid var(--line); font-size: .88rem; align-items: baseline; }
 .docs .row:last-child { border-bottom: 0; }
+a.row { color: inherit; text-decoration: none; } a.row:hover { background: var(--surface-2); }
+a.lk { color: inherit; text-decoration: none; }
 .docs .row .no { font-family: var(--mono); font-size: .72rem; color: var(--faint); }
 .docs .row .f { font-family: var(--mono); font-size: .68rem; color: var(--muted); }
 .oq { margin-top: 18px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 18px; display: grid; gap: 10px; }
@@ -1007,8 +1009,8 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
     <h1 class="display">The contract layer every system can <em>verify</em>.</h1>
     <p class="lead">Universal Paper is an open language for agreements between GPOs, suppliers and members. Every agreement, signature and change is plain JSON that any system can check for itself, offline.</p>
     <div class="cta">
-      <a class="btn primary" href="#how">See how it works</a>
-      <a class="btn" href="#start">Start building</a>
+      <a class="btn primary" href="#start">Quick start</a>
+      <a class="btn" href="/spec/">Read the spec</a>
     </div>
     <div class="install"><pre>git clone https://github.com/Uppercentile/universal-paper.git</pre><button class="copybtn" type="button">Copy</button></div>
     <div class="statrow">
@@ -1023,7 +1025,6 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
     <div class="marquee" aria-label="Standards: RFC 8785 Canonical JSON, SHA-256 Content hashes, RFC 8032 Ed25519 signatures, RFC 3339 Timestamps, ISO 4217 Currencies, GS1 GTIN items, GS1 GLN locations, HIBCC HIN, FDA NDC, ASC X12 845 · 844 · 849 · 867 mapping, CC BY 4.0 Spec license, Apache-2.0 Reference code"><div class="mt"><span class="std"><b>RFC 8785</b>Canonical JSON</span><span class="std"><b>SHA-256</b>Content hashes</span><span class="std"><b>RFC 8032</b>Ed25519 signatures</span><span class="std"><b>RFC 3339</b>Timestamps</span><span class="std"><b>ISO 4217</b>Currencies</span><span class="std"><b>GS1</b>GTIN items</span><span class="std"><b>GS1</b>GLN locations</span><span class="std"><b>HIBCC</b>HIN</span><span class="std"><b>FDA</b>NDC</span><span class="std"><b>ASC X12</b>845 · 844 · 849 · 867 mapping</span><span class="std"><b>CC BY 4.0</b>Spec license</span><span class="std"><b>Apache-2.0</b>Reference code</span><span class="dup" aria-hidden="true" style="display:contents"><span class="std"><b>RFC 8785</b>Canonical JSON</span><span class="std"><b>SHA-256</b>Content hashes</span><span class="std"><b>RFC 8032</b>Ed25519 signatures</span><span class="std"><b>RFC 3339</b>Timestamps</span><span class="std"><b>ISO 4217</b>Currencies</span><span class="std"><b>GS1</b>GTIN items</span><span class="std"><b>GS1</b>GLN locations</span><span class="std"><b>HIBCC</b>HIN</span><span class="std"><b>FDA</b>NDC</span><span class="std"><b>ASC X12</b>845 · 844 · 849 · 867 mapping</span><span class="std"><b>CC BY 4.0</b>Spec license</span><span class="std"><b>Apache-2.0</b>Reference code</span></span></div></div>
   </div>
 </section>
-
 
 <!-- ============ WHY ============ -->
 <section class="sec" id="why">
@@ -1047,254 +1048,82 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
   </div>
 </section>
 
-
-<!-- ============ HOW ============ -->
-<section class="sec" id="how">
-  <div class="wrap g">
-    <div class="head center rise">
-      <p class="eyebrow">How it works</p>
-      <h2 class="h2">One agreement, from draft to <em>proof</em>.</h2>
-      <p class="lead">Scroll to follow the admin-fee clause from the repo's conventional example. Every hash below is computed live in your browser.</p>
-    </div>
-    <div class="scrolly" data-story="how" id="howStory" data-step="0">
-      <div class="scrolly-visual"><div class="scrolly-stage">
-        <div class="paper" id="howPaper" aria-live="polite">
-          <div class="pbar"><span class="brand-mark uplogo sm" aria-hidden="true"></span><span>agreement.json · clause "fee"</span><span class="badge" id="howState">draft</span></div>
-          <div class="srcs" aria-hidden="true"><span>GPO contract system</span><span>Supplier ERP</span><span>Member spreadsheet</span></div>
-          <pre class="pjson"><span class="k">"term":</span> <span class="s">"UP:Admin-Fee"</span>,
-<span class="k">"payer":</span> <span class="s">"supplier"</span>, <span class="k">"payee":</span> <span class="s">"aggregator"</span>,
-<span class="k">"rate":</span> <span class="s rate" id="howRate">"0.02"</span>,
-<span class="k">"due":</span> { <span class="k">"count":</span> 30, <span class="k">"unit":</span> <span class="s">"day"</span> }</pre>
-          <div class="prow hashrow"><span class="lbl">fingerprint · JCS + SHA-256</span><code class="hash" id="howHash"></code></div>
-          <div class="prow sigs"><span class="lbl">signatures · Ed25519</span><span class="badges"><span class="badge" id="sgG">GPO</span><span class="badge" id="sgSp">Supplier</span></span></div>
-          <div class="prow calc"><span class="lbl">January report · <span class="hypn">hypothetical</span></span><span class="calcv">USD 3,050.00 × <b id="howPct">2%</b> → <b>USD 61.00</b> due <b>2027-03-03</b></span></div>
-        </div>
-      </div></div>
-      <ol class="scrolly-steps">
-        <li class="scrolly-step step" data-step="0"><span class="eyebrow">01 · Write it once</span><h3>Three systems, one form</h3><p>The GPO's contract system, the supplier's ERP and the member's spreadsheet each describe the same deal. Universal Paper gives it one shape: plain JSON built from standard Terms, with the parties' own numbers.</p></li>
-        <li class="scrolly-step step" data-step="1"><span class="eyebrow">02 · Fingerprint it</span><h3>A name computed from the content</h3><p>Canonical JSON (RFC 8785) plus SHA-256 turns the agreement into 64 characters. Any system, in any language, computes the same ones.</p></li>
-        <li class="scrolly-step step" data-step="2"><span class="eyebrow">03 · Sign the fingerprint</span><h3>Signatures cover exactly this text</h3><p>Each party signs the hash with Ed25519. The signature covers these Terms and these numbers, nothing more and nothing less.</p></li>
-        <li class="scrolly-step step" data-step="3"><span class="eyebrow">04 · Let the data do the math</span><h3>Everyone derives the same fee</h3><p>When January's sales report arrives, every party's software computes the same fee and due date from the signed clause. Nobody re-keys a number.</p></li>
-        <li class="scrolly-step step" data-step="4"><span class="eyebrow">05 · Catch any change</span><h3>One digit breaks the proof</h3><p>Change the rate after signing and the fingerprint no longer matches. Every party's software rejects the copy, offline, without asking anyone.</p></li>
-        <li class="scrolly-step step" data-step="5"><span class="eyebrow">06 · Keep private terms private</span><h3>Sealed values still verify</h3><p>A Seal hides a value from parties who shouldn't see it (A10). They still check the signatures and reach the same verdicts.</p></li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-
-<!-- ============ TRY ============ -->
-<section class="sec alt" id="try">
-  <div class="wrap g trygrid">
-    <div class="trytext rise">
-      <p class="eyebrow">Try it</p>
-      <h2 class="h2">Edit a signed clause. Watch the proof <em>react</em>.</h2>
-      <p class="lead">Change the rate, the due period or the rounding. The fingerprint, the contract text and the fee recompute in your browser, exactly as the Python reference does.</p>
-      <ul class="ticks"><li>Hashes match the reference interpreter digit for digit</li><li>Contract text rendered from the same data (A8)</li><li>Exact decimal rounding, four modes</li></ul>
-      <a class="btn" href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#playground" target="_blank" rel="noopener">Open the full Playground ↗</a>
-    </div>
-    <div class="play" id="play">
-      <div class="ptabs" role="tablist" aria-label="Hero demo">
-        <button role="tab" id="pt-play" aria-selected="true" aria-controls="pv-play">agreement.json</button>
-        <button role="tab" id="pt-chain" aria-selected="false" aria-controls="pv-chain">live chain</button>
-        <span class="live">runs in your browser</span>
-      </div>
-      <div class="pv" id="pv-play" role="tabpanel" aria-labelledby="pt-play">
-        <div class="ed" aria-label="The fee clause of the example master agreement. The rate, due period and rounding mode are editable.">
-<div><span class="c">// examples/conventional · master agreement · clause "fee"</span></div>
-<div><span class="k">{ "term":</span> <span class="s">"UP:Admin-Fee"</span><span class="k">, "def":</span> <span class="s">"sha256:7794f787…"</span><span class="k">,</span></div>
-<div><span class="k">  "params": { "payer":</span> <span class="s">"supplier"</span><span class="k">, "payee":</span> <span class="s">"aggregator"</span><span class="k">,</span></div>
-<div class="edit"><span class="k">    "rate":</span> <span class="n">"</span><input id="pRate" value="0.02" spellcheck="false" autocomplete="off" inputmode="decimal" aria-label="Fee rate, a Decimal string"><span class="n">"</span><span class="k">,</span></div>
-<div class="edit"><span class="k">    "due": { "count":</span> <input id="pDue" value="30" inputmode="numeric" aria-label="Days after the period ends that the fee is due"><span class="k">, "unit":</span> <span class="s">"day"</span><span class="k"> },</span></div>
-<div><span class="k">    "period": { "count":</span> <span class="n">1</span><span class="k">, "unit":</span> <span class="s">"month"</span><span class="k"> },</span></div>
-<div class="edit"><span class="k">    "rounding": { "mode":</span> <select id="pMode" aria-label="Rounding mode"><option>half-even</option><option>half-up</option><option>down</option><option>up</option></select><span class="k">, "scale":</span> <span class="n">2</span><span class="k"> } } }</span></div>
-        </div>
-        <div class="outs" aria-live="polite">
-          <div class="o"><span class="ol"><span>Agreement hash · JCS + SHA-256</span><span class="vpill" id="pSig">matches the signed hash</span></span><code id="pHash">sha256:616dac2fd52f336580dec71a1d1f00ccabed5b3ef0e14b15bb0761a453218623</code><span class="perr" id="pErr" hidden></span></div>
-          <div class="o"><span class="ol"><span>Contract text · up render (A8)</span></span><p id="pText"></p></div>
-          <div class="o two"><div><span class="ol">Fee owed · Jan 2027</span><b id="pFee">USD 61.00</b><span class="note">on USD 3,050.00 reported · <span class="hypn">hypothetical</span></span></div><div><span class="ol">Due</span><b id="pDueAt">2027-03-03</b><span class="note">January period ends 2027-02-01</span></div></div>
-        </div>
-      </div>
-      <div class="pv" id="pv-chain" role="tabpanel" aria-labelledby="pt-chain" hidden>
-        <div class="canvasbox" aria-label="Animation: the aggregator, supplier and member sign events that join a single verified chain">
-          <canvas id="net"></canvas>
-          <div class="cap"><span>master chain · examples/conventional · <span style="opacity:.7">hypothetical</span></span><span id="netstat"><b>✓</b> every signature verified</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ============ PATHS ============ -->
-<section class="paths" aria-labelledby="pathsH">
-  <div class="wrap g">
-    <div class="pathshead"><h2 id="pathsH">Start where you work</h2><span class="note">Four ways into the same language</span></div>
-    <div class="pgrid">
-      <a class="path" href="#start"><span class="who">Engineers</span><h3>Validate a real agreement in four steps</h3><p>Install the reference interpreter, replay the example chains and derive what's owed.</p><span class="go">Get started →</span></a>
-      <a class="path" href="#apps"><span class="who">Product builders</span><h3>See ten apps the language makes possible</h3><p>Deal desks, price sync, renewal calendars and agents that work with every counterparty.</p><span class="go">Browse app ideas →</span></a>
-      <a class="path" href="#teams"><span class="who">Procurement & finance</span><h3>See what changes between "signed" and "paid"</h3><p>Before-and-after for business development, procurement, finance, implementation and legal.</p><span class="go">Compare by team →</span></a>
-      <a class="path" href="#terms"><span class="who">Legal & standards</span><h3>Read the 16 standard Terms and the rules</h3><p>Every Term's contract text, parameters and machine meaning, hashed in your browser.</p><span class="go">Open the Term library →</span></a>
-    </div>
-  </div>
-</section>
-
-
-<!-- ============ DEAL FLOW ============ -->
-<section class="sec alt" id="flow">
+<!-- ============ QUICK START ============ -->
+<section class="sec" id="start">
   <div class="wrap g">
     <div class="head rise">
-      <p class="eyebrow">From signature to first invoice</p>
-      <h2 class="h2">Watch a deal go live, one signed event at a time</h2>
-      <p class="lede">This is the conventional example from the repo: a GPO and supplier sign a tiered agreement, a hospital joins, its tier is confirmed, and the first report and fee settle. Every date and number below comes from the example chains. The parties and values are <span class="hyp">hypothetical</span></p>
+      <p class="eyebrow">Quick start</p>
+      <h2 class="h2">From an empty terminal to a verified agreement</h2>
+      <p class="lede">The spec is the language. The Python interpreter is a reference you can use, port or replace. If your code produces the same hashes and verdicts, it speaks Universal Paper.</p>
     </div>
-    <div class="story" data-story="flow">
-      <div class="steps">
-        <div class="step" data-step="0"><div class="card"><span class="when">2026-12-01 · propose</span><h3>The GPO sends a proposal</h3><p>Business development composes the agreement from standard Terms: renewal, three price tiers, monthly sales reporting, a 2% admin fee, audit and exit. The proposal is signed and becomes the first event of the chain.</p></div></div>
-        <div class="step" data-step="1"><div class="card"><span class="when">2026-12-05 · accept</span><h3>The supplier signs. No redline round.</h3><p>The supplier accepts the exact agreement hash it reviewed. Both required signers now agree, so the agreement is executed and goes into force on 2027-01-01.</p></div></div>
-        <div class="step" data-step="2"><div class="card"><span class="when">2027-01-04 · 09:00 → 16:00</span><h3>A hospital joins in one afternoon</h3><p>The participation is its own small agreement linked to the master. The GPO proposes at 09:00, and the hospital and supplier accept by 16:00. It starts on tier C until a tier is confirmed.</p></div></div>
-        <div class="step" data-step="3"><div class="card"><span class="when">2027-01-07 · attest + accept</span><h3>Tier confirmed, contract prices live</h3><p>The hospital attests tier B and the supplier acknowledges it the same day. Every system derives the same contract prices from the chain. Nobody had to send or load a price file.</p></div></div>
-        <div class="step" data-step="4"><div class="card"><span class="when">2027-02-10 · attest</span><h3>The first sales report lands</h3><p>The supplier reports January's sales against each participation. The fee owed follows by itself: 2% of USD 3,050.00 reported, which is USD 61.00, due 30 days after the period ends.</p></div></div>
-        <div class="step" data-step="5"><div class="card"><span class="when">2027-02-15 → 02-16</span><h3>An upgrade reprices on acknowledgment</h3><p>The hospital's purchases now qualify for tier A. It attests, the supplier acknowledges, and the derived prices change for everyone at once.</p></div></div>
-        <div class="step" data-step="6"><div class="card"><span class="when">2027-02-20 → 02-21</span><h3>The fee settles, with proof on both sides</h3><p>The supplier attests payment of USD 61.00 and the GPO acknowledges it. The obligation is discharged in every copy, with no true-up spreadsheet.</p></div></div>
+    <div class="start">
+      <div class="rise">
+        <h3 style="font-size:var(--s2);margin-bottom:22px">A verified agreement in four steps</h3>
+        <ol>
+          <li><div><b>Get the code and install</b> <span class="note">Python 3.11+ and Git. On Windows, run .venv\Scripts\Activate.ps1 instead of source</span><pre>git clone https://github.com/Uppercentile/universal-paper.git
+cd universal-paper
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e '.[test]'</pre></div></li>
+          <li><div><b>Validate an example</b><pre>up validate examples/conventional/bundle.json</pre></div></li>
+          <li><div><b>Ask what's owed on a date</b><pre>up derive examples/conventional/bundle.json --at 2027-04-30T00:00:00Z</pre></div></li>
+          <li><div><b>Read it as a contract, run the tests</b><pre>up render examples/conventional/bundle.json --chain 0
+python -m pytest</pre></div></li>
+        </ol>
       </div>
-      <div class="stagewrap"><div class="stage">
-        <div class="panel room" id="room">
-          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span>Deal room · derived from the chain</span><span id="roomAt">2026-12-01</span></div>
-          <div class="sect">
-            <div class="lbl">Master agreement</div>
-            <div class="rowx"><span>Hypothetical Health Purchasing Alliance <span id="mName">× Example Medical Supply Co.</span></span><span class="pill" id="mStatus">proposed</span></div>
-            <div class="signers"><span class="sg on" id="sgA">aggregator ✓</span><span class="sg" id="sgS">supplier</span></div>
-          </div>
-          <div class="sect">
-            <div class="lbl">Member · participation</div>
-            <div class="rowx"><span id="pName" style="color:var(--faint)">No members yet</span><span class="pill" id="pStatus">none</span></div>
-            <div class="rowx"><span class="sub" id="pTier">tier —</span><span class="sub" id="pSign"></span></div>
-          </div>
-          <div class="sect">
-            <div class="lbl">Contract prices for this member <span id="priceTier"></span></div>
-            <div class="prices">
-              <div class="price off" id="pr0"><span class="gt">GTIN …0017</span><span class="v">—</span></div>
-              <div class="price off" id="pr1"><span class="gt">GTIN …0024</span><span class="v">—</span></div>
-              <div class="price off" id="pr2"><span class="gt">GTIN …0031</span><span class="v">—</span></div>
-            </div>
-          </div>
-          <div class="sect">
-            <div class="lbl">Obligations · January 2027</div>
-            <div class="obl">
-              <div class="o"><span>Sales report, supplier → aggregator</span><span class="pill" id="oRep">not yet due</span></div>
-              <div class="o"><span>Admin fee <span id="feeAmt" class="mono" style="color:var(--muted)"></span></span><span class="pill" id="oFee">not yet due</span></div>
-            </div>
-          </div>
-          <div class="sect"><div class="logline" id="log"><b>propose</b> aggregator · Master agreement · ChainId sha256:47b4b79c…</div></div>
-        </div>
-      </div></div>
+      <div class="links rise">
+        <a class="lk" href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw" target="_blank" rel="noopener"><b>Open the Playground ↗</b><span>Write agreements, compare versions and replay a deal's history in your browser.</span></a>
+        <a class="lk file" href="/spec/overview/"><b class="mono">spec/00-overview.md</b><span>Start here: thesis, properties and document map.</span></a>
+        <a class="lk file" href="/spec/axioms/"><b class="mono">spec/03-axioms.md</b><span>The thirteen consensus rules, each checkable by hand.</span></a>
+        <a class="lk file" href="/spec/terms/"><b class="mono">spec/06-terms/</b><span>The 16-Term library, as prose and JSON.</span></a>
+        <a class="lk file" href="/spec/mapping-guide/"><b class="mono">spec/07-mapping-guide.md</b><span>How rosters, eligibility files and X12 sets map onto events.</span></a>
+        <a class="lk file" href="https://github.com/Uppercentile/universal-paper/tree/main/examples"><b class="mono">examples/</b><span>Conventional, generative, overlay and confidential bundles with traces.</span></a>
+      </div>
     </div>
+
+    <div class="rise">
+      <div class="tabs" role="tablist" aria-label="Code examples">
+        <button role="tab" id="tab-cli" aria-selected="true" aria-controls="code-cli">CLI</button>
+        <button role="tab" id="tab-py" aria-selected="false" aria-controls="code-py">Python</button>
+        <button role="tab" id="tab-js" aria-selected="false" aria-controls="code-js">Hash it yourself (JS)</button>
+      </div>
+      <div class="codebox" role="tabpanel" id="code-cli" aria-labelledby="tab-cli"><button class="copybtn" type="button">Copy</button><pre>$ up validate examples/conventional/bundle.json
+chain 0: Master agreement (hypothetical)
+  id sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be
+  [ok      ] #0 propose 2026-12-01T15:00:00Z
+  [ok      ] #1 accept  2026-12-05T10:00:00Z
+  …
+  state sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144  status at latest event: active
+Every event is valid.
+
+$ up derive   examples/conventional/bundle.json --at 2027-04-30T00:00:00Z   # status, tiers, prices, obligations
+$ up render   examples/confidential/bundle.json --chain 0 --hashes-only     # the contract text, sealed values hidden
+$ up trace    examples/conventional/bundle.json -o conventional.trace.json  # every check, as a trace file</pre></div>
+      <div class="codebox" role="tabpanel" id="code-py" aria-labelledby="tab-py" hidden><button class="copybtn" type="button">Copy</button><pre>import json
+from universal_paper.engine import Bundle, Evaluator
+from universal_paper.canon import content_hash
+from universal_paper.report import snapshot
+
+bundle = Bundle(json.load(open("examples/conventional/bundle.json")))
+ev = Evaluator(bundle)
+
+chain_id = content_hash(bundle.chain_list[0][0])   # ChainId = hash of the genesis event
+for step in ev.run(chain_id):
+    print(step.index, step.event["kind"], "ok" if step.accepted else step.reason)
+
+print(ev.status(chain_id, "2027-04-30T00:00:00Z"))   # "active"
+report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, obligations</pre></div>
+      <div class="codebox" role="tabpanel" id="code-js" aria-labelledby="tab-js" hidden><button class="copybtn" type="button">Copy</button><pre id="jsSrc"></pre></div>
+      <p class="note" style="margin-top:10px">The JS tab is the exact code this page runs for the fingerprint lab. It matches the Python interpreter's hashes for the example agreement.</p>
+    </div>
+
   </div>
 </section>
-
-
-<!-- ============ TEAMS ============ -->
-<section class="sec" id="teams">
-  <div class="wrap g">
-    <div class="head rise">
-      <p class="eyebrow">What changes for each team</p>
-      <h2 class="h2">Less reconciling. More time on the deal.</h2>
-      <p class="lede">When every party works from the same verifiable record, most of the work between "signed" and "paid" stops being manual. Here's what that could look like for the people who live in it today.</p>
-    </div>
-    <div class="teamtabs" role="tablist" aria-label="Teams">
-      <button role="tab" aria-selected="true" aria-controls="t-bd" id="tb-bd">Business development</button>
-      <button role="tab" aria-selected="false" aria-controls="t-pro" id="tb-pro">Procurement</button>
-      <button role="tab" aria-selected="false" aria-controls="t-fin" id="tb-fin">Finance</button>
-      <button role="tab" aria-selected="false" aria-controls="t-imp" id="tb-imp">Implementation & IT</button>
-      <button role="tab" aria-selected="false" aria-controls="t-leg" id="tb-leg">Legal & compliance</button>
-    </div>
-    <div class="teampanel" role="tabpanel" id="t-bd" aria-labelledby="tb-bd">
-      <div class="col today"><h4>Today</h4><ul><li>Every counterparty starts from different paper, so each deal opens with a redline cycle.</li><li>Approved language drifts between versions and has to be re-checked.</li><li>"Which version did they sign?" is a real question.</li></ul></div>
-      <div class="col up"><h4>On Universal Paper</h4><ul><li>Proposals are assembled from standard Terms. Only the parameters are negotiated.</li><li>The counterparty reviews a short list of values, not a 40-page diff.</li><li>The signed hash settles which version is binding.</li></ul></div>
-      <div class="col built"><h4>Built on</h4><div class="chips"><span class="chip">propose</span><span class="chip">accept</span><span class="chip">Term library</span><span class="chip">A8 rendering</span></div><p class="note">Value-neutral by design: the library never suggests a price, rate or period.</p></div>
-    </div>
-    <div class="teampanel" role="tabpanel" id="t-pro" aria-labelledby="tb-pro" hidden>
-      <div class="col today"><h4>Today</h4><ul><li>Members wait on roster updates and eligibility files before contract pricing applies.</li><li>Tier changes travel by email and land in each system at different times.</li><li>Price discrepancies show up later as chargeback disputes.</li></ul></div>
-      <div class="col up"><h4>On Universal Paper</h4><ul><li>A member joins through its own participation chain, signed by all three parties.</li><li>A tier attestation plus acknowledgment changes the derived price everywhere at once.</li><li>Eligibility is a projection anyone holding the chain can recompute.</li></ul></div>
-      <div class="col built"><h4>Built on</h4><div class="chips"><span class="chip">UP:Participation</span><span class="chip">UP:Tier-Selection</span><span class="chip">UP:Tiers</span><span class="chip">Link form</span></div></div>
-    </div>
-    <div class="teampanel" role="tabpanel" id="t-fin" aria-labelledby="tb-fin" hidden>
-      <div class="col today"><h4>Today</h4><ul><li>Admin fees are computed in one system and checked by hand in another.</li><li>Fee disclosures to members are assembled from separate reports.</li><li>Month-end close waits on reconciling the counterparty's numbers.</li></ul></div>
-      <div class="col up"><h4>On Universal Paper</h4><ul><li>What's owed is computed from the chain with <code>obligations(S, t)</code>, the same way for both sides.</li><li>A payment attestation acknowledged by the payee discharges the duty in every copy.</li><li>Sealed values keep amounts private while totals still verify.</li></ul></div>
-      <div class="col built"><h4>Built on</h4><div class="chips"><span class="chip">UP:Admin-Fee</span><span class="chip">UP:Sales-Reporting</span><span class="chip">UP:Fee-Disclosure</span><span class="chip">Duty form</span></div></div>
-    </div>
-    <div class="teampanel" role="tabpanel" id="t-imp" aria-labelledby="tb-imp" hidden>
-      <div class="col today"><h4>Today</h4><ul><li>Each new agreement starts a project to key terms and prices into the CLM, ERP and EDI maps.</li><li>Every trading partner needs its own integration.</li><li>Kickoff waits on the final PDF.</li></ul></div>
-      <div class="col up"><h4>On Universal Paper</h4><ul><li>The executed event is a machine-readable kickoff signal with every term already structured.</li><li>One integration speaks to every counterparty that uses the language.</li><li>Existing EDI sets map onto events, so teams can run both side by side.</li></ul></div>
-      <div class="col built"><h4>Built on</h4><div class="chips"><span class="chip">State.status</span><span class="chip">Bundle</span><span class="chip">mapping guide</span><span class="chip">up trace</span></div></div>
-    </div>
-    <div class="teampanel" role="tabpanel" id="t-leg" aria-labelledby="tb-leg" hidden>
-      <div class="col today"><h4>Today</h4><ul><li>The "legal version" and the "system version" of a contract can disagree.</li><li>Renewal and notice deadlines live in calendars and memory.</li><li>Audit prep means gathering records from several parties.</li></ul></div>
-      <div class="col up"><h4>On Universal Paper</h4><ul><li>The signed prose is generated from the data under the same hash, so they can't disagree.</li><li>Opt-out windows and notice periods are computed from the agreement.</li><li>The history is a signed chain any auditor can replay offline.</li></ul></div>
-      <div class="col built"><h4>Built on</h4><div class="chips"><span class="chip">A8 Ricardian</span><span class="chip">UP:Renewing-Term</span><span class="chip">UP:Audit</span><span class="chip">UP:Overlay</span></div><p class="note">The language standardizes process, never prices or economic terms.</p></div>
-    </div>
-    <p class="note disclaim">These describe possibilities the design allows. They are not measured results from a deployment.</p>
-
-    <div class="subhead rise">
-      <p class="eyebrow">Time to first invoice</p>
-      <h3>Fewer hand-offs between the signature and the first invoice</h3>
-      <p class="note">Illustrative only. Bar lengths show the shape of the work, not a measurement.</p>
-    </div>
-    <div class="lanes">
-      <div class="lane">
-        <div class="ln"><span>A typical path today</span><span class="note">many hand-offs</span></div>
-        <div class="track"><span class="seg" style="--w:3">Redlines</span><span class="seg" style="--w:2">Legal review</span><span class="seg" style="--w:2">Key into CLM</span><span class="seg" style="--w:2">Price file to ERP</span><span class="seg" style="--w:2">Roster & eligibility</span><span class="seg" style="--w:1.5">Tier confirmation</span><span class="seg" style="--w:2">Reconcile</span><span class="seg" style="--w:1">Invoice</span></div>
-      </div>
-      <div class="lane now">
-        <div class="ln"><span>On Universal Paper</span><span class="note">each step is a signed event</span></div>
-        <div class="track"><span class="seg" style="--w:2">Parameters</span><span class="seg" style="--w:1">Sign</span><span class="seg" style="--w:1">Join</span><span class="seg" style="--w:1">Tier</span><span class="seg inv" style="--w:1">Invoice</span></div>
-      </div>
-      <div class="axis"><span>signature</span><span>first invoice at contract price</span></div>
-    </div>
-    <div class="gone">
-      <div class="rise"><span class="x">Version reconciliation</span><h3>One hash per agreement</h3><p>Copies either match the signed hash or are rejected. There's nothing to compare by hand.</p></div>
-      <div class="rise"><span class="x">Price file loads</span><h3>Prices are derived</h3><p>Contract price follows from the tier schedule and the member's acknowledged tier.</p></div>
-      <div class="rise"><span class="x">Fee true-ups</span><h3>Fees are computed</h3><p>The fee follows from the reported sales and the signed rate, with rounding defined in the spec.</p></div>
-      <div class="rise"><span class="x">"Who changed this?"</span><h3>Every change is signed</h3><p>Corrections are new events. The past can't be edited, only added to.</p></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ============ AT A GLANCE ============ -->
-<section class="sec" id="glance" style="padding-top:0">
-  <div class="wrap g">
-    <div class="head rise">
-      <p class="eyebrow">At a glance</p>
-      <h2 class="h2">The whole language fits on one page.</h2>
-      <p class="lede">Each count below is fixed in the spec. Every new construct is a permanent commitment, so the language stays small enough for any engineer to implement and any lawyer to read.</p>
-    </div>
-    <div class="stats rise">
-      <div class="kstat"><span class="v gr">7</span><span class="k">Primitives</span><span class="d">Agreement, Party, Role, Term, Event, State, Mandate</span></div>
-      <div class="kstat"><span class="v">3</span><span class="k">Event kinds</span><span class="d"><code>propose</code> <code>accept</code> <code>attest</code></span></div>
-      <div class="kstat"><span class="v">6</span><span class="k">Clause forms</span><span class="d">Window, Exit, Selection, Valuation, Duty, Link</span></div>
-      <div class="kstat"><span class="v">16</span><span class="k">Standard Terms</span><span class="d">From admin fees to governing law, in <code>spec/06-terms</code></span></div>
-      <div class="kstat"><span class="v">13</span><span class="k">Axioms</span><span class="d">Consensus rules, each checkable by hand</span></div>
-      <div class="kstat"><span class="v gr">0</span><span class="k">Servers required</span><span class="d">Any party verifies any copy, offline</span></div>
-    </div>
-    <div class="sheet">
-      <div class="rise"><h3>Content-addressed <span class="ax">RFC 8785</span></h3><p>Every object is named by the SHA-256 of its canonical JSON. Same content, same name, on every machine.</p></div>
-      <div class="rise"><h3>Deterministic <span class="ax">A4</span></h3><p>State is computed from the chain, never stored. Two evaluators with the same events always agree.</p></div>
-      <div class="rise"><h3>Value-neutral <span class="ax">A6</span></h3><p>Terms define meaning, never numbers. The library can't suggest a price, rate or period.</p></div>
-      <div class="rise"><h3>Ricardian <span class="ax">A8</span></h3><p>The signed contract text is generated from the data, under the same hash. They can't drift.</p></div>
-      <div class="rise"><h3>Bounded delegation <span class="ax">A9</span></h3><p>Agents act under Mandates. Anything outside the bounds is invalid for every evaluator.</p></div>
-      <div class="rise"><h3>Confidential by construction <span class="ax">A10</span></h3><p>Seals hide private values while hashes, signatures and states still verify.</p></div>
-    </div>
-  </div>
-</section>
-
 
 <!-- ============ LANGUAGE ============ -->
 <section class="sec alt" id="language">
   <div class="wrap g">
     <div class="head rise">
-      <p class="eyebrow">The language</p>
+      <p class="eyebrow">Core concepts</p>
       <h2 class="h2">Small enough to check by hand. Complete enough to run a contract.</h2>
       <p class="lede">Seven primitives, two value types and six clause forms. Each primitive does one thing, and the list is short on purpose because every primitive is a permanent commitment.</p>
     </div>
@@ -1311,6 +1140,23 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
       <div class="cell value rise"><span class="tag">Clause forms</span><h3>Six building blocks</h3><p>Every Term is built from these. A new Term never needs new code.</p><div class="forms"><span>Window</span><span>Exit</span><span>Selection</span><span>Valuation</span><span>Duty</span><span>Link</span></div></div>
     </div>
 
+    <div class="stats rise" style="margin-top:28px">
+      <div class="kstat"><span class="v gr">7</span><span class="k">Primitives</span><span class="d">Agreement, Party, Role, Term, Event, State, Mandate</span></div>
+      <div class="kstat"><span class="v">3</span><span class="k">Event kinds</span><span class="d"><code>propose</code> <code>accept</code> <code>attest</code></span></div>
+      <div class="kstat"><span class="v">6</span><span class="k">Clause forms</span><span class="d">Window, Exit, Selection, Valuation, Duty, Link</span></div>
+      <div class="kstat"><span class="v">16</span><span class="k">Standard Terms</span><span class="d">From admin fees to governing law, in <code>spec/06-terms</code></span></div>
+      <div class="kstat"><span class="v">13</span><span class="k">Axioms</span><span class="d">Consensus rules, each checkable by hand</span></div>
+      <div class="kstat"><span class="v gr">0</span><span class="k">Servers required</span><span class="d">Any party verifies any copy, offline</span></div>
+    </div>
+    <div class="sheet">
+      <div class="rise"><h3>Content-addressed <span class="ax">RFC 8785</span></h3><p>Every object is named by the SHA-256 of its canonical JSON. Same content, same name, on every machine.</p></div>
+      <div class="rise"><h3>Deterministic <span class="ax">A4</span></h3><p>State is computed from the chain, never stored. Two evaluators with the same events always agree.</p></div>
+      <div class="rise"><h3>Value-neutral <span class="ax">A6</span></h3><p>Terms define meaning, never numbers. The library can't suggest a price, rate or period.</p></div>
+      <div class="rise"><h3>Ricardian <span class="ax">A8</span></h3><p>The signed contract text is generated from the data, under the same hash. They can't drift.</p></div>
+      <div class="rise"><h3>Bounded delegation <span class="ax">A9</span></h3><p>Agents act under Mandates. Anything outside the bounds is invalid for every evaluator.</p></div>
+      <div class="rise"><h3>Confidential by construction <span class="ax">A10</span></h3><p>Seals hide private values while hashes, signatures and states still verify.</p></div>
+    </div>
+
     <div class="subhead rise" id="terms">
       <p class="eyebrow">Term library</p>
       <h3>Sixteen standard Terms. Each one hashed live in your browser.</h3>
@@ -1325,64 +1171,8 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
       <div class="libmain" id="libMain" aria-live="polite"></div>
     </div>
 
-    <div class="subhead rise">
-      <p class="eyebrow">Terms as data</p>
-      <h3>Scroll to watch a clause become data</h3>
-      <p class="note">The real <code>UP:Admin-Fee</code> Term. Its prose and its machine meaning share one hash, so they can't drift apart.</p>
-    </div>
-    <div class="story" data-story="term">
-      <div class="steps">
-        <div class="step" data-step="0"><div class="card"><span class="when">1 · The prose</span><h3>It starts as contract language</h3><p>The rendering template has a slot for each value the parties choose. There are no numbers in it.</p></div></div>
-        <div class="step" data-step="1"><div class="card"><span class="when">2 · Parameters</span><h3>Every slot is a typed parameter</h3><p>Name, type and description, and nothing else. There's no field for a default value, so the library can't suggest a price or rate (axiom A6).</p></div></div>
-        <div class="step" data-step="2"><div class="card"><span class="when">3 · Machine meaning</span><h3>The meaning is a Duty form</h3><p>Who owes whom, how often, by when, how the amount is computed, and what discharges it.</p></div></div>
-        <div class="step" data-step="3"><div class="card"><span class="when">4 · A clause</span><h3>The Agreement binds values</h3><p>The clause pins the exact Term definition by hash in <code>def</code> and supplies every parameter.</p></div></div>
-        <div class="step" data-step="4"><div class="card"><span class="when">5 · Back to prose</span><h3>The signed text is generated</h3><p><code>up render</code> fills the template. Everyone gets the same sentence, byte for byte (axiom A8).</p></div></div>
-      </div>
-      <div class="stagewrap"><div class="stage">
-        <div class="pane on" data-pane="0"><div class="panel"><div class="bar"><span>UP-Admin-Fee.json → render</span><span>template</span></div><div class="prose">For each period of <span class="tok">{{period|period}}</span>, <span class="tok">{{payer|role}}</span> pays <span class="tok">{{payee|role}}</span> an administrative fee equal to <span class="tok">{{rate|rate}}</span> of the net sales reported for that period, rounded <span class="tok">{{rounding|rounding}}</span>, within <span class="tok">{{due|period}}</span> after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.</div></div></div>
-        <div class="pane" data-pane="1"><div class="panel"><div class="bar"><span>UP-Admin-Fee.json → params</span><span>no defaults (A6)</span></div><div style="overflow-x:auto"><table class="params">
-          <tr><th>name</th><th>type</th><th>doc</th></tr>
-          <tr><td>payer</td><td>Role</td><td>Role that pays the fee.</td></tr>
-          <tr><td>payee</td><td>Role</td><td>Role that receives the fee.</td></tr>
-          <tr><td>rate</td><td>Rate</td><td>Fee as a fraction of reported net sales.</td></tr>
-          <tr><td>report_clause</td><td>string</td><td>Name of the Sales-Reporting clause whose reports form the base.</td></tr>
-          <tr><td>period</td><td>Period</td><td>Fee period.</td></tr>
-          <tr><td>due</td><td>Period</td><td>Time after each period's end by which the fee is due.</td></tr>
-          <tr><td>rounding</td><td>Rounding</td><td>Rounding applied to each period's fee.</td></tr>
-        </table></div></div></div>
-        <div class="pane" data-pane="2"><div class="panel"><div class="bar"><span>UP-Admin-Fee.json → forms</span><span>Duty</span></div><pre><span class="k">{</span>
-  <span class="k">"form":</span> <span class="s hl">"Duty"</span>, <span class="k">"duty":</span> <span class="s">"pay"</span>,
-  <span class="k">"obligor":</span> {<span class="k">"param":</span> <span class="s">"payer"</span>},
-  <span class="k">"obligee":</span> {<span class="k">"param":</span> <span class="s">"payee"</span>},
-  <span class="k">"trigger":</span> {<span class="k">"every":</span> {<span class="k">"param":</span> <span class="s">"period"</span>}, <span class="k">"anchor":</span> <span class="s">"window-start"</span>},
-  <span class="k">"due":</span> {<span class="k">"param":</span> <span class="s">"due"</span>},
-  <span class="k">"discharge":</span> {<span class="k">"claim":</span> <span class="s">"UP:Admin-Fee/paid"</span>, <span class="k">"ack":</span> [{<span class="k">"param":</span> <span class="s">"payee"</span>}]},
-  <span class="hl"><span class="k">"amount":</span> {
-    <span class="k">"rate":</span> {<span class="k">"param":</span> <span class="s">"rate"</span>},
-    <span class="k">"base":</span> {<span class="k">"claim":</span> <span class="s">"UP:Sales-Reporting/report"</span>,
-             <span class="k">"clause":</span> {<span class="k">"param":</span> <span class="s">"report_clause"</span>}, <span class="k">"field":</span> <span class="s">"total_net"</span>},
-    <span class="k">"rounding":</span> {<span class="k">"param":</span> <span class="s">"rounding"</span>}
-  }</span>
-<span class="k">}</span></pre></div></div>
-        <div class="pane" data-pane="3"><div class="panel"><div class="bar"><span>master agreement · clause "fee"</span><span class="hyp">hypothetical values</span></div><pre><span class="k">{</span>
-  <span class="k">"n":</span> <span class="s">"fee"</span>,
-  <span class="k">"term":</span> <span class="s">"UP:Admin-Fee"</span>,
-  <span class="k">"def":</span> <span class="s hl">"sha256:7794f7872d6cef305839b2fdc7b7e9f2916e71f20cde4bdac95321848e21a85e"</span>,
-  <span class="k">"params":</span> {
-    <span class="k">"due":</span> {<span class="k">"count":</span> <span class="n">30</span>, <span class="k">"unit":</span> <span class="s">"day"</span>},
-    <span class="k">"payee":</span> <span class="s">"aggregator"</span>, <span class="k">"payer":</span> <span class="s">"supplier"</span>,
-    <span class="k">"period":</span> {<span class="k">"count":</span> <span class="n">1</span>, <span class="k">"unit":</span> <span class="s">"month"</span>},
-    <span class="k">"rate":</span> <span class="n hl">"0.02"</span>,
-    <span class="k">"report_clause":</span> <span class="s">"reporting"</span>,
-    <span class="k">"rounding":</span> {<span class="k">"mode":</span> <span class="s">"half-even"</span>, <span class="k">"scale":</span> <span class="n">2</span>}
-  }
-<span class="k">}</span></pre></div></div>
-        <div class="pane" data-pane="4"><div class="panel"><div class="bar"><span>$ up render … --chain 0</span><span>output</span></div><div class="prose"><p class="note mono" style="margin-bottom:10px">### 4. Administrative fee (UP:Admin-Fee, clause "fee")</p>For each period of <span class="tok">1 calendar month</span>, <span class="tok">the Supplier</span> pays <span class="tok">the Aggregator</span> an administrative fee equal to <span class="tok">2%</span> of the net sales reported for that period, rounded <span class="tok">to 2 decimal places, rounding half to even</span>, within <span class="tok">30 days</span> after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.<p class="note mono" style="margin-top:12px;word-break:break-all">Agreement hash: sha256:616dac2fd52f336580dec71a1d1f00ccabed5b3ef0e14b15bb0761a453218623</p></div></div></div>
-      </div></div>
-    </div>
   </div>
 </section>
-
 
 <!-- ============ PROOF ============ -->
 <section class="sec" id="proof">
@@ -1409,27 +1199,6 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
         </div>
         <div><p class="note" style="margin-bottom:6px">Agreement hash <span id="diffCount"></span></p><div class="hashout" id="hashOut" aria-live="polite">sha256:616dac2fd52f336580dec71a1d1f00ccabed5b3ef0e14b15bb0761a453218623</div></div>
         <div class="verdict" id="verdict"><span class="dot"></span><span>Matches the hash both parties signed. Their signatures still verify.</span></div>
-      </div></div>
-    </div>
-
-    <div class="subhead rise">
-      <p class="eyebrow">Signatures and chains</p>
-      <h3>History is a single signed line. Tampering breaks it.</h3>
-      <p class="note">Each Event is signed over its hash and names the State before it. This is the real master chain, then the repo's fault example.</p>
-    </div>
-    <div class="story" data-story="chain">
-      <div class="steps">
-        <div class="step" data-step="0"><div class="card"><span class="when">genesis</span><h3>The proposal starts the chain</h3><p>Its hash becomes the ChainId, the agreement's permanent identity, even through later amendments.</p></div></div>
-        <div class="step" data-step="1"><div class="card"><span class="when">prev → state</span><h3>Each event commits to what came before</h3><p>The supplier's accept names the State it saw in <code>prev</code>. Two events can't both follow the same State, so there's never a fork to argue over.</p></div></div>
-        <div class="step" data-step="2"><div class="card"><span class="when">nine events</span><h3>Every evaluator lands on the same State</h3><p>After nine events, every copy reaches <code>sha256:f7ca8ea5…</code>. What's owed comes from <code>up derive</code>, never from a stored balance.</p></div></div>
-        <div class="step" data-step="3"><div class="card"><span class="when">fault example</span><h3>Change one number in one copy</h3><p>In the supplier ERP's copy, the fee rate was changed from 2% to 1.5% after signing. The genesis event's hash changes, the aggregator's signature fails, and that copy stops at event #0.</p></div></div>
-      </div>
-      <div class="stagewrap"><div class="stage">
-        <div class="chainwrap" id="chainwrap">
-          <div class="copylabel" id="copylabel"></div>
-          <div class="chain" id="chain"></div>
-          <div class="tampernote"><b>Supplier ERP copy · rejected at event #0</b><br><span class="mono" style="font-size:.76rem">A9 · Signature by ed25519:315acb5c… does not verify: the event was altered after signing, or the signature is missing or forged.</span><br><span class="note">From conventional.tamper-supplier-fee.trace.json</span></div>
-        </div>
       </div></div>
     </div>
 
@@ -1470,7 +1239,6 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
   </div>
 </section>
 
-
 <!-- ============ APPS ============ -->
 <section class="sec alt gallery" id="apps" style="padding-block:0">
   <div class="pin" style="padding-block:64px">
@@ -1503,55 +1271,12 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
   </div>
 </section>
 
-
-<!-- ============ BUILD ============ -->
-<section class="sec" id="build">
+<!-- ============ CONFORMANCE ============ -->
+<section class="sec alt" id="conformance">
   <div class="wrap g">
     <div class="head rise">
-      <p class="eyebrow">Build on it</p>
-      <h2 class="h2">A foundation, not a platform</h2>
-      <p class="lede">The spec is the language. The Python interpreter is a reference you can use, port or replace. If your code produces the same hashes and verdicts, it speaks Universal Paper. Nobody has to grant you access.</p>
-    </div>
-    <div class="rise">
-      <div class="tabs" role="tablist" aria-label="Code examples">
-        <button role="tab" id="tab-cli" aria-selected="true" aria-controls="code-cli">CLI</button>
-        <button role="tab" id="tab-py" aria-selected="false" aria-controls="code-py">Python</button>
-        <button role="tab" id="tab-js" aria-selected="false" aria-controls="code-js">Hash it yourself (JS)</button>
-      </div>
-      <div class="codebox" role="tabpanel" id="code-cli" aria-labelledby="tab-cli"><button class="copybtn" type="button">Copy</button><pre>$ up validate examples/conventional/bundle.json
-chain 0: Master agreement (hypothetical)
-  id sha256:47b4b79c2b8e07588427250c27c170241a171cd1e86dded047828518e31d78be
-  [ok      ] #0 propose 2026-12-01T15:00:00Z
-  [ok      ] #1 accept  2026-12-05T10:00:00Z
-  …
-  state sha256:f7ca8ea5183a39b1e6a1388dcc33cf0b66e9eb1b91b00df8972bca6548a95144  status at latest event: active
-Every event is valid.
-
-$ up derive   examples/conventional/bundle.json --at 2027-04-30T00:00:00Z   # status, tiers, prices, obligations
-$ up simulate examples/conventional/bundle.json my-hypothetical-events.json # what-if; Mandate limits still apply
-$ up render   examples/confidential/bundle.json --chain 0 --hashes-only     # the contract text, sealed values hidden
-$ up trace    examples/conventional/bundle.json -o conventional.trace.json  # every check, as a trace file</pre></div>
-      <div class="codebox" role="tabpanel" id="code-py" aria-labelledby="tab-py" hidden><button class="copybtn" type="button">Copy</button><pre>import json
-from universal_paper.engine import Bundle, Evaluator
-from universal_paper.canon import content_hash
-from universal_paper.report import snapshot
-
-bundle = Bundle(json.load(open("examples/conventional/bundle.json")))
-ev = Evaluator(bundle)
-
-chain_id = content_hash(bundle.chain_list[0][0])   # ChainId = hash of the genesis event
-for step in ev.run(chain_id):
-    print(step.index, step.event["kind"], "ok" if step.accepted else step.reason)
-
-print(ev.status(chain_id, "2027-04-30T00:00:00Z"))   # "active"
-report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, obligations</pre></div>
-      <div class="codebox" role="tabpanel" id="code-js" aria-labelledby="tab-js" hidden><button class="copybtn" type="button">Copy</button><pre id="jsSrc"></pre></div>
-      <p class="note" style="margin-top:10px">The JS tab is the exact code this page runs for the fingerprint lab. It matches the Python interpreter's hashes for the example agreement.</p>
-    </div>
-
-    <div class="subhead rise" id="conformance">
       <p class="eyebrow">Conformance</p>
-      <h3>Reproduce these results and your code speaks Universal Paper</h3>
+      <h2 class="h2">Reproduce these results and your code speaks Universal Paper</h2>
       <p class="note">There's no certification program and nobody to ask for permission. The example traces are the test vectors: every evaluator has to reach the same verdict on every event and the same State hash at every step.</p>
     </div>
     <div class="impls">
@@ -1570,32 +1295,8 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <tr><td>confidential.trace.json</td><td>Every price, rate and amount sealed. The observer has no disclosures</td><td><span class="exp">Same verdicts and same State hash at every step (A10)</span></td></tr>
     </table></div>
 
-    <div class="start" id="start">
-      <div class="rise">
-        <h3 style="font-size:var(--s2);margin-bottom:22px">Verified agreement in four steps</h3>
-        <ol>
-          <li><div><b>Get the code and install</b> <span class="note">Python 3.11+ and Git. On Windows, run .venv\Scripts\Activate.ps1 instead of source</span><pre>git clone https://github.com/Uppercentile/universal-paper.git
-cd universal-paper
-python3 -m venv .venv &amp;&amp; source .venv/bin/activate
-pip install -e '.[test]'</pre></div></li>
-          <li><div><b>Validate an example</b><pre>up validate examples/conventional/bundle.json</pre></div></li>
-          <li><div><b>Ask what's owed on a date</b><pre>up derive examples/conventional/bundle.json --at 2027-04-30T00:00:00Z</pre></div></li>
-          <li><div><b>Read it as a contract, run the tests</b><pre>up render examples/conventional/bundle.json --chain 0
-python -m pytest</pre></div></li>
-        </ol>
-      </div>
-      <div class="links rise">
-        <a class="lk" href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw" target="_blank" rel="noopener"><b>Open the Playground ↗</b><span>Write agreements, compare versions and replay a deal's history in your browser.</span></a>
-        <div class="lk file"><b class="mono">spec/00-overview.md</b><span>Start here: thesis, properties and document map.</span></div>
-        <div class="lk file"><b class="mono">spec/03-axioms.md</b><span>The thirteen consensus rules, each checkable by hand.</span></div>
-        <div class="lk file"><b class="mono">spec/06-terms/</b><span>The 16-Term library, as prose and JSON.</span></div>
-        <div class="lk file"><b class="mono">spec/07-mapping-guide.md</b><span>How rosters, eligibility files and X12 sets map onto events.</span></div>
-        <div class="lk file"><b class="mono">examples/</b><span>Conventional, generative, overlay and confidential bundles with traces.</span></div>
-      </div>
-    </div>
   </div>
 </section>
-
 
 <!-- ============ SPEC STATUS ============ -->
 <section class="sec" id="spec">
@@ -1623,40 +1324,35 @@ python -m pytest</pre></div></li>
       </div>
       <div>
         <div class="docs rise">
-          <div class="row"><span class="no">00</span><span>Overview: thesis, properties and document map</span><span class="f">00-overview.md</span></div>
-          <div class="row"><span class="no">01</span><span>Domain: objects, canonical JSON and hashing</span><span class="f">01-domain.md</span></div>
-          <div class="row"><span class="no">02</span><span>Predicates and functions</span><span class="f">02-predicates-functions.md</span></div>
-          <div class="row"><span class="no">03</span><span>Axioms A1 to A13</span><span class="f">03-axioms.md</span></div>
-          <div class="row"><span class="no">04</span><span>Inference: how State is computed</span><span class="f">04-inference.md</span></div>
-          <div class="row"><span class="no">05</span><span>Lifecycle</span><span class="f">05-lifecycle.md</span></div>
-          <div class="row"><span class="no">06</span><span>Initial Term library (16 Terms)</span><span class="f">06-terms/</span></div>
-          <div class="row"><span class="no">07</span><span>Mapping guide: rosters, eligibility and X12</span><span class="f">07-mapping-guide.md</span></div>
-          <div class="row"><span class="no">08</span><span>Neutrality charter</span><span class="f">08-neutrality-charter.md</span></div>
+          <a class="row" href="/spec/overview/"><span class="no">00</span><span>Overview: thesis, properties and document map</span><span class="f">00-overview.md</span></a>
+          <a class="row" href="/spec/domain/"><span class="no">01</span><span>Domain: objects, canonical JSON and hashing</span><span class="f">01-domain.md</span></a>
+          <a class="row" href="/spec/predicates-functions/"><span class="no">02</span><span>Predicates and functions</span><span class="f">02-predicates-functions.md</span></a>
+          <a class="row" href="/spec/axioms/"><span class="no">03</span><span>Axioms A1 to A13</span><span class="f">03-axioms.md</span></a>
+          <a class="row" href="/spec/inference/"><span class="no">04</span><span>Inference: how State is computed</span><span class="f">04-inference.md</span></a>
+          <a class="row" href="/spec/lifecycle/"><span class="no">05</span><span>Lifecycle</span><span class="f">05-lifecycle.md</span></a>
+          <a class="row" href="/spec/terms/"><span class="no">06</span><span>Initial Term library (16 Terms)</span><span class="f">06-terms/</span></a>
+          <a class="row" href="/spec/mapping-guide/"><span class="no">07</span><span>Mapping guide: rosters, eligibility and X12</span><span class="f">07-mapping-guide.md</span></a>
+          <a class="row" href="/spec/neutrality-charter/"><span class="no">08</span><span>Neutrality charter</span><span class="f">08-neutrality-charter.md</span></a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-
 <!-- ============ FAQ ============ -->
 <section class="sec alt" id="faq">
   <div class="wrap g faq">
     <div class="head rise">
       <p class="eyebrow">Questions</p>
-      <h2 class="h2">What teams ask first</h2>
+      <h2 class="h2">What developers ask first</h2>
       <p class="lede">Short answers, with the part of the spec that backs each one.</p>
     </div>
     <div class="qa rise">
       <details open><summary>Is this a blockchain?</summary><div class="a"><p>No. There's no ledger, token, mining or global network. Each agreement has its own short chain of signed events, held by the parties to it. Hashes link the events and Ed25519 signatures authorize them, so any copy can be checked offline.</p><p class="note">spec/04-inference.md · axiom A3</p></div></details>
       <details><summary>Where do our agreements live?</summary><div class="a"><p>With the parties. A bundle is plain JSON that you can store in your CLM, ERP or a file share. Hosted services can store and route bundles for you, but nobody needs one to verify, because every evaluator recomputes the same verdicts from the same events.</p><p class="note">spec/08-neutrality-charter.md: products built on the language may not claim to be required to use it.</p></div></details>
-      <details><summary>Does the language set or suggest prices?</summary><div class="a"><p>Never. Terms have typed parameters with no default values, so the library can't suggest a price, rate or period. The parties supply every number. The language standardizes process, not economics.</p><p class="note">axiom A6 · spec/08-neutrality-charter.md</p></div></details>
-      <details><summary>Do we have to renegotiate existing contracts?</summary><div class="a"><p>No. <code>UP:Overlay</code> describes a contract you already have by its document hash, so you get computed obligations on day one while the signed PDF stays the governing document.</p><p class="note">spec/06-terms/UP-Overlay.md · examples/overlay</p></div></details>
-      <details><summary>How do confidential prices stay private?</summary><div class="a"><p>A private value can be replaced by a Seal, a salted SHA-256 commitment. Hashes and signatures cover the sealed form, so a holder who sees nothing still reaches the same verdicts and State hashes. You disclose values only to the parties who need them.</p><p class="note">axiom A10 · examples/confidential</p></div></details>
-      <details><summary>Can AI agents sign on our behalf?</summary><div class="a"><p>Yes, within limits. A Mandate gives an agent its own key and bounds on the kinds, Roles, Terms and values it may use. An out-of-bounds event is invalid on arrival for everyone.</p><p class="note">axiom A9 · examples/generative</p></div></details>
       <details><summary>How does it fit with EDI?</summary><div class="a"><p>Side by side. The mapping guide shows how rosters, eligibility files and the X12 845, 844, 849 and 867 sets correspond to events and projections. The main gap in v0 is the distributor Role, and it's documented.</p><p class="note">spec/07-mapping-guide.md</p></div></details>
-      <details><summary>Who governs the spec?</summary><div class="a"><p>Uppercentile is the current steward. The neutrality charter commits the steward to publish its affiliations, keep the language value-neutral, and transfer stewardship to a neutral body once the language has users across segments.</p><p class="note">spec/08-neutrality-charter.md</p></div></details>
       <details><summary>What's the license?</summary><div class="a"><p>Universal Paper was created by Uppercentile, which offers it to everyone for free under open licenses: the specification and Term library are CC BY 4.0, the reference code and schemas are Apache-2.0, and the example agreements are CC0. No account, fee or license key is ever required. Anyone can implement it: if your code produces the same hashes and verdicts, it speaks Universal Paper. <a href="/license/">Licenses in detail</a>.</p></div></details>
+      <p style="margin-top:18px"><a class="btn" href="/faq/">All questions, for every team</a></p>
     </div>
   </div>
 </section>
@@ -1667,7 +1363,7 @@ python -m pytest</pre></div></li>
     <p class="eyebrow" >Universal Paper</p>
     <h2 class="h2">Same paper for everyone. Proof for every change.</h2>
     <p>Open language, open reference code, no gatekeeper. Pick an example, run the validator, and build the first app your team wishes it had.</p>
-    <div class="cta" style="justify-content:center"><a class="btn primary" href="#start">Get started</a><a class="btn" href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw" target="_blank" rel="noopener">Open the Playground</a></div>
+    <div class="cta" style="justify-content:center"><a class="btn primary" href="#start">Quick start</a><a class="btn" href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw" target="_blank" rel="noopener">Open the Playground</a></div>
   </div>
 </section>
 <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Search">
@@ -1683,9 +1379,9 @@ python -m pytest</pre></div></li>
       <a class="mark" href="#top" style="color:var(--night-ink);text-decoration:none;display:inline-flex;gap:10px;align-items:center;font-weight:600"><span class="uplogo" aria-hidden="true"></span>Universal Paper</a>
       <p>An open language for agreements between GPOs, suppliers and members. Same paper for everyone, proof for every change.</p>
     </div>
-    <div><h4>Learn</h4><ul><li><a href="#why">The problem</a></li><li><a href="#flow">Deal flow</a></li><li><a href="#teams">Teams</a></li><li><a href="#language">Language</a></li><li><a href="#proof">Proof</a></li></ul></div>
-    <div><h4>Build</h4><ul><li><a href="#start">Get started</a></li><li><a href="#build">Code examples</a></li><li><a href="#apps">App ideas</a></li><li><a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw" target="_blank" rel="noopener">Playground ↗</a></li><li><a href="#conformance">Conformance</a></li><li><a href="#faq">FAQ</a></li></ul></div>
-    <div><h4>Reference</h4><ul><li><a href="#spec">Specification status</a></li><li><a href="#terms">Term library</a></li><li class="mono">spec/03-axioms.md</li><li class="mono">spec/07-mapping-guide.md</li><li class="mono">spec/08-neutrality-charter.md</li></ul></div>
+    <div><h4>On this page</h4><ul><li><a href="#why">The problem</a></li><li><a href="#start">Quick start</a></li><li><a href="#language">Core concepts</a></li><li><a href="#terms">Term library</a></li><li><a href="#proof">Proof</a></li><li><a href="#conformance">Conformance</a></li></ul></div>
+    <div><h4>More</h4><ul><li><a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#playground" target="_blank" rel="noopener">Playground ↗</a></li><li><a href="#apps">App ideas</a></li><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/Uppercentile/universal-paper">GitHub</a></li></ul></div>
+    <div><h4>Reference</h4><ul><li><a href="#spec">Specification status</a></li><li><a href="#terms">Term library</a></li><li class="mono"><a href="https://universalpaper.org/spec/axioms/">spec/03-axioms.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/mapping-guide/">spec/07-mapping-guide.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/neutrality-charter/">spec/08-neutrality-charter.md</a></li></ul></div>
   </div>
   <div class="wrap g base"><span class="status">UP/0.1-draft · working draft · Created by Uppercentile · Spec CC BY 4.0 · Code Apache-2.0 · Examples CC0</span><span>All parties, identifiers, prices, rates, quantities and dates in the examples are hypothetical.</span></div>
 </footer>
@@ -1782,6 +1478,7 @@ const AGREEMENT = {"clauses": [{"def": "sha256:19126e50a5e29d7b86c6c2cac51bd3b74
 const SIGNED_HASH = "sha256:616dac2fd52f336580dec71a1d1f00ccabed5b3ef0e14b15bb0761a453218623";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const narrow = () => matchMedia("(max-width: 860px)").matches;
+const $ = id => document.getElementById(id);
 
 const CHAIN = [
   { k: "propose", at: "2026-12-01", by: "aggregator", what: "Master agreement", prev: null, st: "56eb3b283c61" },
@@ -1795,175 +1492,8 @@ const CHAIN = [
   { k: "attest",  at: "2027-04-10", by: "supplier",   what: "Sales report · Mar", prev: "89845772bda4", st: "f7ca8ea5183a" }
 ];
 
-/* ================= hero canvas ================= */
-(function hero() {
-  const cv = document.getElementById("net"), ctx = cv.getContext("2d");
-  const stat = document.getElementById("netstat");
-  const ROLES = { aggregator: "#a99fff", supplier: "#7fd6a8", member: "#ff9a4d" };
-  // event script: master chain plus the hospital's participation, in time order
-  const SCRIPT = [
-    ["aggregator", "propose", "47b4b79c"], ["supplier", "accept", "d989ae37"],
-    ["aggregator", "propose", "7ee62d05"], ["member", "accept", "participation"], ["supplier", "accept", "participation"],
-    ["member", "attest", "tier B"], ["supplier", "accept", "tier ack"],
-    ["supplier", "attest", "0647c16d"], ["supplier", "attest", "abe368d5"], ["aggregator", "accept", "f870b82b"],
-    ["member", "attest", "tier A"], ["supplier", "accept", "tier ack"]
-  ];
-  let W = 0, H = 0, dpr = 1, t0 = performance.now(), visible = true, raf = 0;
-  function size() {
-    const r = cv.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1);
-    W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  const nodes = () => {
-    const x = W < 520 ? 54 : 84;
-    return { aggregator: [x, H * .18], supplier: [x, H * .44], member: [x, H * .70] };
-  };
-  const STEP = 1300; // ms per event
-  function draw(now) {
-    const N = nodes();
-    const elapsed = reduced ? SCRIPT.length * STEP - 1 : Math.max(0, now - t0) % ((SCRIPT.length + 3) * STEP);
-    const idx = Math.min(SCRIPT.length, Math.floor(elapsed / STEP));
-    const frac = (elapsed % STEP) / STEP;
-    ctx.clearRect(0, 0, W, H);
-    const bw = W < 520 ? 58 : 74, bh = W < 520 ? 40 : 46, gap = W < 520 ? 12 : 16;
-    const left = (W < 520 ? 120 : 190), cy = H * .44 - bh / 2;
-    const fit = Math.max(1, Math.floor((W - left - 12) / (bw + gap)));
-    const done = Math.min(idx, SCRIPT.length);
-    const offset = Math.max(0, done + 1 - fit);
-    // links from roles to the chain column
-    ctx.lineWidth = 1;
-    for (const [role, [x, y]] of Object.entries(N)) {
-      ctx.strokeStyle = "rgba(192,227,209,.12)"; ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x + 80, y, left - 60, H * .44, left - 6, H * .44); ctx.stroke();
-    }
-    // chain blocks
-    ctx.font = `500 ${W < 520 ? 9 : 10}px "Geist Mono", ui-monospace, monospace`;
-    for (let i = offset; i < done; i++) {
-      const [role, kind, label] = SCRIPT[i];
-      const x = left + (i - offset) * (bw + gap);
-      const fresh = i === done - 1 && frac < .5 && !reduced ? 1 - frac * 2 : 0;
-      if (i > offset) { ctx.strokeStyle = "rgba(169,159,255,.55)"; ctx.beginPath(); ctx.moveTo(x - gap, cy + bh / 2); ctx.lineTo(x, cy + bh / 2); ctx.stroke(); }
-      ctx.fillStyle = "rgba(20,34,24,.96)"; ctx.strokeStyle = fresh ? `rgba(127,214,168,${.4 + fresh * .6})` : "rgba(192,227,209,.22)";
-      roundRect(x, cy, bw, bh, 8); ctx.fill(); ctx.stroke();
-      if (fresh) { ctx.shadowColor = "rgba(127,214,168,.6)"; ctx.shadowBlur = 18 * fresh; roundRect(x, cy, bw, bh, 8); ctx.stroke(); ctx.shadowBlur = 0; }
-      ctx.fillStyle = ROLES[role]; ctx.fillText(kind, x + 8, cy + 16);
-      ctx.fillStyle = "rgba(200,208,230,.7)"; ctx.fillText(label.slice(0, W < 520 ? 7 : 9), x + 8, cy + 31);
-      ctx.fillStyle = "#7fd6a8"; ctx.fillText("✓", x + bw - 15, cy + 16);
-    }
-    // ghost slot for next block
-    if (done < SCRIPT.length) {
-      const x = left + (done - offset) * (bw + gap);
-      ctx.setLineDash([3, 4]); ctx.strokeStyle = "rgba(192,227,209,.28)"; roundRect(x, cy, bw, bh, 8); ctx.stroke(); ctx.setLineDash([]);
-      // packet in flight
-      if (!reduced) {
-        const [role, kind] = SCRIPT[done];
-        const [sx, sy] = N[role];
-        const e = easeInOut(Math.min(1, frac * 1.25));
-        const p = cubic([sx, sy], [sx + 80, sy], [x - 60, H * .44], [x + bw / 2, H * .44], e);
-        ctx.fillStyle = ROLES[role]; ctx.shadowColor = ROLES[role]; ctx.shadowBlur = 14;
-        ctx.beginPath(); ctx.arc(p[0], p[1], 4.5, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-        ctx.fillStyle = "rgba(230,235,248,.8)"; ctx.fillText(kind, p[0] + 9, p[1] - 8);
-      }
-    }
-    // role nodes
-    ctx.font = `600 ${W < 520 ? 10 : 11}px "Geist", system-ui, sans-serif`;
-    for (const [role, [x, y]] of Object.entries(N)) {
-      const active = done < SCRIPT.length && SCRIPT[done][0] === role && !reduced;
-      ctx.fillStyle = "#142218"; ctx.strokeStyle = ROLES[role]; ctx.lineWidth = active ? 2 : 1;
-      ctx.beginPath(); ctx.arc(x, y, 18, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.lineWidth = 1;
-      if (active) { ctx.strokeStyle = ROLES[role] + "55"; ctx.beginPath(); ctx.arc(x, y, 18 + 8 * frac, 0, Math.PI * 2); ctx.stroke(); }
-      ctx.fillStyle = ROLES[role]; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "rgba(230,235,248,.85)"; ctx.textAlign = "center"; ctx.fillText(role, x, y + 34); ctx.textAlign = "left";
-    }
-    stat.innerHTML = `<b>✓</b> ${done} of ${SCRIPT.length} events signed and verified`;
-    if (!reduced && visible) raf = requestAnimationFrame(draw);
-  }
-  function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-  function easeInOut(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-  function cubic(a, b, c, d, t) { const u = 1 - t; return [0, 1].map(i => u*u*u*a[i] + 3*u*u*t*b[i] + 3*u*t*t*c[i] + t*t*t*d[i]); }
-  size(); draw(performance.now());
-  addEventListener("resize", () => { size(); if (reduced || !visible) draw(performance.now()); });
-  new IntersectionObserver(([e]) => { visible = e.isIntersecting; cancelAnimationFrame(raf); if (visible && !reduced) raf = requestAnimationFrame(draw); }).observe(cv);
-  document.fonts && document.fonts.ready.then(() => { if (reduced) draw(performance.now()); });
-})();
-
-/* ================= deal room ================= */
-const ROOM = [
-  { at: "2026-12-01 15:00", m: ["proposed", ""], sgS: false, p: null, log: '<b>propose</b> aggregator · Master agreement · ChainId sha256:47b4b79c…' },
-  { at: "2026-12-05 10:00", m: ["executed · starts 2027-01-01", "go"], sgS: true, p: null, log: '<b>accept</b> supplier · targets 47b4b79c… · prev 56eb3b28…' },
-  { at: "2027-01-04 16:00", m: ["active", "ok"], sgS: true, p: { st: ["executed · starts 01-05", "go"], tier: "C (initial, until a tier is acknowledged)", sign: "3 of 3 signed · 09:00 → 16:00", prices: ["9.80", "22.50", "3.30"] }, log: '<b>accept</b> supplier · participation 7ee62d05… · all three parties signed' },
-  { at: "2027-01-07 15:00", m: ["active", "ok"], sgS: true, p: { st: ["active", "ok"], tier: "B · attested by member, acknowledged by supplier", sign: "3 of 3 signed", prices: ["9.40", "21.75", "3.15"] }, log: '<b>accept</b> supplier · acknowledges UP:Tier-Selection/selects "B"' },
-  { at: "2027-02-10 12:00", m: ["active", "ok"], sgS: true, p: { st: ["active", "ok"], tier: "B", sign: "3 of 3 signed", prices: ["9.40", "21.75", "3.15"] }, rep: ["discharged 02-10", "ok"], fee: ["open · due 03-03", "go"], feeAmt: "USD 61.00", log: '<b>attest</b> supplier · UP:Sales-Reporting/report · total_net USD 3,050.00' },
-  { at: "2027-02-16 09:00", m: ["active", "ok"], sgS: true, p: { st: ["active", "ok"], tier: "A · upgraded, acknowledged by supplier", sign: "3 of 3 signed", prices: ["9.10", "21.00", "3.05"] }, rep: ["discharged 02-10", "ok"], fee: ["open · due 03-03", "go"], feeAmt: "USD 61.00", log: '<b>accept</b> supplier · acknowledges UP:Tier-Selection/selects "A"' },
-  { at: "2027-02-21 12:00", m: ["active", "ok"], sgS: true, p: { st: ["active", "ok"], tier: "A", sign: "3 of 3 signed", prices: ["9.10", "21.00", "3.05"] }, rep: ["discharged 02-10", "ok"], fee: ["discharged 02-21", "ok"], feeAmt: "USD 61.00", log: '<b>accept</b> aggregator · acknowledges UP:Admin-Fee/paid USD 61.00' }
-];
-const $ = id => document.getElementById(id);
-function pill(el, [text, cls]) { el.textContent = text; el.className = "pill" + (cls ? " " + cls : ""); }
-let lastPrices = null;
-function setRoom(i) {
-  const s = ROOM[i];
-  $("roomAt").textContent = s.at;
-  pill($("mStatus"), s.m);
-  $("sgS").classList.toggle("on", s.sgS); $("sgS").textContent = s.sgS ? "supplier ✓" : "supplier";
-  if (s.p) {
-    $("pName").textContent = "Hypothetical Community Hospital"; $("pName").style.color = "";
-    pill($("pStatus"), s.p.st); $("pTier").textContent = "tier " + s.p.tier; $("pSign").textContent = s.p.sign;
-    $("priceTier").textContent = "· tier " + s.p.tier[0];
-  } else {
-    $("pName").textContent = "No members yet"; $("pName").style.color = "var(--faint)";
-    pill($("pStatus"), ["none", ""]); $("pTier").textContent = "tier —"; $("pSign").textContent = ""; $("priceTier").textContent = "";
-  }
-  const pr = s.p ? s.p.prices : null;
-  [0, 1, 2].forEach(j => {
-    const el = $("pr" + j), v = el.querySelector(".v");
-    v.textContent = pr ? "USD " + pr[j] : "—";
-    el.classList.toggle("off", !pr);
-    if (pr && lastPrices && lastPrices[j] !== pr[j] && !reduced) { el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 900); }
-  });
-  lastPrices = pr;
-  pill($("oRep"), s.rep || ["not yet due", ""]);
-  pill($("oFee"), s.fee || ["not yet due", ""]);
-  $("feeAmt").textContent = s.feeAmt ? "· " + s.feeAmt : "";
-  $("log").innerHTML = s.log;
-}
-
-/* ================= chain ================= */
-const chainEl = $("chain");
-chainEl.innerHTML = CHAIN.map((e, i) => `
-  <div class="ev"><div class="rail"><span class="kind">${e.k}</span></div>
-  <div class="box"><div class="t"><span><b>#${i}</b> ${e.what}</span><span class="note">${e.at} · ${e.by}</span></div>
-  <div class="h">${e.prev ? `prev <b>${e.prev}…</b> → ` : "ChainId = hash of this event · "}state ${e.st}…</div></div></div>`).join("");
-const LIT = [1, 2, 9, 9];
-function setChain(step) {
-  chainEl.querySelectorAll(".ev").forEach((el, i) => el.classList.toggle("lit", i < LIT[step]));
-  $("chainwrap").classList.toggle("tamper", step === 3);
-  $("copylabel").innerHTML = step === 3 ? 'Supplier ERP copy · fee rate changed to "0.015" after signing' : 'Master agreement · examples/conventional · <span class="hyp">hypothetical</span>';
-}
-
 /* ================= pinned stories ================= */
-/* ================= how it works (scrolly) ================= */
-const HOW_OK = upHash(AGREEMENT), HOW_BAD = upHash(withRate("0.025"));
-function setHow(i) {
-  const st = $("howState"), hashEl = $("howHash"), rate = $("howRate");
-  const tamper = i === 4, sealed = i === 5;
-  // fingerprint
-  if (i < 1) hashEl.innerHTML = '<span class="ghost">sha256:' + "·".repeat(64) + "</span>";
-  else if (tamper) { let s = ""; for (let k = 0; k < HOW_BAD.length; k++) s += HOW_BAD[k] !== HOW_OK[k] ? `<span class="flip">${HOW_BAD[k]}</span>` : HOW_BAD[k]; hashEl.innerHTML = s; }
-  else hashEl.textContent = HOW_OK;
-  // rate value
-  rate.textContent = tamper ? '"0.025"' : sealed ? "● sealed ●" : '"0.02"';
-  rate.classList.toggle("bad", tamper); rate.classList.toggle("sealed", sealed);
-  $("howPct").textContent = tamper ? "2.5%" : "2%";
-  // signatures
-  [["sgG", "GPO"], ["sgSp", "Supplier"]].forEach(([id, who]) => {
-    const el = $(id);
-    el.className = "badge" + (i >= 2 ? (tamper ? " bad" : " ok") : "");
-    el.textContent = who + (i >= 2 ? (tamper ? " ✗" : " ✓") : "");
-  });
-  const S = [["draft", ""], ["hashed", ""], ["signed", "ok"], ["active", "ok"], ["rejected", "bad"], ["sealed ✓", "ok"]][i];
-  st.textContent = S[0]; st.className = "badge" + (S[1] ? " " + S[1] : "");
-  $("howPaper").className = "paper s" + i;
-}
-
-const HANDLERS = { flow: setRoom, chain: setChain, how: setHow };
+const HANDLERS = {};
 document.querySelectorAll("[data-story]").forEach(story => {
   const kind = story.dataset.story;
   const steps = [...story.querySelectorAll(".step")];
@@ -2061,57 +1591,7 @@ document.querySelectorAll(".copybtn").forEach(b => b.addEventListener("click", (
   try { navigator.clipboard.writeText(pre.textContent).then(done, sel); } catch (e) { sel(); }
 }));
 
-/* ================= hero playground ================= */
 const TERMS = [{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Admin-Fee","title":"Administrative fee","params":{"payer":{"type":"Role","doc":"Role that pays the fee."},"payee":{"type":"Role","doc":"Role that receives the fee."},"rate":{"type":"Rate","doc":"Fee as a fraction of reported net sales."},"report_clause":{"type":"string","doc":"Name of the Sales-Reporting clause whose reports form the base."},"period":{"type":"Period","doc":"Fee period."},"due":{"type":"Period","doc":"Time after each period's end by which the fee is due."},"rounding":{"type":"Rounding","doc":"Rounding applied to each period's fee."}},"forms":[{"form":"Duty","duty":"pay","obligor":{"param":"payer"},"obligee":{"param":"payee"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Admin-Fee/paid","ack":[{"param":"payee"}]},"amount":{"rate":{"param":"rate"},"base":{"claim":"UP:Sales-Reporting/report","clause":{"param":"report_clause"},"field":"total_net"},"rounding":{"param":"rounding"}}}],"claims":{"UP:Admin-Fee/paid":{"data":{"period":"{start: Time, end: Time}","amount":"Amount","reference":"string"},"doc":"The payer attests payment of the fee for the period. Discharges the duty when acknowledged by the payee."}},"render":"For each period of {{period|period}}, {{payer|role}} pays {{payee|role}} an administrative fee equal to {{rate|rate}} of the net sales reported for that period, rounded {{rounding|rounding}}, within {{due|period}} after the period ends. The fee is fixed at that rate for the term of this Agreement unless the Agreement is amended.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Audit","title":"Audit right","params":{"auditor":{"type":"Role","doc":"Role that may request an audit."},"auditee":{"type":"Role","doc":"Role whose records are audited."},"response":{"type":"Period","doc":"Time after a request by which records must be made available."},"max_requests":{"type":"int","doc":"Maximum requests per limit period."},"per":{"type":"Period","doc":"Limit period."}},"forms":[{"form":"Duty","duty":"make-records-available","obligor":{"param":"auditee"},"obligee":{"param":"auditor"},"trigger":{"on":"UP:Audit/request","by":[{"param":"auditor"}],"limit":{"count":{"param":"max_requests"},"per":{"param":"per"}}},"due":{"param":"response"},"discharge":{"claim":"UP:Audit/available","ack":[{"param":"auditor"}]}}],"claims":{"UP:Audit/request":{"data":{"scope":"string","lookback":"{start: Time, end: Time}"},"doc":"Request for an audit of records within the stated scope and time range."},"UP:Audit/available":{"data":{"request":"Hash"},"doc":"The auditee attests that the requested records are available. Discharges the duty when acknowledged by the auditor."}},"render":"{{auditor|role}} may request an audit of the records of {{auditee|role}} relating to this Agreement. The number of audit requests may not exceed {{max_requests}} in any period of {{per|period}}. {{auditee|role}} makes the requested records available within {{response|period}} of each request.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fee-Disclosure","title":"Fee disclosure","params":{"period":{"type":"Period","doc":"Disclosure period."},"due":{"type":"Period","doc":"Time after each period's end by which the disclosure is due."}},"forms":[{"form":"Duty","duty":"disclose","obligor":"aggregator","obligee":"member","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Fee-Disclosure/disclosed"}}],"claims":{"UP:Fee-Disclosure/disclosed":{"data":{"period":"{start: Time, end: Time}","received":"Amount","basis":"string"},"doc":"The Aggregator states the administrative fees it received from the Supplier for the period under the parent agreement, attributable to this Member where the parent agreement reports by participation."}},"render":"For each period of {{period|period}}, the Aggregator discloses to the Member, in writing, the amount of administrative fees it received from the Supplier under the parent agreement for that period, within {{due|period}} after the period ends. This clause records a disclosure process. It makes no statement about whether any arrangement satisfies any law.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Fixed-Term","title":"Term of agreement","params":{"start":{"type":"Time","doc":"First instant the Agreement is in force."},"end":{"type":"Time","doc":"First instant the Agreement is no longer in force."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"}}],"claims":{},"render":"This Agreement is in force from {{start|time}} until {{end|time}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Governing-Law","title":"Governing law","params":{"law":{"type":"string","doc":"Governing law, e.g. a named jurisdiction."},"forum":{"type":"string","doc":"Forum for disputes."}},"forms":[],"claims":{},"render":"This Agreement is governed by the law of {{law}}. Disputes are resolved in {{forum}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Notices","title":"Notices","params":{},"forms":[],"claims":{},"render":"Any notice under this Agreement is given by a signed attestation recorded on this Agreement's chain of events, and is given at the time stated in that attestation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Overlay","title":"Overlay of an existing agreement","params":{"document":{"type":"Hash","doc":"SHA-256 hash of the existing contract document, as the parties hold it."},"document_title":{"type":"string","doc":"Title of the existing contract. Sealable."},"document_date":{"type":"Time","doc":"Date the existing contract was signed."},"governs":{"type":"\"document\" | \"this-record\"","doc":"Which text controls if this record and the existing contract are inconsistent."}},"forms":[],"claims":{},"render":"This record describes the agreement titled {{document_title}}, signed on {{document_date|time}}, whose document has the hash {{document}}. It does not amend or replace that agreement. If this record and that agreement are inconsistent, {{governs|governs}} controls.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Participation","title":"Participation in an aggregator agreement","params":{"parent":{"type":"ChainId","doc":"The chain of the parent Agreement."}},"forms":[{"form":"Link","parent":{"param":"parent"},"bind":["aggregator","supplier"]}],"claims":{},"render":"This Agreement is a participation under the agreement identified by {{parent}}. The Aggregator and the Supplier of that agreement are parties to this one in the same roles. This Agreement is in force only while that agreement is in force.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Price-Reference","title":"Price by reference to a price list","params":{"items":{"type":"[Identifier]","doc":"Items in scope."},"list_role":{"type":"Role","doc":"Role that attests the reference price list."},"factor":{"type":"Decimal","doc":"Multiplier applied to the reference price."},"rounding":{"type":"Rounding","doc":"Rounding applied to the result."}},"forms":[{"form":"Valuation","items":{"param":"items"},"source":{"reference":{"claim":"UP:Price-Reference/list","role":{"param":"list_role"},"factor":{"param":"factor"},"rounding":{"param":"rounding"}}}}],"claims":{"UP:Price-Reference/list":{"data":{"effective":"Time","prices":"[{item: Identifier, price: Amount}]"},"doc":"A reference price list, effective from the stated time."}},"render":"The price of each Item in scope is its price in the most recent reference price list attested by {{list_role|role}} that is effective at the time of purchase, multiplied by {{factor}} and rounded {{rounding|rounding}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Purchase-Commitment","title":"Purchase commitment","params":{"category":{"type":"string","doc":"Description of the product category."},"share":{"type":"Rate","doc":"Committed share of category purchases."},"period":{"type":"Period","doc":"Measurement period."},"due":{"type":"Period","doc":"Time after each period's end by which the attestation is due."}},"forms":[{"form":"Duty","duty":"attest-compliance","obligor":"member","obligee":"supplier","trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Purchase-Commitment/met","ack":["supplier"]}}],"claims":{"UP:Purchase-Commitment/met":{"data":{"period":"{start: Time, end: Time}","basis":"string"},"doc":"The Member attests that it met the committed share for the period. Discharges the duty when acknowledged by the Supplier."}},"render":"The Member commits to purchase under this Agreement at least {{share|rate}} of its purchases of {{category}} in each period of {{period|period}}, and attests whether it met that commitment within {{due|period}} after each period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Renewing-Term","title":"Term of agreement with renewal","params":{"start":{"type":"Time","doc":"First instant in force."},"end":{"type":"Time","doc":"End of the initial term."},"renewal_period":{"type":"Period","doc":"Length of each renewal."},"max_renewals":{"type":"int","doc":"Maximum number of renewals."},"optout_roles":{"type":"[Role]","doc":"Roles that may prevent the next renewal."},"optout_notice":{"type":"Period","doc":"How long before a term ends an opt-out notice must be given."}},"forms":[{"form":"Window","start":{"param":"start"},"end":{"param":"end"},"renew":{"period":{"param":"renewal_period"},"max":{"param":"max_renewals"},"optout_roles":{"param":"optout_roles"},"optout_notice":{"param":"optout_notice"}}}],"claims":{"UP:Renewing-Term/optout":{"data":{},"doc":"Notice that the Agreement will not renew at the end of the current term."}},"render":"This Agreement is in force from {{start|time}} until {{end|time}}. It then renews for successive periods of {{renewal_period|period}}, up to {{max_renewals}} times, unless {{optout_roles|role}} gives notice of non-renewal at least {{optout_notice|period}} before the end of the then-current term.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Sales-Reporting","title":"Sales reporting","params":{"reporter":{"type":"Role","doc":"Role that reports."},"recipient":{"type":"Role","doc":"Role that receives the report."},"period":{"type":"Period","doc":"Reporting period."},"due":{"type":"Period","doc":"Time after each period's end by which the report is due."}},"forms":[{"form":"Duty","duty":"report","obligor":{"param":"reporter"},"obligee":{"param":"recipient"},"trigger":{"every":{"param":"period"},"anchor":"window-start"},"due":{"param":"due"},"discharge":{"claim":"UP:Sales-Reporting/report"}}],"claims":{"UP:Sales-Reporting/report":{"data":{"period":"{start: Time, end: Time}","lines":"[{participation: ChainId, item: Identifier, quantity: Decimal, net: Amount}]","total_net":"Amount"},"doc":"Sales for one period, by participation and Item, with the total net sales."}},"render":"{{reporter|role}} reports to {{recipient|role}} the sales made under this Agreement in each reporting period of {{period|period}}, by Member participation and Item, within {{due|period}} after the period ends.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Cause","title":"Termination for cause","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate for cause."},"cure_period":{"type":"Period","doc":"Time allowed to cure after a breach notice."},"notice":{"type":"Period","doc":"Time from termination notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"},"requires":{"claim":"UP:Termination-Cause/breach","age":{"param":"cure_period"},"unless":"UP:Termination-Cause/cured"}}],"claims":{"UP:Termination-Cause/breach":{"data":{"description":"string"},"doc":"Notice describing an alleged material breach."},"UP:Termination-Cause/cured":{"data":{"breach":"Hash"},"doc":"Statement that the breach identified by the referenced notice has been cured. Effective only when acknowledged by the party that gave the breach notice."},"UP:Termination-Cause/notice":{"data":{"breach":"Hash"},"doc":"Notice of termination for the referenced, uncured breach."}},"render":"If a party commits a material breach, {{holders|role}} may give notice describing it. If the breach is not cured within {{cure_period|period}} of that notice, {{holders|role}} may terminate this Agreement by further notice, effective {{notice|period}} after that notice. A breach counts as cured only when the party that gave the breach notice acknowledges the cure.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Termination-Convenience","title":"Termination for convenience","params":{"holders":{"type":"[Role]","doc":"Roles that may terminate."},"notice":{"type":"Period","doc":"Time from notice to termination."}},"forms":[{"form":"Exit","holders":{"param":"holders"},"notice":{"param":"notice"}}],"claims":{"UP:Termination-Convenience/notice":{"data":{},"doc":"Notice of termination."}},"render":"{{holders|role}} may terminate this Agreement without cause by notice. Termination takes effect {{notice|period}} after the notice is given.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tier-Selection","title":"Tier attestation and selection","params":{"tiers_clause":{"type":"string","doc":"Name of the Tiers clause in the parent Agreement."},"initial":{"type":"string","doc":"Tier in effect before any selection."},"effective":{"type":"\"on-ack\" | {next: Period}","doc":"When an acknowledged selection takes effect."}},"forms":[{"form":"Selection","options":{"from":{"link":true,"clause":{"param":"tiers_clause"}}},"subject":"member","ack":["supplier"],"effective":{"param":"effective"},"initial":{"param":"initial"}}],"claims":{"UP:Tier-Selection/selects":{"data":{"option":"string","basis":"string"},"doc":"The Member attests that it meets the conditions of the named tier, stating the basis."}},"render":"The Member's tier is {{initial}} until changed under this clause. The Member may attest that it meets the conditions of another tier, stating the basis. The change takes effect when the Supplier acknowledges the attestation, {{effective|effective}}.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}},{"type":"TermDefinition","spec":"UP/0.1-draft","id":"UP:Tiers","title":"Tiered price schedule","params":{"tiers":{"type":"[{name: string, conditions: string}]","doc":"The tiers, in order, with descriptive qualification conditions."},"prices":{"type":"[{item: Identifier, by: {<tier>: Amount}}]","doc":"Price of each Item in each tier."}},"forms":[{"form":"Valuation","source":{"table":{"param":"prices"},"options":{"param":"tiers"}}}],"claims":{},"render":"The following tiers apply. {{#each tiers}}Tier {{name}}: {{conditions}}. {{/each}}The price of each Item in each tier is: {{#each prices}}{{item}}: {{by|amount}}. {{/each}}Whether a Member meets a tier's conditions is established by that Member's attestation and the Supplier's acknowledgment, as set out in the tier selection clause of the Member's participation.","provenance":{"drafted_by":"Universal Paper v0 working draft (publisher name pending open question 2)","reviewed_by":[],"change_note":"Initial draft. Not yet reviewed by counsel from any segment."}}];
-(function playground() {
-  const rIn = $("pRate"), dIn = $("pDue"), mIn = $("pMode");
-  const ROLE = { aggregator: "the Aggregator", supplier: "the Supplier", member: "the Member" };
-  const MODE = { "half-even": "half to even", "half-up": "half up", "down": "down", "up": "up" };
-  const tpl = TERMS.find(t => t.id === "UP:Admin-Fee").render;
-  const pct = v => { // Decimal string × 100, as render.py formats a rate
-    const neg = v.startsWith("-"), [i, f = ""] = v.replace("-", "").split(".");
-    const ff = (f + "00").slice(0, Math.max(2, f.length));
-    let whole = (i + ff.slice(0, 2)).replace(/^0+(?=\d)/, ""), frac = ff.slice(2).replace(/0+$/, "");
-    return (neg ? "-" : "") + whole + (frac ? "." + frac : "") + "%";
-  };
-  const period = p => `${p.count} ${({ day: "day", month: "calendar month" })[p.unit]}${p.count != 1 ? "s" : ""}`;
-  function fee(rate, mode) { // USD 3,050.00 × rate, rounded to cents with the clause's mode (exact BigInt arithmetic)
-    const neg = rate.startsWith("-"), [i, f = ""] = rate.replace("-", "").split(".");
-    const num = 305000n * BigInt(i + f), den = 10n ** BigInt(f.length);
-    let q = num / den, r = num % den;
-    if (r) {
-      if (mode === "up") q += 1n;
-      else if (mode !== "down") { const twice = 2n * r; if (twice > den || (twice === den && (mode === "half-up" || q % 2n === 1n))) q += 1n; }
-    }
-    const c = q.toString().padStart(3, "0");
-    return (neg ? "-" : "") + "USD " + Number(c.slice(0, -2)).toLocaleString("en-US") + "." + c.slice(-2);
-  }
-  function run() {
-    const rate = rIn.value.trim(), due = dIn.value.trim(), mode = mIn.value;
-    const okR = DECIMAL.test(rate) && !rate.startsWith("-"), okD = /^[1-9][0-9]{0,3}$/.test(due);
-    $("pErr").hidden = okR && okD;
-    $("pErr").textContent = !okR ? "Rate must be a non-negative Decimal string, like 0.02." : "Due must be a whole number of days, 1 to 9999.";
-    rIn.setAttribute("aria-invalid", String(!okR)); dIn.setAttribute("aria-invalid", String(!okD));
-    if (!okR || !okD) return;
-    const ag = JSON.parse(JSON.stringify(AGREEMENT)), p = ag.clauses.find(c => c.n === "fee").params;
-    p.rate = rate; p.due = { count: +due, unit: "day" }; p.rounding = { mode, scale: 2 };
-    const h = upHash(ag);
-    let html = "", diff = 0;
-    for (let k = 0; k < h.length; k++) { if (h[k] !== SIGNED_HASH[k]) { diff++; html += `<span class="d">${h[k]}</span>`; } else html += h[k]; }
-    $("pHash").innerHTML = html;
-    const sig = $("pSig"); sig.classList.toggle("bad", !!diff);
-    sig.textContent = diff ? `${diff}/64 digits changed · signatures fail` : "matches the signed hash";
-    const vals = { period: period(p.period), payer: ROLE[p.payer], payee: ROLE[p.payee], rate: pct(rate), rounding: `to 2 decimal places, rounding ${MODE[mode]}`, due: period(p.due) };
-    const esc = x => x.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
-    $("pText").innerHTML = esc(tpl).replace(/\{\{(\w+)(?:\|\w+)?\}\}/g, (_, k) => `<mark>${esc(vals[k] ?? k)}</mark>`);
-    $("pFee").textContent = fee(rate, mode);
-    const d = new Date(Date.UTC(2027, 1, 1) + (+due) * 864e5);
-    $("pDueAt").textContent = d.toISOString().slice(0, 10);
-  }
-  [rIn, dIn].forEach(x => x.addEventListener("input", run)); mIn.addEventListener("change", run);
-  $("pt-chain").addEventListener("click", () => requestAnimationFrame(() => dispatchEvent(new Event("resize"))));
-  run();
-})();
 
 /* ================= term library ================= */
 const FORMS = ["Window", "Exit", "Selection", "Valuation", "Duty", "Link"];
@@ -2157,7 +1637,7 @@ const TERM_HASH = Object.fromEntries(TERMS.map(t => [t.id, upHash(t)]));
   const dlg = $("cmdk"), inp = $("cmdkQ"), ul = $("cmdkL"); let items = [], sel = 0, last = null;
   const go = id => () => document.getElementById(id).scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
   const ALL = [
-    ...[["why", "The problem"], ["glance", "At a glance"], ["flow", "Deal flow"], ["teams", "Teams"], ["language", "Language"], ["terms", "Term library"], ["proof", "Proof and the hash lab"], ["apps", "App ideas"], ["build", "Build on it"], ["conformance", "Conformance vectors"], ["start", "Get started"], ["spec", "Specification status"], ["faq", "FAQ"]].map(([id, l]) => ({ l, g: "Section", run: go(id) })),
+    ...[["why", "The problem"], ["start", "Quick start"], ["language", "Core concepts"], ["terms", "Term library"], ["proof", "Proof and the hash lab"], ["apps", "App ideas"], ["conformance", "Conformance vectors"], ["spec", "Specification status"], ["faq", "FAQ"]].map(([id, l]) => ({ l, g: "Section", run: go(id) })),
     ...TERMS.map(t => ({ l: `${t.id} · ${t.title}`, g: "Term", run: () => { showTerm(t.id); go("terms")(); } })),
     { l: "Copy: up validate examples/conventional/bundle.json", g: "Action", run: () => { try { navigator.clipboard.writeText("up validate examples/conventional/bundle.json"); } catch (e) {} } },
     { l: "Switch color theme", g: "Action", run: () => $("themeBtn").click() },
