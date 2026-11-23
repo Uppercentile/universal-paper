@@ -659,6 +659,7 @@ PARTNERS = {
         {"id": "preferred-dev-partner", "subject": "Universal Paper: preferred dev partner", "description": "Agents or agencies building on Universal Paper who want to be the developer Uppercentile refers people to. A referral-fee arrangement may be explored."},
         {"id": "other", "subject": "Uppercentile inquiry", "description": "All other inquiries and business opportunities."},
     ],
+    "tag": {"description": "Tag Uppercentile when you post about what you built; we share work we find interesting.", "linkedin": "https://www.linkedin.com/company/uppercentile/", "x": "@uppercentile"},
     "notOffered": ["consulting", "sales calls", "mapping live agreements", "pilot scoping", "implementation or custom builds"],
     "message": {
         "format": "Plain-text email. One 'Field: value' per line, in this order. Leave a field blank if it does not apply.",
@@ -744,7 +745,7 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 
 ## Community, registry and agents
 
-Built something with Universal Paper? Uppercentile (the steward) would love to hear about it. Email {PARTNERS["contact"]["email"]} with the subject "{PARTNERS["contact"]["subject"]}", tag Uppercentile when you post about it, and say whether you want to be listed in "Built with Universal Paper" (opt-in, removed on request, not an endorsement). AI agents are especially welcome: use the subject "{PARTNERS["agents"]["subject"]}" and state your name, your operator, the principal you act for, why you are writing and a human contact. Agents or agencies building on Universal Paper can apply to be Uppercentile's preferred dev partner with the subject "{PARTNERS["devPartner"]["subject"]}"; Uppercentile would explore a referral-fee arrangement. Uppercentile does not offer consulting, sales calls, pilots or implementation. All other inquiries go to the same email. Contacting Uppercentile is never required to use Universal Paper, and nothing in the language or tools reports usage.
+Built something with Universal Paper? Uppercentile (the steward) would love to hear about it. Email {PARTNERS["contact"]["email"]} with the subject "{PARTNERS["contact"]["subject"]}", tag Uppercentile (LinkedIn, or @uppercentile on X) when you post about it, and say whether you want to be listed in "Built with Universal Paper" (opt-in, removed on request, not an endorsement). AI agents are especially welcome: use the subject "{PARTNERS["agents"]["subject"]}" and state your name, your operator, the principal you act for, why you are writing and a human contact. Agents or agencies building on Universal Paper can apply to be Uppercentile's preferred dev partner with the subject "{PARTNERS["devPartner"]["subject"]}"; Uppercentile would explore a referral-fee arrangement. Uppercentile does not offer consulting, sales calls, pilots or implementation. All other inquiries go to the same email. Contacting Uppercentile is never required to use Universal Paper, and nothing in the language or tools reports usage.
 
 - [How to reach us, as JSON]({site.url('/partners.json')}): message fields for people, agents and dev partners, and registry rules
 - [Community page]({PARTNERS["contact"]["page"]}): the same, for people
