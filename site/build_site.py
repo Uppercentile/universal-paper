@@ -631,10 +631,61 @@ Sitemap: {site.url('/sitemap.xml')}
         "display": "standalone", "background_color": "#f7f5f0", "theme_color": "#f7f5f0",
         "icons": [{"src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png"},
                   {"src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png"}]}, indent=2))
+    # partners.json: opt-in contact and "Built with Universal Paper" listing, for people and AI agents.
+    # Nothing here phones home; contacting Uppercentile is never required to use Universal Paper.
+    site.write("partners.json", json.dumps(PARTNERS, indent=2) + "\n")
     # security.txt points at the repo's SECURITY policy
     if a.repo_url:
         exp = (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
         site.write(".well-known/security.txt", f"Policy: {a.repo_url}/blob/main/SECURITY.md\nContact: {a.repo_url}/security/advisories/new\nExpires: {exp}T00:00:00Z\nPreferred-Languages: en\nCanonical: {site.url('/.well-known/security.txt')}\n")
+
+
+PARTNERS = {
+    "$comment": "How to contact the steward of Universal Paper, for people and AI agents. Opt-in; nothing in Universal Paper reports usage.",
+    "name": "Universal Paper partners and contact",
+    "version": "1",
+    "steward": {"name": "Uppercentile", "url": "https://www.uppercentile.com"},
+    "contact": {
+        "email": "contact@uppercentile.com",
+        "page": "https://www.uppercentile.com/partners",
+        "subject": "Universal Paper: partner inquiry",
+        "languages": ["en"],
+        "humanReviewed": True,
+    },
+    "purposes": ["partnership", "pilot", "built-with-listing", "spec-feedback", "new-term-proposal", "governance", "other"],
+    "message": {
+        "format": "Plain-text email. One 'Field: value' per line, in this order. Leave a field blank if it does not apply.",
+        "fields": [
+            {"name": "Name", "required": True},
+            {"name": "Organization", "required": True},
+            {"name": "Role", "required": True, "enum": ["GPO", "supplier", "member", "developer", "other"]},
+            {"name": "Purpose", "required": True, "enumRef": "purposes"},
+            {"name": "What you are building or interested in", "required": True},
+            {"name": "Conformance status", "required": False, "enum": ["not started", "validating", "conformant"]},
+            {"name": "OK to list publicly", "required": False, "enum": ["yes", "no"], "default": "no"},
+        ],
+    },
+    "agents": {
+        "welcome": True,
+        "subject": "Universal Paper: agent inquiry",
+        "disclosure": "An AI agent must say it is an agent, who operates it, and which person or organization it acts for. Messages that hide this are ignored.",
+        "extraFields": [
+            {"name": "Agent name", "required": True},
+            {"name": "Operator", "required": True, "description": "Who runs this agent"},
+            {"name": "Acting for", "required": True, "description": "The principal person or organization"},
+            {"name": "Human contact", "required": True, "description": "Where a person on the principal's side can be reached"},
+            {"name": "Mandate", "required": False, "description": "Optional: hash of a Universal Paper Mandate that authorizes this contact"},
+        ],
+        "limits": "No bulk or repeated messages. We reply to the human contact for anything binding.",
+    },
+    "listing": {
+        "name": "Built with Universal Paper",
+        "optIn": True,
+        "consent": "Listed only with the explicit consent of the organization (the principal, when an agent writes).",
+        "neutrality": "A listing is not an endorsement or certification. Conformance is self-reported unless verified with the published test vectors.",
+    },
+    "license": "CC0-1.0",
+}
 
 
 def build_llms(site):
@@ -663,6 +714,13 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 - [FAQ]({site.url('/faq/')}): plain-language answers for GPOs, suppliers, members and developers
 - [Licenses]({site.url('/license/')}): what is licensed how, and how to credit it
 - [Specification index]({site.url('/spec/')}){repo}
+
+## Contact, partners and agents
+
+Building with Universal Paper, interested in partnering, or want to shape the standard? Email {PARTNERS["contact"]["email"]} (Uppercentile, the steward). AI agents are welcome to write too: use the subject "{PARTNERS["agents"]["subject"]}" and state your name, your operator, the principal you act for, your purpose and a human contact. A person reads every message. Being listed as "Built with Universal Paper" is opt-in and needs the principal's consent. Contacting Uppercentile is never required to use Universal Paper, and nothing in the language or tools reports usage.
+
+- [How to reach us, as JSON]({site.url('/partners.json')}): fields for people and agents, and listing rules
+- [Partner page]({PARTNERS["contact"]["page"]}): the same, for people
 
 ## Specification (Markdown)
 
