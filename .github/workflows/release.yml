@@ -3,7 +3,8 @@ name: Release
 # Publishes a version when a tag like v0.1.0 is pushed (or a GitHub Release creates one):
 #   1. checks that the tag matches every version number and that the tests pass,
 #   2. builds universal-paper and universal-paper-mcp,
-#   3. publishes both to PyPI with trusted publishing (no tokens; set up once on pypi.org),
+#   3. publishes both to PyPI with trusted publishing (no tokens; set up once on pypi.org;
+#      environment pypi for universal-paper, pypi-mcp for universal-paper-mcp),
 #   4. publishes server.json to the official MCP Registry as io.github.Uppercentile/universal-paper
 #      (GitHub OIDC; no tokens).
 on:
@@ -42,19 +43,38 @@ jobs:
       - run: python -m pytest -q
       - name: Build both packages
         run: |
-          python -m build --outdir dist .
-          python -m build --outdir dist packages/universal-paper-mcp
-          ls -l dist
+          python -m build --outdir dist/core .
+          python -m build --outdir dist/mcp packages/universal-paper-mcp
+          ls -l dist/*
       - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
 
+  # One job and one GitHub environment per PyPI project: PyPI refuses two pending trusted
+  # publishers with the same repository, workflow and environment.
   pypi:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: pypi
+      url: https://pypi.org/project/universal-paper/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/core/
+
+  pypi-mcp:
+    needs: pypi  # universal-paper-mcp depends on the universal-paper release just published
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi-mcp
       url: https://pypi.org/project/universal-paper-mcp/
     permissions:
       id-token: write
@@ -64,9 +84,11 @@ jobs:
           name: dist
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/mcp/
 
   mcp-registry:
-    needs: pypi
+    needs: pypi-mcp
     runs-on: ubuntu-latest
     permissions:
       id-token: write
