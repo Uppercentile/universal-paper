@@ -92,7 +92,7 @@ The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile))
 | `simulate_amendment` | Tries one parameter change as an agent's amendment under its Mandate, and says which bound it breaks. Try `simulate_amendment("example:mandate-cap", "price", "factor", "1.05")`. |
 | `simulate_purchase` | Prices a purchase under a member's participation in its tier (or a tier it might move to), and tests a purchase commitment. Try `simulate_purchase("example:what-if", 1, [{"item": "00000000000017", "quantity": 100}], category_total="1500")`. |
 | `simulate_termination` | If a party gave notice now: allowed or not (including cure periods), the effective date, duties and fees still owed, and participations that stop with it. |
-| `simulate_eligibility` | Whether a member is an active participant at a time, so its purchases count for the supplier, with the reason. |
+| `simulate_eligibility` | Whether a member is an active participant at a time, so its purchases count under the agreement, with the reason. |
 | `render_text` | The human-readable agreement text, fixed by its hash (optionally as an outsider sees it). |
 | `hash_object` | The content hash of any JSON value. |
 | `list_terms`, `explain_term` | The Term library: parameters, claims, rendering template, provenance and hash. |

@@ -335,19 +335,20 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
          "would accept it, and if not, which bound it breaks. Try it on bundle 'example:mandate-cap'.")
     tool(simulate_purchase,
          "Price a purchase under a member's participation (`chain`, its position in the bundle) at time `at`: `lines` is "
-         "[{item, quantity}], item a GTIN string or {scheme, id}. Uses the tier in effect; `tier` (e.g. 'A') tests the price as "
+         "[{item, quantity}], item a GTIN string or {scheme, id}. Uses the tier in effect, which the member attests and the "
+         "supplier acknowledges (UP:Tier-Selection); the tool never derives a tier from volume. `tier` (e.g. 'A') tests the price as "
          "if the member attested that tier and the supplier acknowledged it. With `category_total` (the member's total category "
          "purchases for the period, e.g. '1500.00'), also says whether a UP:Purchase-Commitment share is met. Returns accepted "
          "true/false with the reason, line prices, the total, and the total in every tier. Try bundle 'example:what-if', chain 1.")
     tool(simulate_termination,
          "What happens if party `by` (a role such as 'supplier', or a name, key or identifier) gives notice of termination on "
          "chain `chain` at time `at`: allowed true/false with the reason, which clause (UP:Termination-Convenience or "
-         "UP:Termination-Cause, including cure periods), the effective date, duties and fees still owed for periods up to then, "
+         "UP:Termination-Cause, including cure periods), the effective date, duties and fees (such as admin fees) still owed for periods up to then, "
          "and participations that stop with it. `clause` picks one termination clause. Try bundle 'example:what-if', chain 0.")
     tool(simulate_eligibility,
          "Is `member` (a name, key, or identifier such as an HIN or GLN) eligible at time `at`: a real, active participant "
          "under an aggregator agreement (UP:Participation: executed by every party, within its term, parent agreement in "
-         "force), so its purchases count for the supplier? Returns eligible true/false with the reason for each participation. "
+         "force), so its purchases count under the agreement? Returns eligible true/false with the reason for each participation. "
          "`parent` limits it to one aggregator agreement (chain position). Try bundle 'example:what-if'.")
     tool(render_text,
          "Render agreements as the human-readable text fixed by their hash. `chain` picks one chain by position; "
