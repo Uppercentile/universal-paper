@@ -524,7 +524,7 @@ def build_spec(site):
     for p in (site.repo / "schema").glob("*.json"):
         (site.out / "schema").mkdir(parents=True, exist_ok=True)
         shutil.copy(p, site.out / "schema" / p.name)
-    for d in ("conventional", "generative", "overlay", "confidential"):
+    for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if"):
         for p in (site.repo / "examples" / d).glob("*"):
             if p.suffix in (".json", ".txt"):
                 (site.out / "examples" / d).mkdir(parents=True, exist_ok=True)
@@ -762,7 +762,7 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 
 ## MCP server for agents
 
-The official Universal Paper MCP server gives an agent the reference interpreter as read-only tools: validate_bundle, derive_state, check_event, simulate_events (Mandate limits apply), render_text, hash_object, list_terms, explain_term and get_example. It holds no keys, signs nothing and writes nothing.
+The official Universal Paper MCP server gives an agent the reference interpreter as read-only tools: validate_bundle, derive_state, check_event, simulate_events (Mandate limits apply), simulate_amendment, simulate_price_conformity, simulate_termination, simulate_eligibility, render_text, hash_object, list_terms, explain_term and get_example. It holds no keys, signs nothing and writes nothing. Any tool takes `"example:mandate-cap"` as its bundle: an agent whose Mandate caps price changes at 2% either way, so `simulate_amendment("example:mandate-cap", "price", "factor", "1.05")` is rejected under axiom A9. `"example:what-if"` has one master agreement and three members (active, terminated, not yet signed by the supplier) for simulate_price_conformity, simulate_termination and simulate_eligibility.
 
 - Hosted (Streamable HTTP, no sign-in): {MCP["endpoint"]}
 - Local: `uvx {MCP["pypi"]}` (PyPI), or `up-mcp` from the universal-paper package

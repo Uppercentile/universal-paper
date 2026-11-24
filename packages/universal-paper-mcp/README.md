@@ -2,6 +2,8 @@
 
 <!-- mcp-name: io.github.Uppercentile/universal-paper -->
 
+[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-15171b?logo=cursor&logoColor=white)](https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D) [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-2f45c6?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D)
+
 The official [Model Context Protocol](https://modelcontextprotocol.io) server for [Universal Paper](https://universalpaper.org), an open language for agreements between group purchasing organizations (GPOs), suppliers and members.
 
 It lets an AI agent check an agreement the same way every other party does: validate a bundle, derive statuses and obligations, dry-run a signed event, simulate hypothetical events under a Mandate, render the agreement text, hash an object and look up Terms. Every tool is read-only. The server holds no keys, signs nothing, writes nothing and reports nothing.
@@ -36,6 +38,10 @@ Other clients:
 | `derive_state` | Statuses, tiers, contract prices and open obligations at a time |
 | `check_event` | Dry-run one signed event against its chain, writing nothing |
 | `simulate_events` | Run hypothetical unsigned events forward; Mandate limits still apply |
+| `simulate_amendment` | Try one parameter change as an agent's amendment; see which Mandate bound it breaks |
+| `simulate_price_conformity` | Do prices conform to the member's contract prices in its tier (or another tier)? |
+| `simulate_termination` | If a party gave notice: allowed or not, effective date, what is still owed |
+| `simulate_eligibility` | Is a member an active participant, so the agreement's terms and contract prices apply to it? |
 | `render_text` | The human-readable agreement text fixed by its hash; optionally as an outsider sees sealed values |
 | `hash_object` | Content hash (RFC 8785 JCS + SHA-256) of any JSON value |
 | `list_terms`, `explain_term` | The standard 16-Term library |

@@ -78,7 +78,8 @@ def test_server_lists_every_tool_as_read_only():
     listed = anyio.run(tools)
     names = {t.name for t in listed}
     assert names == {"validate_bundle", "derive_state", "check_event", "simulate_events", "render_text",
-                     "hash_object", "list_terms", "explain_term", "get_example"}
+                     "hash_object", "list_terms", "explain_term", "get_example", "simulate_amendment",
+                     "simulate_price_conformity", "simulate_termination", "simulate_eligibility"}
     for t in listed:
         ann = t.annotations
         assert getattr(ann, "read_only_hint", getattr(ann, "readOnlyHint", None)) is True
@@ -146,3 +147,107 @@ def test_release_versions_agree():
     readme = (root / "packages/universal-paper-mcp/README.md").read_text(encoding="utf-8")
     assert f"mcp-name: {server['name']} -->" in readme
     assert len(server["description"]) <= 100
+
+
+def test_simulate_amendment_blocks_an_agent_past_its_mandate_cap():
+    out = m.simulate_amendment("example:mandate-cap", "price", "factor", 1.05)
+    assert out["accepted"] is False and out["change"]["to"] == "1.05"
+    assert "above the maximum 1.02" in out["reason"] and out["failed_checks"][0]["rule"] == "A9"
+    inside = m.simulate_amendment(bundle("mandate-cap"), "price", "factor", "1.015")
+    assert inside["accepted"] is True and inside["reason"] is None
+    with pytest.raises(InputError, match="no clause"):
+        m.simulate_amendment("example:mandate-cap", "fee", "rate", "0.05")
+    assert m.validate_bundle("example:mandate-cap")["valid"]
+
+
+# ---- what-if tools on example:what-if (master 0; member 1 active in tier B; member 2 left; member 3 unsigned) ----
+
+GTIN17, GTIN24 = "00000000000017", {"scheme": "GTIN", "id": "00000000000024"}
+
+
+def test_simulate_price_conformity_checks_prices_against_the_tier_in_effect():
+    data = bundle("what-if")
+    before = json.dumps(data, sort_keys=True)
+    ok = m.simulate_price_conformity(data, 1, [{"item": GTIN17, "price": "9.40"},
+                                              {"item": GTIN24, "price": {"value": "21.75", "currency": "USD"}}])
+    assert ok["conforms"] is True and ok["tier"]["applied"] == "B"
+    assert ok["prices"][0]["contract"] == {"value": "9.40", "currency": "USD"}
+    assert ok["prices"][0]["by_tier"]["A"]["value"] == "9.10"
+    off = m.simulate_price_conformity(data, 1, [{"item": GTIN17, "price": 9.8}])
+    assert off["conforms"] is False and off["prices"][0]["difference"]["value"] == "0.40"
+    assert "above" in off["reason"] and "tier C price" in off["reason"]
+    assert json.dumps(data, sort_keys=True) == before
+
+
+def test_simulate_price_conformity_tier_change_and_refusals():
+    r = m.simulate_price_conformity("example:what-if", 1, [{"item": GTIN17, "price": "9.10"}], tier="A")
+    assert r["conforms"] and r["tier"]["change"]["accepted"] and r["tier"]["applied"] == "A"
+    bad = m.simulate_price_conformity("example:what-if", 1, [{"item": GTIN17, "price": "9.10"}], tier="Z")
+    assert bad["conforms"] is False and "not one of the named options" in bad["reason"]
+    left = m.simulate_price_conformity("example:what-if", 2, [{"item": GTIN17, "price": "9.80"}])
+    assert left["conforms"] is False and "terminated" in left["reason"]
+    unknown = m.simulate_price_conformity("example:what-if", 1, [{"item": "99", "price": "1.00"}])
+    assert unknown["conforms"] is False and "not priced" in unknown["reason"]
+    eur = m.simulate_price_conformity("example:what-if", 1, [{"item": GTIN17, "price": {"value": "9.40", "currency": "EUR"}}])
+    assert eur["conforms"] is False and "EUR" in eur["reason"]
+    with pytest.raises(InputError):
+        m.simulate_price_conformity("example:what-if", 0, [{"item": GTIN17, "price": "9.40"}])  # the master is not a participation
+
+
+def test_simulate_termination_convenience_cause_and_cure_period():
+    now = m.simulate_termination("example:what-if", 0, "aggregator")
+    assert now["allowed"] and now["clause"] == "exit" and now["effective_at"] == "2027-05-30T09:00:00Z"
+    cause = next(o for o in now["options"] if o["clause"] == "cause")
+    assert cause["allowed"] is False and "2027-03-31T09:00:00Z" in cause["cure"]
+    assert [p["chain"] for p in next(o for o in now["options"] if o["clause"] == "exit")["affected_participations"]] == [1]
+    later = m.simulate_termination("example:what-if", 0, "aggregator", at="2027-03-31T09:00:00Z", clause="cause")
+    assert later["allowed"] and later["effective_at"] == "2027-04-30T09:00:00Z"
+    assert later["options"][0]["fees_still_owed"]
+    member = m.simulate_termination("example:what-if", 1, "Hypothetical Community Hospital")
+    assert member["allowed"] and member["effective_at"] == "2027-03-31T09:00:00Z"
+    no = m.simulate_termination("example:what-if", 1, "supplier")
+    assert no["allowed"] is False and "No termination clause lets the supplier" in no["reason"]
+    gone = m.simulate_termination("example:what-if", 2, "member")
+    assert gone["allowed"] is False and "already terminated" in gone["reason"]
+    with pytest.raises(InputError):
+        m.simulate_termination("example:what-if", 0, "member")
+
+
+def test_simulate_eligibility_active_left_unsigned_unknown():
+    yes = m.simulate_eligibility("example:what-if", "HYP000001")
+    assert yes["eligible"] is True and yes["participations"][0]["tier"] == "B"
+    left = m.simulate_eligibility("example:what-if", "Sample Regional Clinic")
+    assert left["eligible"] is False and "terminated" in left["reason"]
+    before = m.simulate_eligibility("example:what-if", "Sample Regional Clinic", at="2027-02-01T00:00:00Z")
+    assert before["eligible"] is True
+    unsigned = m.simulate_eligibility("example:what-if", "Hypothetical Rural Hospital")
+    assert unsigned["eligible"] is False and "supplier" in unsigned["reason"]
+    nobody = m.simulate_eligibility("example:what-if", "Nobody")
+    assert nobody["eligible"] is False and nobody["participations"] == []
+    after_master_ends = m.simulate_eligibility("example:what-if", "HYP000001", at="2029-06-01T00:00:00Z")
+    assert after_master_ends["eligible"] is False
+
+
+def test_what_if_tools_reject_bad_times_and_roles_and_respect_seals():
+    assert m.validate_bundle("example:what-if")["valid"]
+    for call in (lambda: m.simulate_eligibility("example:what-if", "HYP000001", at="tomorrow"),
+                 lambda: m.simulate_price_conformity("example:what-if", 1, [{"item": GTIN17, "price": "9.40"}], at="2027-13-01"),
+                 lambda: m.simulate_termination("example:what-if", 0, "supplier", at="soon"),
+                 lambda: m.simulate_eligibility("example:what-if", "member")):  # a role names no one member
+        with pytest.raises(InputError):
+            call()
+    notice = m.simulate_eligibility("example:what-if", "Sample Regional Clinic", at="2027-02-10T00:00:00Z")
+    assert notice["eligible"] is True and "Notice of termination has been given" in notice["reason"]
+    hidden = bundle("confidential")
+    hidden["disclosures"] = []
+    sealed = m.simulate_price_conformity(hidden, 1, [{"item": GTIN17, "price": "9.10"}])
+    assert sealed["conforms"] is False and "sealed" in sealed["reason"]
+    assert m.simulate_price_conformity(bundle("confidential"), 1, [{"item": GTIN17, "price": "9.10"}])["conforms"] is True
+
+
+def test_what_if_answers_are_deterministic():
+    data = bundle("what-if")
+    for call in (lambda d: m.simulate_termination(d, 0, "aggregator"),
+                 lambda d: m.simulate_price_conformity(d, 1, [{"item": GTIN17, "price": "9.80"}], tier="A"),
+                 lambda d: m.simulate_eligibility(d, "HYP000003")):
+        assert json.dumps(call(data), sort_keys=True) == json.dumps(call(json.loads(json.dumps(data))), sort_keys=True)

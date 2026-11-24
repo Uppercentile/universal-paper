@@ -69,6 +69,8 @@ python -m pytest                                                        # the fu
 
 <!-- mcp-name: io.github.Uppercentile/universal-paper -->
 
+[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-15171b?logo=cursor&logoColor=white)](https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D) [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-2f45c6?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D)
+
 The official Universal Paper [Model Context Protocol](https://modelcontextprotocol.io) server is a read-only layer over the reference interpreter. It lets an agent check an agreement the same way every other party does, and test whether an action is within its Mandate before anyone signs. It holds no keys, signs nothing, and writes nothing.
 
 | Use it | How |
@@ -77,7 +79,7 @@ The official Universal Paper [Model Context Protocol](https://modelcontextprotoc
 | Local, from PyPI | `uvx universal-paper-mcp` |
 | Local, from this repo | `pip install -e '.[mcp]'` then `up-mcp` |
 
-Claude Code: `claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp`, or locally `claude mcp add universal-paper -- uvx universal-paper-mcp`. Other clients: `{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}`, or the hosted URL wherever a client takes a remote server. It is listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.Uppercentile/universal-paper`.
+Claude Code: `claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp`, or locally `claude mcp add universal-paper -- uvx universal-paper-mcp`. Other clients: `{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}`, or the hosted URL wherever a client takes a remote server. Agents setting it up for you can follow [llms-install.md](llms-install.md). It is listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.Uppercentile/universal-paper`.
 
 The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile)) is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths, so a bundle is passed as an object or JSON text. It counts calls per tool name in memory and shows the totals at [/stats](https://mcp.universalpaper.org/stats); that is its only usage signal. How it is deployed and released: [deploy/README.md](deploy/README.md).
 
@@ -87,12 +89,16 @@ The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile))
 | `derive_state` | Status, tiers, contract prices and obligations at a time. |
 | `check_event` | Dry-runs one signed event against its chain's current state. |
 | `simulate_events` | Runs hypothetical, unsigned events forward. Mandate limits still apply. |
+| `simulate_amendment` | Tries one parameter change as an agent's amendment under its Mandate, and says which bound it breaks. Try `simulate_amendment("example:mandate-cap", "price", "factor", "1.05")`. |
+| `simulate_price_conformity` | Checks prices given for items against a member's contract prices in its tier (or a tier it might move to): conforms or not, and by how much. Try `simulate_price_conformity("example:what-if", 1, [{"item": "00000000000017", "price": "9.40"}])`. |
+| `simulate_termination` | If a party gave notice now: allowed or not (including cure periods), the effective date, duties and fees (such as admin fees) still owed, and participations that stop with it. |
+| `simulate_eligibility` | Whether a member is an active participant at a time, so the agreement's terms and contract prices apply to it, with the reason. |
 | `render_text` | The human-readable agreement text, fixed by its hash (optionally as an outsider sees it). |
 | `hash_object` | The content hash of any JSON value. |
 | `list_terms`, `explain_term` | The Term library: parameters, claims, rendering template, provenance and hash. |
-| `get_example` | One of the worked example bundles. |
+| `get_example` | One of the worked example bundles, including `mandate-cap` (an agent capped at ±2% on price) and `what-if` (for the price conformity, termination and eligibility tools). |
 
-Bundles can be passed as JSON objects, JSON text, or (local server only) file paths.
+Bundles can be passed as JSON objects, JSON text, `"example:<name>"`, or (local server only) file paths.
 
 ## Examples
 

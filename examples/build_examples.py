@@ -252,6 +252,89 @@ def generative():
 
 
 # ---------------------------------------------------------------------------
+# 5. Mandate cap: an agent's pricing authority is capped at 2% either way (the "deterministic block" demo)
+# ---------------------------------------------------------------------------
+
+def mandate_cap():
+    """A cooperative's agent may move prices at most 2% from the supplier's list. It tries 5%; the language says no.
+
+    The bundle holds the signed Mandate and the active agreement (list price x 1.00). The out-of-bounds amendment is
+    left for an agent to try with simulate_events or check_event; an in-bounds one (x 1.015) is shown here for contrast.
+    """
+    w = World()
+    coop = Actor("Hypothetical Agent-Run Purchasing Cooperative")
+    sup = Actor("Example Medical Supply Co.")
+    bot = Key.from_seed("universal-paper-example:agent:pricing-agent")
+    any_ = {"any": True}
+    m = w.mandate(coop, bot, "2026-11-01T00:00:00Z", "2027-12-31T00:00:00Z", {
+        "kinds": ["propose", "accept"], "roles": ["aggregator"],
+        "terms": {"UP:Fixed-Term": {"start": any_, "end": any_},
+                  "UP:Price-Reference": {"items": any_, "list_role": {"in": ["supplier"]},
+                                         "factor": {"min": "0.98", "max": "1.02"}, "rounding": any_},
+                  "UP:Notices": {}}})
+
+    def deal(factor: str) -> dict:
+        return w.agreement([("aggregator", coop), ("supplier", sup)], [
+            w.clause("term", "UP:Fixed-Term", {"start": "2027-01-01T00:00:00Z", "end": "2028-01-01T00:00:00Z"}),
+            w.clause("price", "UP:Price-Reference", {"items": ITEMS, "list_role": "supplier", "factor": factor, "rounding": R2}),
+            w.clause("notices", "UP:Notices", {}),
+        ], "Pricing agreement (agent-run cooperative, hypothetical)")
+
+    A = deal("1.00")
+    pos, h = w.propose(coop, A, "2026-12-01T09:00:00Z", agent=(bot, m))
+    w.accept(pos, sup, h, "2026-12-01T10:00:00Z")
+    # Out of bounds: a 5% increase. Rejected under A9, so it never enters the chain (checked here, then discarded).
+    trial = copy.deepcopy(w)
+    trial.propose(coop, deal("1.05"), "2027-02-01T09:00:00Z", pos=pos, supersedes=content_hash(A), agent=(bot, m), expect=False)
+    return w, {"coop": coop, "sup": sup, "agent": bot, "mandate": m}, "2027-03-01T00:00:00Z"
+
+
+def what_if():
+    """For the simulate_price_conformity, simulate_termination and simulate_eligibility tools: one master, three members.
+
+    The master adds termination for cause, and the aggregator has given a breach notice (cure period 30 days).
+    Member 1 is active, in tier B. Member 2 gave notice and has left.
+    Member 3 has signed with the aggregator, but the supplier has not signed yet.
+    """
+    w = World()
+    agg = Actor("Hypothetical Health Purchasing Alliance", ids=[{"scheme": "GLN", "id": "0000000000017"}])
+    sup = Actor("Example Medical Supply Co.", ids=[{"scheme": "GLN", "id": "0000000000024"}])
+    m1 = Actor("Hypothetical Community Hospital", ids=[{"scheme": "HIN", "id": "HYP000001"}])
+    m2 = Actor("Sample Regional Clinic", ids=[{"scheme": "HIN", "id": "HYP000002"}])
+    m3 = Actor("Hypothetical Rural Hospital", ids=[{"scheme": "HIN", "id": "HYP000003"}])
+    clauses = master_clauses(w)
+    clauses.insert(6, w.clause("cause", "UP:Termination-Cause", {"holders": ["aggregator", "supplier"],
+                                                                 "cure_period": DAYS(30), "notice": DAYS(30)}))
+    A = w.agreement([("aggregator", agg), ("supplier", sup)], clauses, "Master agreement with termination for cause (hypothetical)")
+    a, h = w.propose(agg, A, "2026-12-01T15:00:00Z")
+    w.accept(a, sup, h, "2026-12-05T10:00:00Z")
+    cidA = w.chain_id(a)
+
+    def participation(m, start):
+        cl = participation_clauses(w, cidA, start)
+        return w.agreement([("aggregator", agg), ("member", m), ("supplier", sup)], cl, f"Participation of {m.name}")
+
+    # Member 1: active, tier B (attested, acknowledged by the supplier).
+    p1, ph = w.propose(m1, participation(m1, "2027-01-05T00:00:00Z"), "2027-01-04T09:00:00Z")
+    w.accept(p1, agg, ph, "2027-01-04T13:00:00Z")
+    w.accept(p1, sup, ph, "2027-01-04T16:00:00Z")
+    w.attest(p1, m1, "tier", "UP:Tier-Selection/selects",
+             {"option": "B", "basis": "Hypothetical basis: prior-year category purchases"}, "2027-01-07T10:00:00Z", cosigners=[sup])
+    # Member 2: joined, then gave 30 days' notice of termination for convenience.
+    p2, ph = w.propose(m2, participation(m2, "2027-01-11T00:00:00Z"), "2027-01-10T09:00:00Z")
+    w.accept(p2, agg, ph, "2027-01-10T13:00:00Z")
+    w.accept(p2, sup, ph, "2027-01-10T16:00:00Z")
+    w.attest(p2, m2, "exit", "UP:Termination-Convenience/notice", {}, "2027-01-25T09:00:00Z")
+    # Member 3: proposed and signed by the aggregator; the supplier has not signed.
+    p3, ph = w.propose(m3, participation(m3, "2027-03-01T00:00:00Z"), "2027-02-20T09:00:00Z")
+    w.accept(p3, agg, ph, "2027-02-20T13:00:00Z")
+    # The aggregator says the supplier missed the January sales report; the cure period runs 30 days.
+    w.attest(a, agg, "cause", "UP:Termination-Cause/breach",
+             {"description": "Hypothetical: the sales report for January 2027 was not delivered"}, "2027-03-01T09:00:00Z")
+    return w, {"agg": agg, "sup": sup, "m1": m1, "m2": m2, "m3": m3}, "2027-03-15T00:00:00Z"
+
+
+# ---------------------------------------------------------------------------
 # 3. Overlay: an existing contract described without renegotiation
 # ---------------------------------------------------------------------------
 
@@ -397,6 +480,12 @@ def main():
         {"id": "observer", "name": "Observer (hashes only)", "data": hidden, "hashes_only": True},
     ], {"title": "Confidential: verification from Seals alone",
         "description": "The conventional story with every price, rate, quantity, and amount sealed. The observer holds no disclosures, yet reaches the same verdict and the same state hash at every step. All values are hypothetical."}, at))
+    # 5. Mandate cap (bundle only: the out-of-bounds step is for an agent to try)
+    w, actors, at = mandate_cap()
+    write(out / "mandate-cap" / "bundle.json", w.data())
+    # 6. What-if (bundle only: for the simulate_price_conformity, simulate_termination and simulate_eligibility tools)
+    w, actors, at = what_if()
+    write(out / "what-if" / "bundle.json", w.data())
     print("examples written")
 
 

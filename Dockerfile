@@ -12,11 +12,13 @@ COPY src src
 COPY deploy/requirements-hosted.txt /tmp/requirements-hosted.txt
 RUN pip install -c /tmp/requirements-hosted.txt '.[hosted]' && rm -rf /src
 
-# The four worked examples, so get_example never reaches out to the network.
+# The worked examples, so get_example never reaches out to the network.
 COPY examples/conventional/bundle.json /srv/examples/conventional/bundle.json
 COPY examples/generative/bundle.json   /srv/examples/generative/bundle.json
 COPY examples/confidential/bundle.json /srv/examples/confidential/bundle.json
 COPY examples/overlay/bundle.json      /srv/examples/overlay/bundle.json
+COPY examples/mandate-cap/bundle.json  /srv/examples/mandate-cap/bundle.json
+COPY examples/what-if/bundle.json      /srv/examples/what-if/bundle.json
 
 RUN useradd --system --uid 10001 --no-create-home up
 USER up

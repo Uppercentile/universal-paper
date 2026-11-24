@@ -10,5 +10,7 @@
 !examples/generative/bundle.json
 !examples/confidential/bundle.json
 !examples/overlay/bundle.json
+!examples/mandate-cap/bundle.json
+!examples/what-if/bundle.json
 **/__pycache__
 **/*.egg-info

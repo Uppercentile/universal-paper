@@ -14,6 +14,17 @@ def simulate(data: dict, hypothetical: list[dict], at: str | None = None) -> dic
 
     Signatures are not checked for hypothetical events, but Mandate coverage is.
     """
+    data, unverified, results = run_hypothetical(data, hypothetical)
+    final_at = at or (hypothetical[-1]["at"] if hypothetical else None)
+    final = snapshot(Evaluator(Bundle(data), unverified), final_at) if final_at else None
+    return {"type": "Simulation", "spec": SPEC, "hypothetical": True, "steps": results, "final": final, "at": final_at}
+
+
+def run_hypothetical(data: dict, hypothetical: list[dict]) -> tuple[dict, set[str], list[dict]]:
+    """Append hypothetical events to a copy of the bundle: (new bundle data, unverified event hashes, per-step results).
+
+    Build an Evaluator(Bundle(data), unverified) over the result to ask further questions of the hypothetical state.
+    """
     data = copy.deepcopy(data)
     unverified: set[str] = set()
     results = []
@@ -54,6 +65,4 @@ def simulate(data: dict, hypothetical: list[dict], at: str | None = None) -> dic
                         "checks": [c.to_json() for c in step.checks],
                         "state_hash": content_hash(step.state) if step.state else None,
                         "derived": snapshot(ev, h["at"])})
-    final_at = at or (hypothetical[-1]["at"] if hypothetical else None)
-    final = snapshot(Evaluator(Bundle(data), unverified), final_at) if final_at else None
-    return {"type": "Simulation", "spec": SPEC, "hypothetical": True, "steps": results, "final": final, "at": final_at}
+    return data, unverified, results
