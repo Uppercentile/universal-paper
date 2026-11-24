@@ -1,12 +1,12 @@
 {
- "run": "2026-11-22",
+ "run": "2026-11-24",
  "pytest": {
-  "passed": 170,
+  "passed": 190,
   "failed": 0
  },
  "js": {
-  "passed": 121,
-  "total": 121,
+  "passed": 136,
+  "total": 136,
   "traces": 26
  },
  "lab": {

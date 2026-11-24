@@ -298,7 +298,7 @@ PAGE_CSS = """
 .side b{font:500 var(--t-eyebrow)/1 var(--f-mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);margin:0 0 10px}
 .side a{color:var(--ink-2);text-decoration:none;padding:5px 10px;border-radius:6px}
 .side a:hover{color:var(--ink);background:var(--bg-2)}.side a[aria-current="page"]{color:var(--ink);background:var(--bg-2);font-weight:500}
-@media (max-width:860px){.layout{grid-template-columns:1fr;gap:24px}.side{position:static;display:flex;flex-wrap:wrap;gap:6px}.side b{width:100%}.side a{border:1px solid var(--rule)}}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr);gap:24px}.side{position:static;display:flex;flex-wrap:wrap;gap:6px}.side b{width:100%}.side a{border:1px solid var(--rule)}}
 .faq-group{margin-top:48px}.faq-group h2{margin-top:0}
 .faq details{border-top:1px solid var(--rule);padding:4px 0}.faq details:last-child{border-bottom:1px solid var(--rule)}
 .faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:16px 0;font:500 1.05rem/1.4 var(--f-body);color:var(--ink)}
@@ -311,7 +311,7 @@ PAGE_CSS = """
 .card h3{margin:0;font:600 1.05rem/1.3 var(--f-body)}.card p{margin:0;color:var(--ink-2);font-size:.93rem}
 .card .lic{font:500 .8rem/1 var(--f-mono);color:var(--accent)}
 .card ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:.9rem}
-.attr{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-2);padding:16px;font:400 .86rem/1.6 var(--f-mono);color:var(--ink)}
+.attr{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-2);padding:16px;font:400 .86rem/1.6 var(--f-mono);color:var(--ink);overflow-wrap:anywhere}
 .site-footer2{border-top:1px solid var(--rule);background:var(--bg-2);color:var(--ink-2)}
 .site-footer2 .row{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;padding-top:28px}
 .site-footer2 .brand{color:var(--ink)}
@@ -573,7 +573,7 @@ def build_spec(site):
 <h2 id="machine-readable">Machine-readable files</h2>
 <ul><li>JSON Schemas: <a href="/schema/universal-paper.schema.json">universal-paper.schema.json</a>, <a href="/schema/trace.schema.json">trace.schema.json</a> (Apache-2.0)</li>
 <li>Term definitions as JSON: <code>/spec/terms/UP-*.json</code>, for example <a href="/spec/terms/UP-Admin-Fee.json">UP-Admin-Fee.json</a> (CC BY 4.0)</li>
-<li>Example bundles: <a href="/examples/conventional/bundle.json">conventional</a>, <a href="/examples/generative/bundle.json">generative</a>, <a href="/examples/overlay/bundle.json">overlay</a>, <a href="/examples/confidential/bundle.json">confidential</a> (CC0 1.0)</li>
+<li>Example bundles: <a href="/examples/conventional/bundle.json">conventional</a>, <a href="/examples/generative/bundle.json">generative</a>, <a href="/examples/overlay/bundle.json">overlay</a>, <a href="/examples/confidential/bundle.json">confidential</a>, <a href="/examples/mandate-cap/bundle.json">mandate-cap</a>, <a href="/examples/what-if/bundle.json">what-if</a> (CC0 1.0)</li>
 <li>Every page is also available as Markdown: add <code>.md</code> to its path, for example <a href="/spec/axioms.md">/spec/axioms.md</a></li></ul>
 <p style="font-size:.85rem;color:var(--ink-3)">Specification by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>.</p></div>"""
     title = "Universal Paper specification | UP/0.1-draft"

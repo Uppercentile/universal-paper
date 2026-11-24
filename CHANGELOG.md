@@ -6,14 +6,21 @@ All notable changes to the specification, the Term library, and the reference im
 
 ### Added
 
-- The official MCP server, released three ways: a hosted, stateless endpoint (`up-mcp --hosted`, `Dockerfile`, to be served at `https://mcp.universalpaper.org/mcp`), the `universal-paper-mcp` package on PyPI (`uvx universal-paper-mcp`), and an MCP Registry entry `io.github.Uppercentile/universal-paper` (`server.json`). The hosted mode never reads file paths, keeps no access logs and only counts calls per tool name (`/stats`).
-- `release.yml` publishes both packages to PyPI with trusted publishing and `server.json` to the MCP Registry on a `v*` tag; `deploy-mcp.yml` deploys the endpoint to Fly.io. See `deploy/README.md`.
-- MCP sections on the developer page, in `llms.txt` and in `partners.json`.
+- MCP tool `simulate_amendment`: one call checks a proposed change to one clause parameter against the agent's Mandate (A9). Every tool also accepts `"example:<name>"` as its bundle. New example bundle `examples/mandate-cap`.
 - MCP tools `simulate_price_conformity`, `simulate_termination` and `simulate_eligibility` (`src/universal_paper/whatif.py`): whether prices conform to a member's contract prices in its attested tier; whether a party may terminate now, when it takes effect and what is still owed; whether a member is an active participant at a time. Read-only, computed by the reference interpreter. New example bundle `examples/what-if`.
+- One-click installs for the hosted MCP server (Add to Cursor, Install in VS Code) on the developer page and in the README, plus `llms-install.md`.
 
-## [0.1.0] - unreleased
+The hosted endpoint already serves these 13 tools; the 0.1.0 packages on PyPI and the MCP Registry entry have the first 9.
+
+## [0.1.0] - 2026-11-24
 
 Version 0.1.0 is the first release to PyPI. Pre-release audit. Details and rationale for every item are in [AUDIT.md](AUDIT.md).
+
+### Added
+
+- The official MCP server, released three ways: a hosted, stateless endpoint (`up-mcp --hosted`, `Dockerfile`, served at `https://mcp.universalpaper.org/mcp`), the `universal-paper-mcp` package on PyPI (`uvx universal-paper-mcp`), and an MCP Registry entry `io.github.Uppercentile/universal-paper` (`server.json`). The hosted mode never reads file paths, keeps no access logs and only counts calls per tool name (`/stats`).
+- `release.yml` publishes both packages to PyPI with trusted publishing and `server.json` to the MCP Registry on a `v*` tag; `deploy-mcp.yml` deploys the endpoint to Fly.io. See `deploy/README.md`.
+- MCP sections on the developer page, in `llms.txt` and in `partners.json`.
 
 ### Changed (Validity)
 
