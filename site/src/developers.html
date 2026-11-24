@@ -1155,11 +1155,13 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
         <p class="eyebrow">For AI agents</p>
         <h3 style="font-size:var(--s2);margin:6px 0 14px">The official MCP server</h3>
         <p class="note" style="margin-bottom:18px">Give any agent the reference interpreter as tools. It can validate a bundle, see what's owed on a date, dry-run an event, check whether an action is inside its Mandate before anyone signs, and read the agreement as text. Every tool is read-only. The server holds no keys, signs nothing and writes nothing.</p>
-        <p style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px"><a class="btn primary" href="https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D" rel="noopener">Add to Cursor</a><a class="btn" href="https://insiders.vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D" target="_blank" rel="noopener">Install in VS Code</a></p>
+        <p style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px"><a class="btn primary" href="https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D" rel="noopener">Add to Cursor</a><a class="btn" href="https://vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D" rel="noopener">Install in VS Code</a></p>
+        <p class="note" style="margin:-8px 0 18px">The buttons open Cursor or VS Code if it is installed, and your browser may ask first. If nothing happens, add it by hand with one of the steps below.</p>
         <ol>
           <li><div><b>Hosted, nothing to install</b> <span class="note">Streamable HTTP, no sign-in</span><pre>https://mcp.universalpaper.org/mcp</pre></div></li>
           <li><div><b>Or run it locally</b> <span class="note">with uv; or pip install universal-paper-mcp</span><pre>uvx universal-paper-mcp</pre></div></li>
           <li><div><b>Add it to Claude Code</b><pre>claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp</pre></div></li>
+          <li><div><b>Add it to VS Code</b><pre>code --add-mcp '{"name":"universal-paper","type":"http","url":"https://mcp.universalpaper.org/mcp"}'</pre></div></li>
           <li><div><b>Any other client</b><pre>{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}</pre></div></li>
         </ol>
       </div>

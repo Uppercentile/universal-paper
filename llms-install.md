@@ -21,7 +21,22 @@ Config files that take a URL (Cline, Cursor, VS Code, Windsurf and others):
 }
 ```
 
-For Cline, set `"type": "streamableHttp"` on the entry if your version asks for a type. For VS Code, use `"type": "http"`.
+For Cline, set `"type": "streamableHttp"` on the entry if your version asks for a type.
+
+VS Code uses a `servers` key instead, in `.vscode/mcp.json` (workspace) or the user `mcp.json`:
+
+```json
+{
+  "servers": {
+    "universal-paper": {
+      "type": "http",
+      "url": "https://mcp.universalpaper.org/mcp"
+    }
+  }
+}
+```
+
+Or from a terminal: `code --add-mcp '{"name":"universal-paper","type":"http","url":"https://mcp.universalpaper.org/mcp"}'`.
 
 ## Alternative: run locally (stdio)
 

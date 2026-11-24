@@ -2,7 +2,9 @@
 
 <!-- mcp-name: io.github.Uppercentile/universal-paper -->
 
-[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-15171b?logo=cursor&logoColor=white)](https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D) [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-2f45c6?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D)
+[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-15171b?logo=cursor&logoColor=white)](https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D) [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-2f45c6?logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D)
+
+The buttons open Cursor or VS Code if it is installed; your browser may ask first. If nothing happens, add the server by hand. VS Code: `code --add-mcp '{"name":"universal-paper","type":"http","url":"https://mcp.universalpaper.org/mcp"}'`. Cursor and other clients: see [llms-install.md](https://github.com/Uppercentile/universal-paper/blob/main/llms-install.md).
 
 The official [Model Context Protocol](https://modelcontextprotocol.io) server for [Universal Paper](https://universalpaper.org), an open language for agreements between group purchasing organizations (GPOs), suppliers and members.
 
