@@ -1,0 +1,272 @@
+{
+  "chains": [
+    [
+      {
+        "at": "2026-12-01T09:00:00Z",
+        "body": {
+          "agreement": {
+            "clauses": [
+              {
+                "def": "sha256:0f0c265a43d9fa361ef55b8136d4cad9d5e11ebabe79a8ea93e87f352b68f372",
+                "n": "term",
+                "params": {
+                  "end": "2028-01-01T00:00:00Z",
+                  "start": "2027-01-01T00:00:00Z"
+                },
+                "term": "UP:Fixed-Term"
+              },
+              {
+                "def": "sha256:589002827fe61e7caefda7f6c7221de0f2a6f3dd12aea13d731369c9efefae12",
+                "n": "price",
+                "params": {
+                  "factor": "1.00",
+                  "items": [
+                    {
+                      "id": "00000000000017",
+                      "scheme": "GTIN"
+                    },
+                    {
+                      "id": "00000000000024",
+                      "scheme": "GTIN"
+                    },
+                    {
+                      "id": "00000000000031",
+                      "scheme": "GTIN"
+                    }
+                  ],
+                  "list_role": "supplier",
+                  "rounding": {
+                    "mode": "half-even",
+                    "scale": 2
+                  }
+                },
+                "term": "UP:Price-Reference"
+              },
+              {
+                "def": "sha256:ac1e78bc3e0ed82e0cda2f203c4cd5446cb1da7ef7ce1dd972763ca76fcc59e1",
+                "n": "notices",
+                "params": {},
+                "term": "UP:Notices"
+              }
+            ],
+            "label": "Pricing agreement (agent-run cooperative, hypothetical)",
+            "parties": [
+              {
+                "party": {
+                  "key": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5",
+                  "name": "Hypothetical Agent-Run Purchasing Cooperative"
+                },
+                "role": "aggregator"
+              },
+              {
+                "party": {
+                  "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+                  "name": "Example Medical Supply Co."
+                },
+                "role": "supplier"
+              }
+            ],
+            "spec": "UP/0.1-draft",
+            "type": "Agreement"
+          }
+        },
+        "by": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5",
+        "kind": "propose",
+        "sigs": [
+          {
+            "key": "ed25519:400f7fb3f58d643715aae7320ffdbae3d2a4a0bdc67077ea56ba5ec04369b89f",
+            "mandate": "sha256:5d4fc6e676e83a98ba065c013a6f14ac196e14de6a0e92479b1bc28fd7ef47b0",
+            "sig": "83f2fd79c5cf5a519e8dedf5e823700bdef29395c085530b9c722657e28f6f4634c99a7b94da64f77cb97d8f213199a4ef12099a7234bb30763f60723b29f50b"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      },
+      {
+        "at": "2026-12-01T10:00:00Z",
+        "body": {
+          "target": "sha256:99505e2aeee229a20ff506180530193c9740ac7ed1d966d2a07ba02cc801fc42"
+        },
+        "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+        "chain": "sha256:99505e2aeee229a20ff506180530193c9740ac7ed1d966d2a07ba02cc801fc42",
+        "kind": "accept",
+        "prev": "sha256:e43a46759e3265e8df5a61ad7ac8a97f020cbefe8546e5b7f1cd07e792e2cce6",
+        "sigs": [
+          {
+            "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
+            "sig": "447bf05ca1c11c3dfd8f5cf3b117e77c007a20807bcae6a244e9a994fc2edeeeda8c11adf6c37ab78729c1aec666b2712d02f2a45b17abce75d65a7469241406"
+          }
+        ],
+        "spec": "UP/0.1-draft",
+        "type": "Event"
+      }
+    ]
+  ],
+  "mandates": [
+    {
+      "agent": "ed25519:400f7fb3f58d643715aae7320ffdbae3d2a4a0bdc67077ea56ba5ec04369b89f",
+      "expires": "2027-12-31T00:00:00Z",
+      "not_before": "2026-11-01T00:00:00Z",
+      "principal": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5",
+      "scope": {
+        "kinds": [
+          "propose",
+          "accept"
+        ],
+        "roles": [
+          "aggregator"
+        ],
+        "terms": {
+          "UP:Fixed-Term": {
+            "end": {
+              "any": true
+            },
+            "start": {
+              "any": true
+            }
+          },
+          "UP:Notices": {},
+          "UP:Price-Reference": {
+            "factor": {
+              "max": "1.02",
+              "min": "0.98"
+            },
+            "items": {
+              "any": true
+            },
+            "list_role": {
+              "in": [
+                "supplier"
+              ]
+            },
+            "rounding": {
+              "any": true
+            }
+          }
+        }
+      },
+      "sigs": [
+        {
+          "key": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5",
+          "sig": "dac005bdf6f691355a1b9a7a2d7fbf0772600d3807661bdf882a767bd59a29ed358f2b11dff130d173e1278d955e4ed00820ec104e058a223f62b8efdb88a101"
+        }
+      ],
+      "spec": "UP/0.1-draft",
+      "type": "Mandate"
+    }
+  ],
+  "spec": "UP/0.1-draft",
+  "terms": [
+    {
+      "claims": {},
+      "forms": [
+        {
+          "end": {
+            "param": "end"
+          },
+          "form": "Window",
+          "start": {
+            "param": "start"
+          }
+        }
+      ],
+      "id": "UP:Fixed-Term",
+      "params": {
+        "end": {
+          "doc": "First instant the Agreement is no longer in force.",
+          "type": "Time"
+        },
+        "start": {
+          "doc": "First instant the Agreement is in force.",
+          "type": "Time"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "This Agreement is in force from {{start|time}} until {{end|time}}.",
+      "spec": "UP/0.1-draft",
+      "title": "Term of agreement",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {},
+      "forms": [],
+      "id": "UP:Notices",
+      "params": {},
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "Any notice under this Agreement is given by a signed attestation recorded on this Agreement's chain of events, and is given at the time stated in that attestation.",
+      "spec": "UP/0.1-draft",
+      "title": "Notices",
+      "type": "TermDefinition"
+    },
+    {
+      "claims": {
+        "UP:Price-Reference/list": {
+          "data": {
+            "effective": "Time",
+            "prices": "[{item: Identifier, price: Amount}]"
+          },
+          "doc": "A reference price list, effective from the stated time."
+        }
+      },
+      "forms": [
+        {
+          "form": "Valuation",
+          "items": {
+            "param": "items"
+          },
+          "source": {
+            "reference": {
+              "claim": "UP:Price-Reference/list",
+              "factor": {
+                "param": "factor"
+              },
+              "role": {
+                "param": "list_role"
+              },
+              "rounding": {
+                "param": "rounding"
+              }
+            }
+          }
+        }
+      ],
+      "id": "UP:Price-Reference",
+      "params": {
+        "factor": {
+          "doc": "Multiplier applied to the reference price.",
+          "type": "Decimal"
+        },
+        "items": {
+          "doc": "Items in scope.",
+          "type": "[Identifier]"
+        },
+        "list_role": {
+          "doc": "Role that attests the reference price list.",
+          "type": "Role"
+        },
+        "rounding": {
+          "doc": "Rounding applied to the result.",
+          "type": "Rounding"
+        }
+      },
+      "provenance": {
+        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
+        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
+        "reviewed_by": []
+      },
+      "render": "The price of each Item in scope is its price in the most recent reference price list attested by {{list_role|role}} that is effective at the time of purchase, multiplied by {{factor}} and rounded {{rounding|rounding}}.",
+      "spec": "UP/0.1-draft",
+      "title": "Price by reference to a price list",
+      "type": "TermDefinition"
+    }
+  ],
+  "type": "Bundle"
+}

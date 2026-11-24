@@ -78,7 +78,7 @@ def test_server_lists_every_tool_as_read_only():
     listed = anyio.run(tools)
     names = {t.name for t in listed}
     assert names == {"validate_bundle", "derive_state", "check_event", "simulate_events", "render_text",
-                     "hash_object", "list_terms", "explain_term", "get_example"}
+                     "hash_object", "list_terms", "explain_term", "get_example", "simulate_amendment"}
     for t in listed:
         ann = t.annotations
         assert getattr(ann, "read_only_hint", getattr(ann, "readOnlyHint", None)) is True
@@ -146,3 +146,14 @@ def test_release_versions_agree():
     readme = (root / "packages/universal-paper-mcp/README.md").read_text(encoding="utf-8")
     assert f"mcp-name: {server['name']} -->" in readme
     assert len(server["description"]) <= 100
+
+
+def test_simulate_amendment_blocks_an_agent_past_its_mandate_cap():
+    out = m.simulate_amendment("example:mandate-cap", "price", "factor", 1.05)
+    assert out["accepted"] is False and out["change"]["to"] == "1.05"
+    assert "above the maximum 1.02" in out["reason"] and out["failed_checks"][0]["rule"] == "A9"
+    inside = m.simulate_amendment(bundle("mandate-cap"), "price", "factor", "1.015")
+    assert inside["accepted"] is True and inside["reason"] is None
+    with pytest.raises(InputError, match="no clause"):
+        m.simulate_amendment("example:mandate-cap", "fee", "rate", "0.05")
+    assert m.validate_bundle("example:mandate-cap")["valid"]

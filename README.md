@@ -87,12 +87,13 @@ The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile))
 | `derive_state` | Status, tiers, contract prices and obligations at a time. |
 | `check_event` | Dry-runs one signed event against its chain's current state. |
 | `simulate_events` | Runs hypothetical, unsigned events forward. Mandate limits still apply. |
+| `simulate_amendment` | Tries one parameter change as an agent's amendment under its Mandate, and says which bound it breaks. Try `simulate_amendment("example:mandate-cap", "price", "factor", "1.05")`. |
 | `render_text` | The human-readable agreement text, fixed by its hash (optionally as an outsider sees it). |
 | `hash_object` | The content hash of any JSON value. |
 | `list_terms`, `explain_term` | The Term library: parameters, claims, rendering template, provenance and hash. |
-| `get_example` | One of the worked example bundles. |
+| `get_example` | One of the worked example bundles, including `mandate-cap` (an agent capped at ±2% on price). |
 
-Bundles can be passed as JSON objects, JSON text, or (local server only) file paths.
+Bundles can be passed as JSON objects, JSON text, `"example:<name>"`, or (local server only) file paths.
 
 ## Examples
 

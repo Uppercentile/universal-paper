@@ -20,6 +20,7 @@ import os
 import time
 import urllib.request
 from collections.abc import Callable
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -32,7 +33,7 @@ from .render import render_agreement
 from .report import snapshot
 from .simulate import simulate
 
-EXAMPLES = ("conventional", "generative", "confidential", "overlay")
+EXAMPLES = ("conventional", "generative", "confidential", "overlay", "mandate-cap")
 EXAMPLES_DIR = Path(os.environ.get("UP_EXAMPLES_DIR") or Path(__file__).resolve().parents[2] / "examples")
 EXAMPLES_URL = "https://universalpaper.org/examples/{name}/bundle.json"
 
@@ -50,12 +51,14 @@ ALLOW_PATHS = True
 
 
 def _data(bundle: dict | str) -> dict:
-    """A bundle given as an object, as JSON text, or (local servers only) as a path to a local JSON file."""
+    """A bundle given as an object, as JSON text, as "example:<name>", or (local servers only) as a path to a JSON file."""
     if isinstance(bundle, dict):
         return bundle
     if not isinstance(bundle, str):
-        raise InputError("bundle must be a JSON object, JSON text, or a file path")
+        raise InputError("bundle must be a JSON object, JSON text, \"example:<name>\", or a file path")
     text = bundle.strip()
+    if text.startswith("example:"):
+        return get_example(text.removeprefix("example:"))
     if not text.startswith("{"):
         if not ALLOW_PATHS:
             raise InputError("pass the bundle as a JSON object or JSON text; the hosted server does not read file paths")
@@ -136,6 +139,51 @@ def simulate_events(bundle: dict | str, events: list[dict], at: str | None = Non
     if not isinstance(events, list):
         raise InputError("events must be a list")
     return simulate(_data(bundle), events, at)
+
+
+def simulate_amendment(bundle: dict | str, clause: str, param: str, value: Any, chain: int = 0,
+                       mandate: str | None = None, at: str | None = None) -> dict:
+    """Try changing one clause parameter by amendment, proposed by an agent under its Mandate. Unsigned and hypothetical."""
+    data = _data(bundle)
+    b = Bundle(data)
+    if not 0 <= chain < len(b.chain_list) or not b.chain_list[chain]:
+        raise InputError(f"no chain {chain} in the bundle (it has {len(b.chain_list)})")
+    ev = Evaluator(b)
+    cid = content_hash(b.chain_list[chain][0])
+    current = ev.agreement(ev.state_at(cid))
+    if not current:
+        raise InputError(f"chain {chain} has no agreement in force to amend")
+    mandates = {content_hash(mm): mm for mm in data.get("mandates", []) if isinstance(mm, dict)}
+    keys = {(p.get("party") or {}).get("key") for p in current.get("parties", []) if isinstance(p, dict)}
+    if mandate is None:
+        fits = [h for h, mm in mandates.items() if mm.get("principal") in keys]
+        if len(fits) != 1:
+            raise InputError(f"name the Mandate by its hash; {len(fits)} Mandates in the bundle have a principal on chain {chain}")
+        mandate = fits[0]
+    if mandate not in mandates:
+        raise InputError(f"no Mandate {mandate} in the bundle; known: {', '.join(sorted(mandates)) or 'none'}")
+    M = mandates[mandate]
+    proposed = json.loads(json.dumps(current))
+    target = next((c for c in proposed.get("clauses", []) if c.get("n") == clause), None)
+    if target is None:
+        raise InputError(f"no clause {clause!r}; clauses: {', '.join(c.get('n', '?') for c in proposed.get('clauses', []))}")
+    if param not in target.get("params", {}):
+        raise InputError(f"clause {clause!r} has no parameter {param!r}; parameters: {', '.join(sorted(target.get('params', {})))}")
+    before = target["params"][param]
+    if isinstance(before, str) and isinstance(value, int | float) and not isinstance(value, bool):
+        value = str(value)  # Decimals and Rates are strings; agents often send numbers
+    target["params"][param] = value
+    if at is None:
+        latest = datetime.fromisoformat(_latest(b).replace("Z", "+00:00")) + timedelta(days=1)
+        at = latest.strftime("%Y-%m-%dT%H:%M:%SZ")
+    event = {"chain": chain, "kind": "propose", "by": M["principal"], "at": at,
+             "body": {"agreement": proposed, "supersedes": content_hash(current)},
+             "agent": {"key": M["agent"], "mandate": mandate}}
+    step = simulate(data, [event])["steps"][0]
+    return {"hypothetical": True, "change": {"clause": clause, "param": param, "from": before, "to": value},
+            "agent": M["agent"], "principal": M["principal"], "mandate": mandate, "at": at,
+            "accepted": step["accepted"], "reason": step.get("reason") or None,
+            "failed_checks": [c for c in step.get("checks", []) if not c.get("passed", True)]}
 
 
 def render_text(bundle: dict | str, chain: int | None = None, hashes_only: bool = False) -> str:
@@ -242,7 +290,7 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
 
     tool(validate_bundle,
          "Check every agreement and event in a Universal Paper bundle against the axioms (signatures, hashes, "
-         f"Mandates, Term typing). `bundle` is {where}. "
+         f"Mandates, Term typing). `bundle` is {where}, or \"example:<name>\". "
          "Returns per-event accept/reject with the rule that rejected it.")
     tool(derive_state,
          "Derive each agreement's status, tiers, contract prices and open obligations at time `at` "
@@ -254,6 +302,11 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
          "Run hypothetical events forward. Each event is {chain, kind, by, at, body, cosigners?, agent?: {key, mandate}}. "
          "Signatures are not required, but Mandate limits still apply, so an agent can test whether an action is "
          "within its authority before anyone signs.")
+    tool(simulate_amendment,
+         "Try one change to an agreement in force, as an amendment proposed by an agent under its Mandate: set parameter "
+         "`param` of clause `clause` to `value` (e.g. clause 'price', param 'factor', value '1.05'). The Mandate defaults to "
+         "the only one whose principal is a party. Nothing is signed or written; the result says whether every evaluator "
+         "would accept it, and if not, which bound it breaks. Try it on bundle 'example:mandate-cap'.")
     tool(render_text,
          "Render agreements as the human-readable text fixed by their hash. `chain` picks one chain by position; "
          "`hashes_only` ignores disclosures, showing what an outsider sees of sealed values.")

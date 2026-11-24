@@ -252,6 +252,44 @@ def generative():
 
 
 # ---------------------------------------------------------------------------
+# 5. Mandate cap: an agent's pricing authority is capped at 2% either way (the "deterministic block" demo)
+# ---------------------------------------------------------------------------
+
+def mandate_cap():
+    """A cooperative's agent may move prices at most 2% from the supplier's list. It tries 5%; the language says no.
+
+    The bundle holds the signed Mandate and the active agreement (list price x 1.00). The out-of-bounds amendment is
+    left for an agent to try with simulate_events or check_event; an in-bounds one (x 1.015) is shown here for contrast.
+    """
+    w = World()
+    coop = Actor("Hypothetical Agent-Run Purchasing Cooperative")
+    sup = Actor("Example Medical Supply Co.")
+    bot = Key.from_seed("universal-paper-example:agent:pricing-agent")
+    any_ = {"any": True}
+    m = w.mandate(coop, bot, "2026-11-01T00:00:00Z", "2027-12-31T00:00:00Z", {
+        "kinds": ["propose", "accept"], "roles": ["aggregator"],
+        "terms": {"UP:Fixed-Term": {"start": any_, "end": any_},
+                  "UP:Price-Reference": {"items": any_, "list_role": {"in": ["supplier"]},
+                                         "factor": {"min": "0.98", "max": "1.02"}, "rounding": any_},
+                  "UP:Notices": {}}})
+
+    def deal(factor: str) -> dict:
+        return w.agreement([("aggregator", coop), ("supplier", sup)], [
+            w.clause("term", "UP:Fixed-Term", {"start": "2027-01-01T00:00:00Z", "end": "2028-01-01T00:00:00Z"}),
+            w.clause("price", "UP:Price-Reference", {"items": ITEMS, "list_role": "supplier", "factor": factor, "rounding": R2}),
+            w.clause("notices", "UP:Notices", {}),
+        ], "Pricing agreement (agent-run cooperative, hypothetical)")
+
+    A = deal("1.00")
+    pos, h = w.propose(coop, A, "2026-12-01T09:00:00Z", agent=(bot, m))
+    w.accept(pos, sup, h, "2026-12-01T10:00:00Z")
+    # Out of bounds: a 5% increase. Rejected under A9, so it never enters the chain (checked here, then discarded).
+    trial = copy.deepcopy(w)
+    trial.propose(coop, deal("1.05"), "2027-02-01T09:00:00Z", pos=pos, supersedes=content_hash(A), agent=(bot, m), expect=False)
+    return w, {"coop": coop, "sup": sup, "agent": bot, "mandate": m}, "2027-03-01T00:00:00Z"
+
+
+# ---------------------------------------------------------------------------
 # 3. Overlay: an existing contract described without renegotiation
 # ---------------------------------------------------------------------------
 
@@ -397,6 +435,9 @@ def main():
         {"id": "observer", "name": "Observer (hashes only)", "data": hidden, "hashes_only": True},
     ], {"title": "Confidential: verification from Seals alone",
         "description": "The conventional story with every price, rate, quantity, and amount sealed. The observer holds no disclosures, yet reaches the same verdict and the same state hash at every step. All values are hypothetical."}, at))
+    # 5. Mandate cap (bundle only: the out-of-bounds step is for an agent to try)
+    w, actors, at = mandate_cap()
+    write(out / "mandate-cap" / "bundle.json", w.data())
     print("examples written")
 
 
