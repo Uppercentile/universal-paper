@@ -18,6 +18,7 @@ COPY examples/generative/bundle.json   /srv/examples/generative/bundle.json
 COPY examples/confidential/bundle.json /srv/examples/confidential/bundle.json
 COPY examples/overlay/bundle.json      /srv/examples/overlay/bundle.json
 COPY examples/mandate-cap/bundle.json  /srv/examples/mandate-cap/bundle.json
+COPY examples/what-if/bundle.json      /srv/examples/what-if/bundle.json
 
 RUN useradd --system --uid 10001 --no-create-home up
 USER up

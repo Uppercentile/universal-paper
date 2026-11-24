@@ -78,7 +78,8 @@ def test_server_lists_every_tool_as_read_only():
     listed = anyio.run(tools)
     names = {t.name for t in listed}
     assert names == {"validate_bundle", "derive_state", "check_event", "simulate_events", "render_text",
-                     "hash_object", "list_terms", "explain_term", "get_example", "simulate_amendment"}
+                     "hash_object", "list_terms", "explain_term", "get_example", "simulate_amendment",
+                     "simulate_purchase", "simulate_termination", "simulate_eligibility"}
     for t in listed:
         ann = t.annotations
         assert getattr(ann, "read_only_hint", getattr(ann, "readOnlyHint", None)) is True
@@ -157,3 +158,71 @@ def test_simulate_amendment_blocks_an_agent_past_its_mandate_cap():
     with pytest.raises(InputError, match="no clause"):
         m.simulate_amendment("example:mandate-cap", "fee", "rate", "0.05")
     assert m.validate_bundle("example:mandate-cap")["valid"]
+
+
+# ---- what-if tools on example:what-if (master 0; member 1 active in tier B; member 2 left; member 3 unsigned) ----
+
+GTIN17, GTIN24 = "00000000000017", {"scheme": "GTIN", "id": "00000000000024"}
+
+
+def test_simulate_purchase_prices_in_the_tier_in_effect_and_tests_the_commitment():
+    data = bundle("what-if")
+    before = json.dumps(data, sort_keys=True)
+    r = m.simulate_purchase(data, 1, [{"item": GTIN17, "quantity": 100}, {"item": GTIN24, "quantity": "20"}],
+                            category_total={"value": "1500.00", "currency": "USD"})
+    assert r["accepted"] is True and r["tier"]["applied"] == "B"
+    assert r["total"] == {"value": "1375.00", "currency": "USD"}  # 100 x 9.40 + 20 x 21.75
+    assert r["total_by_tier"]["A"]["value"] == "1330.00" and r["total_by_tier"]["C"]["value"] == "1430.00"
+    assert r["commitment"]["share_required"] == "0.80" and r["commitment"]["share_actual"] == "0.9167"
+    assert r["commitment"]["met"] is True
+    low = m.simulate_purchase(data, 1, [{"item": GTIN17, "quantity": 100}], category_total="2000")
+    assert low["commitment"]["met"] is False and "below" in low["commitment"]["reason"]
+    assert json.dumps(data, sort_keys=True) == before
+
+
+def test_simulate_purchase_tier_change_and_refusals():
+    r = m.simulate_purchase("example:what-if", 1, [{"item": GTIN17, "quantity": 100}], tier="A")
+    assert r["accepted"] and r["tier"]["change"]["accepted"] and r["tier"]["applied"] == "A"
+    assert r["total"]["value"] == "910.00"
+    bad = m.simulate_purchase("example:what-if", 1, [{"item": GTIN17, "quantity": 1}], tier="Z")
+    assert bad["accepted"] is False and "not one of the named options" in bad["reason"]
+    left = m.simulate_purchase("example:what-if", 2, [{"item": GTIN17, "quantity": 1}])
+    assert left["accepted"] is False and "terminated" in left["reason"]
+    unknown = m.simulate_purchase("example:what-if", 1, [{"item": "99", "quantity": 1}])
+    assert unknown["accepted"] is False and "not priced" in unknown["reason"]
+    with pytest.raises(InputError):
+        m.simulate_purchase("example:what-if", 0, [{"item": GTIN17, "quantity": 1}])  # the master is not a participation
+
+
+def test_simulate_termination_convenience_cause_and_cure_period():
+    now = m.simulate_termination("example:what-if", 0, "aggregator")
+    assert now["allowed"] and now["clause"] == "exit" and now["effective_at"] == "2027-05-30T09:00:00Z"
+    cause = next(o for o in now["options"] if o["clause"] == "cause")
+    assert cause["allowed"] is False and "2027-03-31T09:00:00Z" in cause["cure"]
+    assert [p["chain"] for p in next(o for o in now["options"] if o["clause"] == "exit")["affected_participations"]] == [1]
+    later = m.simulate_termination("example:what-if", 0, "aggregator", at="2027-03-31T09:00:00Z", clause="cause")
+    assert later["allowed"] and later["effective_at"] == "2027-04-30T09:00:00Z"
+    assert later["options"][0]["fees_still_owed"]
+    member = m.simulate_termination("example:what-if", 1, "Hypothetical Community Hospital")
+    assert member["allowed"] and member["effective_at"] == "2027-03-31T09:00:00Z"
+    no = m.simulate_termination("example:what-if", 1, "supplier")
+    assert no["allowed"] is False and "No termination clause lets the supplier" in no["reason"]
+    gone = m.simulate_termination("example:what-if", 2, "member")
+    assert gone["allowed"] is False and "already terminated" in gone["reason"]
+    with pytest.raises(InputError):
+        m.simulate_termination("example:what-if", 0, "member")
+
+
+def test_simulate_eligibility_active_left_unsigned_unknown():
+    yes = m.simulate_eligibility("example:what-if", "HYP000001")
+    assert yes["eligible"] is True and yes["participations"][0]["tier"] == "B"
+    left = m.simulate_eligibility("example:what-if", "Sample Regional Clinic")
+    assert left["eligible"] is False and "terminated" in left["reason"]
+    before = m.simulate_eligibility("example:what-if", "Sample Regional Clinic", at="2027-02-01T00:00:00Z")
+    assert before["eligible"] is True
+    unsigned = m.simulate_eligibility("example:what-if", "Hypothetical Rural Hospital")
+    assert unsigned["eligible"] is False and "supplier" in unsigned["reason"]
+    nobody = m.simulate_eligibility("example:what-if", "Nobody")
+    assert nobody["eligible"] is False and nobody["participations"] == []
+    after_master_ends = m.simulate_eligibility("example:what-if", "HYP000001", at="2029-06-01T00:00:00Z")
+    assert after_master_ends["eligible"] is False

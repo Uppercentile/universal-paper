@@ -2,7 +2,8 @@
 
 It lets an agent check agreements the same way every other party does: validate a bundle,
 derive statuses and obligations, dry-run one event, simulate hypothetical events under a
-Mandate, render the agreement text, hash an object, and look up Terms.
+Mandate, ask what-if questions (an amendment, a purchase, a termination, a member's eligibility),
+render the agreement text, hash an object, and look up Terms.
 
 Every tool is read-only. Nothing is signed, written to disk, or sent anywhere, and the server
 holds no keys. Results come from the reference interpreter, so each one can be reproduced by
@@ -24,7 +25,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from . import SPEC, __version__
+from . import SPEC, __version__, whatif
 from .__main__ import InputError, _latest, loads
 from .build import load_terms
 from .canon import content_hash
@@ -33,7 +34,7 @@ from .render import render_agreement
 from .report import snapshot
 from .simulate import simulate
 
-EXAMPLES = ("conventional", "generative", "confidential", "overlay", "mandate-cap")
+EXAMPLES = ("conventional", "generative", "confidential", "overlay", "mandate-cap", "what-if")
 EXAMPLES_DIR = Path(os.environ.get("UP_EXAMPLES_DIR") or Path(__file__).resolve().parents[2] / "examples")
 EXAMPLES_URL = "https://universalpaper.org/examples/{name}/bundle.json"
 
@@ -186,6 +187,31 @@ def simulate_amendment(bundle: dict | str, clause: str, param: str, value: Any, 
             "failed_checks": [c for c in step.get("checks", []) if not c.get("passed", True)]}
 
 
+def simulate_purchase(bundle: dict | str, chain: int, lines: list[dict], at: str | None = None,
+                      tier: str | None = None, category_total: Any = None) -> dict:
+    """Price a purchase under a member's participation; optionally as if it moved to `tier`, and test its purchase commitment."""
+    try:
+        return whatif.simulate_purchase(_data(bundle), chain, lines, at, tier, category_total)
+    except whatif.WhatIfError as e:
+        raise InputError(str(e)) from None
+
+
+def simulate_termination(bundle: dict | str, chain: int, by: str, at: str | None = None, clause: str | None = None) -> dict:
+    """If a party gave notice of termination at `at`: is it allowed, when does it take effect, and what is still owed."""
+    try:
+        return whatif.simulate_termination(_data(bundle), chain, by, at, clause)
+    except whatif.WhatIfError as e:
+        raise InputError(str(e)) from None
+
+
+def simulate_eligibility(bundle: dict | str, member: str, at: str | None = None, parent: int | None = None) -> dict:
+    """Is a member a real, active participant at `at`, so its purchases count under the aggregator agreement?"""
+    try:
+        return whatif.simulate_eligibility(_data(bundle), member, at, parent)
+    except whatif.WhatIfError as e:
+        raise InputError(str(e)) from None
+
+
 def render_text(bundle: dict | str, chain: int | None = None, hashes_only: bool = False) -> str:
     """The human-readable agreement text, fixed by the agreement's hash."""
     b = Bundle(_data(bundle))
@@ -307,6 +333,22 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
          "`param` of clause `clause` to `value` (e.g. clause 'price', param 'factor', value '1.05'). The Mandate defaults to "
          "the only one whose principal is a party. Nothing is signed or written; the result says whether every evaluator "
          "would accept it, and if not, which bound it breaks. Try it on bundle 'example:mandate-cap'.")
+    tool(simulate_purchase,
+         "Price a purchase under a member's participation (`chain`, its position in the bundle) at time `at`: `lines` is "
+         "[{item, quantity}], item a GTIN string or {scheme, id}. Uses the tier in effect; `tier` (e.g. 'A') tests the price as "
+         "if the member attested that tier and the supplier acknowledged it. With `category_total` (the member's total category "
+         "purchases for the period, e.g. '1500.00'), also says whether a UP:Purchase-Commitment share is met. Returns accepted "
+         "true/false with the reason, line prices, the total, and the total in every tier. Try bundle 'example:what-if', chain 1.")
+    tool(simulate_termination,
+         "What happens if party `by` (a role such as 'supplier', or a name, key or identifier) gives notice of termination on "
+         "chain `chain` at time `at`: allowed true/false with the reason, which clause (UP:Termination-Convenience or "
+         "UP:Termination-Cause, including cure periods), the effective date, duties and fees still owed for periods up to then, "
+         "and participations that stop with it. `clause` picks one termination clause. Try bundle 'example:what-if', chain 0.")
+    tool(simulate_eligibility,
+         "Is `member` (a name, key, or identifier such as an HIN or GLN) eligible at time `at`: a real, active participant "
+         "under an aggregator agreement (UP:Participation: executed by every party, within its term, parent agreement in "
+         "force), so its purchases count for the supplier? Returns eligible true/false with the reason for each participation. "
+         "`parent` limits it to one aggregator agreement (chain position). Try bundle 'example:what-if'.")
     tool(render_text,
          "Render agreements as the human-readable text fixed by their hash. `chain` picks one chain by position; "
          "`hashes_only` ignores disclosures, showing what an outsider sees of sealed values.")

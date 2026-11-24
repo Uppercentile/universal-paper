@@ -44,7 +44,8 @@ Without uv: `pip install universal-paper-mcp`, then use `"command": "universal-p
 
 1. Call `list_terms`. It should return 16 Terms, such as `UP:Admin-Fee`.
 2. Call `simulate_amendment` with `bundle: "example:mandate-cap"`, `clause: "price"`, `param: "factor"`, `value: "1.05"`. It should return `"accepted": false` with a reason saying 1.05 is above the maximum 1.02. That is the expected result: the agent's Mandate caps price changes at 2%.
+3. Call `simulate_eligibility` with `bundle: "example:what-if"`, `member: "Sample Regional Clinic"`. It should return `"eligible": false`: that member gave notice and its participation was terminated.
 
-Any tool accepts `"example:<name>"` as its bundle: `conventional`, `generative`, `confidential`, `overlay` or `mandate-cap`. The local server also accepts file paths; the hosted one does not.
+Any tool accepts `"example:<name>"` as its bundle: `conventional`, `generative`, `confidential`, `overlay`, `mandate-cap` or `what-if`. The local server also accepts file paths; the hosted one does not.
 
 Docs: https://universalpaper.org/developers/#mcp
