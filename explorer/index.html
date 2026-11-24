@@ -261,13 +261,14 @@ td.num, th.num { text-align: right; }
 .stage { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r-3); padding: 8px; min-width: 0; position: relative; box-shadow: var(--shadow); }
 .stage svg { display: block; width: 100%; height: auto; }
 .stage .tag { position: absolute; top: 14px; right: 14px; }
-svg .layer-label { font: 500 10.5px var(--f-mono); letter-spacing: 0.12em; fill: var(--ink-3); text-transform: uppercase; }
-svg .node-label { font: 500 12px var(--f-body); fill: var(--ink); }
-svg .node-sub { font: 10.5px var(--f-body); fill: var(--ink-3); }
+svg .layer-label { font: 500 11px var(--f-mono); letter-spacing: 0.12em; fill: var(--ink-3); text-transform: uppercase; }
+svg .node-label { font: 500 13px var(--f-body); fill: var(--ink); }
+svg .node-sub { font: 11.5px var(--f-body); fill: var(--ink-3); }
+svg .halo { paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
 svg .found-title { font: 300 24px var(--f-display); letter-spacing: -0.02em; fill: var(--ink); }
-svg .found-sub { font: 12px var(--f-body); fill: var(--ink-2); }
-svg .lane-label { font: 10.5px var(--f-mono); fill: var(--ink-3); }
-svg .hashlbl { font: 10px var(--f-mono); fill: var(--accent); }
+svg .found-sub { font: 13px var(--f-body); fill: var(--ink-2); }
+svg .lane-label { font: 11.5px var(--f-mono); fill: var(--ink-3); }
+svg .hashlbl { font: 11px var(--f-mono); fill: var(--accent); }
 svg .logo-img { filter: var(--logo-filter, none); }
 :root[data-theme="dark"] { --logo-filter: invert(1); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --logo-filter: invert(1); } }
@@ -2737,26 +2738,27 @@ footer .brand-mark { width: 32px; height: 32px; }
     }
     function layout() {
       narrow = svg.getBoundingClientRect().width < 640;
-      var W = narrow ? 420 : 1200, H = narrow ? 860 : 650, P = {}, A = {}, lanes = [];
+      // Desktop coordinates are close to the stage's real width (about 810px), so 1 unit is about 1px and the labels read at their CSS size.
+      var W = narrow ? 420 : 860, P = {}, A = {}, lanes = [];
       var mem = g.actors.members, agent = g.parts[0] && g.parts[0].agent;
       if (!narrow) {
-        P[g.actors.agg.pub] = { x: 200, y: 82, role: "aggregator" }; P[g.actors.sup.pub] = { x: 1000, y: 82, role: "supplier" };
-        mem.forEach(function (m, i) { P[m.pub] = { x: mem.length === 1 ? 600 : 500 + i * (200 / (mem.length - 1)), y: 82, role: "member" }; });
-        A = { aggregator: { x: 200, y: 212, w: 180, t: "Contract management", s: "the aggregator’s app" }, price: { x: 400, y: 212, w: 160, t: "Price activation", s: "a shared service" },
-          member: { x: 600, y: 212, w: 180, t: "Member procurement", s: "each member’s app" }, settle: { x: 800, y: 212, w: 160, t: "Fee settlement", s: "a shared service" },
-          supplier: { x: 1000, y: 212, w: 180, t: "Supplier ERP", s: "the supplier’s app" } };
-        var agentNode = agent ? { x: 600, y: 322 } : null;
-        var fy = 380, fh = 250;
-        g.data.chains.forEach(function (c, i) { lanes.push({ y: fy + 98 + i * Math.min(36, 130 / Math.max(1, g.data.chains.length - 1 || 1)), x0: 250, x1: 1160 }); });
-        return { W: W, H: H, P: P, A: A, agent: agentNode, fy: fy, fh: fh, lanes: lanes, labelX: 40, bands: [[30, "Parties"], [160, "Apps (hypothetical)"], [292, "Agents"]] };
+        P[g.actors.agg.pub] = { x: 102, y: 74, role: "aggregator" }; P[g.actors.sup.pub] = { x: 758, y: 74, role: "supplier" };
+        mem.forEach(function (m, i) { P[m.pub] = { x: mem.length === 1 ? 430 : 350 + i * (160 / (mem.length - 1)), y: 74, role: "member" }; });
+        A = { aggregator: { x: 102, y: 198, w: 152, t: "Contract management", s: "the aggregator’s app" }, price: { x: 266, y: 198, w: 152, t: "Price activation", s: "a shared service" },
+          member: { x: 430, y: 198, w: 152, t: "Member procurement", s: "each member’s app" }, settle: { x: 594, y: 198, w: 152, t: "Fee settlement", s: "a shared service" },
+          supplier: { x: 758, y: 198, w: 152, t: "Supplier ERP", s: "the supplier’s app" } };
+        var agentNode = agent ? { x: 430, y: 296 } : null;
+        var fy = 334, n = g.data.chains.length, gap = Math.min(36, 130 / Math.max(1, n - 1 || 1)), fh = 98 + (n - 1) * gap + 34;
+        g.data.chains.forEach(function (c, i) { lanes.push({ y: fy + 98 + i * gap, x0: 230, x1: W - 40 }); });
+        return { W: W, H: fy + fh + 10, P: P, A: A, agent: agentNode, fy: fy, fh: fh, lanes: lanes, labelX: 24, bands: [[30, "Parties"], [150, "Apps (hypothetical)"], [262, "Agents"]] };
       }
       P[g.actors.agg.pub] = { x: 52, y: 90, role: "aggregator" }; P[g.actors.sup.pub] = { x: 368, y: 90, role: "supplier" };
       mem.forEach(function (m, i) { P[m.pub] = { x: mem.length === 1 ? 210 : 140 + i * (140 / (mem.length - 1)), y: 90, role: "member" }; });
       A = { aggregator: { x: 75, y: 205, w: 128, t: "Contract mgmt", s: "aggregator" }, member: { x: 210, y: 205, w: 128, t: "Procurement", s: "members" },
         supplier: { x: 345, y: 205, w: 128, t: "Supplier ERP", s: "supplier" }, price: { x: 140, y: 275, w: 128, t: "Price activation", s: "service" }, settle: { x: 280, y: 275, w: 128, t: "Fee settlement", s: "service" } };
-      var lanesN = [];
-      g.data.chains.forEach(function (c, i) { lanesN.push({ y: 520 + i * Math.min(70, 280 / Math.max(1, g.data.chains.length)), x0: 30, x1: 390, labelAbove: true }); });
-      return { W: W, H: H, P: P, A: A, agent: agent ? { x: 210, y: 368 } : null, fy: 420, fh: 420, lanes: lanesN, labelX: 20, bands: [[30, "Parties"], [158, "Apps (hypothetical)"], [340, "Agents"]] };
+      var lanesN = [], gapN = Math.min(70, 280 / Math.max(1, g.data.chains.length)), fhN = 100 + (g.data.chains.length - 1) * gapN + 40;
+      g.data.chains.forEach(function (c, i) { lanesN.push({ y: 520 + i * gapN, x0: 30, x1: 390, labelAbove: true }); });
+      return { W: W, H: 420 + fhN + 10, P: P, A: A, agent: agent ? { x: 210, y: 368 } : null, fy: 420, fh: fhN, lanes: lanesN, labelX: 20, bands: [[30, "Parties"], [158, "Apps (hypothetical)"], [340, "Agents"]] };
     }
     function draw() {
       cancelAnimationFrame(raf); packets = [];
@@ -2789,8 +2791,8 @@ footer .brand-mark { width: 32px; height: 32px; }
       if (L.agent) {
         var ag = el("g", {}), x = L.agent.x, y = L.agent.y;
         L.agent.box = el("path", { d: "M" + x + " " + (y - 14) + " L" + (x + 14) + " " + y + " L" + x + " " + (y + 14) + " L" + (x - 14) + " " + y + "Z", fill: "var(--panel-2)", stroke: "var(--accent)", "stroke-width": 1.5 }, ag);
-        el("text", { x: x + 22, y: y - 2, "class": "node-label" }, ag, "Procurement agent");
-        el("text", { x: x + 22, y: y + 13, "class": "node-sub" }, ag, "Mandate allows tiers " + g.parts[0].agentAllowed);
+        el("text", { x: x + 22, y: y - 2, "class": "node-label halo" }, ag, "Procurement agent");
+        el("text", { x: x + 22, y: y + 13, "class": "node-sub halo" }, ag, "Mandate allows tiers " + g.parts[0].agentAllowed);
       }
       // foundation
       el("rect", { x: 10, y: L.fy, width: L.W - 20, height: L.fh, rx: 12, fill: "var(--found)", stroke: "var(--found-line)" });

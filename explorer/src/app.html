@@ -112,13 +112,14 @@ td.num, th.num { text-align: right; }
 .stage { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r-3); padding: 8px; min-width: 0; position: relative; box-shadow: var(--shadow); }
 .stage svg { display: block; width: 100%; height: auto; }
 .stage .tag { position: absolute; top: 14px; right: 14px; }
-svg .layer-label { font: 500 10.5px var(--f-mono); letter-spacing: 0.12em; fill: var(--ink-3); text-transform: uppercase; }
-svg .node-label { font: 500 12px var(--f-body); fill: var(--ink); }
-svg .node-sub { font: 10.5px var(--f-body); fill: var(--ink-3); }
+svg .layer-label { font: 500 11px var(--f-mono); letter-spacing: 0.12em; fill: var(--ink-3); text-transform: uppercase; }
+svg .node-label { font: 500 13px var(--f-body); fill: var(--ink); }
+svg .node-sub { font: 11.5px var(--f-body); fill: var(--ink-3); }
+svg .halo { paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
 svg .found-title { font: 300 24px var(--f-display); letter-spacing: -0.02em; fill: var(--ink); }
-svg .found-sub { font: 12px var(--f-body); fill: var(--ink-2); }
-svg .lane-label { font: 10.5px var(--f-mono); fill: var(--ink-3); }
-svg .hashlbl { font: 10px var(--f-mono); fill: var(--accent); }
+svg .found-sub { font: 13px var(--f-body); fill: var(--ink-2); }
+svg .lane-label { font: 11.5px var(--f-mono); fill: var(--ink-3); }
+svg .hashlbl { font: 11px var(--f-mono); fill: var(--accent); }
 svg .logo-img { filter: var(--logo-filter, none); }
 :root[data-theme="dark"] { --logo-filter: invert(1); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --logo-filter: invert(1); } }
