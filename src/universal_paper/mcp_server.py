@@ -196,15 +196,20 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
     """The MCP server. `hosted` refuses file paths; `on_call(tool, ok, seconds)` sees only the tool name and outcome."""
     global ALLOW_PATHS
     ALLOW_PATHS = not hosted
-    try:  # MCP Python SDK 2.x
-        from mcp.server.mcpserver import MCPServer as Server
-        from mcp.server.mcpserver.exceptions import ToolError
-    except ImportError:  # 1.x
+    # Loaded by name so the module works, and type-checks, with either major version of the MCP SDK.
+    import importlib
+
+    Server: Any = None
+    ToolError: Any = None
+    for pkg, cls in (("mcp.server.mcpserver", "MCPServer"), ("mcp.server.fastmcp", "FastMCP")):  # SDK 2.x, then 1.x
         try:
-            from mcp.server.fastmcp import FastMCP as Server
-            from mcp.server.fastmcp.exceptions import ToolError
-        except ImportError:
-            raise SystemExit("up-mcp needs the MCP SDK:  pip install 'universal-paper[mcp]'") from None
+            Server = getattr(importlib.import_module(pkg), cls)
+            ToolError = importlib.import_module(f"{pkg}.exceptions").ToolError
+            break
+        except (ImportError, AttributeError):
+            continue
+    if Server is None:
+        raise SystemExit("up-mcp needs the MCP SDK:  pip install 'universal-paper[mcp]'")
 
     try:
         server = Server("universal-paper", title="Universal Paper", instructions=INSTRUCTIONS,
@@ -212,7 +217,7 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
     except TypeError:  # 1.x
         server = Server("universal-paper", instructions=INSTRUCTIONS)
     where = "a bundle object or JSON text" if hosted else "a bundle object, JSON text, or a local file path"
-    read_only = {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False}
+    read_only: Any = {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False}
 
     def tool(impl, description: str):
         @functools.wraps(impl)
