@@ -1,0 +1,8 @@
+# Pinned versions for the hosted image (constraints, used with pip install -c). Dependabot keeps them current.
+mcp==2.3.0
+uvicorn==0.54.0
+starlette==1.7.0
+cryptography==50.0.1
+pydantic==2.13.5
+anyio==4.15.1
+sse-starlette==3.4.11

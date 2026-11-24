@@ -1,0 +1,33 @@
+# Fly.io config for the hosted Universal Paper MCP endpoint (https://mcp.universalpaper.org/mcp).
+# One small machine that stops when idle and starts on the next request (about a second).
+# Deployed by .github/workflows/deploy-mcp.yml once the FLY_API_TOKEN secret exists. See deploy/README.md.
+app = "universal-paper-mcp"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 40
+    hard_limit = 60
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "30s"
+  method = "GET"
+  path = "/healthz"
+  timeout = "3s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

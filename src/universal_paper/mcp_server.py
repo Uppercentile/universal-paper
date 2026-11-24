@@ -7,12 +7,19 @@ Mandate, render the agreement text, hash an object, and look up Terms.
 Every tool is read-only. Nothing is signed, written to disk, or sent anywhere, and the server
 holds no keys. Results come from the reference interpreter, so each one can be reproduced by
 hand from the specification. Requires the optional dependency:  pip install 'universal-paper[mcp]'
+(or run the published package:  uvx universal-paper-mcp).
+
+The same server is hosted at https://mcp.universalpaper.org/mcp (see mcp_http.py). In hosted mode a
+bundle can only be passed as an object or as JSON text, never as a file path.
 """
 from __future__ import annotations
 
 import functools
 import json
+import os
+import time
 import urllib.request
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -26,7 +33,7 @@ from .report import snapshot
 from .simulate import simulate
 
 EXAMPLES = ("conventional", "generative", "confidential", "overlay")
-EXAMPLES_DIR = Path(__file__).resolve().parents[2] / "examples"
+EXAMPLES_DIR = Path(os.environ.get("UP_EXAMPLES_DIR") or Path(__file__).resolve().parents[2] / "examples")
 EXAMPLES_URL = "https://universalpaper.org/examples/{name}/bundle.json"
 
 INSTRUCTIONS = (
@@ -38,14 +45,20 @@ INSTRUCTIONS = (
 )
 
 
+# Set to False by the hosted server: a public endpoint must never read files on the machine it runs on.
+ALLOW_PATHS = True
+
+
 def _data(bundle: dict | str) -> dict:
-    """A bundle given as an object, as JSON text, or as a path to a local JSON file."""
+    """A bundle given as an object, as JSON text, or (local servers only) as a path to a local JSON file."""
     if isinstance(bundle, dict):
         return bundle
     if not isinstance(bundle, str):
         raise InputError("bundle must be a JSON object, JSON text, or a file path")
     text = bundle.strip()
     if not text.startswith("{"):
+        if not ALLOW_PATHS:
+            raise InputError("pass the bundle as a JSON object or JSON text; the hosted server does not read file paths")
         try:
             text = Path(text).expanduser().read_text(encoding="utf-8")
         except OSError as e:
@@ -179,7 +192,10 @@ def get_example(name: str) -> dict:
 # MCP wiring
 # ---------------------------------------------------------------------------
 
-def build_server():
+def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], None] | None = None):
+    """The MCP server. `hosted` refuses file paths; `on_call(tool, ok, seconds)` sees only the tool name and outcome."""
+    global ALLOW_PATHS
+    ALLOW_PATHS = not hosted
     try:  # MCP Python SDK 2.x
         from mcp.server.mcpserver import MCPServer as Server
         from mcp.server.mcpserver.exceptions import ToolError
@@ -190,18 +206,29 @@ def build_server():
         except ImportError:
             raise SystemExit("up-mcp needs the MCP SDK:  pip install 'universal-paper[mcp]'") from None
 
-    server = Server("universal-paper", instructions=INSTRUCTIONS)
+    try:
+        server = Server("universal-paper", title="Universal Paper", instructions=INSTRUCTIONS,
+                        website_url="https://universalpaper.org", version=__version__)
+    except TypeError:  # 1.x
+        server = Server("universal-paper", instructions=INSTRUCTIONS)
+    where = "a bundle object or JSON text" if hosted else "a bundle object, JSON text, or a local file path"
     read_only = {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False}
 
     def tool(impl, description: str):
         @functools.wraps(impl)
         def fn(*args, **kwargs):
+            t0, ok = time.monotonic(), False
             try:
-                return impl(*args, **kwargs)
+                out = impl(*args, **kwargs)
+                ok = True
+                return out
             except InputError as e:
                 raise ToolError(str(e)) from None
             except Exception as e:  # malformed input is reported, never a crash
                 raise ToolError(f"the input could not be processed ({type(e).__name__}: {e})") from None
+            finally:
+                if on_call:
+                    on_call(impl.__name__, ok, time.monotonic() - t0)
 
         try:
             server.tool(name=fn.__name__, description=description, annotations=read_only)(fn)
@@ -210,7 +237,7 @@ def build_server():
 
     tool(validate_bundle,
          "Check every agreement and event in a Universal Paper bundle against the axioms (signatures, hashes, "
-         "Mandates, Term typing). `bundle` is a bundle object, JSON text, or a local file path. "
+         f"Mandates, Term typing). `bundle` is {where}. "
          "Returns per-event accept/reject with the rule that rejected it.")
     tool(derive_state,
          "Derive each agreement's status, tiers, contract prices and open obligations at time `at` "
@@ -237,7 +264,15 @@ def main() -> None:
 
     p = argparse.ArgumentParser(prog="up-mcp", description=f"Read-only Universal Paper MCP server ({SPEC}, v{__version__})")
     p.add_argument("--transport", choices=["stdio", "streamable-http"], default="stdio")
+    p.add_argument("--hosted", action="store_true",
+                   help="run the public, stateless HTTP endpoint (no file paths, no access logs, request counts only)")
+    p.add_argument("--host", default=None, help="with --hosted: interface to bind (default 0.0.0.0)")
+    p.add_argument("--port", type=int, default=None, help="with --hosted: port (default $PORT or 8080)")
     a = p.parse_args()
+    if a.hosted:
+        from .mcp_http import serve
+        serve(host=a.host, port=a.port)
+        return
     build_server().run(transport=a.transport)
 
 

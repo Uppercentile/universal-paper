@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Uppercentile/universal-paper",
+  "title": "Universal Paper",
+  "description": "Validate, simulate and render GPO, supplier and member agreements. Read-only; holds no keys.",
+  "version": "0.1.0",
+  "websiteUrl": "https://universalpaper.org/developers/#mcp",
+  "repository": {
+    "url": "https://github.com/Uppercentile/universal-paper",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "universal-paper-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.universalpaper.org/mcp"
+    }
+  ]
+}

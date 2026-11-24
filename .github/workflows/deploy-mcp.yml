@@ -1,0 +1,40 @@
+name: Deploy MCP endpoint
+
+# Deploys the hosted MCP server (Dockerfile) to Fly.io when the code it serves changes on main.
+# Does nothing until the repository has a FLY_API_TOKEN secret (see deploy/README.md).
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "Dockerfile", ".dockerignore", "deploy/**", "fly.toml", "pyproject.toml", "examples/*/bundle.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-mcp
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    steps:
+      - name: Skip without a Fly.io token
+        if: env.FLY_API_TOKEN == ''
+        run: echo "No FLY_API_TOKEN secret; skipping the deploy."
+      - uses: actions/checkout@v7
+        if: env.FLY_API_TOKEN != ''
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
+        if: env.FLY_API_TOKEN != ''
+      - name: Deploy
+        if: env.FLY_API_TOKEN != ''
+        run: flyctl deploy --remote-only --ha=false
+      - name: Smoke test
+        if: env.FLY_API_TOKEN != ''
+        run: |
+          for i in 1 2 3 4 5 6; do
+            curl -fsS https://universal-paper-mcp.fly.dev/healthz && exit 0 || sleep 10
+          done
+          exit 1

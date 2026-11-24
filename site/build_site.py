@@ -644,10 +644,21 @@ Sitemap: {site.url('/sitemap.xml')}
         site.write(".well-known/security.txt", f"Policy: {a.repo_url}/blob/main/SECURITY.md\nContact: {a.repo_url}/security/advisories/new\nExpires: {exp}T00:00:00Z\nPreferred-Languages: en\nCanonical: {site.url('/.well-known/security.txt')}\n")
 
 
+MCP = {
+    "endpoint": "https://mcp.universalpaper.org/mcp",
+    "transport": "streamable-http",
+    "pypi": "universal-paper-mcp",
+    "registry": "io.github.Uppercentile/universal-paper",
+    "stats": "https://mcp.universalpaper.org/stats",
+    "docs": "https://universalpaper.org/developers/#mcp",
+    "readOnly": True,
+    "auth": "none",
+}
+
 PARTNERS = {
     "$comment": "How to reach the steward of Universal Paper, for people and AI agents. Opt-in; nothing in Universal Paper reports usage.",
     "name": "Universal Paper community and contact",
-    "version": "2",
+    "version": "3",
     "steward": {"name": "Uppercentile", "url": "https://www.uppercentile.com"},
     "contact": {
         "email": "contact@uppercentile.com",
@@ -664,6 +675,7 @@ PARTNERS = {
         {"id": "other", "subject": "Uppercentile inquiry", "description": "All other inquiries and business opportunities."},
     ],
     "tag": {"description": "Tag Uppercentile when you post about what you built; we share work we find interesting.", "linkedin": "https://www.linkedin.com/company/uppercentile/", "x": "@uppercentile"},
+    "mcp": {**MCP, "description": "Agents can use Universal Paper directly through the official read-only MCP server. No contact or account is needed."},
     "notOffered": ["consulting", "sales calls", "mapping live agreements", "pilot scoping", "implementation or custom builds"],
     "message": {
         "format": "Plain-text email. One 'Field: value' per line, in this order. Leave a field blank if it does not apply.",
@@ -743,9 +755,19 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 
 - [Home and Playground]({site.url('/')}): what Universal Paper is, a vision of apps and agents built on it, an in-browser Playground, and conformance results
 - [Developers]({site.url('/developers/')}): primitives, the 16-Term library, code examples, the CLI and test vectors
+- [MCP server]({site.url('/developers/#mcp')}): the official, read-only Universal Paper MCP server
 - [FAQ]({site.url('/faq/')}): plain-language answers for GPOs, suppliers, members and developers
 - [Licenses]({site.url('/license/')}): what is licensed how, and how to credit it
 - [Specification index]({site.url('/spec/')}){repo}
+
+## MCP server for agents
+
+The official Universal Paper MCP server gives an agent the reference interpreter as read-only tools: validate_bundle, derive_state, check_event, simulate_events (Mandate limits apply), render_text, hash_object, list_terms, explain_term and get_example. It holds no keys, signs nothing and writes nothing.
+
+- Hosted (Streamable HTTP, no sign-in): {MCP["endpoint"]}
+- Local: `uvx {MCP["pypi"]}` (PyPI), or `up-mcp` from the universal-paper package
+- MCP Registry name: {MCP["registry"]}
+- The hosted server is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths (pass bundles as JSON). It only counts calls per tool name, shown at {MCP["stats"]}.
 
 ## Community, registry and agents
 

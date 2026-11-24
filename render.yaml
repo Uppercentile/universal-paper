@@ -1,0 +1,12 @@
+# Render Blueprint for the hosted Universal Paper MCP endpoint: the no-cost alternative to fly.toml.
+# The free plan sleeps after 15 idle minutes and can take up to a minute to wake. See deploy/README.md.
+services:
+  - type: web
+    name: universal-paper-mcp
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    autoDeploy: true
+    domains:
+      - mcp.universalpaper.org
