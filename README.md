@@ -69,6 +69,8 @@ python -m pytest                                                        # the fu
 
 <!-- mcp-name: io.github.Uppercentile/universal-paper -->
 
+[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-15171b?logo=cursor&logoColor=white)](https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D) [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-2f45c6?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D)
+
 The official Universal Paper [Model Context Protocol](https://modelcontextprotocol.io) server is a read-only layer over the reference interpreter. It lets an agent check an agreement the same way every other party does, and test whether an action is within its Mandate before anyone signs. It holds no keys, signs nothing, and writes nothing.
 
 | Use it | How |
@@ -77,7 +79,7 @@ The official Universal Paper [Model Context Protocol](https://modelcontextprotoc
 | Local, from PyPI | `uvx universal-paper-mcp` |
 | Local, from this repo | `pip install -e '.[mcp]'` then `up-mcp` |
 
-Claude Code: `claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp`, or locally `claude mcp add universal-paper -- uvx universal-paper-mcp`. Other clients: `{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}`, or the hosted URL wherever a client takes a remote server. It is listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.Uppercentile/universal-paper`.
+Claude Code: `claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp`, or locally `claude mcp add universal-paper -- uvx universal-paper-mcp`. Other clients: `{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}`, or the hosted URL wherever a client takes a remote server. Agents setting it up for you can follow [llms-install.md](llms-install.md). It is listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.Uppercentile/universal-paper`.
 
 The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile)) is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths, so a bundle is passed as an object or JSON text. It counts calls per tool name in memory and shows the totals at [/stats](https://mcp.universalpaper.org/stats); that is its only usage signal. How it is deployed and released: [deploy/README.md](deploy/README.md).
 

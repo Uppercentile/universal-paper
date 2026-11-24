@@ -2,6 +2,8 @@
 
 <!-- mcp-name: io.github.Uppercentile/universal-paper -->
 
+[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-15171b?logo=cursor&logoColor=white)](https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D) [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-2f45c6?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D)
+
 The official [Model Context Protocol](https://modelcontextprotocol.io) server for [Universal Paper](https://universalpaper.org), an open language for agreements between group purchasing organizations (GPOs), suppliers and members.
 
 It lets an AI agent check an agreement the same way every other party does: validate a bundle, derive statuses and obligations, dry-run a signed event, simulate hypothetical events under a Mandate, render the agreement text, hash an object and look up Terms. Every tool is read-only. The server holds no keys, signs nothing, writes nothing and reports nothing.
