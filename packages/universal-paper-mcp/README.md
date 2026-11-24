@@ -39,9 +39,9 @@ Other clients:
 | `check_event` | Dry-run one signed event against its chain, writing nothing |
 | `simulate_events` | Run hypothetical unsigned events forward; Mandate limits still apply |
 | `simulate_amendment` | Try one parameter change as an agent's amendment; see which Mandate bound it breaks |
-| `simulate_purchase` | Price a purchase in the member's tier (or another tier), and test a purchase commitment |
+| `simulate_rate_conformity` | Do rates conform to the member's contract prices in its tier (or another tier)? |
 | `simulate_termination` | If a party gave notice: allowed or not, effective date, what is still owed |
-| `simulate_eligibility` | Is a member an active participant, so its purchases count under the agreement? |
+| `simulate_eligibility` | Is a member an active participant, so the agreement's terms and contract prices apply to it? |
 | `render_text` | The human-readable agreement text fixed by its hash; optionally as an outsider sees sealed values |
 | `hash_object` | Content hash (RFC 8785 JCS + SHA-256) of any JSON value |
 | `list_terms`, `explain_term` | The standard 16-Term library |

@@ -1,11 +1,11 @@
-"""What-if questions an agent asks before anyone signs: purchase, termination, eligibility.
+"""What-if questions an agent asks before anyone signs: rate conformity, termination, eligibility.
 
 Each answer is computed by the reference interpreter from the bundle alone, so every party that runs the
 same question on the same bundle gets the same answer, with the same reason. Nothing is signed or written:
 hypothetical events are evaluated without signatures (Mandate limits still apply, see simulate.py).
 
 These are conveniences over the specification, not new semantics. Where the specification leaves a fact to an
-attestation (a member's tier, whether a commitment was met), the answer says so and shows what the numbers given imply.
+attestation (such as a member's tier), the answer says so and works from what has been attested and acknowledged.
 """
 from __future__ import annotations
 
@@ -16,10 +16,9 @@ from .canon import content_hash
 from .engine import Bundle, Evaluator, _val_items, clause_forms, keys_with_role, party_keys, roles_of
 from .report import snapshot
 from .simulate import run_hypothetical
-from .values import SEALED, add_period, dec, dec_str, dmul, dsum, fmt_period, round_dec
+from .values import SEALED, add_period, dec, dec_str, fmt_period
 
 ROLES = ("aggregator", "supplier", "member")
-HUNDREDTHS = {"scale": 2, "mode": "half-even"}
 
 
 class WhatIfError(ValueError):
@@ -200,14 +199,14 @@ def simulate_eligibility(data: dict, member: str, at: str | None = None, parent:
 
 
 # ---------------------------------------------------------------------------
-# Purchase
+# Rate conformity
 # ---------------------------------------------------------------------------
 
-def simulate_purchase(data: dict, chain: int | str, lines: list[dict], at: str | None = None,
-                      tier: str | None = None, category_total: Any = None) -> dict:
-    """Price a purchase under a member's participation at `at`, optionally as if it attested `tier`, and test its commitment."""
-    if not isinstance(lines, list) or not lines:
-        raise WhatIfError("lines is a non-empty list of {item, quantity}")
+def simulate_rate_conformity(data: dict, chain: int | str, rates: list[dict], at: str | None = None,
+                             tier: str | None = None) -> dict:
+    """Do the rates given for items conform to the member's contract prices at `at`? Optionally as if it moved to `tier`."""
+    if not isinstance(rates, list) or not rates:
+        raise WhatIfError("rates is a non-empty list of {item, price}")
     b = Bundle(data)
     pos, cid = _chain(b, chain)
     ev = Evaluator(b)
@@ -215,10 +214,10 @@ def simulate_purchase(data: dict, chain: int | str, lines: list[dict], at: str |
     S = ev.state_at(cid, t)
     ag = ev.agreement(S)
     parents = ev.parents(cid, t) if ag else []
-    sel = next((cf for cf in clause_forms(b, ag or {}) if cf.kind == "Selection"), None)
     if not ag or not parents:
         what = "is not an executed agreement" if not ag else "is not a participation (it has no UP:Participation clause)"
         raise WhatIfError(f"chain {pos} {what}; pass the member's participation chain")
+    sel = next((cf for cf in clause_forms(b, ag) if cf.kind == "Selection"), None)
     member = keys_with_role(ag, sel.form["subject"])[0] if sel else keys_with_role(ag, "member")[0]
     status, why = _participation_status(ev, b, pos, cid, t)
     current = ev.selection(cid, sel.name, member, t) if sel else None
@@ -227,19 +226,20 @@ def simulate_purchase(data: dict, chain: int | str, lines: list[dict], at: str |
     out: dict[str, Any] = {"hypothetical": True, "chain": pos, "label": _label(ag, pos), "at": t,
                            "member": {"key": member, "name": _name(ag, member)}, "status": status}
     tier_out: dict[str, Any] = {"in_effect": current, "options": options,
-                                "note": "Tier conditions are descriptive; a tier applies once the member attests it and the supplier acknowledges (UP:Tier-Selection)."}
+                                "note": "A tier applies once the member attests it and the supplier acknowledges it (UP:Tier-Selection); "
+                                        "it is never derived from volume."}
     applied = current
     peval = ev
     if tier is not None and tier != current:
         if not sel:
             raise WhatIfError("this participation has no tier selection clause")
-        supplier = [k for r in sel.form.get("ack", []) for k in keys_with_role(ag, r)]
-        event = {"chain": pos, "kind": "attest", "by": member, "at": t, "cosigners": supplier,
+        acks = [k for r in sel.form.get("ack", []) for k in keys_with_role(ag, r)]
+        event = {"chain": pos, "kind": "attest", "by": member, "at": t, "cosigners": acks,
                  "body": {"claim": {"type": f"{sel.tid}/selects", "clause": sel.name,
-                                    "data": {"option": tier, "basis": "Hypothetical: simulated by simulate_purchase"}}}}
+                                    "data": {"option": tier, "basis": "Hypothetical: simulated by simulate_rate_conformity"}}}}
         data2, unverified, steps = run_hypothetical(data, [event])
         step = steps[0]
-        change = {"requested": tier, "accepted": step["accepted"], "reason": step.get("reason") or None}
+        change: dict[str, Any] = {"requested": tier, "accepted": step["accepted"], "reason": step.get("reason") or None}
         if step["accepted"]:
             peval = Evaluator(Bundle(data2), unverified)
             eff = sel.form.get("effective")
@@ -251,8 +251,7 @@ def simulate_purchase(data: dict, chain: int | str, lines: list[dict], at: str |
                 change["effective_at"] = add_period(start, eff["next"], k)
             else:
                 change["effective_at"] = t
-            change["note"] = ("Simulated as the member's attestation, co-signed by the supplier as acknowledgment. "
-                              "Whether the member really meets the tier's conditions is for the parties, not the interpreter.")
+            change["note"] = "Simulated as the member's attestation, acknowledged by the supplier."
             if change["effective_at"] <= t:
                 applied = tier
         tier_out["change"] = change
@@ -260,87 +259,52 @@ def simulate_purchase(data: dict, chain: int | str, lines: list[dict], at: str |
     out["tier"] = tier_out
 
     known = _priced_items(ev, parents[0], t)
-    priced, problems = [], []
-    totals: dict[str, list] = {}
-    by_tier: dict[str, dict[str, list]] = {o: {} for o in options}
-    for i, ln in enumerate(lines):
-        if not isinstance(ln, dict) or "item" not in ln or "quantity" not in ln:
-            raise WhatIfError(f"line {i} needs an item and a quantity")
-        item = _match(_item(ln["item"]), known)
-        try:
-            qty = dec(str(ln["quantity"]))
-        except ValueError:
-            raise WhatIfError(f"line {i} quantity is not a decimal: {ln['quantity']!r}") from None
+    lines, problems, off = [], [], []
+    for i, r in enumerate(rates):
+        if not isinstance(r, dict) or "item" not in r or "price" not in r:
+            raise WhatIfError(f"rate {i} needs an item and a price")
+        given = _amount(r["price"], f"rate {i} price")
+        item = _match(_item(r["item"]), known)
+        line: dict[str, Any] = {"item": item or r["item"], "given": given, "contract": None, "conforms": None}
+        lines.append(line)
         if item is None:
-            problems.append(f"line {i}: item {_item(ln['item'])['id']} is not priced under the agreement")
-            priced.append({"item": ln["item"], "quantity": dec_str(qty), "unit_price": None, "amount": None})
+            problems.append(f"item {_item(r['item'])['id']} is not priced under the agreement")
             continue
         unit = peval.value(parents[0], item, applied, t) if applied else None
         if unit is SEALED:
-            problems.append(f"line {i}: the price of {item['id']} is sealed and not disclosed in this bundle")
-            unit = None
-        elif unit is None:
-            problems.append(f"line {i}: no price for {item['id']} in tier {applied} at {t}")
-        amount = None
-        if unit:
-            amount = {"value": dec_str(round_dec(dmul(qty, dec(unit["value"])), HUNDREDTHS)), "currency": unit["currency"]}
-            totals.setdefault(unit["currency"], []).append(dec(amount["value"]))
-        priced.append({"item": item, "quantity": dec_str(qty), "unit_price": unit, "amount": amount})
-        for o in options:
-            u = ev.value(parents[0], item, o, t)
-            if isinstance(u, dict):
-                by_tier[o].setdefault(u["currency"], []).append(round_dec(dmul(qty, dec(u["value"])), HUNDREDTHS))
-    out["lines"] = priced
-    total: Any = None
-    if len(totals) == 1 and not problems:
-        cur, vals = next(iter(totals.items()))
-        total = {"value": dec_str(dsum(vals)), "currency": cur}
-    out["total"] = total
-    out["total_by_tier"] = {o: ({"value": dec_str(dsum(v[next(iter(v))])), "currency": next(iter(v))}
-                                if len(v) == 1 and sum(map(len, v.values())) == len(lines) else None)
-                            for o, v in by_tier.items()}
-
-    # Purchase commitment (UP:Purchase-Commitment): the share these purchases are of the member's category total.
-    pc = next((cf for cf in clause_forms(b, ag) if cf.tid == "UP:Purchase-Commitment"), None)
-    commitment = None
-    if pc:
-        share = b.reveal(pc.clause["params"]["share"])
-        commitment = {"clause": pc.name, "category": b.reveal(pc.clause["params"]["category"]),
-                      "share_required": None if share is SEALED else share, "period": pc.clause["params"]["period"]}
-        if category_total is None:
-            commitment["met"] = None
-            commitment["reason"] = "Pass category_total (the member's total category purchases for the period) to test the commitment."
-        elif total is None:
-            commitment["met"] = None
-            commitment["reason"] = "The purchase could not be priced, so the share cannot be computed."
-        elif share is SEALED:
-            commitment["met"] = None
-            commitment["reason"] = "The committed share is sealed and not disclosed in this bundle."
-        else:
-            ct = _amount(category_total, "category_total")
-            if ct["currency"] not in (None, total["currency"]):
-                raise WhatIfError(f"category_total is in {ct['currency']}, the purchase in {total['currency']}")
-            if dec(ct["value"]) <= 0:
-                raise WhatIfError("category_total must be more than zero")
-            actual = round_dec(dec(total["value"]) / dec(ct["value"]), {"scale": 4, "mode": "half-even"})
-            met = actual >= dec(share)
-            commitment.update({"category_total": {"value": ct["value"], "currency": total["currency"]},
-                               "share_actual": dec_str(actual), "met": met,
-                               "reason": (f"On-contract purchases of {total['value']} are {dec_str(actual)} of category purchases of "
-                                          f"{ct['value']}, {'at or above' if met else 'below'} the committed {share}. "
-                                          "The commitment is discharged by the member's attestation, acknowledged by the supplier.")})
-    out["commitment"] = commitment
+            problems.append(f"the contract price of {item['id']} is sealed and not disclosed in this bundle")
+            continue
+        if unit is None:
+            problems.append(f"no contract price for {item['id']} in tier {applied} at {t}")
+            continue
+        line["contract"] = unit
+        line["by_tier"] = {o: (u if isinstance(u := ev.value(parents[0], item, o, t), dict) else None) for o in options}
+        if given["currency"] is None:
+            given["currency"] = unit["currency"]
+        if given["currency"] != unit["currency"]:
+            line["conforms"] = False
+            off.append(f"{item['id']} is given in {given['currency']}, the contract price is in {unit['currency']}")
+            continue
+        diff = dec(given["value"]) - dec(unit["value"])
+        line["conforms"] = diff == 0
+        line["difference"] = {"value": dec_str(diff), "currency": unit["currency"]}
+        if diff:
+            match = [o for o, u in line["by_tier"].items() if u and dec(u["value"]) == dec(given["value"])]
+            off.append(f"{item['id']} at {given['value']} is {'above' if diff > 0 else 'below'} the contract price "
+                       f"{unit['value']} in tier {applied}" + (f" (it is the tier {', '.join(match)} price)" if match else ""))
+    out["rates"] = lines
 
     if status != "active":
-        out.update(accepted=False, reason=f"These purchases do not count under the agreement at {t}: {why}")
-    elif problems:
-        out.update(accepted=False, reason="Not every line can be priced: " + "; ".join(problems) + ".")
+        out.update(conforms=False, reason=f"No contract price applies at {t}: {why}")
     elif tier_out.get("change") and not tier_out["change"]["accepted"]:
-        out.update(accepted=False, reason=f"The tier change to {tier} would be rejected: {tier_out['change']['reason']}")
+        out.update(conforms=False, reason=f"The tier change to {tier} would be rejected: {tier_out['change']['reason']}")
+    elif problems:
+        out.update(conforms=False, reason="Not every rate can be checked: " + "; ".join(problems) + ".")
+    elif off:
+        out.update(conforms=False, reason=f"{len(off)} of {len(lines)} rate(s) do not conform: " + "; ".join(off) + ".")
     else:
-        out.update(accepted=True, reason=f"Priced under the participation in tier {applied}: total {total['value']} {total['currency']}.")
+        out.update(conforms=True, reason=f"All {len(lines)} rate(s) equal the member's contract prices in tier {applied} at {t}.")
     return out
-
 
 # ---------------------------------------------------------------------------
 # Termination

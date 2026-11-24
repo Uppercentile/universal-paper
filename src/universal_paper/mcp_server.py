@@ -2,7 +2,7 @@
 
 It lets an agent check agreements the same way every other party does: validate a bundle,
 derive statuses and obligations, dry-run one event, simulate hypothetical events under a
-Mandate, ask what-if questions (an amendment, a purchase, a termination, a member's eligibility),
+Mandate, ask what-if questions (an amendment, rate conformity, a termination, a member's eligibility),
 render the agreement text, hash an object, and look up Terms.
 
 Every tool is read-only. Nothing is signed, written to disk, or sent anywhere, and the server
@@ -187,11 +187,11 @@ def simulate_amendment(bundle: dict | str, clause: str, param: str, value: Any, 
             "failed_checks": [c for c in step.get("checks", []) if not c.get("passed", True)]}
 
 
-def simulate_purchase(bundle: dict | str, chain: int, lines: list[dict], at: str | None = None,
-                      tier: str | None = None, category_total: Any = None) -> dict:
-    """Price a purchase under a member's participation; optionally as if it moved to `tier`, and test its purchase commitment."""
+def simulate_rate_conformity(bundle: dict | str, chain: int, rates: list[dict], at: str | None = None,
+                             tier: str | None = None) -> dict:
+    """Do the rates given for items equal the member's contract prices at `at`? Optionally as if it moved to `tier`."""
     try:
-        return whatif.simulate_purchase(_data(bundle), chain, lines, at, tier, category_total)
+        return whatif.simulate_rate_conformity(_data(bundle), chain, rates, at, tier)
     except whatif.WhatIfError as e:
         raise InputError(str(e)) from None
 
@@ -205,7 +205,7 @@ def simulate_termination(bundle: dict | str, chain: int, by: str, at: str | None
 
 
 def simulate_eligibility(bundle: dict | str, member: str, at: str | None = None, parent: int | None = None) -> dict:
-    """Is a member a real, active participant at `at`, so its purchases count under the aggregator agreement?"""
+    """Is a member a real, active participant at `at`, so the aggregator agreement's terms and contract prices apply to it?"""
     try:
         return whatif.simulate_eligibility(_data(bundle), member, at, parent)
     except whatif.WhatIfError as e:
@@ -333,13 +333,13 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
          "`param` of clause `clause` to `value` (e.g. clause 'price', param 'factor', value '1.05'). The Mandate defaults to "
          "the only one whose principal is a party. Nothing is signed or written; the result says whether every evaluator "
          "would accept it, and if not, which bound it breaks. Try it on bundle 'example:mandate-cap'.")
-    tool(simulate_purchase,
-         "Price a purchase under a member's participation (`chain`, its position in the bundle) at time `at`: `lines` is "
-         "[{item, quantity}], item a GTIN string or {scheme, id}. Uses the tier in effect, which the member attests and the "
-         "supplier acknowledges (UP:Tier-Selection); the tool never derives a tier from volume. `tier` (e.g. 'A') tests the price as "
-         "if the member attested that tier and the supplier acknowledged it. With `category_total` (the member's total category "
-         "purchases for the period, e.g. '1500.00'), also says whether a UP:Purchase-Commitment share is met. Returns accepted "
-         "true/false with the reason, line prices, the total, and the total in every tier. Try bundle 'example:what-if', chain 1.")
+    tool(simulate_rate_conformity,
+         "Check whether rates conform to a member's pricing agreement: for the member's participation (`chain`, its position "
+         "in the bundle) at time `at`, compare each rate in `rates` ([{item, price}], item a GTIN string or {scheme, id}, price "
+         "e.g. '9.40' or {value, currency}) with the contract price in the member's tier. The tier in effect is the one the "
+         "member attested and the supplier acknowledged (UP:Tier-Selection); it is never derived from volume. `tier` (e.g. 'A') "
+         "checks as if the member moved to that tier. Returns conforms true/false with the reason, and per item the contract "
+         "price, the difference and the price in every tier. Try bundle 'example:what-if', chain 1.")
     tool(simulate_termination,
          "What happens if party `by` (a role such as 'supplier', or a name, key or identifier) gives notice of termination on "
          "chain `chain` at time `at`: allowed true/false with the reason, which clause (UP:Termination-Convenience or "
@@ -348,7 +348,7 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
     tool(simulate_eligibility,
          "Is `member` (a name, key, or identifier such as an HIN or GLN) eligible at time `at`: a real, active participant "
          "under an aggregator agreement (UP:Participation: executed by every party, within its term, parent agreement in "
-         "force), so its purchases count under the agreement? Returns eligible true/false with the reason for each participation. "
+         "force), so the agreement's terms and contract prices apply to it? Returns eligible true/false with the reason for each participation. "
          "`parent` limits it to one aggregator agreement (chain position). Try bundle 'example:what-if'.")
     tool(render_text,
          "Render agreements as the human-readable text fixed by their hash. `chain` picks one chain by position; "

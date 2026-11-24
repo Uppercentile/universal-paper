@@ -79,7 +79,7 @@ def test_server_lists_every_tool_as_read_only():
     names = {t.name for t in listed}
     assert names == {"validate_bundle", "derive_state", "check_event", "simulate_events", "render_text",
                      "hash_object", "list_terms", "explain_term", "get_example", "simulate_amendment",
-                     "simulate_purchase", "simulate_termination", "simulate_eligibility"}
+                     "simulate_rate_conformity", "simulate_termination", "simulate_eligibility"}
     for t in listed:
         ann = t.annotations
         assert getattr(ann, "read_only_hint", getattr(ann, "readOnlyHint", None)) is True
@@ -165,33 +165,33 @@ def test_simulate_amendment_blocks_an_agent_past_its_mandate_cap():
 GTIN17, GTIN24 = "00000000000017", {"scheme": "GTIN", "id": "00000000000024"}
 
 
-def test_simulate_purchase_prices_in_the_tier_in_effect_and_tests_the_commitment():
+def test_simulate_rate_conformity_checks_rates_against_the_tier_in_effect():
     data = bundle("what-if")
     before = json.dumps(data, sort_keys=True)
-    r = m.simulate_purchase(data, 1, [{"item": GTIN17, "quantity": 100}, {"item": GTIN24, "quantity": "20"}],
-                            category_total={"value": "1500.00", "currency": "USD"})
-    assert r["accepted"] is True and r["tier"]["applied"] == "B"
-    assert r["total"] == {"value": "1375.00", "currency": "USD"}  # 100 x 9.40 + 20 x 21.75
-    assert r["total_by_tier"]["A"]["value"] == "1330.00" and r["total_by_tier"]["C"]["value"] == "1430.00"
-    assert r["commitment"]["share_required"] == "0.80" and r["commitment"]["share_actual"] == "0.9167"
-    assert r["commitment"]["met"] is True
-    low = m.simulate_purchase(data, 1, [{"item": GTIN17, "quantity": 100}], category_total="2000")
-    assert low["commitment"]["met"] is False and "below" in low["commitment"]["reason"]
+    ok = m.simulate_rate_conformity(data, 1, [{"item": GTIN17, "price": "9.40"},
+                                              {"item": GTIN24, "price": {"value": "21.75", "currency": "USD"}}])
+    assert ok["conforms"] is True and ok["tier"]["applied"] == "B"
+    assert ok["rates"][0]["contract"] == {"value": "9.40", "currency": "USD"}
+    assert ok["rates"][0]["by_tier"]["A"]["value"] == "9.10"
+    off = m.simulate_rate_conformity(data, 1, [{"item": GTIN17, "price": 9.8}])
+    assert off["conforms"] is False and off["rates"][0]["difference"]["value"] == "0.40"
+    assert "above" in off["reason"] and "tier C price" in off["reason"]
     assert json.dumps(data, sort_keys=True) == before
 
 
-def test_simulate_purchase_tier_change_and_refusals():
-    r = m.simulate_purchase("example:what-if", 1, [{"item": GTIN17, "quantity": 100}], tier="A")
-    assert r["accepted"] and r["tier"]["change"]["accepted"] and r["tier"]["applied"] == "A"
-    assert r["total"]["value"] == "910.00"
-    bad = m.simulate_purchase("example:what-if", 1, [{"item": GTIN17, "quantity": 1}], tier="Z")
-    assert bad["accepted"] is False and "not one of the named options" in bad["reason"]
-    left = m.simulate_purchase("example:what-if", 2, [{"item": GTIN17, "quantity": 1}])
-    assert left["accepted"] is False and "terminated" in left["reason"]
-    unknown = m.simulate_purchase("example:what-if", 1, [{"item": "99", "quantity": 1}])
-    assert unknown["accepted"] is False and "not priced" in unknown["reason"]
+def test_simulate_rate_conformity_tier_change_and_refusals():
+    r = m.simulate_rate_conformity("example:what-if", 1, [{"item": GTIN17, "price": "9.10"}], tier="A")
+    assert r["conforms"] and r["tier"]["change"]["accepted"] and r["tier"]["applied"] == "A"
+    bad = m.simulate_rate_conformity("example:what-if", 1, [{"item": GTIN17, "price": "9.10"}], tier="Z")
+    assert bad["conforms"] is False and "not one of the named options" in bad["reason"]
+    left = m.simulate_rate_conformity("example:what-if", 2, [{"item": GTIN17, "price": "9.80"}])
+    assert left["conforms"] is False and "terminated" in left["reason"]
+    unknown = m.simulate_rate_conformity("example:what-if", 1, [{"item": "99", "price": "1.00"}])
+    assert unknown["conforms"] is False and "not priced" in unknown["reason"]
+    eur = m.simulate_rate_conformity("example:what-if", 1, [{"item": GTIN17, "price": {"value": "9.40", "currency": "EUR"}}])
+    assert eur["conforms"] is False and "EUR" in eur["reason"]
     with pytest.raises(InputError):
-        m.simulate_purchase("example:what-if", 0, [{"item": GTIN17, "quantity": 1}])  # the master is not a participation
+        m.simulate_rate_conformity("example:what-if", 0, [{"item": GTIN17, "price": "9.40"}])  # the master is not a participation
 
 
 def test_simulate_termination_convenience_cause_and_cure_period():

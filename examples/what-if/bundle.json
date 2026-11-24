@@ -340,23 +340,6 @@
                 "term": "UP:Fixed-Term"
               },
               {
-                "def": "sha256:878498986dfb65d2060889abbff61c30a2c285c793c75dd505a1eb972c49ce34",
-                "n": "commitment",
-                "params": {
-                  "category": "Hypothetical: the three listed items",
-                  "due": {
-                    "count": 30,
-                    "unit": "day"
-                  },
-                  "period": {
-                    "count": 1,
-                    "unit": "quarter"
-                  },
-                  "share": "0.80"
-                },
-                "term": "UP:Purchase-Commitment"
-              },
-              {
                 "def": "sha256:bbee8002e913a12e1472c6d7f0763f94a07f3dc6451048b3cece180d359149ac",
                 "n": "disclosure",
                 "params": {
@@ -443,7 +426,7 @@
         "sigs": [
           {
             "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-            "sig": "55081b8aa9c5e5e3f0268779823da7195f7fd9c4249fad00d9e23344e38f656d852a21e096aac2a183c1e5f14be8be883573c49698df0da43378aaa817a3bf00"
+            "sig": "bb653401f4647bd415812803a373145477d5b47f1a511ea907e9ccbbff1cdea10c11787d6bdf6f0f5a6de194fa3e39026e5518f83fd1e72c91196f1ca7876c08"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -452,16 +435,16 @@
       {
         "at": "2027-01-04T13:00:00Z",
         "body": {
-          "target": "sha256:7a9a15002b5b043cbeef7f59a03c6ce481914c8fa5e17247eaea1c538334d992"
+          "target": "sha256:333e80769477e1460d994904688cc09d059856fce55abba20645b7819378da39"
         },
         "by": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-        "chain": "sha256:7a9a15002b5b043cbeef7f59a03c6ce481914c8fa5e17247eaea1c538334d992",
+        "chain": "sha256:333e80769477e1460d994904688cc09d059856fce55abba20645b7819378da39",
         "kind": "accept",
-        "prev": "sha256:c7a7282781634ba0f704b61bb5f50629ed210cede87b755a6fc2e8ae3826267c",
+        "prev": "sha256:d11505b7abceee3747141151e5c77d5b9853fcc7482f42a7f51ffc88e25cc255",
         "sigs": [
           {
             "key": "ed25519:315acb5c6ded280903455062c22cb22cb02dd1a46ae3db7e787aa2bb0f8042fb",
-            "sig": "4d2c8edd77d7fac6996344afe3dbdcfceec2b9bb01ff55fe8a85a6679104888d9d80db97345b027fbc9bc7b170294ac656e4a08a05fabb0bd47d6f0eaf6fdb0a"
+            "sig": "5a59046b0ab349a77014327f39a46a53492b73fc9798696719471c0f814750d81a3f8c7c56e944a36b8f9235a7053f3187fe9325347cbe7be03880b3ea303f00"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -470,16 +453,16 @@
       {
         "at": "2027-01-04T16:00:00Z",
         "body": {
-          "target": "sha256:7a9a15002b5b043cbeef7f59a03c6ce481914c8fa5e17247eaea1c538334d992"
+          "target": "sha256:333e80769477e1460d994904688cc09d059856fce55abba20645b7819378da39"
         },
         "by": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-        "chain": "sha256:7a9a15002b5b043cbeef7f59a03c6ce481914c8fa5e17247eaea1c538334d992",
+        "chain": "sha256:333e80769477e1460d994904688cc09d059856fce55abba20645b7819378da39",
         "kind": "accept",
-        "prev": "sha256:9bef5d6336f0a0c898dce3dff4dd31c5bc6341d760ca917e5a578815fd1be196",
+        "prev": "sha256:1ac50fd430baf3908d26a29f5cf714dfcd8ede122498f991821be2924acdfafb",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "ac851654b48a4b51390321ee0e42ea7a63eee8c9aa936c60543b1a5d40889c876635cf21785b3c40526030c9e812d5b4c421b3c3d13d79170eee260ea4de6208"
+            "sig": "bccf9f42705ce0fd7ff842b11c2e701529aa68dfea1f666c57e4ac42035d7b2a29cc22939155a350ff10627e2d3ff5557b83c85fd578c6de0bc493de67e7980a"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -498,17 +481,17 @@
           }
         },
         "by": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-        "chain": "sha256:7a9a15002b5b043cbeef7f59a03c6ce481914c8fa5e17247eaea1c538334d992",
+        "chain": "sha256:333e80769477e1460d994904688cc09d059856fce55abba20645b7819378da39",
         "kind": "attest",
-        "prev": "sha256:6b338eaa5198cff4f8a3c79228a08c98493e41ef0c6ff8259bcde7a9e408e486",
+        "prev": "sha256:acee64e956d3162b4acf91255549f2f233ca2119dacc43242242431109fa966c",
         "sigs": [
           {
             "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678",
-            "sig": "7e440126c88b65fa42a67afb515cd77b061a4061a7dfc00ca41f8b9483a01406db8d26067bb7533e9355a9f25b4b1442b15aafb372e3af0c7c32c29bc504e10a"
+            "sig": "551a27b59ddfc3bc48fc45f4663271472baa9bf122989f8f1157fc688de27c9b2adc44ce06b0f1a4d828ff0e8fde1eab50f154cc47409ae9695afbd0c42a0001"
           },
           {
             "key": "ed25519:596b468a4eedba809e3411d6afddf28b7a706c70b118d3f93ad6885e946d3b07",
-            "sig": "f6d6b3fef5f45d1a296a3b0b25b51fb0d23b657e7e94cf1fc07a3d147c0a019b3a373a4b6c1b642c4ab514d62a00013da6c7147b1a26e50ed055afe857acf00f"
+            "sig": "d28acec06fbaf6f3f2328df6e1f70cc14d135e735a093344b32c6203b587600f32d5a0975f74ad5bfd67f42113ba733dbc6d172641929961f193defa15879009"
           }
         ],
         "spec": "UP/0.1-draft",
@@ -1187,68 +1170,6 @@
       "render": "This Agreement is a participation under the agreement identified by {{parent}}. The Aggregator and the Supplier of that agreement are parties to this one in the same roles. This Agreement is in force only while that agreement is in force.",
       "spec": "UP/0.1-draft",
       "title": "Participation in an aggregator agreement",
-      "type": "TermDefinition"
-    },
-    {
-      "claims": {
-        "UP:Purchase-Commitment/met": {
-          "data": {
-            "basis": "string",
-            "period": "{start: Time, end: Time}"
-          },
-          "doc": "The Member attests that it met the committed share for the period. Discharges the duty when acknowledged by the Supplier."
-        }
-      },
-      "forms": [
-        {
-          "discharge": {
-            "ack": [
-              "supplier"
-            ],
-            "claim": "UP:Purchase-Commitment/met"
-          },
-          "due": {
-            "param": "due"
-          },
-          "duty": "attest-compliance",
-          "form": "Duty",
-          "obligee": "supplier",
-          "obligor": "member",
-          "trigger": {
-            "anchor": "window-start",
-            "every": {
-              "param": "period"
-            }
-          }
-        }
-      ],
-      "id": "UP:Purchase-Commitment",
-      "params": {
-        "category": {
-          "doc": "Description of the product category.",
-          "type": "string"
-        },
-        "due": {
-          "doc": "Time after each period's end by which the attestation is due.",
-          "type": "Period"
-        },
-        "period": {
-          "doc": "Measurement period.",
-          "type": "Period"
-        },
-        "share": {
-          "doc": "Committed share of category purchases.",
-          "type": "Rate"
-        }
-      },
-      "provenance": {
-        "change_note": "Initial draft. Not yet reviewed by counsel from any segment.",
-        "drafted_by": "Universal Paper v0 working draft (publisher name pending open question 2)",
-        "reviewed_by": []
-      },
-      "render": "The Member commits to purchase under this Agreement at least {{share|rate}} of its purchases of {{category}} in each period of {{period|period}}, and attests whether it met that commitment within {{due|period}} after each period ends.",
-      "spec": "UP/0.1-draft",
-      "title": "Purchase commitment",
       "type": "TermDefinition"
     },
     {

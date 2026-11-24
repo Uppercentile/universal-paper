@@ -290,10 +290,10 @@ def mandate_cap():
 
 
 def what_if():
-    """For the simulate_purchase, simulate_termination and simulate_eligibility tools: one master, three members.
+    """For the simulate_rate_conformity, simulate_termination and simulate_eligibility tools: one master, three members.
 
     The master adds termination for cause, and the aggregator has given a breach notice (cure period 30 days).
-    Member 1 is active, in tier B, with an 80% purchase commitment. Member 2 gave notice and has left.
+    Member 1 is active, in tier B. Member 2 gave notice and has left.
     Member 3 has signed with the aggregator, but the supplier has not signed yet.
     """
     w = World()
@@ -310,15 +310,12 @@ def what_if():
     w.accept(a, sup, h, "2026-12-05T10:00:00Z")
     cidA = w.chain_id(a)
 
-    def participation(m, start, commitment=False):
+    def participation(m, start):
         cl = participation_clauses(w, cidA, start)
-        if commitment:
-            cl.insert(3, w.clause("commitment", "UP:Purchase-Commitment", {
-                "category": "Hypothetical: the three listed items", "share": "0.80", "period": QUARTER, "due": DAYS(30)}))
         return w.agreement([("aggregator", agg), ("member", m), ("supplier", sup)], cl, f"Participation of {m.name}")
 
-    # Member 1: active, tier B (attested, acknowledged by the supplier), commits 80% of category purchases.
-    p1, ph = w.propose(m1, participation(m1, "2027-01-05T00:00:00Z", commitment=True), "2027-01-04T09:00:00Z")
+    # Member 1: active, tier B (attested, acknowledged by the supplier).
+    p1, ph = w.propose(m1, participation(m1, "2027-01-05T00:00:00Z"), "2027-01-04T09:00:00Z")
     w.accept(p1, agg, ph, "2027-01-04T13:00:00Z")
     w.accept(p1, sup, ph, "2027-01-04T16:00:00Z")
     w.attest(p1, m1, "tier", "UP:Tier-Selection/selects",
@@ -486,7 +483,7 @@ def main():
     # 5. Mandate cap (bundle only: the out-of-bounds step is for an agent to try)
     w, actors, at = mandate_cap()
     write(out / "mandate-cap" / "bundle.json", w.data())
-    # 6. What-if (bundle only: for the simulate_purchase, simulate_termination and simulate_eligibility tools)
+    # 6. What-if (bundle only: for the simulate_rate_conformity, simulate_termination and simulate_eligibility tools)
     w, actors, at = what_if()
     write(out / "what-if" / "bundle.json", w.data())
     print("examples written")
