@@ -288,8 +288,8 @@ TOOL_DOCS: dict[str, str] = {
         "events, and derive_state to read what the agreements say. Returns valid true/false, each event as accepted or "
         "rejected with the rule and reason, agreement-level issues and forked chains."),
     "derive_state": (
-        "Read what every agreement in a bundle means at one time: each chain's status (proposed, active, terminated), term "
-        "window, the tier each member attested, contract prices per item, and obligations with due dates and status (e.g. "
+        "Read what every agreement in a bundle means at one time: each chain's status (e.g. proposed, active, expired, terminated), "
+        "term window, the tier each member attested, contract prices per item, and obligations with due dates and status (e.g. "
         "overdue). Use it to answer \"what is in force on date X, and what is owed\". Rejected events are skipped, not "
         "reported, so run validate_bundle first on a bundle you did not build. Use render_text instead for the agreement's "
         "wording, simulate_events for the state after hypothetical events, and the simulate_* what-if tools for one "
