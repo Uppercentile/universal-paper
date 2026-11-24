@@ -30,6 +30,8 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
+          # Keep .well-known/security.txt (hidden files are dropped by default).
+          include-hidden-files: true
 
   deploy:
     needs: build

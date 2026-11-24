@@ -126,7 +126,7 @@ Everything live runs on a second, independent engine in JavaScript (`explorer/sr
 
 ## How it is tested
 
-`python -m pytest` runs about 170 tests in a few minutes. Node.js 20 or later is needed for the JavaScript parts, which are skipped without it. CI runs everything on Python 3.11 to 3.13.
+`python -m pytest` runs about 190 tests in a few minutes. Node.js 20 or later is needed for the JavaScript parts, which are skipped without it. CI runs everything on Python 3.11 to 3.13.
 
 - **Rules.** Every axiom (A1 to A13), every transition rule, and every clause form has tests that build small hypothetical agreements and try to break them.
 - **Every Term.** All sixteen Terms are executed in a valid agreement, every parameter is checked against its declared type, and every claim type is attested, acknowledged, and attempted with ill-typed data.
