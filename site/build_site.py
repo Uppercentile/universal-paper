@@ -162,7 +162,11 @@ class Site:
             f'code <a href="{LIC["apache"][1]}" rel="license">Apache-2.0</a> · '
             f'example agreements and traces <a href="{LIC["cc0"][1]}" rel="license">CC0 1.0</a>. '
             'No account, fee or license key is ever required. <a href="/license/">How to use and credit it</a>.</p>'
-            f'<p>{links}</p></div>'
+            f'<p>{links}</p>'
+            # SubmitLLMs directory badge: its listing requires a live link to it (added at Joe's request, 2026-11-24)
+            '<p class="up-badge"><a href="https://submitllms.com/directory/universalpaper.org" target="_blank" rel="noopener noreferrer">'
+            '<img src="https://submitllms.com/api/badge/universalpaper.org" alt="AI Ready on SubmitLLMs" height="20" loading="lazy" style="height:20px;width:auto;vertical-align:middle;opacity:.9"></a></p>'
+            '</div>'
         )
 
 
