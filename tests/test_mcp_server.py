@@ -251,3 +251,29 @@ def test_what_if_answers_are_deterministic():
                  lambda d: m.simulate_price_conformity(d, 1, [{"item": GTIN17, "price": "9.80"}], tier="A"),
                  lambda d: m.simulate_eligibility(d, "HYP000003")):
         assert json.dumps(call(data), sort_keys=True) == json.dumps(call(json.loads(json.dumps(data))), sort_keys=True)
+
+
+def test_every_tool_and_parameter_is_described_for_agents():
+    """Each tool says when to use it over a named sibling; each parameter's schema carries a description."""
+    pytest.importorskip("mcp")
+    import inspect
+
+    import anyio
+
+    assert set(m.TOOL_DOCS) == set(m.PARAM_DOCS)
+    for name, docs in m.PARAM_DOCS.items():
+        assert set(docs) == set(inspect.signature(getattr(m, name)).parameters), name
+
+    listed = anyio.run(m.build_server().list_tools)
+    assert {t.name for t in listed} == set(m.TOOL_DOCS)
+    for t in listed:
+        schema = getattr(t, "input_schema", None) or t.inputSchema
+        for param, spec in schema.get("properties", {}).items():
+            assert len(spec.get("description", "")) >= 30, f"{t.name}.{param} has no useful description"
+        assert set(schema.get("properties", {})) == set(m.PARAM_DOCS[t.name])
+        siblings = [other for other in m.TOOL_DOCS if other != t.name and other in t.description]
+        assert siblings, f"{t.name} names no sibling tool to choose between"
+    # Scope decisions: no volume thresholds for tiers, no net-new-business, no early-termination fee.
+    text = " ".join(m.TOOL_DOCS.values()) + " ".join(d for p in m.PARAM_DOCS.values() for d in p.values())
+    for banned in ("net new", "net-new", "early termination fee", "threshold"):
+        assert banned not in text.lower()
