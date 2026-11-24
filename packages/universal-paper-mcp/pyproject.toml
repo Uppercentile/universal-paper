@@ -1,6 +1,6 @@
 [project]
 name = "universal-paper-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "The official Universal Paper MCP server: read-only tools to validate, simulate and render GPO agreements"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -15,7 +15,7 @@ classifiers = [
     "Topic :: Office/Business",
 ]
 # Released in lockstep with universal-paper: the same version number, always.
-dependencies = ["universal-paper[mcp]==0.1.0"]
+dependencies = ["universal-paper[mcp]==0.1.1"]
 
 [project.scripts]
 universal-paper-mcp = "universal_paper_mcp:main"

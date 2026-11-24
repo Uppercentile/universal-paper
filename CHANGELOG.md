@@ -4,13 +4,15 @@ All notable changes to the specification, the Term library, and the reference im
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-24
+
 ### Added
 
 - MCP tool `simulate_amendment`: one call checks a proposed change to one clause parameter against the agent's Mandate (A9). Every tool also accepts `"example:<name>"` as its bundle. New example bundle `examples/mandate-cap`.
 - MCP tools `simulate_price_conformity`, `simulate_termination` and `simulate_eligibility` (`src/universal_paper/whatif.py`): whether prices conform to a member's contract prices in its attested tier; whether a party may terminate now, when it takes effect and what is still owed; whether a member is an active participant at a time. Read-only, computed by the reference interpreter. New example bundle `examples/what-if`.
 - One-click installs for the hosted MCP server (Add to Cursor, Install in VS Code) on the developer page and in the README, plus `llms-install.md`.
 
-The hosted endpoint already serves these 13 tools; the 0.1.0 packages on PyPI and the MCP Registry entry have the first 9.
+With these, the PyPI packages and the MCP Registry entry match the hosted endpoint: 13 tools.
 
 ## [0.1.0] - 2026-11-24
 
