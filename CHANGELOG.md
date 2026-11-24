@@ -4,6 +4,12 @@ All notable changes to the specification, the Term library, and the reference im
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-11-24
+
+### Changed
+
+- MCP tools: every parameter now has a description in its input schema (format, structure and valid values, e.g. a bundle as an object, JSON text or `"example:<name>"`), and every tool description says when to use it rather than a named sibling tool and what it needs first. A test checks both. No change to what any tool computes.
+
 ## [0.1.1] - 2026-11-24
 
 ### Added

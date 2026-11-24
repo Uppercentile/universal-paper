@@ -333,7 +333,7 @@
     }
   },
   "format": "up-trace/0.1",
-  "generated_by": "universal-paper reference interpreter 0.1.1",
+  "generated_by": "universal-paper reference interpreter 0.1.2",
   "hypothetical": true,
   "parties": {
     "ed25519:6c13aa541f523236f51d5c043e5057f002e64bc7728508127e1021846a08eb93": "Example Surgical Products Inc.",
