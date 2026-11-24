@@ -82,3 +82,67 @@ def test_server_lists_every_tool_as_read_only():
     for t in listed:
         ann = t.annotations
         assert getattr(ann, "read_only_hint", getattr(ann, "readOnlyHint", None)) is True
+
+
+def test_hosted_mode_refuses_file_paths_and_local_mode_restores_them():
+    pytest.importorskip("mcp")
+    path = str(EX / "conventional" / "bundle.json")
+    m.build_server(hosted=True)
+    try:
+        with pytest.raises(InputError, match="does not read file paths"):
+            m.validate_bundle(path)
+        assert m.validate_bundle(bundle("conventional"))["valid"]
+    finally:
+        m.build_server()
+    assert m.validate_bundle(path)["valid"]
+
+
+def test_hosted_endpoint_is_stateless_and_counts_only_tool_names():
+    pytest.importorskip("mcp")
+    pytest.importorskip("httpx")
+    from starlette.testclient import TestClient
+
+    from universal_paper import mcp_http
+
+    usage = mcp_http.Usage()
+    headers = {"accept": "application/json, text/event-stream", "content-type": "application/json",
+               "mcp-protocol-version": "2025-06-18", "host": "mcp.universalpaper.org"}
+    try:
+        with TestClient(mcp_http.create_app(usage), base_url="https://mcp.universalpaper.org") as c:
+            assert c.get("/healthz").json() == {"ok": True}
+            assert c.get("/").json()["endpoint"] == "/mcp"
+            init = {"jsonrpc": "2.0", "id": 1, "method": "initialize",
+                    "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "t", "version": "1"}}}
+            r = c.post("/mcp", json=init, headers=headers)
+            assert r.status_code == 200 and "mcp-session-id" not in r.headers  # stateless: no sessions
+            secret = json.dumps(bundle("confidential"))
+            call = {"jsonrpc": "2.0", "id": 2, "method": "tools/call",
+                    "params": {"name": "validate_bundle", "arguments": {"bundle": secret}}}
+            out = c.post("/mcp", json=call, headers=headers).json()["result"]
+            assert not out.get("isError") and json.loads(out["content"][0]["text"])["valid"]
+            bad = {"jsonrpc": "2.0", "id": 3, "method": "tools/call",
+                   "params": {"name": "validate_bundle", "arguments": {"bundle": "/etc/passwd"}}}
+            assert c.post("/mcp", json=bad, headers=headers).json()["result"]["isError"]
+            stats = c.get("/stats").json()
+    finally:
+        m.build_server()
+    assert stats["calls"] == {"validate_bundle": 2} and stats["errors"] == {"validate_bundle": 1}
+    assert "Supplier" not in json.dumps(stats) and secret[:40] not in json.dumps(stats)
+
+
+def test_release_versions_agree():
+    import tomllib
+
+    root = EX.parent
+    core = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    pkg = tomllib.loads((root / "packages/universal-paper-mcp/pyproject.toml").read_text(encoding="utf-8"))["project"]
+    server = json.loads((root / "server.json").read_text(encoding="utf-8"))
+    from universal_paper import __version__
+
+    v = core["version"]
+    assert __version__ == pkg["version"] == server["version"] == server["packages"][0]["version"] == v
+    assert f"universal-paper[mcp]=={v}" in pkg["dependencies"]
+    assert server["packages"][0]["identifier"] == pkg["name"]
+    readme = (root / "packages/universal-paper-mcp/README.md").read_text(encoding="utf-8")
+    assert f"mcp-name: {server['name']} -->" in readme
+    assert len(server["description"]) <= 100

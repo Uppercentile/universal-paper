@@ -67,14 +67,19 @@ python -m pytest                                                        # the fu
 
 ## MCP server for agents
 
-`up-mcp` is a read-only [Model Context Protocol](https://modelcontextprotocol.io) server over the reference interpreter. It lets an agent check an agreement the same way every other party does, and test whether an action is within its Mandate before anyone signs. It holds no keys, signs nothing, and writes nothing.
+<!-- mcp-name: io.github.Uppercentile/universal-paper -->
 
-```sh
-pip install -e '.[mcp]'
-up-mcp                      # stdio; or: up-mcp --transport streamable-http
-```
+The official Universal Paper [Model Context Protocol](https://modelcontextprotocol.io) server is a read-only layer over the reference interpreter. It lets an agent check an agreement the same way every other party does, and test whether an action is within its Mandate before anyone signs. It holds no keys, signs nothing, and writes nothing.
 
-To use it from Claude Code: `claude mcp add universal-paper -- up-mcp`. Other clients take the same command in their MCP config, for example `{"mcpServers": {"universal-paper": {"command": "up-mcp"}}}`.
+| Use it | How |
+|---|---|
+| Hosted, nothing to install | `https://mcp.universalpaper.org/mcp` (Streamable HTTP, no sign-in) |
+| Local, from PyPI | `uvx universal-paper-mcp` |
+| Local, from this repo | `pip install -e '.[mcp]'` then `up-mcp` |
+
+Claude Code: `claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp`, or locally `claude mcp add universal-paper -- uvx universal-paper-mcp`. Other clients: `{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}`, or the hosted URL wherever a client takes a remote server. It is listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.Uppercentile/universal-paper`.
+
+The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile)) is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths, so a bundle is passed as an object or JSON text. It counts calls per tool name in memory and shows the totals at [/stats](https://mcp.universalpaper.org/stats); that is its only usage signal. How it is deployed and released: [deploy/README.md](deploy/README.md).
 
 | Tool | Does |
 |---|---|
@@ -87,7 +92,7 @@ To use it from Claude Code: `claude mcp add universal-paper -- up-mcp`. Other cl
 | `list_terms`, `explain_term` | The Term library: parameters, claims, rendering template, provenance and hash. |
 | `get_example` | One of the worked example bundles. |
 
-Bundles can be passed as JSON objects, JSON text, or local file paths.
+Bundles can be passed as JSON objects, JSON text, or (local server only) file paths.
 
 ## Examples
 

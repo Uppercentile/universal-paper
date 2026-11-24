@@ -1152,7 +1152,7 @@
     var fin = {}; evs.forEach(function (x) { fin[x.e.id] = snapshot(x.ev, finalAt); });
     var chains = Object.keys(labels).map(Number).map(function (p) { return { position: p, label: labels[p], chain_id: ch(ref.chain_list[p][0]) }; });
     return {
-      type: "Trace", format: FORMAT, spec: SPEC, generated_by: generatedBy || "universal-paper JavaScript engine 0.1.0.dev0",
+      type: "Trace", format: FORMAT, spec: SPEC, generated_by: generatedBy || "universal-paper JavaScript engine 0.1.0",
       title: get(meta, "title", ""), description: get(meta, "description", ""), hypothetical: true,
       evaluators: evaluators.map(function (e) { return { id: e.id, name: e.name, hashes_only: !!get(e, "hashes_only"), tampered: get(e, "tampered", null) }; }),
       parties: nm, chains: chains, steps: steps, final: { at: finalAt, by_evaluator: fin }

@@ -1,0 +1,33 @@
+[project]
+name = "universal-paper-mcp"
+version = "0.1.0"
+description = "The official Universal Paper MCP server: read-only tools to validate, simulate and render GPO agreements"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{ name = "Uppercentile" }]
+keywords = ["mcp", "model context protocol", "agents", "agreements", "contracts", "group purchasing", "GPO"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Office/Business",
+]
+# Released in lockstep with universal-paper: the same version number, always.
+dependencies = ["universal-paper[mcp]==0.1.0"]
+
+[project.scripts]
+universal-paper-mcp = "universal_paper_mcp:main"
+
+[project.urls]
+Homepage = "https://universalpaper.org/developers/#mcp"
+Source = "https://github.com/Uppercentile/universal-paper"
+Issues = "https://github.com/Uppercentile/universal-paper/issues"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

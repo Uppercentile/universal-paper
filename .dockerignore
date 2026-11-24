@@ -1,0 +1,14 @@
+*
+!pyproject.toml
+!README.md
+!LICENSE
+!NOTICE
+!spec/LICENSE
+!src/
+!deploy/requirements-hosted.txt
+!examples/conventional/bundle.json
+!examples/generative/bundle.json
+!examples/confidential/bundle.json
+!examples/overlay/bundle.json
+**/__pycache__
+**/*.egg-info

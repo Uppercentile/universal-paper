@@ -1149,6 +1149,27 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <p class="note" style="margin-top:10px">The JS tab is the exact code this page runs for the fingerprint lab. It matches the Python interpreter's hashes for the example agreement.</p>
     </div>
 
+    <div class="start" id="mcp" style="scroll-margin-top:90px">
+      <div class="rise">
+        <p class="eyebrow">For AI agents</p>
+        <h3 style="font-size:var(--s2);margin:6px 0 14px">The official MCP server</h3>
+        <p class="note" style="margin-bottom:18px">Give any agent the reference interpreter as tools. It can validate a bundle, see what's owed on a date, dry-run an event, check whether an action is inside its Mandate before anyone signs, and read the agreement as text. Every tool is read-only. The server holds no keys, signs nothing and writes nothing.</p>
+        <ol>
+          <li><div><b>Hosted, nothing to install</b> <span class="note">Streamable HTTP, no sign-in</span><pre>https://mcp.universalpaper.org/mcp</pre></div></li>
+          <li><div><b>Or run it locally</b> <span class="note">with uv; or pip install universal-paper-mcp</span><pre>uvx universal-paper-mcp</pre></div></li>
+          <li><div><b>Add it to Claude Code</b><pre>claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp</pre></div></li>
+          <li><div><b>Any other client</b><pre>{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}</pre></div></li>
+        </ol>
+      </div>
+      <div class="links rise">
+        <div class="lk"><b class="mono">validate_bundle · check_event</b><span>Every agreement and event against the axioms, with the rule that rejected what. Dry-run one signed event.</span></div>
+        <div class="lk"><b class="mono">derive_state · simulate_events</b><span>Status, tiers, prices and obligations at a time. Run hypothetical events forward under a Mandate's limits.</span></div>
+        <div class="lk"><b class="mono">render_text · hash_object</b><span>The agreement text fixed by its hash, or what an outsider sees of sealed values. Hash any JSON value.</span></div>
+        <div class="lk"><b class="mono">list_terms · explain_term · get_example</b><span>The 16-Term library and the worked example bundles.</span></div>
+        <div class="lk file"><b>Confidential by construction</b><span>The hosted server is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths. It only counts calls per tool, shown at <a href="https://mcp.universalpaper.org/stats" rel="noopener">/stats</a>. In the MCP Registry as io.github.Uppercentile/universal-paper.</span></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1489,7 +1510,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <a class="mark" href="#top" style="color:var(--night-ink);text-decoration:none;display:inline-flex;gap:10px;align-items:center;font-weight:600"><span class="uplogo" aria-hidden="true"></span>Universal Paper</a>
       <p>An open language for agreements between GPOs, suppliers and members. Same paper for everyone, proof for every change.</p>
     </div>
-    <div><h4>On this page</h4><ul><li><a href="#why">The problem</a></li><li><a href="#start">Quick start</a></li><li><a href="#language">Core concepts</a></li><li><a href="#terms">Term library</a></li><li><a href="#proof">Proof</a></li><li><a href="#conformance">Conformance</a></li></ul></div>
+    <div><h4>On this page</h4><ul><li><a href="#why">The problem</a></li><li><a href="#start">Quick start</a></li><li><a href="#mcp">MCP server</a></li><li><a href="#language">Core concepts</a></li><li><a href="#terms">Term library</a></li><li><a href="#proof">Proof</a></li><li><a href="#conformance">Conformance</a></li></ul></div>
     <div><h4>More</h4><ul><li><a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#playground" target="_blank" rel="noopener">Playground ↗</a></li><li><a href="#apps">App ideas</a></li><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/Uppercentile/universal-paper">GitHub</a></li></ul></div>
     <div><h4>Reference</h4><ul><li><a href="#spec">Specification status</a></li><li><a href="#terms">Term library</a></li><li class="mono"><a href="https://universalpaper.org/spec/axioms/">spec/03-axioms.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/mapping-guide/">spec/07-mapping-guide.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/neutrality-charter/">spec/08-neutrality-charter.md</a></li></ul></div>
   </div>

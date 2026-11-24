@@ -4,7 +4,15 @@ All notable changes to the specification, the Term library, and the reference im
 
 ## [Unreleased]
 
-Pre-release audit. Details and rationale for every item are in [AUDIT.md](AUDIT.md).
+### Added
+
+- The official MCP server, released three ways: a hosted, stateless endpoint (`up-mcp --hosted`, `Dockerfile`, to be served at `https://mcp.universalpaper.org/mcp`), the `universal-paper-mcp` package on PyPI (`uvx universal-paper-mcp`), and an MCP Registry entry `io.github.Uppercentile/universal-paper` (`server.json`). The hosted mode never reads file paths, keeps no access logs and only counts calls per tool name (`/stats`).
+- `release.yml` publishes both packages to PyPI with trusted publishing and `server.json` to the MCP Registry on a `v*` tag; `deploy-mcp.yml` deploys the endpoint to Fly.io. See `deploy/README.md`.
+- MCP sections on the developer page, in `llms.txt` and in `partners.json`.
+
+## [0.1.0] - unreleased
+
+Version 0.1.0 is the first release to PyPI. Pre-release audit. Details and rationale for every item are in [AUDIT.md](AUDIT.md).
 
 ### Changed (Validity)
 
