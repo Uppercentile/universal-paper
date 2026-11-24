@@ -1,4 +1,4 @@
-"""What-if questions an agent asks before anyone signs: rate conformity, termination, eligibility.
+"""What-if questions an agent asks before anyone signs: price conformity, termination, eligibility.
 
 Each answer is computed by the reference interpreter from the bundle alone, so every party that runs the
 same question on the same bundle gets the same answer, with the same reason. Nothing is signed or written:
@@ -199,14 +199,14 @@ def simulate_eligibility(data: dict, member: str, at: str | None = None, parent:
 
 
 # ---------------------------------------------------------------------------
-# Rate conformity
+# Price conformity
 # ---------------------------------------------------------------------------
 
-def simulate_rate_conformity(data: dict, chain: int | str, rates: list[dict], at: str | None = None,
+def simulate_price_conformity(data: dict, chain: int | str, prices: list[dict], at: str | None = None,
                              tier: str | None = None) -> dict:
-    """Do the rates given for items conform to the member's contract prices at `at`? Optionally as if it moved to `tier`."""
-    if not isinstance(rates, list) or not rates:
-        raise WhatIfError("rates is a non-empty list of {item, price}")
+    """Do the prices given for items conform to the member's contract prices at `at`? Optionally as if it moved to `tier`."""
+    if not isinstance(prices, list) or not prices:
+        raise WhatIfError("prices is a non-empty list of {item, price}")
     b = Bundle(data)
     pos, cid = _chain(b, chain)
     ev = Evaluator(b)
@@ -236,7 +236,7 @@ def simulate_rate_conformity(data: dict, chain: int | str, rates: list[dict], at
         acks = [k for r in sel.form.get("ack", []) for k in keys_with_role(ag, r)]
         event = {"chain": pos, "kind": "attest", "by": member, "at": t, "cosigners": acks,
                  "body": {"claim": {"type": f"{sel.tid}/selects", "clause": sel.name,
-                                    "data": {"option": tier, "basis": "Hypothetical: simulated by simulate_rate_conformity"}}}}
+                                    "data": {"option": tier, "basis": "Hypothetical: simulated by simulate_price_conformity"}}}}
         data2, unverified, steps = run_hypothetical(data, [event])
         step = steps[0]
         change: dict[str, Any] = {"requested": tier, "accepted": step["accepted"], "reason": step.get("reason") or None}
@@ -260,10 +260,10 @@ def simulate_rate_conformity(data: dict, chain: int | str, rates: list[dict], at
 
     known = _priced_items(ev, parents[0], t)
     lines, problems, off = [], [], []
-    for i, r in enumerate(rates):
+    for i, r in enumerate(prices):
         if not isinstance(r, dict) or "item" not in r or "price" not in r:
-            raise WhatIfError(f"rate {i} needs an item and a price")
-        given = _amount(r["price"], f"rate {i} price")
+            raise WhatIfError(f"price {i} needs an item and a price")
+        given = _amount(r["price"], f"price {i}")
         item = _match(_item(r["item"]), known)
         line: dict[str, Any] = {"item": item or r["item"], "given": given, "contract": None, "conforms": None}
         lines.append(line)
@@ -292,18 +292,18 @@ def simulate_rate_conformity(data: dict, chain: int | str, rates: list[dict], at
             match = [o for o, u in line["by_tier"].items() if u and dec(u["value"]) == dec(given["value"])]
             off.append(f"{item['id']} at {given['value']} is {'above' if diff > 0 else 'below'} the contract price "
                        f"{unit['value']} in tier {applied}" + (f" (it is the tier {', '.join(match)} price)" if match else ""))
-    out["rates"] = lines
+    out["prices"] = lines
 
     if status != "active":
         out.update(conforms=False, reason=f"No contract price applies at {t}: {why}")
     elif tier_out.get("change") and not tier_out["change"]["accepted"]:
         out.update(conforms=False, reason=f"The tier change to {tier} would be rejected: {tier_out['change']['reason']}")
     elif problems:
-        out.update(conforms=False, reason="Not every rate can be checked: " + "; ".join(problems) + ".")
+        out.update(conforms=False, reason="Not every price can be checked: " + "; ".join(problems) + ".")
     elif off:
-        out.update(conforms=False, reason=f"{len(off)} of {len(lines)} rate(s) do not conform: " + "; ".join(off) + ".")
+        out.update(conforms=False, reason=f"{len(off)} of {len(lines)} price(s) do not conform: " + "; ".join(off) + ".")
     else:
-        out.update(conforms=True, reason=f"All {len(lines)} rate(s) equal the member's contract prices in tier {applied} at {t}.")
+        out.update(conforms=True, reason=f"All {len(lines)} price(s) equal the member's contract prices in tier {applied} at {t}.")
     return out
 
 # ---------------------------------------------------------------------------

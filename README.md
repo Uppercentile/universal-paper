@@ -90,13 +90,13 @@ The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile))
 | `check_event` | Dry-runs one signed event against its chain's current state. |
 | `simulate_events` | Runs hypothetical, unsigned events forward. Mandate limits still apply. |
 | `simulate_amendment` | Tries one parameter change as an agent's amendment under its Mandate, and says which bound it breaks. Try `simulate_amendment("example:mandate-cap", "price", "factor", "1.05")`. |
-| `simulate_rate_conformity` | Checks rates for items against a member's contract prices in its tier (or a tier it might move to): conforms or not, and by how much. Try `simulate_rate_conformity("example:what-if", 1, [{"item": "00000000000017", "price": "9.40"}])`. |
+| `simulate_price_conformity` | Checks prices given for items against a member's contract prices in its tier (or a tier it might move to): conforms or not, and by how much. Try `simulate_price_conformity("example:what-if", 1, [{"item": "00000000000017", "price": "9.40"}])`. |
 | `simulate_termination` | If a party gave notice now: allowed or not (including cure periods), the effective date, duties and fees still owed, and participations that stop with it. |
 | `simulate_eligibility` | Whether a member is an active participant at a time, so the agreement's terms and contract prices apply to it, with the reason. |
 | `render_text` | The human-readable agreement text, fixed by its hash (optionally as an outsider sees it). |
 | `hash_object` | The content hash of any JSON value. |
 | `list_terms`, `explain_term` | The Term library: parameters, claims, rendering template, provenance and hash. |
-| `get_example` | One of the worked example bundles, including `mandate-cap` (an agent capped at ±2% on price) and `what-if` (for the rate conformity, termination and eligibility tools). |
+| `get_example` | One of the worked example bundles, including `mandate-cap` (an agent capped at ±2% on price) and `what-if` (for the price conformity, termination and eligibility tools). |
 
 Bundles can be passed as JSON objects, JSON text, `"example:<name>"`, or (local server only) file paths.
 

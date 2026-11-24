@@ -290,7 +290,7 @@ def mandate_cap():
 
 
 def what_if():
-    """For the simulate_rate_conformity, simulate_termination and simulate_eligibility tools: one master, three members.
+    """For the simulate_price_conformity, simulate_termination and simulate_eligibility tools: one master, three members.
 
     The master adds termination for cause, and the aggregator has given a breach notice (cure period 30 days).
     Member 1 is active, in tier B. Member 2 gave notice and has left.
@@ -483,7 +483,7 @@ def main():
     # 5. Mandate cap (bundle only: the out-of-bounds step is for an agent to try)
     w, actors, at = mandate_cap()
     write(out / "mandate-cap" / "bundle.json", w.data())
-    # 6. What-if (bundle only: for the simulate_rate_conformity, simulate_termination and simulate_eligibility tools)
+    # 6. What-if (bundle only: for the simulate_price_conformity, simulate_termination and simulate_eligibility tools)
     w, actors, at = what_if()
     write(out / "what-if" / "bundle.json", w.data())
     print("examples written")

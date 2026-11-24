@@ -9,7 +9,7 @@ All notable changes to the specification, the Term library, and the reference im
 - The official MCP server, released three ways: a hosted, stateless endpoint (`up-mcp --hosted`, `Dockerfile`, to be served at `https://mcp.universalpaper.org/mcp`), the `universal-paper-mcp` package on PyPI (`uvx universal-paper-mcp`), and an MCP Registry entry `io.github.Uppercentile/universal-paper` (`server.json`). The hosted mode never reads file paths, keeps no access logs and only counts calls per tool name (`/stats`).
 - `release.yml` publishes both packages to PyPI with trusted publishing and `server.json` to the MCP Registry on a `v*` tag; `deploy-mcp.yml` deploys the endpoint to Fly.io. See `deploy/README.md`.
 - MCP sections on the developer page, in `llms.txt` and in `partners.json`.
-- MCP tools `simulate_rate_conformity`, `simulate_termination` and `simulate_eligibility` (`src/universal_paper/whatif.py`): whether rates conform to a member's contract prices in its attested tier; whether a party may terminate now, when it takes effect and what is still owed; whether a member is an active participant at a time. Read-only, computed by the reference interpreter. New example bundle `examples/what-if`.
+- MCP tools `simulate_price_conformity`, `simulate_termination` and `simulate_eligibility` (`src/universal_paper/whatif.py`): whether prices conform to a member's contract prices in its attested tier; whether a party may terminate now, when it takes effect and what is still owed; whether a member is an active participant at a time. Read-only, computed by the reference interpreter. New example bundle `examples/what-if`.
 
 ## [0.1.0] - unreleased
 

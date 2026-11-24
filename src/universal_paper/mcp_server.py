@@ -2,7 +2,7 @@
 
 It lets an agent check agreements the same way every other party does: validate a bundle,
 derive statuses and obligations, dry-run one event, simulate hypothetical events under a
-Mandate, ask what-if questions (an amendment, rate conformity, a termination, a member's eligibility),
+Mandate, ask what-if questions (an amendment, price conformity, a termination, a member's eligibility),
 render the agreement text, hash an object, and look up Terms.
 
 Every tool is read-only. Nothing is signed, written to disk, or sent anywhere, and the server
@@ -187,11 +187,11 @@ def simulate_amendment(bundle: dict | str, clause: str, param: str, value: Any, 
             "failed_checks": [c for c in step.get("checks", []) if not c.get("passed", True)]}
 
 
-def simulate_rate_conformity(bundle: dict | str, chain: int, rates: list[dict], at: str | None = None,
+def simulate_price_conformity(bundle: dict | str, chain: int, prices: list[dict], at: str | None = None,
                              tier: str | None = None) -> dict:
-    """Do the rates given for items equal the member's contract prices at `at`? Optionally as if it moved to `tier`."""
+    """Do the prices given for items equal the member's contract prices at `at`? Optionally as if it moved to `tier`."""
     try:
-        return whatif.simulate_rate_conformity(_data(bundle), chain, rates, at, tier)
+        return whatif.simulate_price_conformity(_data(bundle), chain, prices, at, tier)
     except whatif.WhatIfError as e:
         raise InputError(str(e)) from None
 
@@ -333,9 +333,9 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
          "`param` of clause `clause` to `value` (e.g. clause 'price', param 'factor', value '1.05'). The Mandate defaults to "
          "the only one whose principal is a party. Nothing is signed or written; the result says whether every evaluator "
          "would accept it, and if not, which bound it breaks. Try it on bundle 'example:mandate-cap'.")
-    tool(simulate_rate_conformity,
-         "Check whether rates conform to a member's pricing agreement: for the member's participation (`chain`, its position "
-         "in the bundle) at time `at`, compare each rate in `rates` ([{item, price}], item a GTIN string or {scheme, id}, price "
+    tool(simulate_price_conformity,
+         "Check whether prices conform to a member's pricing agreement: for the member's participation (`chain`, its position "
+         "in the bundle) at time `at`, compare each price in `prices` ([{item, price}], item a GTIN string or {scheme, id}, price "
          "e.g. '9.40' or {value, currency}) with the contract price in the member's tier. The tier in effect is the one the "
          "member attested and the supplier acknowledged (UP:Tier-Selection); it is never derived from volume. `tier` (e.g. 'A') "
          "checks as if the member moved to that tier. Returns conforms true/false with the reason, and per item the contract "
