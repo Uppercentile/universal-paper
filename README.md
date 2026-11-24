@@ -91,7 +91,7 @@ The hosted endpoint (`up-mcp --hosted`, built from the [Dockerfile](Dockerfile))
 | `simulate_events` | Runs hypothetical, unsigned events forward. Mandate limits still apply. |
 | `simulate_amendment` | Tries one parameter change as an agent's amendment under its Mandate, and says which bound it breaks. Try `simulate_amendment("example:mandate-cap", "price", "factor", "1.05")`. |
 | `simulate_price_conformity` | Checks prices given for items against a member's contract prices in its tier (or a tier it might move to): conforms or not, and by how much. Try `simulate_price_conformity("example:what-if", 1, [{"item": "00000000000017", "price": "9.40"}])`. |
-| `simulate_termination` | If a party gave notice now: allowed or not (including cure periods), the effective date, duties and fees still owed, and participations that stop with it. |
+| `simulate_termination` | If a party gave notice now: allowed or not (including cure periods), the effective date, duties and fees (such as admin fees) still owed, and participations that stop with it. |
 | `simulate_eligibility` | Whether a member is an active participant at a time, so the agreement's terms and contract prices apply to it, with the reason. |
 | `render_text` | The human-readable agreement text, fixed by its hash (optionally as an outsider sees it). |
 | `hash_object` | The content hash of any JSON value. |

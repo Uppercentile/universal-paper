@@ -226,3 +226,28 @@ def test_simulate_eligibility_active_left_unsigned_unknown():
     assert nobody["eligible"] is False and nobody["participations"] == []
     after_master_ends = m.simulate_eligibility("example:what-if", "HYP000001", at="2029-06-01T00:00:00Z")
     assert after_master_ends["eligible"] is False
+
+
+def test_what_if_tools_reject_bad_times_and_roles_and_respect_seals():
+    assert m.validate_bundle("example:what-if")["valid"]
+    for call in (lambda: m.simulate_eligibility("example:what-if", "HYP000001", at="tomorrow"),
+                 lambda: m.simulate_price_conformity("example:what-if", 1, [{"item": GTIN17, "price": "9.40"}], at="2027-13-01"),
+                 lambda: m.simulate_termination("example:what-if", 0, "supplier", at="soon"),
+                 lambda: m.simulate_eligibility("example:what-if", "member")):  # a role names no one member
+        with pytest.raises(InputError):
+            call()
+    notice = m.simulate_eligibility("example:what-if", "Sample Regional Clinic", at="2027-02-10T00:00:00Z")
+    assert notice["eligible"] is True and "Notice of termination has been given" in notice["reason"]
+    hidden = bundle("confidential")
+    hidden["disclosures"] = []
+    sealed = m.simulate_price_conformity(hidden, 1, [{"item": GTIN17, "price": "9.10"}])
+    assert sealed["conforms"] is False and "sealed" in sealed["reason"]
+    assert m.simulate_price_conformity(bundle("confidential"), 1, [{"item": GTIN17, "price": "9.10"}])["conforms"] is True
+
+
+def test_what_if_answers_are_deterministic():
+    data = bundle("what-if")
+    for call in (lambda d: m.simulate_termination(d, 0, "aggregator"),
+                 lambda d: m.simulate_price_conformity(d, 1, [{"item": GTIN17, "price": "9.80"}], tier="A"),
+                 lambda d: m.simulate_eligibility(d, "HYP000003")):
+        assert json.dumps(call(data), sort_keys=True) == json.dumps(call(json.loads(json.dumps(data))), sort_keys=True)

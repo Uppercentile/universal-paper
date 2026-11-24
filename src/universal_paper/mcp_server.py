@@ -335,18 +335,18 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
          "would accept it, and if not, which bound it breaks. Try it on bundle 'example:mandate-cap'.")
     tool(simulate_price_conformity,
          "Check whether prices conform to a member's pricing agreement: for the member's participation (`chain`, its position "
-         "in the bundle) at time `at`, compare each price in `prices` ([{item, price}], item a GTIN string or {scheme, id}, price "
+         "in the bundle) at time `at` (UTC, default: the latest event), compare each price in `prices` ([{item, price}], item a GTIN string or {scheme, id}, price "
          "e.g. '9.40' or {value, currency}) with the contract price in the member's tier. The tier in effect is the one the "
          "member attested and the supplier acknowledged (UP:Tier-Selection); it is never derived from volume. `tier` (e.g. 'A') "
          "checks as if the member moved to that tier. Returns conforms true/false with the reason, and per item the contract "
          "price, the difference and the price in every tier. Try bundle 'example:what-if', chain 1.")
     tool(simulate_termination,
          "What happens if party `by` (a role such as 'supplier', or a name, key or identifier) gives notice of termination on "
-         "chain `chain` at time `at`: allowed true/false with the reason, which clause (UP:Termination-Convenience or "
+         "chain `chain` at time `at` (UTC, default: the latest event): allowed true/false with the reason, which clause (UP:Termination-Convenience or "
          "UP:Termination-Cause, including cure periods), the effective date, duties and fees (such as admin fees) still owed for periods up to then, "
          "and participations that stop with it. `clause` picks one termination clause. Try bundle 'example:what-if', chain 0.")
     tool(simulate_eligibility,
-         "Is `member` (a name, key, or identifier such as an HIN or GLN) eligible at time `at`: a real, active participant "
+         "Is `member` (a name, key, or identifier such as an HIN or GLN) eligible at time `at` (UTC, default: the latest event): a real, active participant "
          "under an aggregator agreement (UP:Participation: executed by every party, within its term, parent agreement in "
          "force), so the agreement's terms and contract prices apply to it? Returns eligible true/false with the reason for each participation. "
          "`parent` limits it to one aggregator agreement (chain position). Try bundle 'example:what-if'.")

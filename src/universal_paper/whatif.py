@@ -16,7 +16,7 @@ from .canon import content_hash
 from .engine import Bundle, Evaluator, _val_items, clause_forms, keys_with_role, party_keys, roles_of
 from .report import snapshot
 from .simulate import run_hypothetical
-from .values import SEALED, add_period, dec, dec_str, fmt_period
+from .values import SEALED, add_period, dec, dec_str, fmt_period, parse_time
 
 ROLES = ("aggregator", "supplier", "member")
 
@@ -30,6 +30,17 @@ def _latest(b: Bundle) -> str:
     if not times:
         raise WhatIfError("the bundle has no events")
     return max(times)
+
+
+def _time(b: Bundle, at: str | None) -> str:
+    """`at` checked as a UP Time (RFC 3339 UTC, e.g. 2027-03-01T00:00:00Z); default: the bundle's latest event."""
+    if at is None:
+        return _latest(b)
+    try:
+        parse_time(at)
+    except ValueError:
+        raise WhatIfError(f"at must be a UTC time like 2027-03-01T00:00:00Z, not {at!r}") from None
+    return at
 
 
 def _chain(b: Bundle, chain: int | str) -> tuple[int, str]:
@@ -140,16 +151,18 @@ def _participation_status(ev: Evaluator, b: Bundle, pos: int, cid: str, t: str) 
         parents = ev.parents(cid, t)
         why = ", ".join(f"chain {b.chain_pos.get(p, '?')} is {ev.status(p, t)}" for p in parents)
         return status, f"The participation is signed and in term, but the agreement it participates in is not in force ({why})."
-    return status, f"The participation is executed and in force from {start} until {end or 'no fixed end'}, and the agreement it participates in is in force."
+    notice = f" Notice of termination has been given, effective {S['ends_at']}." if S.get("ends_at") else ""
+    return status, (f"The participation is executed and in force from {start} until {end or 'no fixed end'}, "
+                    f"and the agreement it participates in is in force.{notice}")
 
 
 def simulate_eligibility(data: dict, member: str, at: str | None = None, parent: int | str | None = None) -> dict:
-    """Is `member` a real, active participant (UP:Participation) at time `at`, so its purchases count under the agreement?"""
-    if not isinstance(member, str) or not member.strip():
-        raise WhatIfError("member is a party key, name, or identifier (e.g. an HIN or GLN)")
+    """Is `member` a real, active participant (UP:Participation) at time `at`, so the agreement's terms and contract prices apply to it?"""
+    if not isinstance(member, str) or not member.strip() or member.strip() in ROLES:
+        raise WhatIfError("member is a party key, name, or identifier (e.g. an HIN or GLN), not a role")
     b = Bundle(data)
     ev = Evaluator(b)
-    t = at or _latest(b)
+    t = _time(b, at)
     parent_cid = _chain(b, parent)[1] if parent is not None else None
     found: list[dict] = []
     who: Any = None
@@ -184,13 +197,15 @@ def simulate_eligibility(data: dict, member: str, at: str | None = None, parent:
     if not found:
         scope = f" under chain {parent}" if parent is not None else ""
         return {"hypothetical": True, "at": t, "member": member, "eligible": False,
-                "reason": f"No participation{scope} names {member!r} as its member, so its purchases do not count under any agreement in this bundle.",
+                "reason": f"No participation{scope} names {member!r} as its member, so no agreement in this bundle applies to it.",
                 "participations": []}
     active = [p for p in found if p["status"] == "active"]
     if active:
         p = active[0]
         reason = (f"Eligible: {who['name']} is an active member under '{p['parent']['label']}' through chain {p['chain']}. "
                   + p["reason"])
+        if len(active) > 1:
+            reason += f" It is also active through chain(s) {', '.join(str(x['chain']) for x in active[1:])}."
     else:
         reason = f"Not eligible: {who['name']} has no participation in force at {t}. " + " ".join(
             f"Chain {p['chain']}: {p['reason']}" for p in found)
@@ -210,7 +225,7 @@ def simulate_price_conformity(data: dict, chain: int | str, prices: list[dict], 
     b = Bundle(data)
     pos, cid = _chain(b, chain)
     ev = Evaluator(b)
-    t = at or _latest(b)
+    t = _time(b, at)
     S = ev.state_at(cid, t)
     ag = ev.agreement(S)
     parents = ev.parents(cid, t) if ag else []
@@ -268,14 +283,17 @@ def simulate_price_conformity(data: dict, chain: int | str, prices: list[dict], 
         line: dict[str, Any] = {"item": item or r["item"], "given": given, "contract": None, "conforms": None}
         lines.append(line)
         if item is None:
-            problems.append(f"item {_item(r['item'])['id']} is not priced under the agreement")
+            iid = _item(r["item"])["id"]
+            n = sum(k.get("id") == iid for k in known)
+            problems.append(f"item {iid} is priced under more than one scheme; give its scheme" if n > 1
+                            else f"item {iid} is not priced under the agreement")
             continue
-        unit = peval.value(parents[0], item, applied, t) if applied else None
+        unit = peval.value(parents[0], item, applied, t)
         if unit is SEALED:
             problems.append(f"the contract price of {item['id']} is sealed and not disclosed in this bundle")
             continue
         if unit is None:
-            problems.append(f"no contract price for {item['id']} in tier {applied} at {t}")
+            problems.append(f"no contract price for {item['id']}" + (f" in tier {applied}" if applied else "") + f" at {t}")
             continue
         line["contract"] = unit
         line["by_tier"] = {o: (u if isinstance(u := ev.value(parents[0], item, o, t), dict) else None) for o in options}
@@ -291,7 +309,7 @@ def simulate_price_conformity(data: dict, chain: int | str, prices: list[dict], 
         if diff:
             match = [o for o, u in line["by_tier"].items() if u and dec(u["value"]) == dec(given["value"])]
             off.append(f"{item['id']} at {given['value']} is {'above' if diff > 0 else 'below'} the contract price "
-                       f"{unit['value']} in tier {applied}" + (f" (it is the tier {', '.join(match)} price)" if match else ""))
+                       f"{unit['value']}" + (f" in tier {applied}" if applied else "") + (f" (it is the tier {', '.join(match)} price)" if match else ""))
     out["prices"] = lines
 
     if status != "active":
@@ -303,7 +321,8 @@ def simulate_price_conformity(data: dict, chain: int | str, prices: list[dict], 
     elif off:
         out.update(conforms=False, reason=f"{len(off)} of {len(lines)} price(s) do not conform: " + "; ".join(off) + ".")
     else:
-        out.update(conforms=True, reason=f"All {len(lines)} price(s) equal the member's contract prices in tier {applied} at {t}.")
+        out.update(conforms=True, reason=f"All {len(lines)} price(s) equal the member's contract prices"
+                   + (f" in tier {applied}" if applied else "") + f" at {t}.")
     return out
 
 # ---------------------------------------------------------------------------
@@ -319,7 +338,7 @@ def simulate_termination(data: dict, chain: int | str, by: str, at: str | None =
     b = Bundle(data)
     pos, cid = _chain(b, chain)
     ev = Evaluator(b)
-    t = at or _latest(b)
+    t = _time(b, at)
     S: Any = ev.state_at(cid, t)
     ag = ev.agreement(S)
     if not ag or S["status"] != "executed":
