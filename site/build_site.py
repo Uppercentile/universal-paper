@@ -82,6 +82,19 @@ def jsonld(obj):
     return '<script type="application/ld+json">' + json.dumps(obj, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>"
 
 
+# Every page opens at its top. Browsers otherwise restore the last scroll position on reload,
+# on back/forward and when a mobile browser reopens a tab, which lands people mid-page. A URL
+# with a #fragment still goes straight to it, without the smooth scroll animating across the page.
+SCROLL_TOP_JS = """<script id="up-scroll-top">(function(){var h=history,r=document.documentElement,moved=false;
+try{if("scrollRestoration"in h)h.scrollRestoration="manual"}catch(e){}
+r.style.scrollBehavior="auto";
+["wheel","touchstart","keydown","mousedown"].forEach(function(t){addEventListener(t,function(){moved=true},{passive:true,once:true})});
+function top(){if(!location.hash&&!moved)scrollTo(0,0)}
+addEventListener("DOMContentLoaded",top);
+addEventListener("load",function(){top();setTimeout(function(){r.style.scrollBehavior=""},50)});
+addEventListener("pageshow",function(e){if(e.persisted&&!location.hash)scrollTo(0,0)})})();</script>"""
+
+
 class Site:
     def __init__(self, a):
         self.a = a
@@ -94,6 +107,8 @@ class Site:
         return self.base + path
 
     def write(self, rel, text):
+        if rel.endswith(".html") and "<head>" in text and "up-scroll-top" not in text:
+            text = text.replace("<head>", "<head>\n" + SCROLL_TOP_JS, 1)
         p = self.out / rel.lstrip("/")
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(text, encoding="utf-8")
