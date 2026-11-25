@@ -953,6 +953,74 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
   .tag, .eyebrow, .lbl, .ghost, .vpill, .who, .hyp, .ax, .gt, th { font-size: max(11px, 1em); }
 }
 @media (max-width: 360px) { .site-header .wrap { gap: 8px; } .site-header .navr { gap: 6px; } .menubtn, .themebtn, .searchbtn { width: 36px !important; height: 36px !important; } .site-header .brand { font-size: .95rem; } }
+
+/* ---- phones: condensed layout (desktop unchanged) ----
+ * Long card lists become swipe rows with a peek of the next card, long tables and lists
+ * show their first rows behind one "Show all" button, and the scroll stories get shorter
+ * steps. Every animation still runs; reduced motion still shows final states. */
+.mmore { display: none; }
+@media (prefers-reduced-motion: reduce) { .marquee .dup { display: none !important; } }
+@media (max-width: 720px) {
+  section.sec { padding-block: 60px; }
+  .head { margin-bottom: 32px; }
+  /* hero stats: a tidy 2 x 2 instead of 3 + 1 */
+  .statrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 340px; margin-inline: auto; }
+  .statrow .stat { padding: 10px 8px; }
+  .statrow .stat span { font-size: .8rem; }
+  /* swipe rows */
+  .copies, .start .links, .bento, .sheet, .impls {
+    display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px));
+    margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+    padding: 4px max(16px, env(safe-area-inset-left, 0px)) 14px;
+    scrollbar-width: none; align-items: stretch;
+  }
+  .copies::-webkit-scrollbar, .start .links::-webkit-scrollbar, .bento::-webkit-scrollbar, .sheet::-webkit-scrollbar, .impls::-webkit-scrollbar { display: none; }
+  .copies > *, .start .links > *, .bento > *, .sheet > *, .impls > * { flex: 0 0 min(82%, 320px); scroll-snap-align: start; min-width: 0; }
+  .copies > .copy { flex-basis: min(78%, 300px); }
+  .start .links { align-content: normal; }
+  .start .links > .lk { align-content: start; }
+  .gallery .rail { padding-inline: max(16px, env(safe-area-inset-left, 0px)); scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+  .standards .lbl { letter-spacing: .05em; }
+  .impl .lang { letter-spacing: .04em; flex-wrap: wrap; } .impl .lang span { white-space: nowrap; }
+  .bento .cell { grid-column: auto; }
+  .sheet { background: none; border: 0; border-radius: 0; margin-top: 14px; }
+  .sheet > div { border: 1px solid var(--line); border-radius: var(--r); }
+  .impls { margin-bottom: 14px; }
+  /* stat band: 3 across, numbers and names only (the swipe row above has the detail) */
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stats .kstat { padding: 16px 12px 14px; border-left: 1px solid var(--line); border-top: 0; }
+  .stats .kstat:nth-child(3n+1) { border-left: 0; }
+  .stats .kstat:nth-child(n+4) { border-top: 1px solid var(--line); }
+  .stats .kstat .d { display: none; }
+  .stats .kstat .v { font-size: 1.9rem; }
+  /* scroll stories: shorter steps, same animations */
+  .scrolly-steps { padding: 6vh 0 24vh; gap: 34vh; }
+  .step, .step:first-child, .step:last-child { min-height: 50vh; }
+  /* one clear control for long lists */
+  .mmore { display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 10px; border: 1px solid var(--line); border-radius: var(--rc); background: var(--surface); color: var(--ink); font: 500 .9rem/1 var(--f-body, inherit); cursor: pointer; }
+  .mmore::after { content: "+"; font-family: var(--mono); color: var(--accent); }
+  .mmore[aria-expanded="true"]::after { content: "\2212"; }
+  .vtable:not(.is-open) .vectors tr:nth-child(n+5) { display: none; }
+  .docs:not(.is-open) .row:nth-child(n+5) { display: none; }
+  /* spec card: label beside value */
+  .statuscard dl { grid-template-columns: 6.6em minmax(0, 1fr); }
+  .statuscard dt { border-bottom: 1px solid var(--line); padding-bottom: inherit; }
+  /* footer: links flow in rows instead of three tall columns */
+  footer .cols { grid-template-columns: 1fr; gap: 22px; padding-block: 44px 24px; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 0 18px; }
+  /* reduced motion: standards scroll sideways instead of stacking */
+  .marquee { overflow-x: auto; scrollbar-width: none; }
+  .marquee .mt { flex-wrap: nowrap; }
+  /* legible minimum for labels and code */
+  .tag, .for, .ax, .impl .lang, .docs .row .f, .docs .row .no, .step .when, footer h4, .standards .lbl, .std b, .who, .lbl { font-size: max(12px, 1em); }
+  .codebox pre, .start pre, .install pre { font-size: 12px; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (max-width: 720px) {
+    .bento > .rise, .sheet > .rise, .impls > .rise { animation-timeline: view(inline); animation-range: entry 0% entry 70%; }
+  }
+}
 </style>
 
 <header class="site-header nav">
@@ -1388,7 +1456,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <div class="impl rise"><span class="lang"><span>JavaScript · this page</span><span>~60 lines</span></span><h3>Hashing only</h3><p>Canonical JSON plus SHA-256. It reproduces the example agreement and all 16 Term hashes, but it doesn't verify signatures.</p><ul><li>hash</li><li class="no">verify</li><li class="no">derive</li><li class="no">render</li></ul></div>
       <div class="impl you rise"><span class="lang"><span>Your language</span><span>open</span></span><h3>Your implementation</h3><p>Port it to Go, Rust, Java or TypeScript, or into a CLM or ERP. If your verdicts and hashes match the traces, every counterparty can rely on them.</p></div>
     </div>
-    <div class="vtable rise"><table class="vectors">
+    <div class="vtable rise" id="vectors"><table class="vectors">
       <tr><th>Test vector</th><th>Scenario</th><th>Every evaluator must conclude</th></tr>
       <tr><td>conventional.trace.json</td><td>Tiered master, two members joining, monthly reports, fees and a tier change</td><td><span class="exp">All events valid. Master reaches state <code>f7ca8ea5…</code></span></td></tr>
       <tr><td>conventional.tamper-supplier-fee</td><td>The supplier's copy had its fee rate changed after signing</td><td><span class="exp rej">Rejected at event #0. The aggregator's signature doesn't verify</span></td></tr>
@@ -1398,6 +1466,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <tr><td>overlay.trace.json</td><td>A 2024 contract described by its document hash, without renegotiation</td><td><span class="exp">Valid. Duties start only from the overlay's signing</span></td></tr>
       <tr><td>confidential.trace.json</td><td>Every price, rate and amount sealed. The observer has no disclosures</td><td><span class="exp">Same verdicts and same State hash at every step (A10)</span></td></tr>
     </table></div>
+    <button class="mmore" type="button" aria-expanded="false" aria-controls="vectors" data-more="Show all 7 test vectors" data-less="Show fewer test vectors">Show all 7 test vectors</button>
 
   </div>
 </section>
@@ -1427,7 +1496,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
         </div>
       </div>
       <div>
-        <div class="docs rise">
+        <div class="docs rise" id="specDocs">
           <a class="row" href="/spec/overview/"><span class="no">00</span><span>Overview: thesis, properties and document map</span><span class="f">00-overview.md</span></a>
           <a class="row" href="/spec/domain/"><span class="no">01</span><span>Domain: objects, canonical JSON and hashing</span><span class="f">01-domain.md</span></a>
           <a class="row" href="/spec/predicates-functions/"><span class="no">02</span><span>Predicates and functions</span><span class="f">02-predicates-functions.md</span></a>
@@ -1438,6 +1507,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
           <a class="row" href="/spec/mapping-guide/"><span class="no">07</span><span>Mapping guide: rosters, eligibility and X12</span><span class="f">07-mapping-guide.md</span></a>
           <a class="row" href="/spec/neutrality-charter/"><span class="no">08</span><span>Neutrality charter</span><span class="f">08-neutrality-charter.md</span></a>
         </div>
+        <button class="mmore" type="button" aria-expanded="false" aria-controls="specDocs" data-more="Show all 9 documents" data-less="Show fewer documents">Show all 9 documents</button>
       </div>
     </div>
   </div>
@@ -1667,6 +1737,12 @@ function setHow(i) {
 }
 
 const HANDLERS = { chain: setChain, how: setHow };
+/* phones: "Show all" buttons for long lists (hidden on wider screens) */
+document.querySelectorAll(".mmore").forEach(b => b.addEventListener("click", () => {
+  const t = document.getElementById(b.getAttribute("aria-controls")), open = !t.classList.contains("is-open");
+  t.classList.toggle("is-open", open); b.setAttribute("aria-expanded", open); b.textContent = open ? b.dataset.less : b.dataset.more;
+  if (!open) t.scrollIntoView({ block: "nearest" });
+}));
 document.querySelectorAll("[data-story]").forEach(story => {
   const kind = story.dataset.story;
   const steps = [...story.querySelectorAll(".step")];
