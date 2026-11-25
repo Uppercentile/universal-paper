@@ -954,72 +954,59 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
 }
 @media (max-width: 360px) { .site-header .wrap { gap: 8px; } .site-header .navr { gap: 6px; } .menubtn, .themebtn, .searchbtn { width: 36px !important; height: 36px !important; } .site-header .brand { font-size: .95rem; } }
 
-/* ---- phones: condensed layout (desktop unchanged) ----
- * Long card lists become swipe rows with a peek of the next card, long tables and lists
- * show their first rows behind one "Show all" button, and the scroll stories get shorter
- * steps. Every animation still runs; reduced motion still shows final states. */
-.mmore { display: none; }
+/* ---- phones: what a developer needs on a phone (desktop unchanged) ----
+ * Below 720px the page keeps: what Universal Paper is, the one pinned story, quick start,
+ * the MCP server, core concepts at a glance, the spec documents and the FAQ. Deeper,
+ * interactive sections (.m-hide) stay on wider screens; a link to one of them reveals it.
+ * Nothing scrolls sideways: the page is locked to the phone width and code wraps. */
+.mmore, .m-only { display: none; }
 @media (prefers-reduced-motion: reduce) { .marquee .dup { display: none !important; } }
 @media (max-width: 720px) {
-  section.sec { padding-block: 60px; }
-  .head { margin-bottom: 32px; }
-  /* hero stats: a tidy 2 x 2 instead of 3 + 1 */
-  .statrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 340px; margin-inline: auto; }
-  .statrow .stat { padding: 10px 8px; }
-  .statrow .stat span { font-size: .8rem; }
-  /* swipe rows */
-  .copies, .start .links, .bento, .sheet, .impls {
-    display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory; scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px));
-    margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
-    padding: 4px max(16px, env(safe-area-inset-left, 0px)) 14px;
-    scrollbar-width: none; align-items: stretch;
-  }
-  .copies::-webkit-scrollbar, .start .links::-webkit-scrollbar, .bento::-webkit-scrollbar, .sheet::-webkit-scrollbar, .impls::-webkit-scrollbar { display: none; }
-  .copies > *, .start .links > *, .bento > *, .sheet > *, .impls > * { flex: 0 0 min(82%, 320px); scroll-snap-align: start; min-width: 0; }
-  .copies > .copy { flex-basis: min(78%, 300px); }
-  .start .links { align-content: normal; }
-  .start .links > .lk { align-content: start; }
-  .gallery .rail { padding-inline: max(16px, env(safe-area-inset-left, 0px)); scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
-  .standards .lbl { letter-spacing: .05em; }
-  .impl .lang { letter-spacing: .04em; flex-wrap: wrap; } .impl .lang span { white-space: nowrap; }
-  .bento .cell { grid-column: auto; }
-  .sheet { background: none; border: 0; border-radius: 0; margin-top: 14px; }
-  .sheet > div { border: 1px solid var(--line); border-radius: var(--r); }
-  .impls { margin-bottom: 14px; }
-  /* stat band: 3 across, numbers and names only (the swipe row above has the detail) */
-  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .stats .kstat { padding: 16px 12px 14px; border-left: 1px solid var(--line); border-top: 0; }
-  .stats .kstat:nth-child(3n+1) { border-left: 0; }
-  .stats .kstat:nth-child(n+4) { border-top: 1px solid var(--line); }
-  .stats .kstat .d { display: none; }
-  .stats .kstat .v { font-size: 1.9rem; }
-  /* scroll stories: shorter steps, same animations */
-  .scrolly-steps { padding: 6vh 0 24vh; gap: 34vh; }
-  .step, .step:first-child, .step:last-child { min-height: 50vh; }
-  /* one clear control for long lists */
-  .mmore { display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 10px; border: 1px solid var(--line); border-radius: var(--rc); background: var(--surface); color: var(--ink); font: 500 .9rem/1 var(--f-body, inherit); cursor: pointer; }
+  html, body { overflow-x: hidden; overflow-x: clip; max-width: 100%; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  .m-hide:not(.m-show) { display: none !important; }
+  .m-only { display: block; }
+  #cmdkBtn { display: none !important; }
+  section.sec { padding-block: 52px; }
+  .head { margin-bottom: 28px; }
+  #start .head .lede, #language .head .lede, #spec .head .lede { display: none; }
+  /* inputs at 16px so iOS never zooms the page on focus */
+  input, select, textarea { font-size: 16px !important; }
+  /* code wraps instead of scrolling sideways */
+  pre, .install pre, .codebox pre, .start pre, .start li pre { white-space: pre-wrap !important; overflow-wrap: anywhere; word-break: break-word; overflow-x: hidden !important; font-size: 12.5px; }
+  .install { align-items: flex-start; }
+  .cell code { white-space: normal; overflow-wrap: anywhere; }
+  /* quick start + MCP: one column, the three install routes that work from a phone */
+  .start { gap: 0; }
+  #mcp { margin-top: 36px; }
+  #mcp ol li:nth-child(n+4) { display: none; }
+  /* core concepts: a compact 2-column glossary */
+  .bento { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .bento .cell, .bento .cell.wide { grid-column: auto; padding: 14px; gap: 4px; }
+  .bento .cell h3 { font-size: 1rem; margin: 0; }
+  .bento .cell p { font-size: .84rem; line-height: 1.45; }
+  .bento .cell code, .bento .cell .forms { display: none; }
+  /* scroll story: shorter steps, same animation */
+  .scrolly-steps { padding: 4vh 0 20vh; gap: 24vh; }
+  /* spec documents: first four, one control for the rest */
+  .mmore { display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 10px; border: 1px solid var(--line); border-radius: var(--rc); background: var(--surface); color: var(--ink); font: 500 .9rem/1 var(--sans); cursor: pointer; }
   .mmore::after { content: "+"; font-family: var(--mono); color: var(--accent); }
   .mmore[aria-expanded="true"]::after { content: "\2212"; }
-  .vtable:not(.is-open) .vectors tr:nth-child(n+5) { display: none; }
   .docs:not(.is-open) .row:nth-child(n+5) { display: none; }
-  /* spec card: label beside value */
-  .statuscard dl { grid-template-columns: 6.6em minmax(0, 1fr); }
-  .statuscard dt { border-bottom: 1px solid var(--line); padding-bottom: inherit; }
-  /* footer: links flow in rows instead of three tall columns */
-  footer .cols { grid-template-columns: 1fr; gap: 22px; padding-block: 44px 24px; }
+  .vtable:not(.is-open) .vectors tr:nth-child(n+5) { display: none; }
+  .spec { gap: 0; }
+  .deeper { margin-top: 22px; padding: 18px; border: 1px dashed var(--line); border-radius: var(--r); }
+  .deeper h3 { font-size: 1rem; margin: 0 0 6px; }
+  .deeper p { font-size: .88rem; color: var(--muted); margin: 0 0 10px; }
+  .deeper ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .deeper a { display: block; padding: 10px 0; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 500; }
+  .deeper a::after { content: " \2192"; color: var(--accent); }
+  /* footer: brand, one link row, legal */
+  footer .cols { grid-template-columns: 1fr; gap: 18px; padding-block: 36px 20px; }
+  footer .fbrand p { display: none; }
   footer ul { display: flex; flex-wrap: wrap; gap: 0 18px; }
-  /* reduced motion: standards scroll sideways instead of stacking */
-  .marquee { overflow-x: auto; scrollbar-width: none; }
-  .marquee .mt { flex-wrap: nowrap; }
-  /* legible minimum for labels and code */
-  .tag, .for, .ax, .impl .lang, .docs .row .f, .docs .row .no, .step .when, footer h4, .standards .lbl, .std b, .who, .lbl { font-size: max(12px, 1em); }
-  .codebox pre, .start pre, .install pre { font-size: 12px; }
-}
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) and (max-width: 720px) {
-    .bento > .rise, .sheet > .rise, .impls > .rise { animation-timeline: view(inline); animation-range: entry 0% entry 70%; }
-  }
+  /* legible minimum for labels */
+  .tag, .for, .ax, .docs .row .f, .docs .row .no, .step .when, footer h4, .who, .lbl { font-size: max(12px, 1em); }
 }
 </style>
 
@@ -1030,7 +1017,7 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
       <a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#vision" target="_blank" rel="noopener">Vision</a>
       <a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#playground" target="_blank" rel="noopener">Playground</a>
       <a href="#top" aria-current="true">Developers</a>
-      <a href="#conformance">Conformance</a>
+      <a href="#conformance" class="m-hide">Conformance</a>
     </nav>
     <div class="navr">
       <button class="searchbtn" id="cmdkBtn" type="button" aria-label="Search the page and the Term library (Ctrl K)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Search Terms, sections…</span><kbd>⌘K</kbd></button>
@@ -1083,14 +1070,14 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
       <a class="btn" href="/spec/">Read the spec</a>
     </div>
     <div class="install"><pre>git clone https://github.com/Uppercentile/universal-paper.git</pre><button class="copybtn" type="button">Copy</button></div>
-    <div class="statrow">
+    <div class="statrow m-hide">
       <div class="stat"><b>7</b><span>primitives</span></div>
       <div class="stat"><b>16</b><span>standard Terms</span></div>
       <div class="stat"><b>13</b><span>axioms</span></div>
       <div class="stat"><b>0</b><span>servers required</span></div>
     </div>
   </div>
-  <div class="standards">
+  <div class="standards m-hide">
     <div class="wrap g"><span class="lbl">Built on open standards · reuses the identifiers you already have</span></div>
     <div class="marquee" aria-label="Standards: RFC 8785 Canonical JSON, SHA-256 Content hashes, RFC 8032 Ed25519 signatures, RFC 3339 Timestamps, ISO 4217 Currencies, GS1 GTIN items, GS1 GLN locations, HIBCC HIN, FDA NDC, ASC X12 845 · 844 · 849 · 867 mapping, CC BY 4.0 Spec license, Apache-2.0 Reference code"><div class="mt"><span class="std"><b>RFC 8785</b>Canonical JSON</span><span class="std"><b>SHA-256</b>Content hashes</span><span class="std"><b>RFC 8032</b>Ed25519 signatures</span><span class="std"><b>RFC 3339</b>Timestamps</span><span class="std"><b>ISO 4217</b>Currencies</span><span class="std"><b>GS1</b>GTIN items</span><span class="std"><b>GS1</b>GLN locations</span><span class="std"><b>HIBCC</b>HIN</span><span class="std"><b>FDA</b>NDC</span><span class="std"><b>ASC X12</b>845 · 844 · 849 · 867 mapping</span><span class="std"><b>CC BY 4.0</b>Spec license</span><span class="std"><b>Apache-2.0</b>Reference code</span><span class="dup" aria-hidden="true" style="display:contents"><span class="std"><b>RFC 8785</b>Canonical JSON</span><span class="std"><b>SHA-256</b>Content hashes</span><span class="std"><b>RFC 8032</b>Ed25519 signatures</span><span class="std"><b>RFC 3339</b>Timestamps</span><span class="std"><b>ISO 4217</b>Currencies</span><span class="std"><b>GS1</b>GTIN items</span><span class="std"><b>GS1</b>GLN locations</span><span class="std"><b>HIBCC</b>HIN</span><span class="std"><b>FDA</b>NDC</span><span class="std"><b>ASC X12</b>845 · 844 · 849 · 867 mapping</span><span class="std"><b>CC BY 4.0</b>Spec license</span><span class="std"><b>Apache-2.0</b>Reference code</span></span></div></div>
   </div>
@@ -1104,7 +1091,7 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
       <h2 class="h2">Three systems. Three copies. One deal.</h2>
       <p class="lede">The GPO's contract system, the supplier's ERP and the member's spreadsheet each hold their own version of the same agreement. Teams spend weeks reconciling them. Universal Paper gives all three the same record, with a fingerprint that proves they match. Here's how that works.</p>
     </div>
-    <div class="copies" id="copies">
+    <div class="copies m-hide" id="copies">
       <div class="copy" style="--dx: -30px; --dy: 18px; --rot: -3deg"><div class="who"><span>Aggregator CLM</span><span>v4 (final)</span></div><div class="fmt">Admin fee ........ 2.0% net
 Billing .......... monthly
 Terms ............ Net 30</div><div class="agree">sha256:616dac2f…8623</div></div>
@@ -1114,7 +1101,7 @@ ADM_FEE_DUE_D = 30</div><div class="agree">sha256:616dac2f…8623</div></div>
       <div class="copy" style="--dx: 30px; --dy: 22px; --rot: -1.5deg"><div class="who"><span>Member sheet</span><span>copy (2)</span></div><div class="fmt">| Fee rate | Period | Due  |
 | 0.02     | 1 mo   | 30 d |</div><div class="agree">sha256:616dac2f…8623</div></div>
     </div>
-    <div class="unify rise"><span class="note">Each system keeps its own format. All three compute the same agreement hash:</span><span class="hashpill">sha256:616dac2fd52f336580dec71a1d1f00ccabed5b3ef0e14b15bb0761a453218623</span></div>
+    <div class="unify rise m-hide"><span class="note">Each system keeps its own format. All three compute the same agreement hash:</span><span class="hashpill">sha256:616dac2fd52f336580dec71a1d1f00ccabed5b3ef0e14b15bb0761a453218623</span></div>
   </div>
   <div id="how" class="howpart">
   <div class="wrap g">
@@ -1172,7 +1159,7 @@ pip install -e '.[test]'</pre></div></li>
 python -m pytest</pre></div></li>
         </ol>
       </div>
-      <div class="links rise">
+      <div class="links rise m-hide">
         <a class="lk" href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw" target="_blank" rel="noopener"><b>Open the Playground ↗</b><span>Write agreements, compare versions and replay a deal's history in your browser.</span></a>
         <a class="lk file" href="/spec/overview/"><b class="mono">spec/00-overview.md</b><span>Start here: thesis, properties and document map.</span></a>
         <a class="lk file" href="/spec/axioms/"><b class="mono">spec/03-axioms.md</b><span>The thirteen consensus rules, each checkable by hand.</span></a>
@@ -1182,7 +1169,7 @@ python -m pytest</pre></div></li>
       </div>
     </div>
 
-    <div class="rise">
+    <div class="rise m-hide">
       <div class="tabs" role="tablist" aria-label="Code examples">
         <button role="tab" id="tab-cli" aria-selected="true" aria-controls="code-cli">CLI</button>
         <button role="tab" id="tab-py" aria-selected="false" aria-controls="code-py">Python</button>
@@ -1224,7 +1211,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
         <h3 style="font-size:var(--s2);margin:6px 0 14px">The official MCP server</h3>
         <p class="note" style="margin-bottom:18px">Give any agent the reference interpreter as tools. It can validate a bundle, see what's owed on a date, dry-run an event, check whether an action is inside its Mandate before anyone signs, and read the agreement as text. Every tool is read-only. The server holds no keys, signs nothing and writes nothing.</p>
         <p style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px"><a class="btn primary" href="https://cursor.com/install-mcp?name=universal-paper&config=eyJ1cmwiOiJodHRwczovL21jcC51bml2ZXJzYWxwYXBlci5vcmcvbWNwIn0%3D" rel="noopener">Add to Cursor</a><a class="btn" href="https://vscode.dev/redirect/mcp/install?name=universal-paper&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.universalpaper.org%2Fmcp%22%7D" rel="noopener">Install in VS Code</a></p>
-        <p class="note" style="margin:-8px 0 18px">The buttons open Cursor or VS Code if it is installed, and your browser may ask first. If nothing happens, add it by hand with one of the steps below.</p>
+        <p class="note m-hide" style="margin:-8px 0 18px">The buttons open Cursor or VS Code if it is installed, and your browser may ask first. If nothing happens, add it by hand with one of the steps below.</p>
         <ol>
           <li><div><b>Hosted, nothing to install</b> <span class="note">Streamable HTTP, no sign-in</span><pre>https://mcp.universalpaper.org/mcp</pre></div></li>
           <li><div><b>Or run it locally</b> <span class="note">with uv; or pip install universal-paper-mcp</span><pre>uvx universal-paper-mcp</pre></div></li>
@@ -1233,7 +1220,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
           <li><div><b>Any other client</b><pre>{"mcpServers": {"universal-paper": {"command": "uvx", "args": ["universal-paper-mcp"]}}}</pre></div></li>
         </ol>
       </div>
-      <div class="links rise">
+      <div class="links rise m-hide">
         <div class="lk"><b class="mono">validate_bundle · check_event</b><span>Every agreement and event against the axioms, with the rule that rejected what. Dry-run one signed event.</span></div>
         <div class="lk"><b class="mono">derive_state · simulate_events · simulate_amendment</b><span>Status, tiers, prices and obligations at a time. Run hypothetical events forward, or try one change, under a Mandate's limits. Try example:mandate-cap with a 5% price increase: it's rejected.</span></div>
         <div class="lk"><b class="mono">simulate_price_conformity · simulate_termination · simulate_eligibility</b><span>Whether prices conform to a member's contract prices in its tier; whether a party may terminate, when it takes effect and what is still owed; whether a member is an active participant. Try example:what-if.</span></div>
@@ -1267,7 +1254,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <div class="cell value rise"><span class="tag">Clause forms</span><h3>Six building blocks</h3><p>Every Term is built from these. A new Term never needs new code.</p><div class="forms"><span>Window</span><span>Exit</span><span>Selection</span><span>Valuation</span><span>Duty</span><span>Link</span></div></div>
     </div>
 
-    <div class="stats rise" style="margin-top:28px">
+    <div class="stats rise m-hide" style="margin-top:28px">
       <div class="kstat"><span class="v gr">7</span><span class="k">Primitives</span><span class="d">Agreement, Party, Role, Term, Event, State, Mandate</span></div>
       <div class="kstat"><span class="v">3</span><span class="k">Event kinds</span><span class="d"><code>propose</code> <code>accept</code> <code>attest</code></span></div>
       <div class="kstat"><span class="v">6</span><span class="k">Clause forms</span><span class="d">Window, Exit, Selection, Valuation, Duty, Link</span></div>
@@ -1275,7 +1262,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <div class="kstat"><span class="v">13</span><span class="k">Axioms</span><span class="d">Consensus rules, each checkable by hand</span></div>
       <div class="kstat"><span class="v gr">0</span><span class="k">Servers required</span><span class="d">Any party verifies any copy, offline</span></div>
     </div>
-    <div class="sheet">
+    <div class="sheet m-hide">
       <div class="rise"><h3>Content-addressed <span class="ax">RFC 8785</span></h3><p>Every object is named by the SHA-256 of its canonical JSON. Same content, same name, on every machine.</p></div>
       <div class="rise"><h3>Deterministic <span class="ax">A4</span></h3><p>State is computed from the chain, never stored. Two evaluators with the same events always agree.</p></div>
       <div class="rise"><h3>Value-neutral <span class="ax">A6</span></h3><p>Terms define meaning, never numbers. The library can't suggest a price, rate or period.</p></div>
@@ -1284,12 +1271,12 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <div class="rise"><h3>Confidential by construction <span class="ax">A10</span></h3><p>Seals hide private values while hashes, signatures and states still verify.</p></div>
     </div>
 
-    <div class="subhead rise">
+    <div class="subhead rise m-hide">
       <p class="eyebrow">Terms as data</p>
       <h3>Scroll to watch a clause become data</h3>
       <p class="note">The real <code>UP:Admin-Fee</code> Term. Its prose and its machine meaning share one hash, so they can't drift apart.</p>
     </div>
-    <div class="story" data-story="term">
+    <div class="story m-hide" data-story="term">
       <div class="steps">
         <div class="step" data-step="0"><div class="card"><span class="when">1 · The prose</span><h3>It starts as contract language</h3><p>The rendering template has a slot for each value the parties choose. There are no numbers in it.</p></div></div>
         <div class="step" data-step="1"><div class="card"><span class="when">2 · Parameters</span><h3>Every slot is a typed parameter</h3><p>Name, type and description, and nothing else. There's no field for a default value, so the library can't suggest a price or rate (axiom A6).</p></div></div>
@@ -1340,12 +1327,12 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       </div></div>
     </div>
 
-    <div class="subhead rise" id="terms">
+    <div class="subhead rise m-hide" id="terms">
       <p class="eyebrow">Term library</p>
       <h3>Sixteen standard Terms. Each one hashed live in your browser.</h3>
       <p class="note">These are the real definitions from <code>spec/06-terms</code>. A clause pins a Term by its content hash, and this page recomputes each one so you can check it against the agreements that use it. All are drafts that counsel hasn't reviewed yet.</p>
     </div>
-    <div class="lib rise">
+    <div class="lib rise m-hide">
       <div class="libside">
         <div class="libsearch"><input id="libQ" type="search" placeholder="Filter Terms: fee, tier, renewal…" aria-label="Filter Terms" autocomplete="off"></div>
         <div class="libforms" id="libForms" aria-label="Filter by clause form"></div>
@@ -1358,7 +1345,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
 </section>
 
 <!-- ============ PROOF ============ -->
-<section class="sec" id="proof">
+<section class="sec m-hide" id="proof">
   <div class="wrap g">
     <div class="head rise">
       <p class="eyebrow">Proof, not trust</p>
@@ -1444,7 +1431,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
 </section>
 
 <!-- ============ CONFORMANCE ============ -->
-<section class="sec alt" id="conformance">
+<section class="sec alt m-hide" id="conformance">
   <div class="wrap g">
     <div class="head rise">
       <p class="eyebrow">Conformance</p>
@@ -1480,7 +1467,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <p class="lede">Every rule above comes from the specification, and the spec is the only authority. It's a working draft: here's exactly where it stands and what each document covers.</p>
     </div>
     <div class="spec">
-      <div class="statuscard rise">
+      <div class="statuscard rise m-hide">
         <dl>
           <dt>Version</dt><dd class="mono">UP/0.1-draft</dd>
           <dt>Maturity</dt><dd>Working draft</dd>
@@ -1508,13 +1495,23 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
           <a class="row" href="/spec/neutrality-charter/"><span class="no">08</span><span>Neutrality charter</span><span class="f">08-neutrality-charter.md</span></a>
         </div>
         <button class="mmore" type="button" aria-expanded="false" aria-controls="specDocs" data-more="Show all 9 documents" data-less="Show fewer documents">Show all 9 documents</button>
+        <div class="m-only deeper">
+          <h3>More on a larger screen</h3>
+          <p>On a laptop this page also has the live hash lab, the searchable Term library, the signed-chain walkthrough and the conformance test vectors.</p>
+          <ul>
+            <li><a href="https://github.com/Uppercentile/universal-paper">GitHub repository</a></li>
+            <li><a href="/spec/terms/">Term library</a></li>
+            <li><a href="https://github.com/Uppercentile/universal-paper/tree/main/examples">Examples and test vectors</a></li>
+            <li><a href="/faq/">All questions</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ APPS ============ -->
-<section class="sec alt gallery" id="apps" style="padding-block:0">
+<section class="sec alt gallery m-hide" id="apps" style="padding-block:0">
   <div class="pin" style="padding-block:64px">
     <div class="gh">
       <div style="display:grid;gap:12px;max-width:720px"><p class="eyebrow">What you could build</p><h2 class="h2">Ten apps waiting to be written</h2><p class="note">You have the language, the tools and the tests. Here is what you could build with them. These are concepts, not products: each one only needs the language and the reference interpreter, and each works with every counterparty that speaks it.</p></div>
@@ -1585,9 +1582,9 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <a class="mark" href="#top" style="color:var(--night-ink);text-decoration:none;display:inline-flex;gap:10px;align-items:center;font-weight:600"><span class="uplogo" aria-hidden="true"></span>Universal Paper</a>
       <p>An open language for agreements between GPOs, suppliers and members. Same paper for everyone, proof for every change.</p>
     </div>
-    <div><h4>On this page</h4><ul><li><a href="#why">The problem</a></li><li><a href="#start">Quick start</a></li><li><a href="#mcp">MCP server</a></li><li><a href="#language">Core concepts</a></li><li><a href="#terms">Term library</a></li><li><a href="#proof">Proof</a></li><li><a href="#conformance">Conformance</a></li></ul></div>
+    <div class="m-hide"><h4>On this page</h4><ul><li><a href="#why">The problem</a></li><li><a href="#start">Quick start</a></li><li><a href="#mcp">MCP server</a></li><li><a href="#language">Core concepts</a></li><li><a href="#terms">Term library</a></li><li><a href="#proof">Proof</a></li><li><a href="#conformance">Conformance</a></li></ul></div>
     <div><h4>More</h4><ul><li><a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#playground" target="_blank" rel="noopener">Playground ↗</a></li><li><a href="#apps">App ideas</a></li><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/Uppercentile/universal-paper">GitHub</a></li></ul></div>
-    <div><h4>Reference</h4><ul><li><a href="#spec">Specification status</a></li><li><a href="#terms">Term library</a></li><li class="mono"><a href="https://universalpaper.org/spec/axioms/">spec/03-axioms.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/mapping-guide/">spec/07-mapping-guide.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/neutrality-charter/">spec/08-neutrality-charter.md</a></li></ul></div>
+    <div class="m-hide"><h4>Reference</h4><ul><li><a href="#spec">Specification status</a></li><li><a href="#terms">Term library</a></li><li class="mono"><a href="https://universalpaper.org/spec/axioms/">spec/03-axioms.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/mapping-guide/">spec/07-mapping-guide.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/neutrality-charter/">spec/08-neutrality-charter.md</a></li></ul></div>
   </div>
   <div class="wrap g base"><span class="status">UP/0.1-draft · working draft · Created by Uppercentile · Spec CC BY 4.0 · Code Apache-2.0 · Examples CC0</span><span>All parties, identifiers, prices, rates, quantities and dates in the examples are hypothetical.</span></div>
 </footer>
@@ -1737,6 +1734,16 @@ function setHow(i) {
 }
 
 const HANDLERS = { chain: setChain, how: setHow };
+/* phones: a link to a section hidden on phones reveals it */
+function revealTarget(id) {
+  const t = id && document.getElementById(id);
+  if (!t || t.offsetParent !== null || !matchMedia("(max-width: 720px)").matches) return;
+  for (let a = t; a; a = a.parentElement) if (a.classList && a.classList.contains("m-hide")) a.classList.add("m-show");
+  requestAnimationFrame(() => t.scrollIntoView());
+}
+addEventListener("hashchange", () => revealTarget(location.hash.slice(1)));
+document.addEventListener("click", e => { const a = e.target.closest && e.target.closest('a[href^="#"]'); if (a) revealTarget(a.getAttribute("href").slice(1)); });
+if (location.hash) revealTarget(location.hash.slice(1));
 /* phones: "Show all" buttons for long lists (hidden on wider screens) */
 document.querySelectorAll(".mmore").forEach(b => b.addEventListener("click", () => {
   const t = document.getElementById(b.getAttribute("aria-controls")), open = !t.classList.contains("is-open");
