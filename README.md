@@ -137,6 +137,10 @@ Everything live runs on a second, independent engine in JavaScript (`explorer/sr
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full list and how to add tests.
 
+## Optional integrations
+
+- [Legal Context Protocol](docs/integrations/legal-context-protocol.md): an optional way for agents to discover a Universal Paper bundle at `/.well-known/legal-context.json` and pin it by its fingerprint. Universal Paper does not depend on it.
+
 ## Contributing and security
 
 Contributions to the specification and the code are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Please report vulnerabilities privately, as described in [SECURITY.md](SECURITY.md). Changes are recorded in [CHANGELOG.md](CHANGELOG.md).

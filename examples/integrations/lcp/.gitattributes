@@ -1,0 +1,2 @@
+# Terms files are pinned by SHA-256 (LCP atrHash): keep their bytes exactly as committed.
+*.up.json -text
