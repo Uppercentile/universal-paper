@@ -1,0 +1,127 @@
+{
+  "type": "PredictiveRedlineScenario",
+  "convention": "fingerprint-coordination/0.1",
+  "simulated": true,
+  "notice": "SIMULATED FROM PUBLIC EXAMPLES",
+  "disclaimer": "A candidate derived by a fixed rule from the inputs, not a recommendation. Only the parties decide what to propose.",
+  "source": {
+    "profile": "../demo-profile.json",
+    "profileFingerprint": "sha256:d474108e96a0e2132850bd69840e5b534966b6492f8d36b756f6b0e70a20fd95",
+    "seed": "seed-1"
+  },
+  "target": {
+    "label": "Master Y (specialty network, hypothetical)",
+    "row": "A8",
+    "input": "sha256:4ea7637a9f5f3c6545952eb63951abfcff482adb9b8f868a24b817d5512f6ceb",
+    "chain": 1,
+    "agreement": "sha256:385c6b02b878315689f8dc16253be83814a8d6ed5873f51ff7bb7a64d7879027"
+  },
+  "parameter": {
+    "key": "UP:Admin-Fee.rate",
+    "term": "UP:Admin-Fee",
+    "param": "rate",
+    "clause": "fee"
+  },
+  "before": "0.03",
+  "after": "0.02",
+  "median": "0.02",
+  "deviation": "0.5",
+  "cohort": {
+    "roles": "aggregator+supplier",
+    "agreements": 5,
+    "inputs": 4
+  },
+  "rule": {
+    "id": "toward-median",
+    "text": "The toward-median rule moves the largest numeric outlier in the cohort to the cohort median, giving the seed fee.rate 0.03 → 0.02."
+  },
+  "engine": {
+    "verdict": "accepted",
+    "assumes": "every party of the target agreement signs the proposal; no other events happen",
+    "proposedAt": "2027-02-21T12:05:00Z",
+    "comparedAt": "2027-05-22T12:05:00Z"
+  },
+  "result": {
+    "supersedes": "sha256:385c6b02b878315689f8dc16253be83814a8d6ed5873f51ff7bb7a64d7879027",
+    "newAgreement": "sha256:1b59567436a4f3685a3e379f0d53c66c805fbe925cfae5a67b3a624e899bf3ee",
+    "stateHash": {
+      "before": "sha256:c3af60f4164f364e19f0890022715c3bfcd89d7f7292ab1051d20ff89ec7eceb",
+      "after": "sha256:7f11a579bafe7ddc4ee2c472dfc67987b04a6e5cc9721e22a21869266531e531"
+    }
+  },
+  "delta": {
+    "obligationsChanged": [
+      {
+        "key": "fee/pay/2027-01-01T00:00:00Z",
+        "before": {
+          "clause": "fee",
+          "duty": "pay",
+          "period": {
+            "start": "2027-01-01T00:00:00Z",
+            "end": "2027-02-01T00:00:00Z"
+          },
+          "due": "2027-03-03T00:00:00Z",
+          "amount": {
+            "value": "26.06",
+            "currency": "USD"
+          },
+          "status": "overdue"
+        },
+        "after": {
+          "clause": "fee",
+          "duty": "pay",
+          "period": {
+            "start": "2027-01-01T00:00:00Z",
+            "end": "2027-02-01T00:00:00Z"
+          },
+          "due": "2027-03-03T00:00:00Z",
+          "amount": {
+            "value": "17.37",
+            "currency": "USD"
+          },
+          "status": "overdue"
+        }
+      }
+    ],
+    "obligationsAdded": [],
+    "obligationsRemoved": []
+  },
+  "agents": "An agent can read scenario.json, verify both agreement fingerprints, and reproduce this simulation with any Universal Paper engine. The picture is not the source.",
+  "steps": [
+    {
+      "id": "variance",
+      "reveals": [
+        "parameter",
+        "before",
+        "median",
+        "cohort"
+      ],
+      "text": "Admin-Fee · rate on Master Y (specialty network, hypothetical) is 0.03, 50% above the median of 0.02 across 5 comparable agreements from 4 inputs."
+    },
+    {
+      "id": "seed",
+      "reveals": [
+        "rule",
+        "change"
+      ],
+      "text": "The toward-median rule moves the largest numeric outlier in the cohort to the cohort median, giving the seed fee.rate 0.03 → 0.02."
+    },
+    {
+      "id": "engine",
+      "reveals": [
+        "engine",
+        "result",
+        "delta"
+      ],
+      "text": "The Universal Paper engine accepted the hypothetical amendment, producing agreement sha256:1b59567436a4f3685a3e379f0d53c66c805fbe925cfae5a67b3a624e899bf3ee and recomputing the 2027-01 fee obligation from 26.06 USD to 17.37 USD."
+    },
+    {
+      "id": "median",
+      "reveals": [
+        "after"
+      ],
+      "text": "Admin-Fee · rate on Master Y (specialty network, hypothetical) now sits at the cohort median of 0.02; no other parameter is changed."
+    }
+  ],
+  "fingerprint": "sha256:2777cb87475974e8628c23ff85f6b21f66d8de0fc73284253d68da0d3efd07c3"
+}

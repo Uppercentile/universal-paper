@@ -7,6 +7,7 @@ the core depends on them.
 from __future__ import annotations
 
 import copy
+import html
 import json
 import re
 import sys
@@ -155,3 +156,63 @@ def test_helper_is_local_only():
     src = (FPC / "up_fpc.py").read_text(encoding="utf-8")
     for mod in ("urllib", "http", "socket", "requests", "httpx", "sqlite3", "open("):
         assert mod not in src, mod
+
+
+# ---------------------------------------------------------------------------- predictive-redline playthrough
+SCENARIO = json.loads((FPC / "demo/scenario.json").read_text(encoding="utf-8"))
+PAGE = (FPC / "demo/index.html").read_text(encoding="utf-8")
+
+
+def _block(pattern: str) -> str:
+    return re.search(pattern, PAGE, re.S).group(1)
+
+
+def test_scenario_is_seed_1_copied_from_the_profile():
+    assert up_fpc.check_fingerprint(SCENARIO) and SCENARIO == regenerate.build_scenario(PROFILE)
+    seed = next(s for s in PROFILE["seeds"] if s["id"] == "seed-1")
+    sim = seed["simulation"]
+    assert SCENARIO["simulated"] is True and SCENARIO["notice"] == "SIMULATED FROM PUBLIC EXAMPLES"
+    assert (SCENARIO["parameter"]["term"], SCENARIO["parameter"]["param"], SCENARIO["rule"]["id"]) == ("UP:Admin-Fee", "rate", "toward-median")
+    assert (SCENARIO["before"], SCENARIO["after"], SCENARIO["median"]) == (seed["change"]["from"], seed["change"]["to"], seed["basis"]["median"])
+    assert SCENARIO["cohort"]["agreements"] == seed["basis"]["observations"] and SCENARIO["source"]["profileFingerprint"] == PROFILE["fingerprint"]
+    assert SCENARIO["target"]["agreement"] == SCENARIO["result"]["supersedes"] == seed["target"]["agreement"]
+    assert SCENARIO["result"]["newAgreement"] == sim["newAgreement"]
+    assert SCENARIO["engine"]["verdict"] == ("accepted" if sim["accepted"] else "rejected")
+    assert SCENARIO["delta"]["obligationsChanged"] == sim["obligationsChanged"]
+    assert SCENARIO["disclaimer"] == seed["note"]
+    for fp in (SCENARIO["target"]["agreement"], SCENARIO["result"]["newAgreement"]):  # never truncated
+        assert re.fullmatch(r"sha256:[0-9a-f]{64}", fp)
+    assert [s["id"] for s in SCENARIO["steps"]] == ["variance", "seed", "engine", "median"]
+
+
+def test_scenario_numbers_all_come_from_the_profile():
+    text = " ".join(s["text"] for s in SCENARIO["steps"])
+    for n in re.findall(r"(?<![\w:])\d+(?:\.\d+)?%?", text):
+        assert n.rstrip("%") in json.dumps(PROFILE) or n == "50%" and SCENARIO["deviation"] == "0.5", n
+    assert SCENARIO["result"]["newAgreement"] in text
+    d = SCENARIO["delta"]["obligationsChanged"][0]
+    assert d["before"]["amount"]["value"] in text and d["after"]["amount"]["value"] in text
+
+
+def test_page_step_list_and_howto_match_the_scenario():
+    lis = re.findall(r'<li id="step-([a-z-]+)" data-step="\d">(.*?)</li>', PAGE)
+    assert [(i, html.unescape(t)) for i, t in lis] == [(s["id"], s["text"]) for s in SCENARIO["steps"]]
+    howto = json.loads(_block(r'<script type="application/ld\+json" id="howto">(.*?)</script>').replace("<\\/", "</"))
+    assert howto["@type"] == "HowTo"
+    assert [(s["position"], s["name"], s["text"]) for s in howto["step"]] == [(i, s["id"], s["text"]) for i, s in enumerate(SCENARIO["steps"], 1)]
+    assert json.loads(_block(r'<script type="application/json" id="scenario">(.*?)</script>').replace("<\\/", "</")) == SCENARIO
+
+
+def test_page_surface_for_agents_and_people():
+    assert '<link rel="alternate" type="application/json" href="scenario.json"' in PAGE
+    assert ">Machine-readable scenario (JSON)</a>" in PAGE and 'href="../demo-profile.json"' in PAGE
+    assert regenerate.AGENT_SENTENCE in PAGE and SCENARIO["agents"] == regenerate.AGENT_SENTENCE
+    assert SCENARIO["disclaimer"] in PAGE
+    for tag in ('<button class="btn" type="button" id="pt-play">', 'id="pt-step"', 'id="pt-reset"', '<ol class="pt-steps"', 'aria-live="polite"'):
+        assert tag in PAGE, tag
+    assert "prefers-reduced-motion: reduce" in PAGE and "autoplay" not in PAGE.lower()
+    # the full cycle is in the static HTML (no JavaScript needed): both fingerprints and the delta
+    static = _block(r"<!-- scenario:begin -->(.*?)<!-- scenario:end -->")
+    for v in (SCENARIO["result"]["supersedes"], SCENARIO["result"]["newAgreement"], "26.06 USD", "17.37 USD"):
+        assert v in static
+    assert "Simulated demonstration" in PAGE and "no network calls" in PAGE

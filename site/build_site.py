@@ -762,6 +762,7 @@ INTEGRATION_FACTS = {
                      ("contribution", f"/{FPC_DIR}/contribution.json"),
                      ("structural diff: conventional to what-if", f"/{FPC_DIR}/structural-diff.json")],
         "demo": "/integrations/fingerprint-coordination/demo/",
+        "scenario": True,
         "runnable": [f"python3 {FPC_DIR}/regenerate.py --check"],
         "mcpTools": ["hash_object", "validate_bundle", "derive_state", "simulate_events", "simulate_amendment"],
     },
@@ -778,6 +779,16 @@ def helper_functions(path):
             doc = (ast.get_docstring(n) or "").strip().splitlines()
             out.append({"name": n.name, "signature": f"{n.name}({ast.unparse(n.args)}){ret}", "does": doc[0] if doc else ""})
     return out
+
+
+def _scenario(site, x):
+    """The demo's predictive-redline scenario (source of truth for its playthrough and HowTo JSON-LD), if it has one."""
+    f = site.repo / FPC_DIR / "demo/scenario.json"
+    if not x.get("scenario") or not f.is_file():
+        return {}
+    sc = json.loads(f.read_text(encoding="utf-8"))
+    return {"scenario": {"url": site.url(x["demo"] + "scenario.json"), "fingerprint": sc["fingerprint"], "seed": sc["source"]["seed"],
+                         "howToSteps": [s["id"] for s in sc["steps"]], "howTo": site.url(x["demo"] + "#predictive-redline")}}
 
 
 def integrations_index(site):
@@ -800,7 +811,8 @@ def integrations_index(site):
             "examples": [{"name": n, "url": site.url(u), "license": "CC0-1.0"} for n, u in x["examples"]],
             **({"runnable": x["runnable"]} if x["runnable"] else {}),
             **({"demo": {"url": site.url(x["demo"]), "simulated": True, "network": "none",
-                         "note": "Simulated from public example bundles only; not market data."}} if x.get("demo") else {}),
+                         "note": "Simulated from public example bundles only; not market data.",
+                         **_scenario(site, x)}} if x.get("demo") else {}),
             "mcpTools": x["mcpTools"],
         })
     return {
@@ -849,6 +861,7 @@ def build_integrations(site):
     demo = site.out / "integrations/fingerprint-coordination/demo/index.html"
     demo.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(src / "demo/index.html", demo)
+    shutil.copyfile(src / "demo/scenario.json", demo.parent / "scenario.json")
     shutil.copyfile(src / "demo-profile.json", demo.parent.parent / "demo-profile.json")
     site.add_page("/integrations/fingerprint-coordination/demo/", "0.3", "monthly")
     index = integrations_index(site)

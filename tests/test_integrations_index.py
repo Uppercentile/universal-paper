@@ -110,3 +110,7 @@ def test_fingerprint_coordination_shapes_and_demo():
         assert shapes[shape] == json.loads((fpc / "schemas" / (name.split(".")[0].replace("demo-profile", "derived-profile") + ".schema.json")).read_text(encoding="utf-8"))
     assert item["demo"]["url"] == "https://universalpaper.org/integrations/fingerprint-coordination/demo/"
     assert item["demo"]["simulated"] is True and item["external"] is None
+    sc = json.loads((fpc / "demo/scenario.json").read_text(encoding="utf-8"))
+    assert item["demo"]["scenario"]["url"] == "https://universalpaper.org/integrations/fingerprint-coordination/demo/scenario.json"
+    assert item["demo"]["scenario"]["howToSteps"] == [s["id"] for s in sc["steps"]]
+    assert item["demo"]["scenario"]["fingerprint"] == sc["fingerprint"]

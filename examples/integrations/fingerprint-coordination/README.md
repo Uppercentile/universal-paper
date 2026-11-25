@@ -7,6 +7,7 @@
 | File | What it is |
 |---|---|
 | [demo/index.html](demo/index.html) | The simulated insight demo: variance ranking, variance map, ranges, historical deltas, two seed cards with engine results, and the raw profile beside them. Open it from disk; it makes no network calls and checks the profile's fingerprint in your browser |
+| [demo/scenario.json](demo/scenario.json) | The predictive-redline playthrough of `seed-1`, built only from the profile: before/after values, median, both full agreement fingerprints, the engine verdict, the obligation delta and four ordered steps. The demo's step list, animation and HowTo JSON-LD all come from it |
 | [demo-profile.json](demo-profile.json) | A Derived Profile of six public bundles (16 agreements) |
 | [contribution.json](contribution.json) | A Contribution: one hypothetical aggregator sharing the conventional bundle's fingerprint, with its rules |
 | [structural-diff.json](structural-diff.json) | `diff_bundles` from the conventional to the what-if bundle (it adds `UP:Termination-Cause`) |
