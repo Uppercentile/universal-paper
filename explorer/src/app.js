@@ -64,10 +64,12 @@
         btn.setAttribute("aria-expanded", open ? "true" : "false");
         body.hidden = !open;
         if (preview) preview.hidden = open;
+        var bar = btn.closest(".fold-bar");  // a section with a peek shows its own toggle only while open
+        if (preview && preview.querySelector("[data-fold]")) bar.hidden = !open;
         label.textContent = open ? btn.dataset.close : btn.dataset.open;
       }
       btn.addEventListener("click", function () { set(btn.getAttribute("aria-expanded") !== "true"); });
-      // a peek's own button opens the section and moves focus into it
+      // the peek's button is the section's opener while it is closed; focus then moves to the toggle (now "Hide")
       document.querySelectorAll('[data-fold="' + btn.id + '"]').forEach(function (b) {
         b.addEventListener("click", function (e) { e.stopPropagation(); set(true); btn.focus({ preventScroll: true }); });
         var peek = b.closest(".pg-peek");  // the whole peek is a click target; the button is the keyboard one
@@ -535,6 +537,10 @@
       $("pg-fpmini").innerHTML = fpHTML(h, st.prevHash, "");
       {  // the collapsed section's peek shows the top of the current agreement
         $("pg-peek-fp").innerHTML = fpHTML(h, null, "Agreement fingerprint");
+        var pf = clauseOf("UP:Admin-Fee"), py = years(termClause()), ps = ag.parties.filter(function (p) { return p.role === "supplier"; })[0];
+        if (pf) { var r = Number(pf.params.rate) * 100; $("pg-peek-rate").textContent = r + "%"; $("pg-peek-track").style.width = Math.max(0, Math.min(100, (r - 0.5) / 4.5 * 100)) + "%"; }
+        $("pg-peek-years").innerHTML = [1, 2, 3, 5].map(function (n) { return '<span class="' + (n === py ? "on" : "") + '">' + n + " yr</span>"; }).join("");
+        if (ps) $("pg-peek-sup").textContent = ps.party.name;
         try {  // title, then the fee clause people come to change (party keys would only be noise here)
           var md = UP.renderAgreement(b, ag).split("\n"), fi = md.findIndex(function (l) { return /^### .*UP:Admin-Fee/.test(l); });
           if (fi < 0) fi = md.findIndex(function (l) { return /^### /.test(l); });
