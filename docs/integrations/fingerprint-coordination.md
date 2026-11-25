@@ -110,6 +110,10 @@ Seeds come from two fixed, documented rules. Neither is a judgment about what an
 
 Price and tier Terms (`UP:Tiers`, `UP:Tier-Selection`, `UP:Price-Reference`) are shown as ranges but never seeded, and tier qualification conditions are never compared. Each seed's `simulation` runs the change as a hypothetical, unsigned superseding proposal that every party signs, using the Universal Paper engine, and records the result.
 
+### Predictive redline playthrough
+
+The demo's [Predictive redline](https://universalpaper.org/integrations/fingerprint-coordination/demo/#predictive-redline) section steps through one seed (`seed-1`, `toward-median`): the Admin-Fee rate variance on one agreement, the seed `fee.rate 0.03 → 0.02`, and the engine's result, which is the new agreement fingerprint and the recomputed fee obligation. It is simulated from public examples, optional and recomputable. Its source of truth is [demo/scenario.json](../../examples/integrations/fingerprint-coordination/demo/scenario.json), which `regenerate.py` rebuilds from the profile. The page's step list and its schema.org `HowTo` are generated from that file. An agent can read scenario.json, verify both agreement fingerprints, and reproduce this simulation with any Universal Paper engine. The picture is not the source.
+
 ## Agent flow
 
 1. **Verify.** Check the profile's own fingerprint (`check_fingerprint`). Get the inputs you are entitled to, recompute each one's fingerprint with any Universal Paper engine, and require them to match `inputs` and `inputsRoot`. To trust the statistics, recompute the whole profile (`verify_profile`) instead of reading them.
