@@ -67,6 +67,12 @@
         label.textContent = open ? btn.dataset.close : btn.dataset.open;
       }
       btn.addEventListener("click", function () { set(btn.getAttribute("aria-expanded") !== "true"); });
+      // a peek's own button opens the section and moves focus into it
+      document.querySelectorAll('[data-fold="' + btn.id + '"]').forEach(function (b) {
+        b.addEventListener("click", function (e) { e.stopPropagation(); set(true); btn.focus({ preventScroll: true }); });
+        var peek = b.closest(".pg-peek");  // the whole peek is a click target; the button is the keyboard one
+        if (peek) peek.addEventListener("click", function () { b.click(); });
+      });
       folds.push({ sec: sec, body: body, set: set });
     });
     function openFor(hash) {
@@ -527,6 +533,15 @@
       var changed = st.prevHash && st.prevHash !== h;
       $("pg-fp").innerHTML = fpHTML(h, st.prevHash, "Agreement fingerprint" + (changed ? " · changed" : ""));
       $("pg-fpmini").innerHTML = fpHTML(h, st.prevHash, "");
+      {  // the collapsed section's peek shows the top of the current agreement
+        $("pg-peek-fp").innerHTML = fpHTML(h, null, "Agreement fingerprint");
+        try {  // title, then the fee clause people come to change (party keys would only be noise here)
+          var md = UP.renderAgreement(b, ag).split("\n"), fi = md.findIndex(function (l) { return /^### .*UP:Admin-Fee/.test(l); });
+          if (fi < 0) fi = md.findIndex(function (l) { return /^### /.test(l); });
+          $("pg-peek-paper").innerHTML = mdToHTML([md[0], ""].concat(fi >= 0 ? md.slice(fi, fi + 3) : []).join("\n"))
+            .replace(/(\d+(?:\.\d+)?%)/, "<mark>$1</mark>");
+        } catch (e) {}
+      }
       if (changed) flash($("pg-fp"));
       st.prevHash = h;
       $("pg-valid").innerHTML = issues.length ? '<span class="pill bad">' + issues.length + " problem" + (issues.length === 1 ? "" : "s") + "</span>" : '<span class="pill ok">Valid under A1, A6, A10, A13</span>';
