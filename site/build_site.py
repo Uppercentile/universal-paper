@@ -592,7 +592,10 @@ def build_spec(site):
 # Optional, external integrations (docs/integrations/). Linked modestly (footer, sitemap, llms.txt), never from core pages.
 INTEGRATIONS = [("docs/integrations/legal-context-protocol.md", "legal-context-protocol", "Legal Context Protocol",
                  "Optional: publish a Universal Paper bundle at /.well-known/legal-context.json and pin it by its fingerprint (LCP atrHash). "
-                 "Universal Paper does not depend on it.")]
+                 "Universal Paper does not depend on it."),
+                ("docs/integrations/verifiable-credentials.md", "verifiable-credentials", "Verifiable Credentials",
+                 "Optional: a W3C Verifiable Credential that references a Universal Paper fingerprint, for roster participation "
+                 "and role snapshots. A snapshot only: participation status still comes from a Universal Paper engine.")]
 
 
 def build_integrations(site):
@@ -601,6 +604,11 @@ def build_integrations(site):
     src = site.repo / "examples/integrations/lcp"
     for p in sorted(src.glob("*/*.json")):
         dst = site.out / "examples/integrations/lcp" / p.parent.name / p.name
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(p, dst)
+    # the Verifiable Credentials example payloads (static, unsigned)
+    for p in sorted((site.repo / "examples/integrations/vc").glob("*.json")):
+        dst = site.out / "examples/integrations/vc" / p.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(p, dst)
     note = ('<p class="lead" style="font-size:1rem">Optional. Universal Paper is self-contained and does not depend on any integration below. '
@@ -628,7 +636,7 @@ def build_integrations(site):
 </div>
 <div class="wrap prose" style="max-width:var(--maxw);padding-bottom:96px"><div class="cards">{"".join(cards)}</div>
 <p>Any channel that delivers an artifact's bytes and lets the receiver recompute its fingerprint binds a Universal Paper agreement equally well. These pages describe a few well-known ones; none has special status. Start with the <a href="/spec/">specification</a> instead if you are new to Universal Paper.</p></div>"""
-    desc = "Optional, external integrations for Universal Paper, such as the Legal Context Protocol. Universal Paper does not depend on any of them."
+    desc = "Optional, external integrations for Universal Paper, such as the Legal Context Protocol and W3C Verifiable Credentials. Universal Paper does not depend on any of them."
     site.write("integrations/index.html", shell(site, "/integrations/", "Optional integrations | Universal Paper", desc, body))
     site.add_page("/integrations/", "0.3", "monthly")
 
@@ -832,6 +840,7 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
 - [JSON Schema]({site.url('/schema/universal-paper.schema.json')})
 - [Example bundle: conventional GPO agreement]({site.url('/examples/conventional/bundle.json')})
 - [Optional integration: Legal Context Protocol]({site.url('/integrations/legal-context-protocol.md')}): publish a bundle at /.well-known/legal-context.json, pinned by its fingerprint as atrHash. Universal Paper does not depend on it.
+- [Optional integration: Verifiable Credentials]({site.url('/integrations/verifiable-credentials.md')}): a W3C VC referencing a Universal Paper fingerprint, for roster participation and role snapshots. A snapshot only; participation status comes from a Universal Paper engine (simulate_eligibility). Universal Paper does not issue, verify or require VCs.
 
 ## FAQ
 """ + "\n".join(faq_md)

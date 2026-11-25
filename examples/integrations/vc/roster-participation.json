@@ -1,0 +1,21 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "ParticipationStatusCredential"
+  ],
+  "issuer": "did:example:hypothetical-health-purchasing-alliance",
+  "validFrom": "2027-04-20T12:00:00Z",
+  "validUntil": "2027-05-20T12:00:00Z",
+  "credentialSubject": {
+    "agreementFingerprint": "sha256:93ab686a4b85a5670a056ccfd7d7f5c5d1cfaa5a2184f6e03e48961b726abcae",
+    "participant": {
+      "scheme": "HIN",
+      "id": "HYP000001"
+    },
+    "participantStatus": "active",
+    "eligibleAsOf": "2027-04-20T12:00:00Z"
+  }
+}

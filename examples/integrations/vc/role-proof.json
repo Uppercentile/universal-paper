@@ -1,0 +1,17 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "RoleCredential"
+  ],
+  "issuer": "did:example:hypothetical-community-hospital",
+  "validFrom": "2027-04-20T12:00:00Z",
+  "validUntil": "2027-07-20T12:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:purchasing-agent-01",
+    "agreementFingerprint": "sha256:93ab686a4b85a5670a056ccfd7d7f5c5d1cfaa5a2184f6e03e48961b726abcae",
+    "role": "purchasing-agent"
+  }
+}
