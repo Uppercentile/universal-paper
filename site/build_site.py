@@ -7,6 +7,7 @@ Inputs (read only, never edited):
   REPO/spec/**/*.md, DESIGN_NOTES.md -> /spec/...    (rendered pages plus the raw .md)
   REPO/schema/*.json, spec/06-terms/*.json, examples/*/bundle.json (copied as is)
   content/faq.py                     -> /faq/ and the FAQ parts of llms.txt
+  REPO/docs/integrations/*.md        -> /integrations/... (optional integrations, linked only from the footer)
 
 Output: dist/ (a static site for GitHub Pages: CNAME, .nojekyll, sitemap.xml, robots.txt,
 llms.txt, llms-full.txt, 404.html, og image, favicons).
@@ -149,7 +150,7 @@ class Site:
         gh = f'<a href="{r}">GitHub</a>' if r else ""
         links = " · ".join(x for x in [
             '<a href="/">Home</a>', '<a href="/developers/">Developers</a>', '<a href="/#playground">Playground</a>',
-            '<a href="/spec/">Specification</a>', '<a href="/faq/">FAQ</a>', '<a href="/license/">Licenses</a>', gh] if x)
+            '<a href="/spec/">Specification</a>', '<a href="/faq/">FAQ</a>', '<a href="/license/">Licenses</a>', '<a href="/integrations/">Integrations</a>', gh] if x)
         return (
             '<div class="up-legal"><style>'
             '.up-legal{max-width:1180px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 28px;font:400 .8125rem/1.6 Inter,system-ui,sans-serif;'
@@ -587,6 +588,51 @@ def build_spec(site):
     site.add_page("/spec/", "0.8", "monthly")
 
 
+# ----------------------------------------------------------------------------- optional integrations
+# Optional, external integrations (docs/integrations/). Linked modestly (footer, sitemap, llms.txt), never from core pages.
+INTEGRATIONS = [("docs/integrations/legal-context-protocol.md", "legal-context-protocol", "Legal Context Protocol",
+                 "Optional: publish a Universal Paper bundle at /.well-known/legal-context.json and pin it by its fingerprint (LCP atrHash). "
+                 "Universal Paper does not depend on it.")]
+
+
+def build_integrations(site):
+    lmap = spec_link_map(site)
+    # the LCP worked examples: copied byte for byte, because atrHash pins their exact bytes
+    src = site.repo / "examples/integrations/lcp"
+    for p in sorted(src.glob("*/*.json")):
+        dst = site.out / "examples/integrations/lcp" / p.parent.name / p.name
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(p, dst)
+    note = ('<p class="lead" style="font-size:1rem">Optional. Universal Paper is self-contained and does not depend on any integration below. '
+            'Nothing here changes the language, its schemas, its fingerprints or its engines.</p>')
+    cards = []
+    for f, slug, ttl, desc in INTEGRATIONS:
+        path = f"/integrations/{slug}/"
+        text = (site.repo / f).read_text(encoding="utf-8")
+        h, _ = render_md(site, f, text, lmap)
+        raw = path.rstrip("/") + ".md"
+        site.write(raw, text)
+        edit = f' · <a href="{site.a.repo_url}/blob/main/{f}">View source</a>' if site.a.repo_url else ""
+        body = f"""<div class="wrap" style="padding-top:40px"><div class="crumbs"><a href="/">Universal Paper</a> / <a href="/integrations/">Integrations</a> / {esc(ttl)}</div></div>
+<div class="wrap"><article class="prose" style="max-width:820px;padding-bottom:96px">{h}
+  <p style="margin-top:56px;font-size:.85rem;color:var(--ink-3)">Optional integration documentation by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>. <a href="{esc(raw)}">Plain Markdown</a>{edit}</p></article></div>"""
+        ld = [{"@context": "https://schema.org", "@type": "TechArticle", "headline": f"Universal Paper optional integration: {ttl}",
+               "url": site.url(path), "description": desc, "author": CREATOR, "publisher": CREATOR, "license": LIC["ccby"][1], "inLanguage": "en"}]
+        site.write(path.lstrip("/") + "index.html", shell(site, path, f"{ttl} (optional integration) | Universal Paper", desc, body, kind="article", ld=ld))
+        site.add_page(path, "0.4", "monthly")
+        cards.append(f'<a class="card" href="{path}" style="text-decoration:none"><span class="lic">optional</span><h3 style="color:var(--ink)">{esc(ttl)}</h3><p>{esc(desc)}</p></a>')
+    body = f"""<div class="wrap page-hero">
+  <div class="crumbs"><a href="/">Universal Paper</a> / Integrations</div>
+  <h1 class="display">Optional integrations.</h1>
+  {note}
+</div>
+<div class="wrap prose" style="max-width:var(--maxw);padding-bottom:96px"><div class="cards">{"".join(cards)}</div>
+<p>Any channel that delivers an artifact's bytes and lets the receiver recompute its fingerprint binds a Universal Paper agreement equally well. These pages describe a few well-known ones; none has special status. Start with the <a href="/spec/">specification</a> instead if you are new to Universal Paper.</p></div>"""
+    desc = "Optional, external integrations for Universal Paper, such as the Legal Context Protocol. Universal Paper does not depend on any of them."
+    site.write("integrations/index.html", shell(site, "/integrations/", "Optional integrations | Universal Paper", desc, body))
+    site.add_page("/integrations/", "0.3", "monthly")
+
+
 # ----------------------------------------------------------------------------- misc files
 def build_misc(site):
     a = site.a
@@ -785,6 +831,7 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
 - [Full specification in one file]({site.url('/llms-full.txt')})
 - [JSON Schema]({site.url('/schema/universal-paper.schema.json')})
 - [Example bundle: conventional GPO agreement]({site.url('/examples/conventional/bundle.json')})
+- [Optional integration: Legal Context Protocol]({site.url('/integrations/legal-context-protocol.md')}): publish a bundle at /.well-known/legal-context.json, pinned by its fingerprint as atrHash. Universal Paper does not depend on it.
 
 ## FAQ
 """ + "\n".join(faq_md)
@@ -884,6 +931,7 @@ def main():
     build_faq(site)
     build_license(site)
     build_spec(site)
+    build_integrations(site)
     build_misc(site)
     build_llms(site)
     build_sitemap(site)
