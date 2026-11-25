@@ -36,6 +36,10 @@ FILE_ABOUT = {
     "test_js_conformance.py": "The JavaScript engine reproduces every Python trace",
     "test_simulate_trace.py": "Traces and what-if simulations",
     "test_audit_regressions.py": "One regression test per audit finding",
+    "test_mcp_server.py": "The read-only MCP server: its 13 tools agree with the CLI and engine",
+    "test_integration_lcp.py": "Optional Legal Context Protocol integration, outside the language",
+    "test_integration_vc.py": "Optional Verifiable Credentials convention, outside the language",
+    "test_integrations_index.py": "The machine-readable index of optional integrations",
 }
 
 

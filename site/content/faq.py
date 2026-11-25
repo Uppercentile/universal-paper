@@ -77,7 +77,7 @@ SECTIONS = [
          "<p>Open the <a href=\"/#playground\">Playground</a> to write an agreement in your browser and watch its fingerprint, signatures and obligations update. To work locally, install the Python reference interpreter, which provides the <code>up</code> command (validate, apply, derive, simulate, render, trace, hash). The <a href=\"/developers/\">developer page</a> walks through both.</p>",
          ""),
         ("How is the reference implementation tested?",
-         "<p>About 170 tests cover every axiom, transition rule, clause form and Term. A second, independent engine in JavaScript must reproduce every Python trace, rendering and simulation byte for byte, and differential tests compare both engines on tens of thousands of random inputs. The results are published on the <a href=\"/#conformance\">conformance</a> section.</p>",
+         "<p>More than 200 tests cover every axiom, transition rule, clause form and Term. A second, independent engine in JavaScript must reproduce every Python trace, rendering and simulation byte for byte, and differential tests compare both engines on tens of thousands of random inputs. The results are published on the <a href=\"/#conformance\">conformance</a> section.</p>",
          ""),
         ("Can I write my own implementation?",
          "<p>Yes. The specification is the language, so any implementation that produces the same hashes and the same verdicts for the same events speaks Universal Paper. The example traces (CC0) and test vectors (Apache-2.0) are free to reuse for conformance testing.</p>",
