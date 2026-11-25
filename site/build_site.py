@@ -304,7 +304,7 @@ PAGE_CSS = """
 .side a{color:var(--ink-2);text-decoration:none;padding:5px 10px;border-radius:6px}
 .side a:hover{color:var(--ink);background:var(--bg-2)}.side a[aria-current="page"]{color:var(--ink);background:var(--bg-2);font-weight:500}
 @media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr);gap:24px}.side{position:static;display:flex;flex-wrap:wrap;gap:6px}.side b{width:100%}.side a{border:1px solid var(--rule)}}
-.faq-group{margin-top:48px}.faq-group h2{margin-top:0}
+.faq-group{margin-top:48px}.faq-group h2{margin-top:0}.faq details{scroll-margin-top:88px}
 .faq details{border-top:1px solid var(--rule);padding:4px 0}.faq details:last-child{border-bottom:1px solid var(--rule)}
 .faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:16px 0;font:500 1.05rem/1.4 var(--f-body);color:var(--ink)}
 .faq summary::-webkit-details-marker{display:none}
@@ -374,27 +374,33 @@ def build_faq(site):
     for gid, gtitle, qs in FAQ:
         side.append(f'<a href="#{gid}">{esc(gtitle)}</a>')
         items = []
-        for q, a, ref in qs:
-            qid = re.sub(r"[^a-z0-9]+", "-", q.lower()).strip("-")[:60]
-            refh = f'<p class="ref">{esc(ref)}</p>' if ref else ""
-            items.append(f'<details id="{qid}"><summary><h3 style="all:unset">{esc(q)}</h3></summary><div class="a">{a}{refh}</div></details>')
-            ld_q.append({"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": strip_tags(a)}})
+        for qid, q, a, ref in qs:
+            meta = ([f"Source: {esc(ref)}"] if ref else []) + [f'<a href="#{qid}" aria-label="Link to this answer: {esc(q)}">Link to this answer</a>']
+            items.append(f'<details id="{qid}"><summary><h3 style="all:unset">{esc(q)}</h3></summary><div class="a">{a}'
+                         f'<p class="ref">{" · ".join(meta)}</p></div></details>')
+            url = site.url(f"/faq/#{qid}")
+            ld_q.append({"@type": "Question", "@id": url, "url": url, "name": q,
+                         "acceptedAnswer": {"@type": "Answer", "url": url, "text": strip_tags(a)}})
         groups.append(f'<section class="faq-group" id="{gid}" aria-labelledby="{gid}-h"><h2 id="{gid}-h">{esc(gtitle)}</h2><div class="faq">{"".join(items)}</div></section>')
     n = sum(len(g[2]) for g in FAQ)
     body = f"""<div class="wrap page-hero">
   <div class="crumbs"><a href="/">Universal Paper</a> / FAQ</div>
   <h1 class="display">Questions, answered plainly.</h1>
-  <p class="lead">{n} answers about what Universal Paper is, how it works, what it means for GPOs, suppliers and members, and how it's licensed. Each answer points to the part of the specification it comes from.</p>
+  <p class="lead">{n} answers about what Universal Paper is, how it works, what it means for GPOs, suppliers, members and AI agents, and how it's licensed. Each answer points to the part of the specification it comes from and has its own link.</p>
 </div>
 <div class="wrap layout">
   <nav class="side" aria-label="FAQ sections"><b>Sections</b>{"".join(side)}<a href="/license/">Licenses</a><a href="/spec/">Specification</a></nav>
   <div class="prose" style="max-width:none">{"".join(groups)}</div>
 </div>
-<script>document.addEventListener("DOMContentLoaded",function(){{var h=location.hash.slice(1),d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true}});</script>"""
+<script>(function(){{function o(){{var h=decodeURIComponent(location.hash.slice(1)),d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true}}document.addEventListener("DOMContentLoaded",o);window.addEventListener("hashchange",o)}})();</script>"""
     title = "Universal Paper FAQ | GPO, supplier and member agreements explained"
     desc = ("Answers about Universal Paper: what the open agreement language is, who created it (Uppercentile), how hashes and signatures work, "
-            "confidential pricing, AI agents, EDI, legal status, and its free CC BY 4.0 and Apache-2.0 licenses.")
-    ld = [{"@context": "https://schema.org", "@type": "FAQPage", "url": site.url("/faq/"), "inLanguage": "en", "mainEntity": ld_q}]
+            "confidential pricing, AI agents and the MCP server, optional integrations (LCP, Verifiable Credentials), EDI, legal status and licenses.")
+    ld = [{"@context": "https://schema.org", "@type": "FAQPage", "@id": site.url("/faq/"), "url": site.url("/faq/"), "name": title,
+           "description": desc, "inLanguage": "en", "dateModified": TODAY,
+           "isPartOf": {"@type": "WebSite", "name": "Universal Paper", "url": site.url("/")},
+           "publisher": {"@type": "Organization", "name": "Uppercentile", "url": "https://uppercentile.com"},
+           "license": "https://creativecommons.org/licenses/by/4.0/", "mainEntity": ld_q}]
     site.write("faq/index.html", shell(site, "/faq/", title, desc, body, ld=ld, current="/faq/"))
     site.add_page("/faq/", "0.9", "monthly")
 
@@ -976,8 +982,8 @@ def build_llms(site):
     faq_md = []
     for _, gtitle, qs in FAQ:
         faq_md.append(f"\n### {gtitle}\n")
-        for q, ans, ref in qs:
-            faq_md.append(f"**{q}**\n{strip_tags(ans)}" + (f" (Source: {ref})" if ref else "") + "\n")
+        for qid, q, ans, ref in qs:
+            faq_md.append(f"**[{q}]({site.url(f'/faq/#{qid}')})**\n{strip_tags(ans)}" + (f" (Source: {ref})" if ref else "") + "\n")
     links = "\n".join(f"- [{t}]({site.url(f'/spec/{slug}.md')}): {d}" for _, slug, t, d in SPEC_FILES)
     repo = f"\n- [Source code and full repository]({a.repo_url}): spec, reference interpreter, JavaScript engine, examples, tests" if a.repo_url else ""
     head = f"""# Universal Paper
