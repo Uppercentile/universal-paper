@@ -80,6 +80,8 @@ claims["agreementFingerprint"], claims["participantId"], claims["participantStat
 | `role_proof(...)` | An unsigned `RoleCredential` payload |
 | `extract(vc)` | The fingerprint and basic claims from either shape. Checks the shape only, never the proof |
 
+A machine-readable summary of this integration (helper functions and signatures, claim shapes as JSON Schema, example URLs and the MCP tools to evaluate with) is at [universalpaper.org/integrations/index.json](https://universalpaper.org/integrations/index.json).
+
 ## Not the only way
 
 Rosters and authority are already exchanged many ways: roster files and EDI between aggregators, suppliers and distributors, identifiers such as HIN and GLN, signed Universal Paper participation agreements themselves, Mandates, API tokens, or a phone call. All are equally valid alongside Universal Paper. A Verifiable Credential is one portable, widely implemented option. Universal Paper gives it no special status.
