@@ -1,0 +1,67 @@
+{
+  "type": "StructuralDiff",
+  "convention": "fingerprint-coordination/0.1",
+  "from": "sha256:93ab686a4b85a5670a056ccfd7d7f5c5d1cfaa5a2184f6e03e48961b726abcae",
+  "to": "sha256:9c77781c52544db1c0c352f05049bf049a05f3bc9b930b2f199388234ccb69c6",
+  "termsAdded": [
+    "UP:Termination-Cause"
+  ],
+  "termsRemoved": [],
+  "chains": [
+    {
+      "chain": 0,
+      "from": "sha256:b6f070ef609191eae76ad8e2c6c6f435b2aa00d05e5847180c310c9b8f990f6d",
+      "to": "sha256:324f0e34550f1f6e6a41539dd8b185758bd1c9cc989356da85f3216add8cba8d",
+      "clausesAdded": [
+        {
+          "clause": "cause",
+          "term": "UP:Termination-Cause"
+        }
+      ],
+      "clausesRemoved": [],
+      "paramsChanged": [],
+      "otherMembersChanged": [
+        "label"
+      ]
+    },
+    {
+      "chain": 1,
+      "from": "sha256:426d8b2206e8eb7b6d74cbdb1795f731ab71c94fb7f34ce4b84cfabdb03c8fbc",
+      "to": "sha256:1ab8dedaeb27f33e319554cad2fc25b584e832f1f7dfed9d178ddd021e6f2b45",
+      "clausesAdded": [],
+      "clausesRemoved": [],
+      "paramsChanged": [
+        {
+          "clause": "participation",
+          "term": "UP:Participation",
+          "param": "parent",
+          "from": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
+          "to": "sha256:f9ef0d76320be4adf04843885df1c9a8f5d12beab8471050de4c3ea3e3922a43"
+        }
+      ],
+      "otherMembersChanged": []
+    },
+    {
+      "chain": 2,
+      "from": "sha256:97f98d2edf8e0c29149b2ce9102ce33bf02290ae6141eb1db165331030e8cc48",
+      "to": "sha256:c47ea9ee4abbde2ae1f4e7491753563b95a8c66aa031ee45fae6fff17d959602",
+      "clausesAdded": [],
+      "clausesRemoved": [],
+      "paramsChanged": [
+        {
+          "clause": "participation",
+          "term": "UP:Participation",
+          "param": "parent",
+          "from": "sha256:da1ba49ea857b0f6e695273246dfd4fdae28e52a2d4ac7a131bbbd555ee70fdb",
+          "to": "sha256:f9ef0d76320be4adf04843885df1c9a8f5d12beab8471050de4c3ea3e3922a43"
+        }
+      ],
+      "otherMembersChanged": []
+    },
+    {
+      "chain": 3,
+      "only": "to",
+      "agreement": "sha256:645599dea2b4720a6cf4584d8e87ef72bcf5d470a9c6e7936b06e6783af83920"
+    }
+  ]
+}

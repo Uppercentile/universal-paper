@@ -141,6 +141,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full list and how to add tests.
 
 - [Legal Context Protocol](docs/integrations/legal-context-protocol.md): an optional way for agents to discover a Universal Paper bundle at `/.well-known/legal-context.json` and pin it by its fingerprint. Universal Paper does not depend on it.
 - [Verifiable Credentials](docs/integrations/verifiable-credentials.md): an optional convention for W3C Verifiable Credentials that reference a Universal Paper fingerprint, for roster participation and role snapshots. A credential is a snapshot only; participation status still comes from a Universal Paper engine (`simulate_eligibility`). Universal Paper does not issue, verify or require them.
+- [Fingerprint Coordination](docs/integrations/fingerprint-coordination.md): an optional analytical convention for sharing Universal Paper fingerprints under explicit rules and deriving recomputable profiles (parameter ranges, variance, historical deltas, engine-checked Proposal seeds), with a [simulated demo](examples/integrations/fingerprint-coordination/demo/index.html) built only from the public examples. Universal Paper does not operate, require or depend on any analytics, telemetry or hosting.
 
 ## Contributing and security
 

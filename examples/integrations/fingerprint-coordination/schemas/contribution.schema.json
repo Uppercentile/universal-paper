@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universalpaper.org/examples/integrations/fingerprint-coordination/schemas/contribution.schema.json",
+  "title": "FingerprintContribution (optional Fingerprint Coordination convention)",
+  "description": "Which Universal Paper artifacts a party shares for analysis, how much of each, and the rules for using them. Not part of the Universal Paper language. `fingerprint` is the Universal Paper fingerprint of every other member.",
+  "type": "object",
+  "required": [
+    "type",
+    "convention",
+    "contributor",
+    "created",
+    "artifacts",
+    "rules",
+    "fingerprint"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "FingerprintContribution"
+    },
+    "convention": {
+      "const": "fingerprint-coordination/0.1"
+    },
+    "contributor": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Any identifier the contributor chooses, e.g. a DID or a Universal Paper party key"
+    },
+    "created": {
+      "type": "string",
+      "description": "RFC 3339 UTC time"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "fingerprint",
+          "kind",
+          "disclosure"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+          },
+          "kind": {
+            "enum": [
+              "Bundle",
+              "Agreement"
+            ]
+          },
+          "disclosure": {
+            "enum": [
+              "fingerprint-only",
+              "structure",
+              "parameters"
+            ],
+            "description": "fingerprint-only (default): the fingerprint alone. structure: which Terms, no values. parameters: unsealed parameter values. Sealed values are never counted."
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": [
+        "purposes",
+        "minimumCohort",
+        "attribution",
+        "outputs",
+        "sealedValues"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "purposes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "parameter-ranges",
+              "variance",
+              "historical-deltas",
+              "proposal-seeds"
+            ]
+          }
+        },
+        "minimumCohort": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "No statistic may be published from fewer distinct inputs than this"
+        },
+        "attribution": {
+          "type": "string",
+          "examples": [
+            "none",
+            "public-examples"
+          ]
+        },
+        "outputs": {
+          "type": "string",
+          "examples": [
+            "aggregate-only"
+          ]
+        },
+        "sealedValues": {
+          "const": "never-counted"
+        },
+        "expires": {
+          "type": "string",
+          "description": "RFC 3339 UTC time"
+        }
+      }
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+    }
+  }
+}

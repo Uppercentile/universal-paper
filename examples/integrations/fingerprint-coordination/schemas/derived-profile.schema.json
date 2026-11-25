@@ -1,0 +1,622 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universalpaper.org/examples/integrations/fingerprint-coordination/schemas/derived-profile.schema.json",
+  "title": "DerivedProfile (optional Fingerprint Coordination convention)",
+  "description": "A recomputable analytical profile derived from Universal Paper artifacts. Lists every input by fingerprint, plus inputsRoot; `fingerprint` is the Universal Paper fingerprint of every other member. Not part of the Universal Paper language.",
+  "type": "object",
+  "required": [
+    "type",
+    "convention",
+    "simulated",
+    "notice",
+    "method",
+    "inputs",
+    "inputsRoot",
+    "corpus",
+    "parameters",
+    "seeds",
+    "fingerprint"
+  ],
+  "properties": {
+    "type": {
+      "const": "DerivedProfile"
+    },
+    "convention": {
+      "const": "fingerprint-coordination/0.1"
+    },
+    "simulated": {
+      "type": "boolean"
+    },
+    "notice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method": {
+      "type": "object",
+      "required": [
+        "helper",
+        "function",
+        "minimumCohort"
+      ],
+      "properties": {
+        "helper": {
+          "type": "string"
+        },
+        "function": {
+          "type": "string"
+        },
+        "minimumCohort": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "maxSeeds": {
+          "type": "integer"
+        },
+        "sealedValues": {
+          "const": "never-counted"
+        },
+        "engine": {
+          "type": "string"
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "fingerprint",
+          "kind",
+          "disclosure"
+        ],
+        "properties": {
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+          },
+          "kind": {
+            "enum": [
+              "Bundle",
+              "Agreement"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "disclosure": {
+            "enum": [
+              "fingerprint-only",
+              "structure",
+              "parameters"
+            ]
+          }
+        }
+      }
+    },
+    "inputsRoot": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Fingerprint of the sorted, de-duplicated array of input fingerprints"
+    },
+    "corpus": {
+      "type": "object"
+    },
+    "agreements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "input",
+          "agreement",
+          "cohort"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+          },
+          "chain": {
+            "type": "integer"
+          },
+          "agreement": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+          },
+          "label": {
+            "type": "string"
+          },
+          "cohort": {
+            "type": "string"
+          },
+          "terms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "term",
+          "param",
+          "cohort",
+          "observations",
+          "inputs",
+          "sealed",
+          "suppressed"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "term": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "cohort": {
+            "type": "string"
+          },
+          "observations": {
+            "type": "integer"
+          },
+          "inputs": {
+            "type": "integer"
+          },
+          "sealed": {
+            "type": "integer"
+          },
+          "suppressed": {
+            "type": "boolean"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "count"
+              ]
+            }
+          },
+          "mode": {},
+          "min": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          },
+          "max": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          },
+          "median": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          },
+          "differsFromMode": {
+            "type": "integer"
+          },
+          "historicalChanges": {
+            "type": "integer"
+          },
+          "variation": {
+            "type": "integer"
+          }
+        },
+        "if": {
+          "properties": {
+            "suppressed": {
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "values"
+                ]
+              },
+              {
+                "required": [
+                  "median"
+                ]
+              },
+              {
+                "required": [
+                  "mode"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "clausePresence": {
+      "type": "array"
+    },
+    "matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "cohort",
+          "columns",
+          "rows"
+        ],
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "key",
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "state"
+                    ],
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "median",
+                          "above",
+                          "below",
+                          "mode",
+                          "other",
+                          "absent",
+                          "sealed",
+                          "suppressed"
+                        ]
+                      },
+                      "deviation": {
+                        "type": "string",
+                        "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "deltas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "input",
+          "from",
+          "to",
+          "outcome",
+          "paramsChanged"
+        ],
+        "properties": {
+          "input": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+          },
+          "from": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+          },
+          "outcome": {
+            "enum": [
+              "accepted",
+              "rejected"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "deltaStats": {
+      "type": "array"
+    },
+    "outliers": {
+      "type": "array"
+    },
+    "seeds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "rule",
+          "target",
+          "change",
+          "basis",
+          "note"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rule": {
+            "enum": [
+              "toward-median",
+              "common-clause"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "required": [
+              "input",
+              "chain",
+              "agreement"
+            ],
+            "properties": {
+              "input": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+              },
+              "chain": {
+                "type": "integer"
+              },
+              "agreement": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          },
+          "change": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "op",
+                  "clause",
+                  "term",
+                  "param",
+                  "from",
+                  "to"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "set-param"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "op",
+                  "clause",
+                  "term",
+                  "def",
+                  "params"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "add-clause"
+                  },
+                  "def": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$",
+                    "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+                  },
+                  "params": {
+                    "type": "object"
+                  }
+                }
+              }
+            ]
+          },
+          "basis": {
+            "type": "object"
+          },
+          "note": {
+            "type": "string"
+          },
+          "simulation": {
+            "type": "object",
+            "required": [
+              "hypothetical",
+              "at",
+              "accepted",
+              "newAgreement",
+              "supersedes"
+            ],
+            "properties": {
+              "hypothetical": {
+                "const": true
+              },
+              "at": {
+                "type": "string",
+                "description": "RFC 3339 UTC time"
+              },
+              "comparedAt": {
+                "type": "string",
+                "description": "RFC 3339 UTC time"
+              },
+              "accepted": {
+                "type": "boolean"
+              },
+              "newAgreement": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+              },
+              "supersedes": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+              },
+              "obligationsChanged": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "key",
+                    "before",
+                    "after"
+                  ],
+                  "properties": {
+                    "before": {
+                      "type": "object",
+                      "required": [
+                        "clause",
+                        "duty",
+                        "status"
+                      ],
+                      "properties": {
+                        "clause": {
+                          "type": "string"
+                        },
+                        "duty": {
+                          "type": "string"
+                        },
+                        "period": {
+                          "type": "object"
+                        },
+                        "due": {
+                          "type": "string",
+                          "description": "RFC 3339 UTC time"
+                        },
+                        "amount": {},
+                        "status": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "after": {
+                      "type": "object",
+                      "required": [
+                        "clause",
+                        "duty",
+                        "status"
+                      ],
+                      "properties": {
+                        "clause": {
+                          "type": "string"
+                        },
+                        "duty": {
+                          "type": "string"
+                        },
+                        "period": {
+                          "type": "object"
+                        },
+                        "due": {
+                          "type": "string",
+                          "description": "RFC 3339 UTC time"
+                        },
+                        "amount": {},
+                        "status": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "obligationsAdded": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "clause",
+                    "duty",
+                    "status"
+                  ],
+                  "properties": {
+                    "clause": {
+                      "type": "string"
+                    },
+                    "duty": {
+                      "type": "string"
+                    },
+                    "period": {
+                      "type": "object"
+                    },
+                    "due": {
+                      "type": "string",
+                      "description": "RFC 3339 UTC time"
+                    },
+                    "amount": {},
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "obligationsRemoved": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "clause",
+                    "duty",
+                    "status"
+                  ],
+                  "properties": {
+                    "clause": {
+                      "type": "string"
+                    },
+                    "duty": {
+                      "type": "string"
+                    },
+                    "period": {
+                      "type": "object"
+                    },
+                    "due": {
+                      "type": "string",
+                      "description": "RFC 3339 UTC time"
+                    },
+                    "amount": {},
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "A Universal Paper fingerprint: \"sha256:\" + hex(SHA-256(JCS(strip(o))))"
+    }
+  }
+}
