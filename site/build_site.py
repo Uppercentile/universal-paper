@@ -8,6 +8,7 @@ Inputs (read only, never edited):
   REPO/schema/*.json, spec/06-terms/*.json, examples/*/bundle.json (copied as is)
   content/faq.py                     -> /faq/ and the FAQ parts of llms.txt
   REPO/docs/integrations/*.md        -> /integrations/... (optional integrations, linked only from the footer)
+                                        plus /integrations/index.json, a machine-readable index for agents
 
 Output: dist/ (a static site for GitHub Pages: CNAME, .nojekyll, sitemap.xml, robots.txt,
 llms.txt, llms-full.txt, 404.html, og image, favicons).
@@ -16,6 +17,7 @@ llms.txt, llms-full.txt, 404.html, og image, favicons).
                         [--repo-url https://github.com/Uppercentile/universal-paper] [--og]
 """
 import argparse
+import ast
 import datetime
 import html
 import json
@@ -100,7 +102,7 @@ class Site:
         self.pages.append((path, prio, freq))
 
     # ---- <head> pieces shared by every page
-    def head_meta(self, path, title, desc, kind="website", extra_ld=(), robots="index,follow"):
+    def head_meta(self, path, title, desc, kind="website", extra_ld=(), robots="index,follow", links=()):
         url = self.url(path)
         og = self.url("/assets/og-image.png")
         crumbs = None
@@ -138,6 +140,8 @@ class Site:
             '<link rel="alternate" type="text/plain" title="LLM summary" href="/llms.txt">',
             '<link rel="sitemap" type="application/xml" href="/sitemap.xml">',
         ]
+        # extra <link>s, as (rel, type, href, title): e.g. a page's plain Markdown or a JSON descriptor
+        lines += [f'<link rel="{rel}" type="{typ}" href="{esc(href)}"' + (f' title="{esc(t)}"' if t else "") + ">" for rel, typ, href, t in links]
         if crumbs:
             lines.append(jsonld(crumbs))
         for o in extra_ld:
@@ -324,7 +328,7 @@ function a(m){if(m==="system")r.removeAttribute("data-theme");else r.setAttribut
 a(g());document.addEventListener("DOMContentLoaded",function(){a(g());var b=document.getElementById("themeBtn");if(b)b.onclick=function(){var o=["system","light","dark"],n=o[(o.indexOf(g())+1)%3];try{localStorage.setItem(k,n)}catch(e){}a(n)}})})();</script>"""
 
 
-def shell(site, path, title, desc, body, kind="website", ld=(), current=""):
+def shell(site, path, title, desc, body, kind="website", ld=(), current="", links=()):
     nav = [("/", "Home"), ("/developers/", "Developers"), ("/#playground", "Playground"), ("/spec/", "Specification"), ("/faq/", "FAQ")]
     cur_attr = ' aria-current="true"'
     navh = "".join(f'<a href="{h}"{cur_attr if h == current else ""}>{t}</a>' for h, t in nav)
@@ -334,7 +338,7 @@ def shell(site, path, title, desc, body, kind="website", ld=(), current=""):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{esc(title)}</title>
-{site.head_meta(path, title, desc, kind=kind, extra_ld=ld)}
+{site.head_meta(path, title, desc, kind=kind, extra_ld=ld, links=links)}
 {THEME_JS}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -597,6 +601,162 @@ INTEGRATIONS = [("docs/integrations/legal-context-protocol.md", "legal-context-p
                  "Optional: a W3C Verifiable Credential that references a Universal Paper fingerprint, for roster participation "
                  "and role snapshots. A snapshot only: participation status still comes from a Universal Paper engine.")]
 
+# What /integrations/index.json says about each integration, beyond the prose. Facts only, all taken from the
+# docs above; helper function signatures are read from the helper files themselves so they cannot drift.
+_FP = {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$", "description": "A Universal Paper fingerprint"}
+_TIME = {"type": "string", "description": "RFC 3339 date-time"}
+_VC_ENV = {"@context": {"type": "array", "contains": {"const": "https://www.w3.org/ns/credentials/v2"}},
+           "issuer": {"type": "string", "minLength": 1}, "validFrom": _TIME, "validUntil": _TIME}
+INTEGRATION_FACTS = {
+    "legal-context-protocol": {
+        "kind": "discovery and transaction binding",
+        "external": {"name": "Legal Context Protocol (LCP)", "url": "https://legalcontextprotocol.org/",
+                     "spec": "https://legalcontextprotocol.org/standard", "schema": "https://legalcontextprotocol.org/standard/schema",
+                     "status": "draft v1.0 (as of November 2026)"},
+        "mapping": {
+            "rule": "Serve the artifact's canonical JSON bytes (canonical_bytes) at the `terms` URL, byte for byte. "
+                    "Then LCP atrHash and the Universal Paper fingerprint are the same 32 bytes.",
+            "atrHash": "\"0x\" + hex(SHA-256(served bytes))",
+            "fingerprint": "\"sha256:\" + the same 64 hex digits",
+            "lcpFieldsUsed": ["terms", "termsFormat", "atrHash", "acceptanceRequired"],
+            "publish": ["Bundle (recommended: any engine can evaluate it on its own)", "Agreement", "Term definition"],
+            "doNotPublishAlone": ["Event", "Mandate"],
+            "why": "Events and Mandates carry top-level sigs, which their fingerprint leaves out; publish them inside a Bundle.",
+        },
+        "claimShapes": {"legal-context.json": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "LCP discovery file pinned to a Universal Paper artifact (the fields this integration uses)",
+            "type": "object", "required": ["terms", "atrHash"],
+            "properties": {"terms": {"type": "string", "pattern": "^https://"}, "termsFormat": {"const": "json"},
+                           "atrHash": {"type": "string", "pattern": "^0x[0-9a-fA-F]{64}$"},
+                           "acceptanceRequired": {"type": "boolean"}}}},
+        "agentFlow": [
+            "GET https://{domain}/.well-known/legal-context.json; read terms and atrHash.",
+            "GET the terms URL and keep the raw bytes; do not re-serialize them.",
+            "Check SHA-256(bytes) == atrHash (compare decoded bytes), then that the bytes are canonical Universal Paper JSON, "
+            "so atrHash is the artifact's fingerprint. Compare a fingerprint a counterparty sent you, if any.",
+            "Evaluate with any Universal Paper engine: validate the bundle, then derive statuses, tiers, prices and obligations.",
+            "Optional: if you act under a Mandate, dry-run your intended event first (axiom A9).",
+            "Record atrHash with the transaction.",
+        ],
+        "authority": "The hash check proves which bytes you have. What the agreement says comes only from evaluating it with a Universal Paper engine.",
+        "helper": ("integrations/lcp/up_lcp.py", "Python 3.11+; needs the universal-paper package (its canonicalization), standard library otherwise"),
+        "examples": [("conventional: legal-context.json", "/examples/integrations/lcp/conventional/legal-context.json"),
+                     ("conventional: terms.up.json (canonical bundle bytes)", "/examples/integrations/lcp/conventional/terms.up.json"),
+                     ("mandate-cap: legal-context.json", "/examples/integrations/lcp/mandate-cap/legal-context.json"),
+                     ("mandate-cap: terms.up.json (canonical bundle bytes)", "/examples/integrations/lcp/mandate-cap/terms.up.json")],
+        "runnable": ["python3 examples/integrations/lcp/agent.py", "python3 examples/integrations/lcp/agent.py --online"],
+        "mcpTools": ["hash_object", "validate_bundle", "derive_state", "simulate_events"],
+    },
+    "verifiable-credentials": {
+        "kind": "roster participation and role snapshots",
+        "external": {"name": "W3C Verifiable Credentials Data Model 2.0", "url": "https://www.w3.org/TR/vc-data-model-2.0/",
+                     "spec": "https://www.w3.org/TR/vc-data-model-2.0/", "status": "W3C Recommendation"},
+        "mapping": {
+            "rule": "A standard VC envelope plus claims that name a Universal Paper fingerprint (agreementFingerprint). "
+                    "Claim and type names are issuer-defined terms; nothing in Universal Paper reads them.",
+            "vcFieldsUsed": ["@context", "type", "issuer", "validFrom", "validUntil", "credentialSubject"],
+            "recommendedReference": "The bundle's fingerprint, so a verifier can evaluate it on its own.",
+            "participant": "Same {scheme, id} shape as a Universal Paper Identifier; pass id to simulate_eligibility.",
+        },
+        "claimShapes": {
+            "ParticipationStatusCredential": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema", "title": "Unsigned participation snapshot",
+                "type": "object", "required": ["@context", "type", "issuer", "credentialSubject"],
+                "properties": {**_VC_ENV,
+                               "type": {"type": "array", "allOf": [{"contains": {"const": "VerifiableCredential"}},
+                                                                   {"contains": {"const": "ParticipationStatusCredential"}}]},
+                               "credentialSubject": {"type": "object", "required": ["agreementFingerprint", "participant", "participantStatus"],
+                                                     "properties": {"agreementFingerprint": _FP,
+                                                                    "participant": {"type": "object", "required": ["scheme", "id"],
+                                                                                    "properties": {"scheme": {"type": "string", "minLength": 1},
+                                                                                                   "id": {"type": "string", "minLength": 1}}},
+                                                                    "participantStatus": {"enum": ["active", "inactive"]},
+                                                                    "eligibleAsOf": _TIME}}}},
+            "RoleCredential": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema", "title": "Unsigned role proof",
+                "type": "object", "required": ["@context", "type", "issuer", "credentialSubject"],
+                "properties": {**_VC_ENV,
+                               "type": {"type": "array", "allOf": [{"contains": {"const": "VerifiableCredential"}},
+                                                                   {"contains": {"const": "RoleCredential"}}]},
+                               "credentialSubject": {"type": "object", "required": ["id", "agreementFingerprint", "role"],
+                                                     "properties": {"id": {"type": "string", "minLength": 1}, "agreementFingerprint": _FP,
+                                                                    "role": {"type": "string", "minLength": 1,
+                                                                             "examples": ["purchasing-agent", "roster-admin", "read-only"]}}}}},
+        },
+        "agentFlow": [
+            "Verify the credential with any standard VC library (proof, issuer key, validity window, status list). Outside Universal Paper.",
+            "Extract agreementFingerprint and the claims (participant, participantStatus, eligibleAsOf, or role).",
+            "Get the artifact by any channel, recompute its fingerprint with a Universal Paper engine, require it to equal agreementFingerprint, and validate it.",
+            "If status matters, run simulate_eligibility for the participant at the time you care about. If engine and credential disagree, the engine is right.",
+            "Decide with your own policy: whether you trust that issuer for that claim, and what a role label lets that agent do in your systems.",
+        ],
+        "authority": "A VC is a snapshot only. Participation status comes from a Universal Paper engine (simulate_eligibility). "
+                     "A VC grants no authority inside Universal Paper: who may sign which Event is decided only by party keys and Mandates (axiom A9).",
+        "helper": ("examples/integrations/vc/up_vc.py", "Python 3.11+; standard library only. Builds and reads unsigned shapes; no signing, issuance or verification"),
+        "examples": [("roster participation (unsigned)", "/examples/integrations/vc/roster-participation.json"),
+                     ("role proof (unsigned)", "/examples/integrations/vc/role-proof.json")],
+        "runnable": [],
+        "mcpTools": ["hash_object", "validate_bundle", "simulate_eligibility"],
+    },
+}
+
+
+def helper_functions(path):
+    """Public top-level functions of a helper file: name, signature and the first line of the docstring."""
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    out = []
+    for n in tree.body:
+        if isinstance(n, ast.FunctionDef) and not n.name.startswith("_"):
+            ret = f" -> {ast.unparse(n.returns)}" if n.returns else ""
+            doc = (ast.get_docstring(n) or "").strip().splitlines()
+            out.append({"name": n.name, "signature": f"{n.name}({ast.unparse(n.args)}){ret}", "does": doc[0] if doc else ""})
+    return out
+
+
+def integrations_index(site):
+    """The machine-readable index served at /integrations/index.json."""
+    a = site.a
+    raw = a.repo_url.replace("https://github.com/", "https://raw.githubusercontent.com/") + "/main/" if a.repo_url else None
+    items = []
+    for f, slug, ttl, desc in INTEGRATIONS:
+        x = INTEGRATION_FACTS[slug]
+        hpath, hreq = x["helper"]
+        items.append({
+            "id": slug, "name": ttl, "status": "optional", "kind": x["kind"], "summary": desc,
+            "docs": {"html": site.url(f"/integrations/{slug}/"), "markdown": site.url(f"/integrations/{slug}.md"),
+                     **({"source": f"{a.repo_url}/blob/main/{f}"} if a.repo_url else {})},
+            "external": x["external"], "mapping": x["mapping"], "claimShapes": x["claimShapes"],
+            "agentFlow": x["agentFlow"], "authority": x["authority"],
+            "helper": {"path": hpath, **({"source": f"{a.repo_url}/blob/main/{hpath}", "raw": raw + hpath} if raw else {}),
+                       "language": "Python", "requires": hreq, "license": "Apache-2.0",
+                       "functions": helper_functions(site.repo / hpath)},
+            "examples": [{"name": n, "url": site.url(u), "license": "CC0-1.0"} for n, u in x["examples"]],
+            **({"runnable": x["runnable"]} if x["runnable"] else {}),
+            "mcpTools": x["mcpTools"],
+        })
+    return {
+        "name": "Universal Paper optional integrations",
+        "url": site.url("/integrations/index.json"),
+        "html": site.url("/integrations/"),
+        "formatVersion": 1,
+        "notice": "Optional and external. Universal Paper is self-contained and does not depend on any integration listed here. "
+                  "Nothing here changes the language, its schemas, its fingerprints, its Terms or its engines. "
+                  "Any channel that delivers an artifact's bytes and lets the receiver recompute its fingerprint binds an agreement equally well.",
+        "language": {"name": "Universal Paper", "version": "UP/0.1-draft", "spec": site.url("/spec/"),
+                     "schema": site.url("/schema/universal-paper.schema.json"),
+                     "fingerprint": {"format": "sha256:<64 lowercase hex digits>",
+                                     "definition": "\"sha256:\" + hex(SHA-256(JCS(strip(o)))), where JCS is RFC 8785 and strip removes top-level sigs",
+                                     "spec": site.url("/spec/domain/")}},
+        "engines": {"note": "Evaluation is authoritative and identical in any conforming Universal Paper engine.",
+                    "mcp": {"endpoint": MCP["endpoint"], "transport": MCP["transport"], "auth": MCP["auth"], "readOnly": MCP["readOnly"],
+                            "pypi": MCP["pypi"], "docs": MCP["docs"]},
+                    "python": {"pypi": "universal-paper", "cli": ["up hash FILE", "up validate FILE"]}},
+        "integrations": items,
+        "license": {"text": "CC BY 4.0", "code": "Apache-2.0", "examples": "CC0-1.0", "page": site.url("/license/")},
+        "creator": {"name": CREATOR["name"], "url": CREATOR["url"]},
+    }
+
 
 def build_integrations(site):
     lmap = spec_link_map(site)
@@ -611,10 +771,17 @@ def build_integrations(site):
         dst = site.out / "examples/integrations/vc" / p.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(p, dst)
+    index = integrations_index(site)
+    site.write("integrations/index.json", json.dumps(index, indent=2, ensure_ascii=False) + "\n")
+    idx_url = site.url("/integrations/index.json")
+    idx_media = {"@type": "MediaObject", "contentUrl": idx_url, "encodingFormat": "application/json",
+                 "name": "Machine-readable index of Universal Paper optional integrations"}
+    collection = {"@type": "CollectionPage", "@id": site.url("/integrations/"), "name": "Universal Paper optional integrations",
+                  "url": site.url("/integrations/")}
     note = ('<p class="lead" style="font-size:1rem">Optional. Universal Paper is self-contained and does not depend on any integration below. '
             'Nothing here changes the language, its schemas, its fingerprints or its engines.</p>')
     cards = []
-    for f, slug, ttl, desc in INTEGRATIONS:
+    for (f, slug, ttl, desc), item in zip(INTEGRATIONS, index["integrations"]):
         path = f"/integrations/{slug}/"
         text = (site.repo / f).read_text(encoding="utf-8")
         h, _ = render_md(site, f, text, lmap)
@@ -623,10 +790,21 @@ def build_integrations(site):
         edit = f' · <a href="{site.a.repo_url}/blob/main/{f}">View source</a>' if site.a.repo_url else ""
         body = f"""<div class="wrap" style="padding-top:40px"><div class="crumbs"><a href="/">Universal Paper</a> / <a href="/integrations/">Integrations</a> / {esc(ttl)}</div></div>
 <div class="wrap"><article class="prose" style="max-width:820px;padding-bottom:96px">{h}
-  <p style="margin-top:56px;font-size:.85rem;color:var(--ink-3)">Optional integration documentation by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>. <a href="{esc(raw)}">Plain Markdown</a>{edit}</p></article></div>"""
-        ld = [{"@context": "https://schema.org", "@type": "TechArticle", "headline": f"Universal Paper optional integration: {ttl}",
-               "url": site.url(path), "description": desc, "author": CREATOR, "publisher": CREATOR, "license": LIC["ccby"][1], "inLanguage": "en"}]
-        site.write(path.lstrip("/") + "index.html", shell(site, path, f"{ttl} (optional integration) | Universal Paper", desc, body, kind="article", ld=ld))
+  <p style="margin-top:56px;font-size:.85rem;color:var(--ink-3)">Optional integration documentation by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>. <a href="{esc(raw)}">Plain Markdown</a> · <a href="/integrations/index.json">Machine-readable summary (JSON)</a>{edit}</p></article></div>"""
+        helper = item["helper"]
+        ld = [{"@context": "https://schema.org", "@type": "TechArticle", "@id": site.url(path),
+               "headline": f"Universal Paper optional integration: {ttl}",
+               "url": site.url(path), "description": desc, "author": CREATOR, "publisher": CREATOR, "license": LIC["ccby"][1], "inLanguage": "en",
+               "isPartOf": collection,
+               "about": {"@type": "CreativeWork", "name": item["external"]["name"], "url": item["external"]["url"]},
+               "encoding": [{"@type": "MediaObject", "contentUrl": site.url(raw), "encodingFormat": "text/markdown"}, idx_media],
+               "hasPart": {"@type": "SoftwareSourceCode", "name": helper["path"].rsplit("/", 1)[-1], "programmingLanguage": "Python",
+                           "license": LIC["apache"][1], **({"codeRepository": site.a.repo_url, "url": helper["source"]} if "source" in helper else {})},
+               "isAccessibleForFree": True}]
+        links = [("alternate", "text/markdown", raw, f"{ttl} (Markdown)"),
+                 ("describedby", "application/json", "/integrations/index.json", "Integrations index (JSON)")]
+        site.write(path.lstrip("/") + "index.html", shell(site, path, f"{ttl} (optional integration) | Universal Paper", desc, body,
+                                                         kind="article", ld=ld, links=links))
         site.add_page(path, "0.4", "monthly")
         cards.append(f'<a class="card" href="{path}" style="text-decoration:none"><span class="lic">optional</span><h3 style="color:var(--ink)">{esc(ttl)}</h3><p>{esc(desc)}</p></a>')
     body = f"""<div class="wrap page-hero">
@@ -635,9 +813,16 @@ def build_integrations(site):
   {note}
 </div>
 <div class="wrap prose" style="max-width:var(--maxw);padding-bottom:96px"><div class="cards">{"".join(cards)}</div>
-<p>Any channel that delivers an artifact's bytes and lets the receiver recompute its fingerprint binds a Universal Paper agreement equally well. These pages describe a few well-known ones; none has special status. Start with the <a href="/spec/">specification</a> instead if you are new to Universal Paper.</p></div>"""
+<p>Any channel that delivers an artifact's bytes and lets the receiver recompute its fingerprint binds a Universal Paper agreement equally well. These pages describe a few well-known ones; none has special status. Start with the <a href="/spec/">specification</a> instead if you are new to Universal Paper.</p>
+<p style="font-size:.9rem;color:var(--ink-3)">For agents: <a href="/integrations/index.json">integrations/index.json</a> lists each integration's docs, helper functions, claim shapes (JSON Schema), examples and the MCP tools to evaluate with. Each page is also available as plain Markdown.</p></div>"""
     desc = "Optional, external integrations for Universal Paper, such as the Legal Context Protocol and W3C Verifiable Credentials. Universal Paper does not depend on any of them."
-    site.write("integrations/index.html", shell(site, "/integrations/", "Optional integrations | Universal Paper", desc, body))
+    ld = [{"@context": "https://schema.org", **collection, "description": desc, "publisher": CREATOR, "license": LIC["ccby"][1],
+           "encoding": idx_media,
+           "mainEntity": {"@type": "ItemList", "itemListElement": [
+               {"@type": "ListItem", "position": i, "name": t, "url": site.url(f"/integrations/{s}/")}
+               for i, (_, s, t, _) in enumerate(INTEGRATIONS, 1)]}}]
+    links = [("alternate", "application/json", "/integrations/index.json", "Integrations index (JSON)")]
+    site.write("integrations/index.html", shell(site, "/integrations/", "Optional integrations | Universal Paper", desc, body, ld=ld, links=links))
     site.add_page("/integrations/", "0.3", "monthly")
 
 
@@ -839,6 +1024,7 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
 - [Full specification in one file]({site.url('/llms-full.txt')})
 - [JSON Schema]({site.url('/schema/universal-paper.schema.json')})
 - [Example bundle: conventional GPO agreement]({site.url('/examples/conventional/bundle.json')})
+- [Optional integrations index, as JSON]({site.url('/integrations/index.json')}): for each optional integration, its docs, helper functions with signatures, claim shapes as JSON Schema, example files and the MCP tools to evaluate with. Universal Paper depends on none of them.
 - [Optional integration: Legal Context Protocol]({site.url('/integrations/legal-context-protocol.md')}): publish a bundle at /.well-known/legal-context.json, pinned by its fingerprint as atrHash. Universal Paper does not depend on it.
 - [Optional integration: Verifiable Credentials]({site.url('/integrations/verifiable-credentials.md')}): a W3C VC referencing a Universal Paper fingerprint, for roster participation and role snapshots. A snapshot only; participation status comes from a Universal Paper engine (simulate_eligibility). Universal Paper does not issue, verify or require VCs.
 
@@ -850,6 +1036,10 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
         full.append(f"\n\n<!-- source: {site.url(f'/spec/{slug}/')} -->\n\n" + (site.repo / f).read_text(encoding="utf-8"))
     for p in sorted((site.repo / "spec/06-terms").glob("UP-*.md")):
         full.append(f"\n\n<!-- source: {site.url(f'/spec/terms/{p.stem}/')} -->\n\n" + p.read_text(encoding="utf-8"))
+    full.append("\n\n---\n\n# Appendix: optional integrations (not part of the Universal Paper language)\n\n"
+                "Universal Paper does not depend on these. Machine-readable index: " + site.url("/integrations/index.json") + "\n")
+    for f, slug, _t, _ in INTEGRATIONS:
+        full.append(f"\n\n<!-- source: {site.url(f'/integrations/{slug}/')} -->\n\n" + (site.repo / f).read_text(encoding="utf-8"))
     site.write("llms-full.txt", "".join(full))
 
 

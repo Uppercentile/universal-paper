@@ -80,6 +80,8 @@ result = up_lcp.evaluate(v.artifact)        # the reference engine, unchanged
 | `evaluate(bundle)` | Validation and derived state from the reference interpreter |
 | `check_mandate(bundle, event)` | Whether an agent's hypothetical event is inside its Mandate, from the reference simulator |
 
+A machine-readable summary of this integration (helper functions and signatures, claim shapes as JSON Schema, example URLs and the MCP tools to evaluate with) is at [universalpaper.org/integrations/index.json](https://universalpaper.org/integrations/index.json).
+
 Worked examples: [examples/integrations/lcp/](../../examples/integrations/lcp/README.md). Run `python3 examples/integrations/lcp/agent.py` from the repository root (add `--online` to fetch the same files from universalpaper.org).
 
 ## Serving notes
