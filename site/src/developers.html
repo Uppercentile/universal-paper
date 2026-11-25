@@ -1004,6 +1004,10 @@ footer .status::before { background: var(--warn); box-shadow: 0 0 0 3px var(--wa
   /* footer: brand, one link row, legal */
   footer .cols { grid-template-columns: 1fr; gap: 18px; padding-block: 36px 20px; }
   footer .fbrand p { display: none; }
+  footer .cols { padding-block: 32px 4px; }
+  footer .up-legal { border-top: 0 !important; padding-top: 4px !important; }
+  .closing { padding-block: 56px 52px; }
+  footer .base { padding-block: 18px 6px; }
   footer ul { display: flex; flex-wrap: wrap; gap: 0 18px; }
   /* legible minimum for labels */
   .tag, .for, .ax, .docs .row .f, .docs .row .no, .step .when, footer h4, .who, .lbl { font-size: max(12px, 1em); }
@@ -1583,7 +1587,7 @@ report = snapshot(ev, "2027-04-30T00:00:00Z")        # statuses, tiers, prices, 
       <p>An open language for agreements between GPOs, suppliers and members. Same paper for everyone, proof for every change.</p>
     </div>
     <div class="m-hide"><h4>On this page</h4><ul><li><a href="#why">The problem</a></li><li><a href="#start">Quick start</a></li><li><a href="#mcp">MCP server</a></li><li><a href="#language">Core concepts</a></li><li><a href="#terms">Term library</a></li><li><a href="#proof">Proof</a></li><li><a href="#conformance">Conformance</a></li></ul></div>
-    <div><h4>More</h4><ul><li><a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#playground" target="_blank" rel="noopener">Playground ↗</a></li><li><a href="#apps">App ideas</a></li><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/Uppercentile/universal-paper">GitHub</a></li></ul></div>
+    <div class="m-hide"><h4>More</h4><ul><li><a href="https://claude.ai/artifact/KnNSYjBF3HMQ5n8CzSboiw#playground" target="_blank" rel="noopener">Playground ↗</a></li><li><a href="#apps">App ideas</a></li><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/Uppercentile/universal-paper">GitHub</a></li></ul></div>
     <div class="m-hide"><h4>Reference</h4><ul><li><a href="#spec">Specification status</a></li><li><a href="#terms">Term library</a></li><li class="mono"><a href="https://universalpaper.org/spec/axioms/">spec/03-axioms.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/mapping-guide/">spec/07-mapping-guide.md</a></li><li class="mono"><a href="https://universalpaper.org/spec/neutrality-charter/">spec/08-neutrality-charter.md</a></li></ul></div>
   </div>
   <div class="wrap g base"><span class="status">UP/0.1-draft · working draft · Created by Uppercentile · Spec CC BY 4.0 · Code Apache-2.0 · Examples CC0</span><span>All parties, identifiers, prices, rates, quantities and dates in the examples are hypothetical.</span></div>

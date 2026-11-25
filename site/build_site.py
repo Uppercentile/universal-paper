@@ -288,6 +288,8 @@ def build_developers(site, path):
         s = s.replace(f'<li class="mono">{f}</li>', f'<li class="mono"><a href="/spec/{slug}/">{f}</a></li>')
     s = s.replace('<li><a href="#faq">FAQ</a></li>', '<li><a href="#faq">FAQ</a></li><li><a href="/faq/">All questions</a></li><li><a href="/license/">Licenses</a></li>')
     s = add_legal(s, site.legal_strip())
+    # the app ideas live only on this page: link them from its footer too (on phones the section is reached this way)
+    s = s.replace('<a href="/developers/">Developers</a> · ', '<a href="/developers/">Developers</a> · <a href="#apps">App ideas</a> · ', 1)
     site.write("developers/index.html", s)
     site.add_page("/developers/", "0.9", "weekly")
 
