@@ -53,6 +53,37 @@
     }, { rootMargin: "-45% 0px -50% 0px" });
     ["how", "vision", "playground", "conformance"].forEach(function (id) { navObs.observe($(id)); });
   }
+  // ---- Playground and Conformance start collapsed. A button opens each; a link to the section
+  // (or to anything inside it) opens it before the browser scrolls there, so nothing jumps.
+  (function () {
+    var folds = [];
+    document.querySelectorAll(".fold-toggle").forEach(function (btn) {
+      var body = $(btn.getAttribute("aria-controls")), sec = btn.closest("section"), label = btn.querySelector("span");
+      var preview = sec.querySelector(".fold-preview");
+      function set(open) {
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        body.hidden = !open;
+        if (preview) preview.hidden = open;
+        label.textContent = open ? btn.dataset.close : btn.dataset.open;
+      }
+      btn.addEventListener("click", function () { set(btn.getAttribute("aria-expanded") !== "true"); });
+      folds.push({ sec: sec, body: body, set: set });
+    });
+    function openFor(hash) {
+      if (!hash || hash.charAt(0) !== "#" || hash.length < 2) return;
+      var t = null;
+      try { t = document.getElementById(decodeURIComponent(hash.slice(1))); } catch (e) { return; }
+      if (!t) return;
+      folds.forEach(function (f) { if (f.body.hidden && f.sec.contains(t)) f.set(true); });
+    }
+    openFor(location.hash);
+    window.addEventListener("hashchange", function () { openFor(location.hash); });
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest('a[href*="#"]');
+      if (!a || a.origin + a.pathname !== location.origin + location.pathname) return;
+      openFor(a.hash);
+    });
+  })();
 
   // ======================================================================== Intro demo
   (function () {

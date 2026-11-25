@@ -119,14 +119,14 @@ Open `explorer/index.html` in a browser. It is one self-contained file; apart fr
 
 - **How it works**: a scroll explainer that follows one fee clause from words to a fingerprint, signatures, and a caught edit, computed live. On a phone the visual pins at the top and the steps scroll under it.
 - **Vision**: an illustration of where Universal Paper could sit, under apps for contracting, procurement, pricing, and settlement, with agents acting for parties under Mandates. The apps are hypothetical. The events are not: each scenario is generated, signed, and checked by the engine in the page, including an agent action outside its Mandate that every party rejects.
-- **Playground**: start from an example and change the few things people try first (the fee, the length, the supplier, whether the rate is sealed) while the cover sheet, the contract, and the fingerprint update. Every clause stays editable under “Edit every clause”. **Compare** shows what changed between two versions, clause by clause and word by word, and whether existing signatures still cover it. **History** signs the agreement and plays it forward: enter monthly sales and payments and see the reports, fees, and the status of every duty on any date.
-- **Conformance**: the test suite by file, the audit findings, and a button that runs random agreements and attacks in the browser against eight invariants.
+- **Playground** (collapsed by default; open it with its button or a link to `#playground`): start from an example and change the few things people try first (the fee, the length, the supplier, whether the rate is sealed) while the cover sheet, the contract, and the fingerprint update. Every clause stays editable under “Edit every clause”. **Compare** shows what changed between two versions, clause by clause and word by word, and whether existing signatures still cover it. **History** signs the agreement and plays it forward: enter monthly sales and payments and see the reports, fees, and the status of every duty on any date.
+- **Conformance** (the headline figures show; the rest opens with its button or a link to `#conformance`): the test suite by file, the audit findings, and a button that runs random agreements and attacks in the browser against eight invariants.
 
 Everything live runs on a second, independent engine in JavaScript (`explorer/src/`). `tests/test_js_conformance.py` requires it to reproduce every Python trace, rendering, and simulation byte for byte, and to pass every invariant on 60 fixed seeds. Rebuild the page after editing `explorer/src/` with `python3 tools/build_explorer.py`; add `--run-tests` to run the suite first and record the result shown on the page (`explorer/conformance-results.json`). The plain build is deterministic so CI can check the committed page.
 
 ## How it is tested
 
-`python -m pytest` runs about 190 tests in a few minutes. Node.js 20 or later is needed for the JavaScript parts, which are skipped without it. CI runs everything on Python 3.11 to 3.13.
+`python -m pytest` runs more than 200 tests in a few minutes. Node.js 20 or later is needed for the JavaScript parts, which are skipped without it. CI runs everything on Python 3.11 to 3.13.
 
 - **Rules.** Every axiom (A1 to A13), every transition rule, and every clause form has tests that build small hypothetical agreements and try to break them.
 - **Every Term.** All sixteen Terms are executed in a valid agreement, every parameter is checked against its declared type, and every claim type is attested, acknowledged, and attempted with ill-typed data.
