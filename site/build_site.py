@@ -622,7 +622,17 @@ INTEGRATIONS = [("docs/integrations/legal-context-protocol.md", "legal-context-p
                  "Universal Paper does not depend on it."),
                 ("docs/integrations/verifiable-credentials.md", "verifiable-credentials", "Verifiable Credentials",
                  "Optional: a W3C Verifiable Credential that references a Universal Paper fingerprint, for roster participation "
-                 "and role snapshots. A snapshot only: participation status still comes from a Universal Paper engine.")]
+                 "and role snapshots. A snapshot only: participation status still comes from a Universal Paper engine."),
+                ("docs/integrations/fingerprint-coordination.md", "fingerprint-coordination", "Fingerprint Coordination",
+                 "Optional analytics: share Universal Paper fingerprints under explicit rules and derive recomputable profiles: "
+                 "parameter ranges, variance, historical deltas and engine-checked Proposal seeds. Includes a simulated demo from public examples.")]
+
+FPC_DIR = "examples/integrations/fingerprint-coordination"
+
+
+def _fpc_schema(name):
+    """The convention's claim shapes, read from the repository so the index cannot drift from them."""
+    return json.loads((Path(__file__).resolve().parents[1] / FPC_DIR / "schemas" / f"{name}.schema.json").read_text(encoding="utf-8"))
 
 # What /integrations/index.json says about each integration, beyond the prose. Facts only, all taken from the
 # docs above; helper function signatures are read from the helper files themselves so they cannot drift.
@@ -722,6 +732,39 @@ INTEGRATION_FACTS = {
         "runnable": [],
         "mcpTools": ["hash_object", "validate_bundle", "simulate_eligibility"],
     },
+    "fingerprint-coordination": {
+        "kind": "analytics: parameter ranges, variance, historical deltas and Proposal seeds",
+        "external": None,
+        "mapping": {
+            "rule": "A Contribution names artifacts by Universal Paper fingerprint with a disclosure level and usage rules. "
+                    "A Derived Profile lists every input by fingerprint plus inputsRoot, names the method, and carries its own fingerprint, "
+                    "so anyone holding the inputs can recompute it byte for byte.",
+            "ownFingerprint": "the Universal Paper fingerprint of every member except `fingerprint`",
+            "inputsRoot": "the Universal Paper fingerprint of the sorted, de-duplicated array of input fingerprints",
+            "disclosures": ["fingerprint-only (default)", "structure", "parameters"],
+            "privacy": ["sealed values are never counted", "no statistic from fewer than minimumCohort distinct inputs",
+                        "per-agreement cells record positions against the cohort, never raw values", "no network code, no telemetry"],
+            "seedRules": {"toward-median": "the largest numeric outlier in a cohort, set to the cohort median",
+                          "common-clause": "the most common parameterized Term (in at least 2/3 of a cohort) added to the most similar agreement lacking it"},
+            "neverSeeded": ["UP:Tiers", "UP:Tier-Selection", "UP:Price-Reference"],
+        },
+        "claimShapes": {"FingerprintContribution": _fpc_schema("contribution"), "DerivedProfile": _fpc_schema("derived-profile")},
+        "agentFlow": [
+            "Verify: check the profile's own fingerprint, recompute each input's fingerprint, require them to match inputs and inputsRoot; recompute the profile (verify_profile) to trust its statistics.",
+            "Extract seeds (extract_seeds) and keep only those whose target agreement you are a party to.",
+            "Optionally simulate: seed_proposal + simulate_seed, or the MCP tools simulate_events / simulate_amendment (which also checks a Mandate's bounds).",
+            "Evaluate with your own policy. To propose, sign the propose event with your own keys and send it like any Universal Paper event.",
+        ],
+        "authority": "A profile is derived data, and a seed is a candidate, not a recommendation. Validity and state come only from a Universal Paper engine "
+                     "evaluating the artifacts. Universal Paper does not operate, require or depend on any analytics, telemetry or hosting.",
+        "helper": (f"{FPC_DIR}/up_fpc.py", "Python 3.11+; needs the universal-paper package (canonicalization, fingerprints, engine); no network, no storage, no ML"),
+        "examples": [("derived profile (simulated from public examples)", f"/{FPC_DIR}/demo-profile.json"),
+                     ("contribution", f"/{FPC_DIR}/contribution.json"),
+                     ("structural diff: conventional to what-if", f"/{FPC_DIR}/structural-diff.json")],
+        "demo": "/integrations/fingerprint-coordination/demo/",
+        "runnable": [f"python3 {FPC_DIR}/regenerate.py --check"],
+        "mcpTools": ["hash_object", "validate_bundle", "derive_state", "simulate_events", "simulate_amendment"],
+    },
 }
 
 
@@ -756,6 +799,8 @@ def integrations_index(site):
                        "functions": helper_functions(site.repo / hpath)},
             "examples": [{"name": n, "url": site.url(u), "license": "CC0-1.0"} for n, u in x["examples"]],
             **({"runnable": x["runnable"]} if x["runnable"] else {}),
+            **({"demo": {"url": site.url(x["demo"]), "simulated": True, "network": "none",
+                         "note": "Simulated from public example bundles only; not market data."}} if x.get("demo") else {}),
             "mcpTools": x["mcpTools"],
         })
     return {
@@ -794,6 +839,18 @@ def build_integrations(site):
         dst = site.out / "examples/integrations/vc" / p.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(p, dst)
+    # Fingerprint Coordination: the worked examples and schemas, plus the static demo (copied byte for byte, so its
+    # embedded profile keeps its fingerprint; its relative link ../demo-profile.json resolves next to it)
+    src = site.repo / FPC_DIR
+    for p in sorted([*src.glob("*.json"), *src.glob("schemas/*.json")]):
+        dst = site.out / FPC_DIR / p.relative_to(src)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(p, dst)
+    demo = site.out / "integrations/fingerprint-coordination/demo/index.html"
+    demo.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(src / "demo/index.html", demo)
+    shutil.copyfile(src / "demo-profile.json", demo.parent.parent / "demo-profile.json")
+    site.add_page("/integrations/fingerprint-coordination/demo/", "0.3", "monthly")
     index = integrations_index(site)
     site.write("integrations/index.json", json.dumps(index, indent=2, ensure_ascii=False) + "\n")
     idx_url = site.url("/integrations/index.json")
@@ -819,7 +876,8 @@ def build_integrations(site):
                "headline": f"Universal Paper optional integration: {ttl}",
                "url": site.url(path), "description": desc, "author": CREATOR, "publisher": CREATOR, "license": LIC["ccby"][1], "inLanguage": "en",
                "isPartOf": collection,
-               "about": {"@type": "CreativeWork", "name": item["external"]["name"], "url": item["external"]["url"]},
+               "about": ({"@type": "CreativeWork", "name": item["external"]["name"], "url": item["external"]["url"]} if item["external"]
+                         else {"@type": "CreativeWork", "name": "Universal Paper", "url": site.url("/spec/")}),
                "encoding": [{"@type": "MediaObject", "contentUrl": site.url(raw), "encodingFormat": "text/markdown"}, idx_media],
                "hasPart": {"@type": "SoftwareSourceCode", "name": helper["path"].rsplit("/", 1)[-1], "programmingLanguage": "Python",
                            "license": LIC["apache"][1], **({"codeRepository": site.a.repo_url, "url": helper["source"]} if "source" in helper else {})},
@@ -838,7 +896,8 @@ def build_integrations(site):
 <div class="wrap prose" style="max-width:var(--maxw);padding-bottom:96px"><div class="cards">{"".join(cards)}</div>
 <p>Any channel that delivers an artifact's bytes and lets the receiver recompute its fingerprint binds a Universal Paper agreement equally well. These pages describe a few well-known ones; none has special status. Start with the <a href="/spec/">specification</a> instead if you are new to Universal Paper.</p>
 <p style="font-size:.9rem;color:var(--ink-3)">For agents: <a href="/integrations/index.json">integrations/index.json</a> lists each integration's docs, helper functions, claim shapes (JSON Schema), examples and the MCP tools to evaluate with. Each page is also available as plain Markdown.</p></div>"""
-    desc = "Optional, external integrations for Universal Paper, such as the Legal Context Protocol and W3C Verifiable Credentials. Universal Paper does not depend on any of them."
+    desc = ("Optional, external integrations for Universal Paper, such as the Legal Context Protocol, W3C Verifiable Credentials and Fingerprint Coordination "
+            "analytics. Universal Paper does not depend on any of them.")
     ld = [{"@context": "https://schema.org", **collection, "description": desc, "publisher": CREATOR, "license": LIC["ccby"][1],
            "encoding": idx_media,
            "mainEntity": {"@type": "ItemList", "itemListElement": [
@@ -1050,6 +1109,7 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
 - [Optional integrations index, as JSON]({site.url('/integrations/index.json')}): for each optional integration, its docs, helper functions with signatures, claim shapes as JSON Schema, example files and the MCP tools to evaluate with. Universal Paper depends on none of them.
 - [Optional integration: Legal Context Protocol]({site.url('/integrations/legal-context-protocol.md')}): publish a bundle at /.well-known/legal-context.json, pinned by its fingerprint as atrHash. Universal Paper does not depend on it.
 - [Optional integration: Verifiable Credentials]({site.url('/integrations/verifiable-credentials.md')}): a W3C VC referencing a Universal Paper fingerprint, for roster participation and role snapshots. A snapshot only; participation status comes from a Universal Paper engine (simulate_eligibility). Universal Paper does not issue, verify or require VCs.
+- [Optional integration: Fingerprint Coordination]({site.url('/integrations/fingerprint-coordination.md')}): share Universal Paper fingerprints under explicit rules and derive recomputable profiles (parameter ranges, variance, historical deltas, engine-checked Proposal seeds). Privacy by default: sealed values never counted, minimum cohort. [Simulated demo from public examples]({site.url('/integrations/fingerprint-coordination/demo/')}). Universal Paper does not operate or depend on any analytics.
 
 ## FAQ
 """ + "\n".join(faq_md)

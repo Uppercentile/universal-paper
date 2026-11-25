@@ -8,6 +8,7 @@ All notable changes to the specification, the Term library, and the reference im
 
 - Optional Legal Context Protocol integration, outside the language: `docs/integrations/legal-context-protocol.md`, a reference adapter in `integrations/lcp/`, worked examples in `examples/integrations/lcp/`, and an optional page at universalpaper.org/integrations/. No change to the spec, schemas, fingerprints, Terms or engines.
 - Optional Verifiable Credentials convention, outside the language: `docs/integrations/verifiable-credentials.md`, a payload-shape helper and two unsigned example payloads (roster participation snapshot, role proof) in `examples/integrations/vc/`, and an optional page at universalpaper.org/integrations/verifiable-credentials/. No change to the spec, schemas, fingerprints, Terms or engines.
+- Optional Fingerprint Coordination convention, outside the language: `docs/integrations/fingerprint-coordination.md`, a reference helper (`up_fpc.py`: structural diffs, Derived Profiles, engine-checked Proposal seeds), JSON Schemas, worked examples, `regenerate.py --check`, and a static simulated demo from public examples in `examples/integrations/fingerprint-coordination/`, plus an optional page at universalpaper.org/integrations/fingerprint-coordination/. No change to the spec, schemas, fingerprints, Terms or engines.
 
 ## [0.1.2] - 2026-11-24
 

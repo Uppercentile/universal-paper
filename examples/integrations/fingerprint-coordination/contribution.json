@@ -1,0 +1,27 @@
+{
+  "type": "FingerprintContribution",
+  "convention": "fingerprint-coordination/0.1",
+  "contributor": "did:example:hypothetical-health-purchasing-alliance",
+  "created": "2027-04-20T12:00:00Z",
+  "artifacts": [
+    {
+      "fingerprint": "sha256:93ab686a4b85a5670a056ccfd7d7f5c5d1cfaa5a2184f6e03e48961b726abcae",
+      "kind": "Bundle",
+      "disclosure": "parameters"
+    }
+  ],
+  "rules": {
+    "purposes": [
+      "parameter-ranges",
+      "variance",
+      "historical-deltas",
+      "proposal-seeds"
+    ],
+    "minimumCohort": 3,
+    "attribution": "none",
+    "outputs": "aggregate-only",
+    "sealedValues": "never-counted",
+    "expires": "2028-04-20T12:00:00Z"
+  },
+  "fingerprint": "sha256:7d1a3e5b9b8d06d28ca135d498c5e6dbf728ac4159c17812c86c9d5708be09a3"
+}

@@ -65,6 +65,8 @@ def test_helper_functions_match_the_files():
     names = {i["id"]: {f["name"] for f in i["helper"]["functions"]} for i in INDEX["integrations"]}
     assert {"fingerprint", "canonical_bytes", "legal_context", "verify", "discover", "fetch", "evaluate", "check_mandate"} <= names["legal-context-protocol"]
     assert names["verifiable-credentials"] == {"roster_participation", "role_proof", "extract"}
+    assert {"fingerprint", "inputs_root", "contribution", "diff_bundles", "derive_profile", "verify_profile",
+            "extract_seeds", "seed_proposal", "simulate_seed"} <= names["fingerprint-coordination"]
 
 
 def test_mcp_tools_named_exist():
@@ -95,3 +97,16 @@ def test_claim_shapes_reject_a_bad_fingerprint():
     doc = json.loads((ROOT / "examples/integrations/vc/role-proof.json").read_text(encoding="utf-8"))
     doc["credentialSubject"]["agreementFingerprint"] = "0x" + "a" * 64
     assert not jsonschema.Draft202012Validator(shape).is_valid(doc)
+
+
+def test_fingerprint_coordination_shapes_and_demo():
+    item = BY_ID["fingerprint-coordination"]
+    fpc = ROOT / "examples/integrations/fingerprint-coordination"
+    shapes = item["claimShapes"]
+    for shape, name in (("FingerprintContribution", "contribution.json"), ("DerivedProfile", "demo-profile.json")):
+        doc = json.loads((fpc / name).read_text(encoding="utf-8"))
+        jsonschema.Draft202012Validator.check_schema(shapes[shape])
+        jsonschema.validate(doc, shapes[shape])
+        assert shapes[shape] == json.loads((fpc / "schemas" / (name.split(".")[0].replace("demo-profile", "derived-profile") + ".schema.json")).read_text(encoding="utf-8"))
+    assert item["demo"]["url"] == "https://universalpaper.org/integrations/fingerprint-coordination/demo/"
+    assert item["demo"]["simulated"] is True and item["external"] is None
