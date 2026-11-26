@@ -273,7 +273,7 @@ def build_home(site):
     agreement = json.loads((site.repo / "examples/conventional/bundle.json").read_text(encoding="utf-8"))["chains"][0][0]["body"]["agreement"]
     names = [c["n"] for c in agreement["clauses"]]
     stage = {"AGREEMENT_JSON": json.dumps(agreement, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
-             "AGREEMENT_HEX": content_hash(agreement).split(":", 1)[1], "AGREEMENT_BYTES": f"{len(jcs(agreement)):,}",
+             "AGREEMENT_HEX": content_hash(agreement).split(":", 1)[1], "AGREEMENT_HEX_SHORT": (lambda h: f"{h[:8]}…{h[-8:]}")(content_hash(agreement).split(":", 1)[1]), "AGREEMENT_BYTES": f"{len(jcs(agreement)):,}",
              "FEE_POS": names.index("fee") + 1, "CLAUSE_COUNT": len(names)}
     main = fill(main, {**facts, **stage}, "home")
     scripts = fill(scripts, stage, "home")
