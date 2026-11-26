@@ -1,7 +1,7 @@
 {
  "run": "2026-11-26",
  "pytest": {
-  "passed": 247,
+  "passed": 250,
   "failed": 0
  },
  "js": {

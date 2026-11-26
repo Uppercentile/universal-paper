@@ -1,4 +1,19 @@
 <style>
+.for-agents { margin: 12px 0 0; font-size: 14px; color: var(--ink-3); }
+.for-agents code { font: 450 13px var(--mono); font-variation-settings: "MONO" 1; color: var(--ink-2); overflow-wrap: anywhere; }
+.term-panel .tp-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px 0; font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: rgba(229,226,255,.5); }
+.howstrip { border-radius: var(--r-xl); background: #fff; border: 1px solid var(--line); padding: clamp(24px, 3.4vw, 44px); }
+.hs-head { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 16px 48px; align-items: end; }
+.hs-head p { margin: 0; color: var(--ink-2); font-size: 16px; }
+.hs-head code { font: 450 13.5px var(--mono); font-variation-settings: "MONO" 1; color: var(--lilac-ink); background: #EEE9FF; padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+.hs-steps { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--line); border-radius: var(--r-md); overflow: hidden; counter-reset: hs; }
+.hs-steps li { counter-increment: hs; background: var(--canvas); padding: 18px 16px; }
+.hs-steps li::before { content: "0" counter(hs); display: block; font: 500 12px/1 var(--mono); font-variation-settings: "MONO" 1; color: var(--coral); margin-bottom: 12px; }
+.hs-steps b { display: block; font: 400 19px/1.15 var(--serif); }
+.hs-steps span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.45; color: var(--ink-2); }
+@media (max-width: 1100px) { .hs-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .hs-head { grid-template-columns: minmax(0,1fr); } }
+@media (max-width: 560px) { .hs-steps { grid-template-columns: minmax(0, 1fr); } }
 .dev-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(28px, 4vw, 64px); align-items: center; padding-top: clamp(48px, 6vw, 96px); }
 .dev-hero .display { font-size: clamp(46px, 5.4vw, 84px); color: var(--navy); max-width: 13ch; }
 .dev-hero .lede { margin-top: 24px; }
@@ -112,12 +127,15 @@
       <h1 class="display">The contract layer every system can verify.</h1>
       <p class="lede">Universal Paper is an open language for agreements between GPOs, suppliers and members. Every agreement, signature and change is plain JSON that any system can check for itself, offline.</p>
       <div class="ctas"><a class="btn dark" href="#quick-start">Quick start <svg class="ico"><use href="#i-arrow"/></svg></a><a class="btn ghost" href="/spec/">Read the spec</a></div>
-      <div class="cmd"><code>git clone https://github.com/Uppercentile/universal-paper.git</code><button class="cbtn" type="button" data-copy="git clone https://github.com/Uppercentile/universal-paper.git"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div>
+<div class="cmd"><code>pip install universal-paper</code><button class="cbtn" type="button" data-copy="pip install universal-paper"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div>
+<p class="for-agents">For agents: <code>uvx universal-paper-mcp</code>, or the hosted server at <code>https://mcp.universalpaper.org/mcp</code></p>
       <div class="kpis"><div><b>7</b><span>primitives</span></div><div><b>16</b><span>standard Terms</span></div><div><b>13</b><span>axioms</span></div><div><b>0</b><span>servers required</span></div></div>
     </div>
     <div class="term-panel rv" aria-label="Example output of up validate">
       <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span style="font:500 13px var(--mono);font-variation-settings:'MONO' 1;color:rgba(229,226,255,.6)">~/universal-paper</span></div>
-<pre><span class="c">$</span> up validate examples/conventional/bundle.json
+<pre><span class="c">$</span> pip install universal-paper
+<span class="c">$</span> curl -O https://universalpaper.org/examples/conventional/bundle.json
+<span class="c">$</span> up validate bundle.json
 chain 0: Master agreement (hypothetical)
   id    <span class="l">sha256:da1ba49ea857b0f6e695273246dfd4fd…</span>
   <span class="g">[ok ]</span> #0 propose  2026-12-01T15:00:00Z
@@ -125,85 +143,50 @@ chain 0: Master agreement (hypothetical)
   …
   state <span class="l">sha256:dcedbfcaf67081f19955e387ed70d5b9…</span>
   status at latest event: <span class="y">active</span>
-<span class="g">Every event is valid.</span>
-
-<span class="c">$</span> up derive examples/conventional/bundle.json --at 2027-04-30T00:00:00Z
-<span class="c"># status, tiers, prices, obligations</span></pre>
+<span class="g">Every event is valid.</span></pre>
     </div>
   </div>
-
-  <div class="std" aria-label="Built on open standards">
-    <div class="row" id="stdRow">
-      <span><b>RFC 8785</b>Canonical JSON</span><span><b>SHA-256</b>Content hashes</span><span><b>RFC 8032</b>Ed25519 signatures</span><span><b>RFC 3339</b>Timestamps</span><span><b>ISO 4217</b>Currencies</span><span><b>GS1</b>GTIN items</span><span><b>GS1</b>GLN locations</span><span><b>HIBCC</b>HIN</span><span><b>FDA</b>NDC</span><span><b>ASC X12</b>845 · 844 · 849 · 867 mapping</span><span><b>CC BY 4.0</b>Spec license</span><span><b>Apache-2.0</b>Reference code</span>
-    </div>
-  </div>
-
-  <section class="band" aria-labelledby="problem">
-    <div class="wrap">
-      <div class="head"><div><p class="eyebrow">The problem</p><h2 class="h2" id="problem">Three systems. Three copies. One deal.</h2></div><p class="lede">The GPO’s contract system, the supplier’s ERP and the member’s spreadsheet each hold their own version of the same agreement. Teams spend weeks reconciling them. Universal Paper gives all three the same record, with a fingerprint that proves they match.</p></div>
-      <div class="three">
-        <div class="sysc rv"><header><b>Aggregator CLM</b><small>v4 (final)</small></header><pre>Admin fee ........ 2.0% net
-Billing .......... monthly
-Terms ............ Net 30</pre><footer><svg class="ico" style="width:14px;height:14px"><use href="#i-check"/></svg>sha256:b6f070ef…0f6d</footer></div>
-        <div class="sysc rv" style="transition-delay:.06s"><header><b>Supplier ERP</b><small>rev 7</small></header><pre>ADM_FEE_PCT   = 2.00
-ADM_FEE_FREQ  = M
-ADM_FEE_DUE_D = 30</pre><footer><svg class="ico" style="width:14px;height:14px"><use href="#i-check"/></svg>sha256:b6f070ef…0f6d</footer></div>
-        <div class="sysc rv" style="transition-delay:.12s"><header><b>Member sheet</b><small>copy (2)</small></header><pre>| Fee rate | Period | Due  |
-| 0.02     | 1 mo   | 30 d |</pre><footer><svg class="ico" style="width:14px;height:14px"><use href="#i-check"/></svg>sha256:b6f070ef…0f6d</footer></div>
-      </div>
-      <div class="allhash rv"><span>Each system keeps its own format. All three compute the same agreement hash:</span><code>sha256:b6f070ef609191eae76ad8e2c6c6f435b2aa00d05e5847180c310c9b8f990f6d</code></div>
-    </div>
-  </section>
-
-  <section class="band tight" aria-labelledby="fix">
-    <div class="wrap">
-      <div class="head"><div><p class="eyebrow">The fix</p><h2 class="h2" id="fix">One agreement, from draft to proof.</h2></div><p class="lede">Follow one admin-fee clause from the repo’s conventional example, from the moment it’s written to the moment someone tries to change it.</p></div>
-      <div class="story">
-        <article class="rv"><span class="k">01 · Write it once</span><h3>Three systems, one form</h3><p>Universal Paper gives the deal one shape: plain JSON built from standard Terms, with the parties’ own numbers.</p></article>
-        <article class="rv" style="transition-delay:.05s"><span class="k">02 · Fingerprint it</span><h3>A name computed from the content</h3><p>Canonical JSON (RFC 8785) plus SHA-256 turns the agreement into 64 characters. Any system, in any language, computes the same ones.</p></article>
-        <article class="rv" style="transition-delay:.1s"><span class="k">03 · Sign the fingerprint</span><h3>Signatures cover exactly this text</h3><p>Each party signs the hash with Ed25519. The signature covers these Terms and these numbers, nothing more and nothing less.</p></article>
-        <article class="rv"><span class="k">04 · Let the data do the math</span><h3>Everyone derives the same fee</h3><p>When January’s sales report arrives, every party’s software computes the same fee and due date from the signed clause. Nobody re-keys a number.</p></article>
-        <article class="rv" style="transition-delay:.05s"><span class="k">05 · Catch any change</span><h3>One digit breaks the proof</h3><p>Change the rate after signing and the fingerprint no longer matches. Every party’s software rejects the copy, offline, without asking anyone.</p></article>
-        <article class="rv" style="transition-delay:.1s"><span class="k">06 · Keep private terms private</span><h3>Sealed values still verify</h3><p>A Seal hides a value from parties who shouldn’t see it (A10). They still check the signatures and reach the same verdicts.</p></article>
-      </div>
-    </div>
-  </section>
 
   <section class="band" id="quick-start" aria-labelledby="qs-h" style="background:#fff;border-block:1px solid var(--line)">
     <div class="wrap qs">
       <div>
-        <p class="eyebrow">Quick start</p><h2 class="h2" id="qs-h" style="font-size:clamp(36px,3.6vw,54px)">From an empty terminal to a verified agreement.</h2>
+        <p class="eyebrow">Quick start</p><h2 class="h2" id="qs-h" style="font-size:clamp(36px,3.6vw,54px)">A verified agreement in four commands.</h2>
         <p class="lede" style="margin-top:18px;font-size:17px">The Python interpreter is a reference you can use, port or replace: if your code produces the same hashes and verdicts, it speaks Universal Paper.</p>
         <ol class="qsteps" style="margin-top:28px">
-          <li><div><b>Get the code and install</b><p>Python 3.11+ and Git. On Windows, run <code>.venv\Scripts\Activate.ps1</code> instead of <code>source</code>.</p></div></li>
-          <li><div><b>Validate an example</b><p><code>up validate examples/conventional/bundle.json</code></p></div></li>
-          <li><div><b>Ask what’s owed on a date</b><p><code>up derive examples/conventional/bundle.json --at 2027-04-30T00:00:00Z</code></p></div></li>
-          <li><div><b>Read it as a contract, run the tests</b><p><code>up render examples/conventional/bundle.json --chain 0</code> then <code>python -m pytest</code></p></div></li>
+          <li><div><b>Install</b><p><code>pip install universal-paper</code> (Python 3.11+). It gives you the <code>up</code> command.</p></div></li>
+          <li><div><b>Get a worked example</b><p><code>curl -O https://universalpaper.org/examples/conventional/bundle.json</code></p></div></li>
+          <li><div><b>Validate it</b><p><code>up validate bundle.json</code> checks every signature, hash and rule.</p></div></li>
+          <li><div><b>Ask what’s owed, read it as a contract</b><p><code>up derive bundle.json --at 2027-04-30T00:00:00Z</code> then <code>up render bundle.json --chain 0</code></p></div></li>
         </ol>
       </div>
       <div class="term-panel rv">
-        <div class="bar" role="tablist" aria-label="Quick start language"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><button role="tab" id="t-cli" aria-controls="p-cli" aria-selected="true">CLI</button><button role="tab" id="t-py" aria-controls="p-py" aria-selected="false" tabindex="-1">Python</button><button class="cbtn" type="button" data-copy="#qsCode"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div>
-        <div id="p-cli" role="tabpanel" aria-labelledby="t-cli"><pre id="qsCode">git clone https://github.com/Uppercentile/universal-paper.git
-cd universal-paper
-python3 -m venv .venv &amp;&amp; source .venv/bin/activate
-pip install -e '.[test]'
+        <div class="bar" role="tablist" aria-label="Install method"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><button role="tab" id="t-pip" aria-controls="p-pip" aria-selected="true">pip</button><button role="tab" id="t-py" aria-controls="p-py" aria-selected="false" tabindex="-1">Python</button><button role="tab" id="t-src" aria-controls="p-src" aria-selected="false" tabindex="-1">Source install</button></div>
+        <div id="p-pip" role="tabpanel" aria-labelledby="t-pip"><div class="tp-head"><span>From PyPI</span><button class="cbtn" type="button" data-copy="#qsPip"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div><pre id="qsPip">pip install universal-paper
+curl -O https://universalpaper.org/examples/conventional/bundle.json
 
-up validate examples/conventional/bundle.json
-up derive examples/conventional/bundle.json --at 2027-04-30T00:00:00Z
-up render examples/confidential/bundle.json --chain 0 --hashes-only
-up trace examples/conventional/bundle.json -o conventional.trace.json</pre></div>
-        <div id="p-py" role="tabpanel" aria-labelledby="t-py" hidden><pre><span class="l">import</span> json
+up validate bundle.json
+up derive bundle.json --at 2027-04-30T00:00:00Z
+up render bundle.json --chain 0
+up trace bundle.json -o conventional.trace.json</pre></div>
+        <div id="p-py" role="tabpanel" aria-labelledby="t-py" hidden><div class="tp-head"><span>As a library</span><button class="cbtn" type="button" data-copy="#qsPy"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div><pre id="qsPy"><span class="l">import</span> json
 <span class="l">from</span> universal_paper.engine <span class="l">import</span> Bundle, Evaluator
 <span class="l">from</span> universal_paper.canon <span class="l">import</span> content_hash
 <span class="l">from</span> universal_paper.report <span class="l">import</span> snapshot
 
-bundle = Bundle(json.load(open(<span class="y">"examples/conventional/bundle.json"</span>)))
+bundle = Bundle(json.load(open(<span class="y">"bundle.json"</span>)))
 ev = Evaluator(bundle)
 chain_id = content_hash(bundle.chain_list[0][0])  <span class="c"># ChainId = hash of the genesis event</span>
 <span class="l">for</span> step <span class="l">in</span> ev.run(chain_id):
     print(step.index, step.event[<span class="y">"kind"</span>], <span class="y">"ok"</span> <span class="l">if</span> step.accepted <span class="l">else</span> step.reason)
 print(ev.status(chain_id, <span class="y">"2027-04-30T00:00:00Z"</span>))  <span class="c"># "active"</span>
 report = snapshot(ev, <span class="y">"2027-04-30T00:00:00Z"</span>)  <span class="c"># statuses, tiers, prices, obligations</span></pre></div>
+        <div id="p-src" role="tabpanel" aria-labelledby="t-src" hidden><div class="tp-head"><span>Source install · for contributors and the test suite</span><button class="cbtn" type="button" data-copy="#qsSrc"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div><pre id="qsSrc">git clone https://github.com/Uppercentile/universal-paper.git
+cd universal-paper
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e '.[test]'
+
+up validate examples/conventional/bundle.json
+python -m pytest</pre></div>
       </div>
     </div>
   </section>
@@ -217,7 +200,8 @@ report = snapshot(ev, <span class="y">"2027-04-30T00:00:00Z"</span>)  <span clas
           <h3 class="h3" style="color:#fff">Streamable HTTP, no sign-in.</h3>
           <label>Endpoint</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>https://mcp.universalpaper.org/mcp</code><button class="cbtn" type="button" data-copy="https://mcp.universalpaper.org/mcp">Copy</button></div>
           <label>Add it to Claude Code</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp</code><button class="cbtn" type="button" data-copy="claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp">Copy</button></div>
-          <label>Or run it locally</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>uvx universal-paper-mcp</code><button class="cbtn" type="button" data-copy="uvx universal-paper-mcp">Copy</button></div>
+<label>Or run it locally</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>uvx universal-paper-mcp</code><button class="cbtn" type="button" data-copy="uvx universal-paper-mcp">Copy</button></div>
+<label>Locally, in Claude Code</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>claude mcp add universal-paper -- uvx universal-paper-mcp</code><button class="cbtn" type="button" data-copy="claude mcp add universal-paper -- uvx universal-paper-mcp">Copy</button></div>
           <p style="margin:24px 0 0;font-size:14.5px;color:rgba(238,237,248,.72)"><b style="color:#fff">Confidential by construction.</b> The hosted server is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths. It only counts calls per tool. In the MCP Registry as <code class="mono">io.github.Uppercentile/universal-paper</code>.</p>
         </div>
         <div class="tools">
@@ -230,6 +214,25 @@ report = snapshot(ev, <span class="y">"2027-04-30T00:00:00Z"</span>)  <span clas
       </div>
     </div>
   </section>
+
+<section class="band tight" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="howstrip rv">
+      <div class="hs-head">
+        <div><p class="eyebrow">How it works</p><h2 class="h3" id="how-h">Three systems, three formats, one hash.</h2></div>
+        <p>The GPO’s contract system, the supplier’s ERP and the member’s spreadsheet each keep their own format. All three compute the same agreement hash: <code>sha256:b6f070ef…8f990f6d</code></p>
+      </div>
+      <ol class="hs-steps">
+        <li><b>Write it once</b><span>Plain JSON built from standard Terms.</span></li>
+        <li><b>Fingerprint it</b><span>RFC 8785 canonical JSON, then SHA-256.</span></li>
+        <li><b>Sign the fingerprint</b><span>Ed25519 over exactly that hash.</span></li>
+        <li><b>Let the data do the math</b><span>Every party derives the same fee.</span></li>
+        <li><b>Catch any change</b><span>One digit breaks the proof, offline.</span></li>
+        <li><b>Keep private terms private</b><span>Seals hide values and still verify (A10).</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
 
   <section class="band tight" aria-labelledby="concepts">
     <div class="wrap">
@@ -269,10 +272,10 @@ report = snapshot(ev, <span class="y">"2027-04-30T00:00:00Z"</span>)  <span clas
       <div class="lab">
         <div class="ctl rv">
           <h3 class="h3">Edit the signed fee rate</h3>
-          <p style="color:var(--ink-2);margin:10px 0 0;font-size:15.5px">This preview hashes the master agreement’s <code class="mono">fee</code> clause (hypothetical values) in your browser with canonical JSON and SHA-256.</p>
+          <p style="color:var(--ink-2);margin:10px 0 0;font-size:15.5px">This lab hashes the real <code class="mono">fee</code> clause of the master agreement in <code class="mono">examples/conventional</code>, in your browser, with RFC 8785 canonical JSON and SHA-256.</p>
           <div class="rate"><label for="rateIn" class="mono" style="font-size:14px">"rate":</label><input id="rateIn" value="0.02" inputmode="decimal" spellcheck="false" aria-describedby="rateMsg"><button class="btn ghost" type="button" id="rateTry" style="height:48px">Try 0.015</button><button class="linkbtn" type="button" id="rateReset" style="background:none;border:0;text-decoration:underline;cursor:pointer;font-size:14px">Reset</button></div>
           <p id="rateMsg" role="status" style="margin:16px 0 0;font-weight:600"></p>
-          <p style="margin:18px 0 0;font-size:13px;color:var(--ink-3)">Preview: hashes this one clause object only. The live page hashes the full master agreement, whose signed hash is <span class="mono">sha256:b6f070ef…0f6d</span>.</p>
+          <p style="margin:18px 0 0;font-size:13px;color:var(--ink-3)">Checked against the reference engine’s <code class="mono">hash_object</code>: <span class="mono">sha256:4a9c9305…</span> as signed, <span class="mono">sha256:498d604e…</span> at 0.015.</p>
         </div>
         <ol class="pipe rv" style="transition-delay:.06s">
           <li><small>1 · Clause object</small><code id="labObj"></code></li>
@@ -342,7 +345,6 @@ report = snapshot(ev, <span class="y">"2027-04-30T00:00:00Z"</span>)  <span clas
 </main>
 <script>
 (() => {
-  const row = document.getElementById('stdRow'); row.innerHTML += row.innerHTML; row.lastElementChild && [...row.children].slice(row.children.length / 2).forEach(n => n.setAttribute('aria-hidden', 'true'));
   const clause = { n: 'fee', term: 'UP:Admin-Fee', def: 'sha256:86262a69a7bfba34d47e0f3052aecb541702abea12286e098e60333fa1e24168', params: { due: { count: 30, unit: 'day' }, payee: 'aggregator', payer: 'supplier', period: { count: 1, unit: 'month' }, rate: '0.02', report_clause: 'reporting', rounding: { mode: 'half-even', scale: 2 } } };
   const canon = v => Array.isArray(v) ? '[' + v.map(canon).join(',') + ']' : v && typeof v === 'object' ? '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}' : JSON.stringify(v);
   const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
@@ -360,7 +362,7 @@ report = snapshot(ev, <span class="y">"2027-04-30T00:00:00Z"</span>)  <span clas
     const same = h === base;
     document.getElementById('labHashBox').classList.toggle('diff', !same);
     msg.style.color = same ? 'var(--ok)' : 'var(--bad)';
-    msg.textContent = same ? 'Matches the hash both parties signed. Their signatures still verify.' : 'The hash changed. Both signatures now fail, in every system, offline.';
+    msg.textContent = same ? 'Same clause, same hash, the one the reference engine computes.' : 'One digit changed the whole hash. The agreement hash changes with it, so both signatures fail.';
   }
   inp.addEventListener('input', run);
   document.getElementById('rateTry').addEventListener('click', () => { inp.value = '0.015'; run(); });

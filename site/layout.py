@@ -14,6 +14,8 @@ THEME = Path(__file__).resolve().parent / "theme"
 SPRITE = (THEME / "sprite.svg").read_text(encoding="utf-8").strip()
 
 # top navigation (desktop) and the phone menu sheet
+MCP_URL = "https://mcp.universalpaper.org/mcp"
+
 NAV = [("/developers/", "Developers"), ("/spec/", "Specification"), ("/spec/terms/", "Terms"),
        ("/integrations/", "Integrations"), ("/faq/", "FAQ")]
 # which top-level item a path belongs to
@@ -71,9 +73,11 @@ def header(path, repo_url):
 
 
 def footer(legal, tagline, repo_url, extra_build=()):
-    clone = f"git clone {repo_url}.git" if repo_url else ""
-    cmd = (f'<div class="cmd" style="margin-top:24px;max-width:460px"><code>{esc(clone)}</code><button class="cbtn" type="button" '
-           f'data-copy="{esc(clone)}">{ico("copy", "width:14px;height:14px")}Copy</button></div>') if clone else ""
+    mcp = MCP_URL
+    cmd = ('<p class="fine" style="margin:24px 0 10px">Give your agent the reference engine. Hosted MCP, no sign-in:</p>\n'
+           f'<div class="cmd url" style="max-width:460px"><code>{mcp}</code><button class="cbtn" type="button" '
+           f'data-copy="{mcp}">{ico("copy", "width:14px;height:14px")}Copy</button></div>\n'
+           '<p class="fine" style="margin-top:10px">Or run it locally: <code class="mono" style="color:var(--ink)">uvx universal-paper-mcp</code></p>')
     build = [("/developers/", "Developers"), ("/developers/#mcp", "MCP server"), ("/playground/", "Playground"),
              ("/integrations/", "Integrations"), *extra_build]
     if repo_url:
@@ -205,6 +209,8 @@ def article(h):
     if m:
         lede, h = m.group(1), h[m.end():]
     h = _code_blocks(_checks(_numbered_headings(h)))
+    # wide tables scroll inside their own box on phones instead of widening the page
+    h = re.sub(r'(?<!<div class="tablewrap">)<table>(.*?)</table>', r'<div class="tablewrap"><table>\1</table></div>', h, flags=re.S)
     toc = []
     for m in re.finditer(r'<h2 id="([^"]+)"[^>]*>(.*?)</h2>', h, re.S):
         sn = re.search(r'<span class="sn[^"]*">(.*?)</span>', m.group(2))

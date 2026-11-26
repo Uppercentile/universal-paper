@@ -35,8 +35,11 @@ import markdown
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "content"))
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "src"))  # the reference canonicalizer (standard library only), for hashes the pages show
 import layout as L  # noqa: E402
 from faq import SECTIONS as FAQ  # noqa: E402
+
+from universal_paper.canon import content_hash, jcs  # noqa: E402
 
 TODAY = datetime.date.today().isoformat()
 CREATOR = {"@type": "Organization", "@id": "https://uppercentile.com/#org", "name": "Uppercentile", "url": "https://uppercentile.com"}
@@ -253,7 +256,15 @@ def build_home(site):
         raise SystemExit(f"theme/pages/home.html says 16 Terms; the library has {len(terms)}")
     rail = [[t["id"], t.get("title", ""), sorted(t.get("params", {}))] for t in terms]
     scripts = scripts.replace("/*@@TERMS@@*/[]", json.dumps(rail, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
-    main = fill(main, facts, "home")
+    # The Write / Agree / Build stage hashes the conventional example's master agreement in the browser (RFC 8785 +
+    # SHA-256) and compares it with the hash both parties signed, so both come from the example, never from the design.
+    agreement = json.loads((site.repo / "examples/conventional/bundle.json").read_text(encoding="utf-8"))["chains"][0][0]["body"]["agreement"]
+    names = [c["n"] for c in agreement["clauses"]]
+    stage = {"AGREEMENT_JSON": json.dumps(agreement, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
+             "AGREEMENT_HEX": content_hash(agreement).split(":", 1)[1], "AGREEMENT_BYTES": f"{len(jcs(agreement)):,}",
+             "FEE_POS": names.index("fee") + 1, "CLAUSE_COUNT": len(names)}
+    main = fill(main, {**facts, **stage}, "home")
+    scripts = fill(scripts, stage, "home")
     announce = ('<div class="announce" role="region" aria-label="Announcement"><div class="wrap"><span class="pill">UP/0.1</span>'
                 f'<span>The draft specification is open for review. <b>{facts["TESTS_PASSED"]}/{facts["TESTS_TOTAL"]}</b> conformance tests passing.</span>'
                 '<a href="/spec/">Read the draft</a></div></div>')
@@ -1330,7 +1341,7 @@ def build_assets(site, og):
     shutil.copy(L.THEME / "site.js", ad / "site.js")
     for sub in ("fonts", "icons"):
         shutil.copytree(L.THEME / sub, ad / sub)
-    shutil.copytree(L.THEME / "licenses", site.out / "licenses")  # the fonts' SIL Open Font License texts
+    shutil.copytree(L.THEME / "licenses", site.out / "licenses")  # third-party license texts: the fonts (SIL OFL 1.1) and the Lucide icons (ISC)
     black = Image.open(site.repo / "assets/universal-paper-mark-black-512.png").convert("RGBA")
     white = Image.open(site.repo / "assets/universal-paper-mark-white-512.png").convert("RGBA")
     black.save(ad / "mark-black-512.png"); white.save(ad / "mark-white-512.png")

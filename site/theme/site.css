@@ -536,3 +536,10 @@ a.ccard:hover .go { opacity: 1; transform: none; }
 .tc-foot .go .ico { width: 15px; height: 15px; transition: transform .3s var(--ease); }
 .tc:hover .go .ico { transform: translateX(4px); }
 @media (max-width: 640px) { .seg { width: 100%; overflow-x: auto; } .tsearch { flex: 1 1 100%; } }
+
+.cmd.url code::before { content: none; }
+.cmd.url { border-radius: var(--r-md); }
+.cmd.url code { font-size: 13px; white-space: normal; overflow-wrap: anywhere; text-overflow: clip; }
+
+/* long URLs and identifiers wrap instead of running past a 320 px screen */
+.prose a, .prose code, .mcp code { overflow-wrap: anywhere; }
