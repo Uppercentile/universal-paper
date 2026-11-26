@@ -212,3 +212,25 @@ def test_faq_list_is_full_width_on_phones(dist):
 def test_playground_frame_links_stay_on_the_site():
     app = (ROOT / "explorer/index.html").read_text(encoding="utf-8")
     assert "claude.ai/artifact" not in app
+
+
+def test_agent_json_describes_only_what_exists(dist):
+    """/.well-known/agent.json (and the root copy) for AI agents: the MCP server, its real tools, served resources."""
+    a = json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))
+    assert (dist / "agent.json").read_text(encoding="utf-8") == (dist / ".well-known/agent.json").read_text(encoding="utf-8")
+    assert not (dist / ".well-known/agent-card.json").exists()  # not an A2A agent, so no A2A Agent Card
+    assert [t["name"] for t in a["mcp"]["tools"]] == list(mcp_server.TOOL_DOCS)
+    assert a["mcp"]["url"] == build_site.L.MCP_URL and a["mcp"]["readOnly"] is True and a["mcp"]["auth"] == "none"
+    server = json.loads((ROOT / "server.json").read_text(encoding="utf-8"))
+    assert a["mcp"]["registryName"] == server["name"] and a["mcp"]["version"] == server["version"]
+    r = a["resources"]
+    for u in [v for v in r.values() if isinstance(v, str)] + r["schemas"] + r["examples"]:
+        f = dist / u.removeprefix("https://universalpaper.org/")
+        assert f.is_file() or (f / "index.html").is_file(), u
+    assert "/.well-known/agent.json" in (dist / "llms.txt").read_text(encoding="utf-8")
+
+
+def test_home_hero_copy(dist):
+    s = (dist / "index.html").read_text(encoding="utf-8")
+    assert '<h1 class="display">From agreement, <em>everything</em>.</h1>' in s
+    assert "Sign one, and every system and agent reaches the same answers." in s
