@@ -2,18 +2,21 @@
 """Build the public website for Universal Paper (universalpaper.org).
 
 Inputs (read only, never edited):
-  REPO/explorer/index.html           -> /            (Playground page, the home page)
-  EXPLAINER                          -> /developers/ (developer explainer)
+  site/theme/                        the v7 look: site.css, site.js, fonts, icons (served from /assets/), and
+  site/theme/pages/*.html            hand-designed page bodies: home, developers, spec index, integrations, licenses
+  site/layout.py                     shared header, footer, search, document layout and Markdown post-processing
+  REPO/explorer/index.html           -> /playground/app.html, framed by /playground/ (the in-browser Playground)
   REPO/spec/**/*.md, DESIGN_NOTES.md -> /spec/...    (rendered pages plus the raw .md)
   REPO/schema/*.json, spec/06-terms/*.json, examples/*/bundle.json (copied as is)
   content/faq.py                     -> /faq/ and the FAQ parts of llms.txt
   REPO/docs/integrations/*.md        -> /integrations/... (optional integrations, linked only from the footer)
                                         plus /integrations/index.json, a machine-readable index for agents
+  REPO/explorer/conformance-results.json, AUDIT.md -> the figures on the home page
 
 Output: dist/ (a static site for GitHub Pages: CNAME, .nojekyll, sitemap.xml, robots.txt,
-llms.txt, llms-full.txt, 404.html, og image, favicons).
+llms.txt, llms-full.txt, 404.html, search index, og image, favicons).
 
-  python3 build_site.py [--repo PATH] [--explainer PATH] [--out dist] [--domain universalpaper.org]
+  python3 build_site.py [--repo PATH] [--out dist] [--domain universalpaper.org]
                         [--repo-url https://github.com/Uppercentile/universal-paper] [--og]
 """
 import argparse
@@ -31,6 +34,8 @@ import markdown
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "content"))
+sys.path.insert(0, str(HERE))
+import layout as L  # noqa: E402
 from faq import SECTIONS as FAQ  # noqa: E402
 
 TODAY = datetime.date.today().isoformat()
@@ -102,6 +107,7 @@ class Site:
         self.out = Path(a.out)
         self.repo = Path(a.repo)
         self.pages = []  # (path, priority, changefreq)
+        self.search = []  # entries for /assets/search-index.js, in the order an empty search lists them
 
     def url(self, path):
         return self.base + path
@@ -115,6 +121,15 @@ class Site:
 
     def add_page(self, path, prio="0.6", freq="monthly"):
         self.pages.append((path, prio, freq))
+
+    def add_search(self, path, title, sub, kind, main_html="", rank=50):
+        self.search.append({"t": title, "s": sub, "u": path, "k": kind, "h": L.headings(main_html), "rank": rank})
+
+    def page(self, path, title, desc, main, *, style="", scripts="", kind="website", ld=(), links=(), robots="index,follow", announce=""):
+        """A whole v7 page: shared header, footer, search and scripts around `main`."""
+        return L.document(title=title, head=self.head_meta(path, title, desc, kind=kind, extra_ld=ld, robots=robots, links=links),
+                          header_html=L.header(path, self.a.repo_url), footer_html=L.footer(self.legal_strip(), TAGLINE, self.a.repo_url),
+                          main=main, style=style, scripts=scripts, announce=announce)
 
     # ---- <head> pieces shared by every page
     def head_meta(self, path, title, desc, kind="website", extra_ld=(), robots="index,follow", links=()):
@@ -131,8 +146,8 @@ class Site:
             f'<meta name="robots" content="{robots}">',
             '<meta name="author" content="Uppercentile">',
             '<meta name="creator" content="Uppercentile">',
-            '<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">',
-            '<meta name="theme-color" content="#0f1114" media="(prefers-color-scheme: dark)">',
+            '<meta name="theme-color" content="#F5F2EC">',
+            '<meta name="color-scheme" content="light">',
             f'<meta property="og:type" content="{kind}">',
             '<meta property="og:site_name" content="Universal Paper">',
             f'<meta property="og:title" content="{esc(title)}">',
@@ -148,8 +163,7 @@ class Site:
             f'<meta name="twitter:image" content="{og}">',
             f'<link rel="license" href="{self.url("/license/")}">',
             '<link rel="icon" href="/favicon.ico" sizes="32x32">',
-            '<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" media="(prefers-color-scheme: light)">',
-            '<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-dark.png" media="(prefers-color-scheme: dark)">',
+            '<link rel="icon" type="image/png" sizes="64x64" href="/assets/icons/favicon-64-navy-transparent.png">',
             '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">',
             '<link rel="manifest" href="/site.webmanifest">',
             '<link rel="alternate" type="text/plain" title="LLM summary" href="/llms.txt">',
@@ -163,79 +177,60 @@ class Site:
             lines.append(jsonld(o))
         return "\n".join(lines)
 
-    # ---- the legal strip appended inside every page footer
+    # ---- the legal row at the foot of every page
     def legal_strip(self):
-        r = self.a.repo_url
-        gh = f'<a href="{r}">GitHub</a>' if r else ""
-        links = " · ".join(x for x in [
-            '<a href="/">Home</a>', '<a href="/developers/">Developers</a>', '<a href="/#playground">Playground</a>',
-            '<a href="/spec/">Specification</a>', '<a href="/faq/">FAQ</a>', '<a href="/license/">Licenses</a>', '<a href="/integrations/">Integrations</a>', gh] if x)
         return (
-            '<div class="up-legal"><style>'
-            '.up-legal{max-width:1180px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 28px;font:400 .8125rem/1.6 Inter,system-ui,sans-serif;'
-            'color:inherit;opacity:.85;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent);display:grid;gap:6px}'
-            '.up-legal a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,currentColor 35%,transparent)}'
-            '.up-legal a:hover{text-decoration-color:currentColor}.up-legal p{margin:0;max-width:none}'
-            '</style>'
-            f'<p><b>Created by <a href="https://uppercentile.com">Uppercentile</a>, free for everyone.</b> '
+            '<div class="legal"><span><b>Created by <a href="https://uppercentile.com">Uppercentile</a>, free for everyone.</b> '
             f'Specification and docs <a href="{LIC["ccby"][1]}" rel="license">CC BY 4.0</a> · '
             f'code <a href="{LIC["apache"][1]}" rel="license">Apache-2.0</a> · '
             f'example agreements and traces <a href="{LIC["cc0"][1]}" rel="license">CC0 1.0</a>. '
-            'No account, fee or license key is ever required. <a href="/license/">How to use and credit it</a>.</p>'
-            f'<p>{links}</p>'
+            'No account, fee or license key is ever required. <a href="/license/">How to use and credit it</a>.</span>'
+            '<span class="up-badge">'
             # SubmitLLMs directory badge: its listing requires a live link to it (added at Joe's request, 2026-11-24)
-            '<p class="up-badge"><a href="https://submitllms.com/directory/universalpaper.org" target="_blank" rel="noopener noreferrer">'
-            '<img src="https://submitllms.com/api/badge/universalpaper.org" alt="AI Ready on SubmitLLMs" height="20" loading="lazy" style="height:20px;width:auto;vertical-align:middle;opacity:.9"></a></p>'
-            '</div>'
+            '<a href="https://submitllms.com/directory/universalpaper.org" target="_blank" rel="noopener noreferrer">'
+            '<img src="https://submitllms.com/api/badge/universalpaper.org" alt="AI Ready on SubmitLLMs" height="20" loading="lazy" '
+            'style="height:20px;width:auto;display:inline-block;vertical-align:middle;opacity:.9"></a>'
+            ' Fonts: Hedvig Letters Serif, Funnel Sans, Recursive (<a href="/license/#third-party">SIL OFL 1.1</a>)</span></div>'
         )
 
 
-# ----------------------------------------------------------------------------- transforms of existing pages
-def rewrite_links(s, explorer_id="KnNSYjBF3HMQ5n8CzSboiw", explainer_id="HuTsuqeW18WiuMHVq9Cd39"):
-    """Replace private claude.ai artifact links with site paths and drop new-tab targets on them."""
-    def fix(m):
-        tag = m.group(0)
-        tag = re.sub(r'https://claude\.ai/artifact/' + explorer_id + r'(#[\w-]+)?', lambda k: "/" + (k.group(1) or ""), tag)
-        tag = re.sub(r'https://claude\.ai/artifact/' + explainer_id + r'(#[\w-]+)?', lambda k: "/developers/" + (k.group(1) or ""), tag)
-        tag = tag.replace(' target="_blank"', "").replace(' rel="noopener"', "")
-        return tag
-    s = re.sub(r'<a\b[^>]*claude\.ai/artifact/[^>]*>', fix, s)
-    s = s.replace("Playground ↗", "Playground")
-    # script strings such as open("https://claude.ai/artifact/…", "_blank", "noopener")
-    s = re.sub(r'open\("https://claude\.ai/artifact/' + explorer_id + r'(#[\w-]+)?", "_blank", "noopener"\)',
-               lambda k: 'location.assign("/' + (k.group(1) or "#playground") + '")', s)
-    s = re.sub(r'open\("https://claude\.ai/artifact/' + explainer_id + r'(#[\w-]+)?", "_blank", "noopener"\)',
-               lambda k: 'location.assign("/developers/' + (k.group(1) or "") + '")', s)
-    s = re.sub(r'https://claude\.ai/artifact/' + explorer_id, "/", s)
-    s = re.sub(r'https://claude\.ai/artifact/' + explainer_id, "/developers/", s)
-    left = re.findall(r'claude\.ai/(?:code/)?artifact/[\w-]+', s)
+# ----------------------------------------------------------------------------- hand-designed pages (site/theme/pages/)
+def fill(text, values, name):
+    """Replace {{NAME}} placeholders in a page fragment; every placeholder must be filled."""
+    for k, v in values.items():
+        text = text.replace("{{" + k + "}}", str(v))
+    left = re.findall(r"\{\{\w+\}\}", text)
     if left:
-        print("warning: artifact links left:", sorted(set(left)), file=sys.stderr)
-    return s
+        raise SystemExit(f"theme/pages/{name}.html: unfilled placeholders {sorted(set(left))}")
+    return text
 
 
-def set_head(s, title, meta):
-    s = re.sub(r'<meta name="claude:[^"]*"[^>]*>\n?', "", s)
-    s = re.sub(r'<meta name="description"[^>]*>\n?', "", s)
-    s = re.sub(r"<title>.*?</title>", f"<title>{esc(title)}</title>\n{meta}", s, count=1, flags=re.S)
-    return s
+def require_links(name, html_text, hrefs):
+    """A hand-designed page must keep linking to every page it lists, so a new spec file or tool cannot be forgotten."""
+    missing = [h for h in hrefs if f'href="{h}"' not in html_text]
+    if missing:
+        raise SystemExit(f"theme/pages/{name}.html does not link {missing}")
 
 
-def add_nav(s, items):
-    """Add links before the first </nav> unless they are already present."""
-    extra = "".join(f'\n      <a href="{h}">{t}</a>' for h, t in items if f'href="{h}"' not in s.split("</nav>", 1)[0])
-    return s.replace("</nav>", extra + "\n    </nav>", 1)
+def conformance_facts(site):
+    """The figures the home page shows: the last recorded full test run (tools/build_explorer.py --run-tests) and AUDIT.md."""
+    r = json.loads((site.repo / "explorer/conformance-results.json").read_text(encoding="utf-8"))
+    audit = (site.repo / "AUDIT.md").read_text(encoding="utf-8")
+    sev = re.findall(r"^\| F\d+ \| (\w+) \| \*\*", audit, re.M)
+    return {"TESTS_PASSED": r["pytest"]["passed"], "TESTS_TOTAL": r["pytest"]["passed"] + r["pytest"]["failed"],
+            "JS_PASSED": r["js"]["passed"], "JS_TOTAL": r["js"]["total"], "LAB_RUNS": r["lab"]["runs"], "LAB_FAILURES": r["lab"]["failures"],
+            "AUDIT_FIXED": len(sev), "AUDIT_HIGH": sev.count("High"), "RUN_DATE": r["run"]}
 
 
-def add_legal(s, strip):
-    i = s.rfind("</footer>")
-    if i < 0:
-        return s.replace("</body>", strip + "</body>") if "</body>" in s else s + strip
-    return s[:i] + strip + s[i:]
+def term_defs(site):
+    return [json.loads(p.read_text(encoding="utf-8")) for p in sorted((site.repo / "spec/06-terms").glob("UP-*.json"))]
+
+
+PLAYGROUND_REDIRECT = """<script>/* The Playground moved from /#playground to /playground/: keep old links working. */
+(function(){var h=location.hash;if(h==="#playground"||h.indexOf("#pg-")===0)location.replace("/playground/"+(h==="#playground"?"":h))})();</script>"""
 
 
 def build_home(site):
-    src = (site.repo / "explorer/index.html").read_text(encoding="utf-8")
     title = "Universal Paper | Open language for GPO, supplier and member agreements"
     desc = ("Universal Paper is a free, open language for group purchasing agreements. GPOs, suppliers and members share the same paper: "
             "every change is signed, every party computes the same state, fees and obligations. Try the Playground.")
@@ -249,21 +244,33 @@ def build_home(site):
          "about": ["group purchasing organizations", "contracts", "supply chain agreements", "administrative fees", "content-addressed data"],
          "creator": CREATOR, "copyrightHolder": CREATOR, "license": LIC["ccby"][1], "isAccessibleForFree": True,
          "description": SITE_DESC},
-        {"@context": "https://schema.org", "@type": "WebApplication", "name": "Universal Paper Playground", "url": site.url("/#playground"),
-         "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": True,
-         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "creator": CREATOR, "license": LIC["apache"][1],
-         "description": "Write a Universal Paper agreement in the browser and watch its fingerprint, signatures, rendering and obligations update live."},
+        playground_ld(site),
     ]
-    s = set_head(src, title, site.head_meta("/", title, desc, extra_ld=ld))
-    s = rewrite_links(s)
-    s = add_nav(s, [("/developers/", "Developers"), ("/faq/", "FAQ")])
-    s = add_legal(s, site.legal_strip())
-    site.write("index.html", s)
+    style, main, scripts = L.fragment("home")
+    facts = conformance_facts(site)
+    terms = term_defs(site)
+    if len(terms) != 16:  # the page says "Sixteen Terms" and "16 standard Terms" in prose
+        raise SystemExit(f"theme/pages/home.html says 16 Terms; the library has {len(terms)}")
+    rail = [[t["id"], t.get("title", ""), sorted(t.get("params", {}))] for t in terms]
+    scripts = scripts.replace("/*@@TERMS@@*/[]", json.dumps(rail, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
+    main = fill(main, facts, "home")
+    announce = ('<div class="announce" role="region" aria-label="Announcement"><div class="wrap"><span class="pill">UP/0.1</span>'
+                f'<span>The draft specification is open for review. <b>{facts["TESTS_PASSED"]}/{facts["TESTS_TOTAL"]}</b> conformance tests passing.</span>'
+                '<a href="/spec/">Read the draft</a></div></div>')
+    page = site.page("/", title, desc, main, style=style, scripts=PLAYGROUND_REDIRECT + "\n" + scripts, ld=ld, announce=announce)
+    site.write("index.html", page)
     site.add_page("/", "1.0", "weekly")
+    site.add_search("/", "Home", "Universal Paper", "page", main, rank=0)
 
 
-def build_developers(site, path):
-    src = Path(path).read_text(encoding="utf-8")
+def playground_ld(site):
+    return {"@context": "https://schema.org", "@type": "WebApplication", "name": "Universal Paper Playground", "url": site.url("/playground/"),
+            "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": True,
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "creator": CREATOR, "license": LIC["apache"][1],
+            "description": "Write a Universal Paper agreement in the browser and watch its fingerprint, signatures, rendering and obligations update live."}
+
+
+def build_developers(site):
     title = "Universal Paper for Developers | Spec, reference engine and CLI"
     desc = ("Build on Universal Paper: canonical JSON (RFC 8785), SHA-256 content addresses, Ed25519 signatures, a 16-Term library, "
             "a Python reference interpreter and CLI, and a JavaScript engine that matches it byte for byte. Free and open source.")
@@ -275,141 +282,136 @@ def build_developers(site, path):
            "programmingLanguage": ["Python", "JavaScript"], "license": LIC["apache"][1], "author": CREATOR,
            **({"codeRepository": site.a.repo_url} if site.a.repo_url else {}),
            "description": "Reference interpreter and CLI (up) for Universal Paper, plus an independent JavaScript engine."}]
-    s = set_head(src, title, site.head_meta("/developers/", title, desc, kind="article", extra_ld=ld))
-    if not s.lstrip().lower().startswith("<!doctype"):
-        s = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
-             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + s)
-        s = s.replace('<header class="site-header', '</head>\n<body>\n<header class="site-header', 1)
-        s = s.rstrip() + "\n</body>\n</html>\n"
-    s = rewrite_links(s)
-    s = add_nav(s, [("/faq/", "FAQ")])
-    # footer spec paths -> real pages
-    for f, slug, *_ in SPEC_FILES:
-        s = s.replace(f'<li class="mono">{f}</li>', f'<li class="mono"><a href="/spec/{slug}/">{f}</a></li>')
-    s = s.replace('<li><a href="#faq">FAQ</a></li>', '<li><a href="#faq">FAQ</a></li><li><a href="/faq/">All questions</a></li><li><a href="/license/">Licenses</a></li>')
-    s = add_legal(s, site.legal_strip())
-    # the app ideas live only on this page: link them from its footer too (on phones the section is reached this way)
-    s = s.replace('<a href="/developers/">Developers</a> · ', '<a href="/developers/">Developers</a> · <a href="#apps">App ideas</a> · ', 1)
-    site.write("developers/index.html", s)
+    style, main, scripts = L.fragment("developers")
+    require_links("developers", main, ["/spec/", "/faq/"])
+    site.write("developers/index.html", site.page("/developers/", title, desc, main, style=style, scripts=scripts, kind="article", ld=ld))
     site.add_page("/developers/", "0.9", "weekly")
+    site.add_search("/developers/", "Developers", "Spec, reference engine, CLI and MCP server", "page", main, rank=1)
 
 
-# ----------------------------------------------------------------------------- new pages
-PAGE_CSS = """
-.page-hero{padding:clamp(48px,8vw,104px) 0 clamp(32px,5vw,56px)}
-.page-hero .lead{margin-top:20px}
-.crumbs{font:500 var(--t-eyebrow)/1 var(--f-mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);margin-bottom:20px}
-.crumbs a{color:var(--ink-3);text-decoration:none}.crumbs a:hover{color:var(--ink)}
-.prose{max-width:76ch}
-.prose h1{font:300 var(--t-h2)/1.08 var(--f-display);letter-spacing:-.03em;margin:0 0 24px}
-.prose h2{font:400 1.6rem/1.2 var(--f-display);letter-spacing:-.02em;margin:56px 0 12px;scroll-margin-top:calc(var(--header-h) + 16px)}
-.prose h3{font:600 1.1rem/1.3 var(--f-body);margin:36px 0 8px;scroll-margin-top:calc(var(--header-h) + 16px)}
-.prose h4{font:600 1rem/1.3 var(--f-body);margin:28px 0 6px}
-.prose p,.prose li{color:var(--ink-2)}.prose strong{color:var(--ink)}
-.prose code{font:400 .86em/1.4 var(--f-mono);background:var(--bg-2);border:1px solid var(--rule);border-radius:4px;padding:1px 5px}
-.prose pre{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-2);padding:16px;overflow:auto;font:400 .84rem/1.55 var(--f-mono)}
-.prose pre code{background:none;border:0;padding:0}
-.prose blockquote{margin:20px 0;padding:4px 0 4px 18px;border-left:2px solid var(--accent);color:var(--ink-2)}
-.tablewrap{overflow-x:auto;margin:20px 0;border:1px solid var(--rule);border-radius:var(--r-2);background:var(--surface)}
-.prose table{border-collapse:collapse;width:100%;font-size:.9rem}
-.prose th,.prose td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--rule)}
-.prose th{font:500 .75rem/1.4 var(--f-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);background:var(--bg-2)}
-.prose tr:last-child td{border-bottom:0}
-.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:56px;padding-bottom:96px}
-.side{position:sticky;top:calc(var(--header-h) + 24px);align-self:start;font-size:.875rem;display:grid;gap:4px}
-.side b{font:500 var(--t-eyebrow)/1 var(--f-mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);margin:0 0 10px}
-.side a{color:var(--ink-2);text-decoration:none;padding:5px 10px;border-radius:6px}
-.side a:hover{color:var(--ink);background:var(--bg-2)}.side a[aria-current="page"]{color:var(--ink);background:var(--bg-2);font-weight:500}
-@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr);gap:24px}.side{position:static;display:flex;flex-wrap:wrap;gap:6px}.side b{width:100%}.side a{border:1px solid var(--rule)}}
-.faq-group{margin-top:48px}.faq-group h2{margin-top:0}.faq details{scroll-margin-top:88px}
-.faq details{border-top:1px solid var(--rule);padding:4px 0}.faq details:last-child{border-bottom:1px solid var(--rule)}
-.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:16px 0;font:500 1.05rem/1.4 var(--f-body);color:var(--ink)}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";font:300 1.4rem/1 var(--f-display);color:var(--ink-3);transition:transform var(--d-fast) var(--ease)}
-.faq details[open] summary::after{transform:rotate(45deg)}
-.faq .a{padding:0 0 18px}.faq .a p{margin:0 0 8px}.faq .ref{font:400 .78rem/1.5 var(--f-mono);color:var(--ink-3)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:28px 0}
-.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-3);padding:24px;display:grid;gap:10px;align-content:start}
-.card h3{margin:0;font:600 1.05rem/1.3 var(--f-body)}.card p{margin:0;color:var(--ink-2);font-size:.93rem}
-.card .lic{font:500 .8rem/1 var(--f-mono);color:var(--accent)}
-.card ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:.9rem}
-.attr{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-2);padding:16px;font:400 .86rem/1.6 var(--f-mono);color:var(--ink);overflow-wrap:anywhere}
-.site-footer2{border-top:1px solid var(--rule);background:var(--bg-2);color:var(--ink-2)}
-.site-footer2 .row{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;padding-top:28px}
-.site-footer2 .brand{color:var(--ink)}
-.navr{display:flex;align-items:center;gap:12px}
-"""
+def build_playground(site):
+    """/playground/: the in-browser Playground from explorer/index.html, framed in the site's own page.
 
-THEME_JS = """<script>(function(){var k="up-theme",r=document.documentElement;function g(){try{return localStorage.getItem(k)||"system"}catch(e){return"system"}}
-function a(m){if(m==="system")r.removeAttribute("data-theme");else r.setAttribute("data-theme",m);var b=document.getElementById("themeBtn");if(b)b.setAttribute("aria-label","Color theme: "+m)}
-a(g());document.addEventListener("DOMContentLoaded",function(){a(g());var b=document.getElementById("themeBtn");if(b)b.onclick=function(){var o=["system","light","dark"],n=o[(o.indexOf(g())+1)%3];try{localStorage.setItem(k,n)}catch(e){}a(n)}})})();</script>"""
-
-
-def shell(site, path, title, desc, body, kind="website", ld=(), current="", links=()):
-    nav = [("/", "Home"), ("/developers/", "Developers"), ("/#playground", "Playground"), ("/spec/", "Specification"), ("/faq/", "FAQ")]
-    cur_attr = ' aria-current="true"'
-    navh = "".join(f'<a href="{h}"{cur_attr if h == current else ""}>{t}</a>' for h, t in nav)
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{esc(title)}</title>
-{site.head_meta(path, title, desc, kind=kind, extra_ld=ld, links=links)}
-{THEME_JS}
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/tokens.css">
-<style>:root{{--logo:url(/assets/mark-black-512.png)}}{PAGE_CSS}</style>
-</head>
-<body>
-<a href="#main" style="position:absolute;left:-999px" onfocus="this.style.left='8px'" onblur="this.style.left='-999px'">Skip to content</a>
-<header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/" aria-label="Universal Paper home"><span class="brand-mark" aria-hidden="true"></span>Universal Paper</a>
-    <nav class="site-nav" aria-label="Site">{navh}</nav>
-    <div class="navr">
-      <button class="theme-toggle" id="themeBtn" type="button" aria-label="Color theme: system"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg></button>
-      <a class="btn primary" href="/#playground">Open the Playground</a>
-    </div>
+    The explorer page is built by tools/build_explorer.py and is never edited here. Its copy at /playground/app.html
+    shows only the Playground section (opened), in the site's fonts and colors; the frame grows to fit it.
+    """
+    src = (site.repo / "explorer/index.html").read_text(encoding="utf-8")
+    app = src.replace('<html lang="en">', '<html lang="en" data-theme="light" data-embed="playground">', 1)
+    app = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>\s*', "", app)
+    app = re.sub(r'<link rel="preconnect"[^>]*>\s*', "", app)
+    app = re.sub(r'<meta name="claude:[^"]*"[^>]*>\n?', "", app)
+    app = app.replace("</head>", PLAYGROUND_EMBED_HEAD + "\n</head>", 1)
+    app = app.replace("</body>", PLAYGROUND_EMBED_JS + "\n</body>", 1)
+    site.write("playground/app.html", app)
+    title = "Playground | Write a Universal Paper agreement in your browser"
+    desc = ("Write a Universal Paper agreement in the browser: change the fee, the length or a party and watch the contract text, "
+            "its fingerprint and its signatures update. Compare versions or play out a year of reports and payments. Runs locally.")
+    main = f"""<main id="main">
+  <div class="wrap phero" style="padding-bottom:8px">
+    {L.crumbs([("/", "Universal Paper"), ("", "Playground")])}
+    <h1 class="display">Write an agreement. Watch it fingerprint.</h1>
+    <p class="lede">Change the fee, the length or a name and watch the contract and its fingerprint update. Sign it, then change it again to see the signatures stop covering it. Compare versions, or play out a year of reports and payments. Everything runs in your browser; the values are examples.</p>
   </div>
-</header>
-<main id="main">
-{body}
-</main>
-<footer class="site-footer2">
-  <div class="wrap row"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>Universal Paper</a><span>{esc(TAGLINE)}.</span></div>
-  {site.legal_strip()}
-</footer>
-</body>
-</html>
-"""
+  <div class="wrap" style="padding-bottom:clamp(64px,8vw,120px)">
+    <iframe id="pgframe" class="pgframe" src="/playground/app.html" title="Universal Paper Playground" loading="eager"></iframe>
+    <noscript><p>The Playground needs JavaScript. The <a href="/developers/#quick-start">command line</a> does the same without a browser.</p></noscript>
+  </div>
+</main>"""
+    style = """<style>.pgframe{display:block;width:100%;min-height:900px;border:1px solid var(--line);border-radius:var(--r-xl);background:var(--canvas)}</style>"""
+    scripts = """<script>(function(){var f=document.getElementById("pgframe");function fit(){try{var d=f.contentDocument;if(!d||!d.body)return;f.style.height=Math.max(600,d.documentElement.scrollHeight)+"px"}catch(e){}}
+f.addEventListener("load",function(){fit();try{new ResizeObserver(fit).observe(f.contentDocument.body)}catch(e){setInterval(fit,1000)}});addEventListener("resize",fit)})();</script>"""
+    site.write("playground/index.html", site.page("/playground/", title, desc, main, style=style, scripts=scripts, ld=[playground_ld(site)]))
+    site.add_page("/playground/", "0.9", "weekly")
+    site.add_search("/playground/", "Playground", "Write an agreement in your browser", "page", main, rank=3)
 
 
-def build_faq(site):
-    groups, ld_q, side = [], [], []
-    for gid, gtitle, qs in FAQ:
+# Shown inside /playground/app.html only: the Playground section, opened, in the site's fonts and colors (light only, like the site).
+PLAYGROUND_EMBED_HEAD = """<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="/playground/">
+<style id="up-embed">
+@font-face{font-family:"Hedvig Serif";src:url("/assets/fonts/hedvig-brand-serif-variable-latin.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Funnel Sans";src:url("/assets/fonts/funnel-product-sans-roman-latin.woff2") format("woff2");font-weight:300 800;font-display:swap}
+@font-face{font-family:"Recursive";src:url("/assets/fonts/recursive-interface-variable-latin.woff2") format("woff2");font-weight:300 1000;font-display:swap}
+:root,:root[data-theme]{color-scheme:light;--bg:#F5F2EC;--bg-2:#ECE7DD;--surface:#FFFFFF;--ink:#16143A;--ink-2:#4B4968;--ink-3:#77758F;
+--rule:rgba(22,20,58,.12);--rule-2:rgba(22,20,58,.2);--accent:#19173F;--accent-ink:#FFFFFF;--accent-soft:#EEE9FF;
+--ok:#138A5A;--ok-soft:#DDF5E8;--bad:#D2401F;--bad-soft:#FFE1D8;--warn:#5C3D00;--warn-soft:#FFF1C7;--flip:#FFD873;
+--f-display:"Hedvig Serif",Georgia,serif;--f-paper:"Hedvig Serif",Georgia,serif;--f-body:"Funnel Sans",system-ui,sans-serif;--f-mono:"Recursive",ui-monospace,monospace;
+--r-2:14px;--r-3:20px}
+html[data-embed] body{background:var(--bg)}
+html[data-embed] .site-header,html[data-embed] .site-footer,html[data-embed] main>section:not(#playground),html[data-embed] .scrolly,
+html[data-embed] #playground .sec-head,html[data-embed] #pg-bar,html[data-embed] #pg-peek,html[data-embed] .up-legal{display:none!important}
+html[data-embed] #playground{padding:24px 0!important;margin:0!important}
+html[data-embed] .fpbar,html[data-embed] .fpmini{position:static!important} /* the frame never scrolls, so sticky bars would sit mid-page */
+html[data-embed] [class*="mono"],html[data-embed] code,html[data-embed] .fp{font-variation-settings:"MONO" 1}
+html[data-embed] .h2,html[data-embed] h2,html[data-embed] h3,html[data-embed] h4{font-weight:400}
+</style>"""
+PLAYGROUND_EMBED_JS = """<script>(function(){/* open the Playground and send links to other pages to the top window */
+function open(){var b=document.getElementById("pg-body"),t=document.getElementById("pg-toggle");if(b&&b.hidden&&t)t.click();if(b)b.hidden=false}
+document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a)return;var u=new URL(a.href,location.href);
+if(u.origin!==location.origin||u.pathname!==location.pathname){e.preventDefault();(window.top||window).location.href=u.href}},true);
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",open);else open()})();</script>"""
+
+
+def faq_main(site):
+    groups, ld_q, side, cats = [], [], [], []
+    for i, (gid, gtitle, qs) in enumerate(FAQ):
         side.append(f'<a href="#{gid}">{esc(gtitle)}</a>')
+        tone = L.CARD_TONES[i % len(L.CARD_TONES)]
+        cats.append(f'<a class="ccard c-{tone}" href="#{gid}" style="min-height:150px;padding:20px;border-radius:20px"><span class="fn">{len(qs)} answers</span>'
+                    f'<h3 style="font-size:21px">{esc(gtitle)}</h3></a>')
         items = []
         for qid, q, a, ref in qs:
             meta = ([f"Source: {esc(ref)}"] if ref else []) + [f'<a href="#{qid}" aria-label="Link to this answer: {esc(q)}">Link to this answer</a>']
-            items.append(f'<details id="{qid}"><summary><h3 style="all:unset">{esc(q)}</h3></summary><div class="a">{a}'
-                         f'<p class="ref">{" · ".join(meta)}</p></div></details>')
+            items.append(f'<details class="qa" id="{qid}"><summary><h3>{esc(q)}</h3><span class="pm" aria-hidden="true">{L.ico("plus")}</span></summary>'
+                         f'<div class="a">{a}<p class="ref">{" · ".join(meta)}</p></div></details>')
             url = site.url(f"/faq/#{qid}")
             ld_q.append({"@type": "Question", "@id": url, "url": url, "name": q,
                          "acceptedAnswer": {"@type": "Answer", "url": url, "text": strip_tags(a)}})
-        groups.append(f'<section class="faq-group" id="{gid}" aria-labelledby="{gid}-h"><h2 id="{gid}-h">{esc(gtitle)}</h2><div class="faq">{"".join(items)}</div></section>')
+        groups.append(f'<section class="faqg" id="{gid}" aria-labelledby="{gid}-h"><h2 class="h3 faqh" id="{gid}-h">{esc(gtitle)}</h2>{"".join(items)}</section>')
     n = sum(len(g[2]) for g in FAQ)
-    body = f"""<div class="wrap page-hero">
-  <div class="crumbs"><a href="/">Universal Paper</a> / FAQ</div>
-  <h1 class="display">Questions, answered plainly.</h1>
-  <p class="lead">{n} answers about what Universal Paper is, how it works, what it means for GPOs, suppliers, members and AI agents, and how it's licensed. Each answer points to the part of the specification it comes from and has its own link.</p>
-</div>
-<div class="wrap layout">
-  <nav class="side" aria-label="FAQ sections"><b>Sections</b>{"".join(side)}<a href="/license/">Licenses</a><a href="/spec/">Specification</a></nav>
-  <div class="prose" style="max-width:none">{"".join(groups)}</div>
-</div>
-<script>(function(){{function o(){{var h=decodeURIComponent(location.hash.slice(1)),d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true}}document.addEventListener("DOMContentLoaded",o);window.addEventListener("hashchange",o)}})();</script>"""
+    main = f"""<main id="main">
+  <div class="wrap phero">
+    {L.crumbs([("/", "Universal Paper"), ("", "FAQ")])}
+    <h1 class="display">Questions, answered plainly.</h1>
+    <p class="lede">{n} answers about what Universal Paper is, how it works, what it means for GPOs, suppliers, members and AI agents, and how it's licensed. Each answer points to the part of the specification it comes from and has its own link.</p>
+    <form class="searchbar" role="search" onsubmit="return false">
+      {L.ico("search", "color:var(--ink-3)")}
+      <label class="sr" for="faqq">Filter questions</label><input id="faqq" placeholder="Filter {n} questions… try “blockchain” or “EDI”" autocomplete="off">
+    </form>
+    <p id="faqStatus" role="status" style="margin-top:14px;font-size:14px;color:var(--ink-3)"></p>
+  </div>
+  <div class="wrap">
+    <div class="cgrid" style="grid-template-columns:repeat({len(FAQ)},minmax(0,1fr));gap:10px" id="faqCats">{"".join(cats)}</div>
+  </div>
+  <div class="wrap docs" style="grid-template-columns:232px minmax(0,1fr);padding-top:24px">
+    <nav class="side" aria-label="FAQ sections"><b>Sections</b>{"".join(side)}<b>More</b><a href="/license/">Licenses</a><a href="/spec/">Specification</a></nav>
+    <div style="min-width:0;max-width:860px" id="faqList">{"".join(groups)}</div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(64px,8vw,120px)"><div class="cta" style="padding-block:clamp(48px,6vw,88px)"><canvas data-field="faq" aria-hidden="true"></canvas><h2 class="h2">Still curious?</h2><p class="lede">The specification is the only authority. Every answer above points to the part it comes from.</p><div class="ctas"><a class="btn light" href="/spec/">Read the specification {L.ico("arrow")}</a><a class="btn outline-l" href="/developers/">For developers</a></div></div></div>
+</main>"""
+    return main, ld_q
+
+
+FAQ_STYLE = ("<style>@media (max-width:980px){#faqCats{grid-template-columns:repeat(3,minmax(0,1fr))!important}}"
+             "@media (max-width:560px){#faqCats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}@media (max-width:860px){.docs .side{display:none}}</style>")
+FAQ_JS = """<script>
+(() => {
+  const q = document.getElementById('faqq'), st = document.getElementById('faqStatus');
+  const items = [...document.querySelectorAll('#faqList .qa')], groups = [...document.querySelectorAll('#faqList .faqg')];
+  q.addEventListener('input', () => {
+    const v = q.value.trim().toLowerCase(); let n = 0;
+    items.forEach(d => { const hit = !v || d.textContent.toLowerCase().includes(v); d.classList.toggle('hide', !hit); if (hit) n++; if (v && hit) d.open = true; });
+    groups.forEach(g => g.hidden = !g.querySelector('.qa:not(.hide)'));
+    st.textContent = v ? (n ? n + ' of ' + items.length + ' answers match.' : 'No answers match. Try the search in the header.') : '';
+  });
+  const o = () => { const h = decodeURIComponent(location.hash.slice(1)), d = h && document.getElementById(h); if (d && d.tagName === 'DETAILS') d.open = true; };
+  o(); addEventListener('hashchange', o);
+})();
+</script>"""
+
+
+def build_faq(site):
+    main, ld_q = faq_main(site)
     title = "Universal Paper FAQ | GPO, supplier and member agreements explained"
     desc = ("Answers about Universal Paper: what the open agreement language is, who created it (Uppercentile), how hashes and signatures work, "
             "confidential pricing, AI agents and the MCP server, optional integrations (LCP, Verifiable Credentials), EDI, legal status and licenses.")
@@ -418,65 +420,21 @@ def build_faq(site):
            "isPartOf": {"@type": "WebSite", "name": "Universal Paper", "url": site.url("/")},
            "publisher": {"@type": "Organization", "name": "Uppercentile", "url": "https://uppercentile.com"},
            "license": "https://creativecommons.org/licenses/by/4.0/", "mainEntity": ld_q}]
-    site.write("faq/index.html", shell(site, "/faq/", title, desc, body, ld=ld, current="/faq/"))
+    site.write("faq/index.html", site.page("/faq/", title, desc, main, style=FAQ_STYLE, scripts=FAQ_JS, ld=ld))
     site.add_page("/faq/", "0.9", "monthly")
+    site.search.append({"t": "FAQ", "s": "Questions, answered plainly", "u": "/faq/", "k": "page", "rank": 5,
+                        "h": [(qid, q) for _g, _t, qs in FAQ for qid, q, _a, _r in qs]})
 
 
 def build_license(site):
-    r = site.a.repo_url
-    repo_line = f' The full license texts ship with the source in <a href="{r}">the repository</a>.' if r else ""
-    body = f"""<div class="wrap page-hero">
-  <div class="crumbs"><a href="/">Universal Paper</a> / Licenses</div>
-  <h1 class="display">Open by design. Free for everyone.</h1>
-  <p class="lead">Universal Paper was created by <a href="https://uppercentile.com">Uppercentile</a>. Uppercentile offers it to the market for free, under open licenses that let anyone use, implement, extend, fork and sell products built on it, without permission or payment.</p>
-</div>
-<div class="wrap prose" style="max-width:var(--maxw);padding-bottom:96px">
-  <div class="cards">
-    <div class="card"><span class="lic">CC BY 4.0</span><h3>Specification and documentation</h3><p>The language itself: the specification, the Term library (prose and JSON definitions), the design notes, the mapping guide, the neutrality charter and the text of this website.</p><p><a href="{LIC['ccby'][1]}" rel="license">Creative Commons Attribution 4.0 International</a></p></div>
-    <div class="card"><span class="lic">Apache-2.0</span><h3>Code and schemas</h3><p>The Python reference interpreter and <code>up</code> CLI, the JavaScript engine, the Playground page, the JSON Schemas, build tools, tests and test vectors. Includes an express patent license from every contributor.</p><p><a href="{LIC['apache'][1]}" rel="license">Apache License, Version 2.0</a></p></div>
-    <div class="card"><span class="lic">CC0 1.0</span><h3>Example agreements and traces</h3><p>The example agreements, bundles and traces in <code>examples/</code> are dedicated to the public domain, so any implementation, product or test suite can copy them freely, with no conditions.</p><p><a href="{LIC['cc0'][1]}" rel="license">CC0 1.0 Universal</a></p></div>
-  </div>
-
-  <h2 id="what-you-can-do">What you can do</h2>
-  <ul>
-    <li>Use Universal Paper for any agreement, commercial or not, at no cost.</li>
-    <li>Write your own implementation, in any language, open or closed source.</li>
-    <li>Build and sell products, services and agents that read, write or verify Universal Paper.</li>
-    <li>Copy, translate, adapt and redistribute the specification and the code.</li>
-  </ul>
-  <p>Using the language never requires an account, a fee, a license key or a connection to Uppercentile or anyone else. The <a href="/spec/neutrality-charter/">neutrality charter</a> forbids the core from ever requiring one.</p>
-
-  <h2 id="what-the-licenses-ask">What the licenses ask in return</h2>
-  <ul>
-    <li><strong>CC BY 4.0:</strong> give credit, link to the license, and say if you made changes. You may not suggest that Uppercentile endorses your version.</li>
-    <li><strong>Apache-2.0:</strong> keep the license and the NOTICE file with copies of the code, and mark files you changed.</li>
-    <li><strong>CC0 1.0:</strong> nothing at all.</li>
-  </ul>
-
-  <h2 id="how-to-credit">How to credit Universal Paper</h2>
-  <p>A line like this satisfies CC BY 4.0 for the specification or the Term library:</p>
-  <div class="attr">"Universal Paper" specification by Uppercentile, https://{esc(site.a.domain)}, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: [describe, or "none"].</div>
-  <p>For the code, keep the <code>LICENSE</code> and <code>NOTICE</code> files.{repo_line}</p>
-
-  <h2 id="contributions">Contributions</h2>
-  <p>Contributions are accepted under the same licenses: changes to the specification under CC BY 4.0, changes to code under Apache-2.0, and new example agreements and traces under CC0 1.0. Contributors keep their copyright and license their work to everyone on the same terms.</p>
-
-  <h2 id="stewardship">Stewardship, not ownership</h2>
-  <p>Uppercentile created Universal Paper and is its current steward. The steward maintains the specification for everyone who uses it and does not own the language. Products built on Universal Paper, including any Uppercentile offers, are separate from it and may not claim to be required. The steward has committed to hand stewardship to a neutral body once the language has users across segments. See the <a href="/spec/neutrality-charter/">neutrality charter</a>.</p>
-
-  <h2 id="third-party">Third-party material</h2>
-  <ul>
-    <li>Web fonts Inter, Inter Tight, JetBrains Mono and Source Serif 4 are served by Google Fonts under the SIL Open Font License 1.1.</li>
-    <li>Standards the language references (RFC 8785, RFC 8032, RFC 3339, ISO 4217, GS1, HIBCC, NDC and ASC X12) belong to their publishers. Universal Paper reuses their identifiers and does not redistribute their documents.</li>
-    <li>The Python reference interpreter depends on the <code>cryptography</code> package (Apache-2.0 or BSD). The JavaScript engine has no dependencies.</li>
-  </ul>
-  <p style="margin-top:40px;font-size:.85rem;color:var(--ink-3)">This page summarizes the licenses for convenience. The license texts themselves govern. Nothing here is legal advice.</p>
-</div>"""
+    style, main, scripts = L.fragment("license")
     title = "Licenses | Universal Paper is free and open (CC BY 4.0, Apache-2.0, CC0)"
     desc = ("Universal Paper was created by Uppercentile and is offered free to everyone: specification under CC BY 4.0, code under Apache-2.0, "
             "example agreements under CC0. How to use it, credit it and contribute.")
-    site.write("license/index.html", shell(site, "/license/", title, desc, body))
+    require_links("license", main, [LIC["ccby"][1], LIC["apache"][1], LIC["cc0"][1], "/spec/neutrality-charter/"])
+    site.write("license/index.html", site.page("/license/", title, desc, main, style=style, scripts=scripts))
     site.add_page("/license/", "0.7", "yearly")
+    site.add_search("/license/", "Licenses", "Free and open: CC BY 4.0, Apache-2.0, CC0", "page", main, rank=7)
 
 
 # ----------------------------------------------------------------------------- spec pages
@@ -541,9 +499,55 @@ def render_md(site, src_file, text, lmap):
     return h, md.toc_tokens
 
 
+def spec_side(current):
+    items = []
+    for f, slug, t, _ in SPEC_FILES:
+        m = re.match(r"spec/(\d\d)", f)
+        items.append((f"/spec/{slug}/", m.group(1) if m else "—", t))
+    items += [(None, "", "Pages"), ("/spec/", "↖", "Specification home"), ("/faq/", "?", "FAQ")]
+    return L.side_html("Section", "UP/0.1-draft", items, current)
+
+
+def term_family(md_text):
+    m = re.search(r"\*\*Family:\*\*\s*([^·\n]+?)\s*·", md_text)
+    return m.group(1).strip() if m else ""
+
+
+def term_layers(readme):
+    """Which layer each Term usually sits in, from the table in spec/06-terms/README.md."""
+    out = {}
+    for row, key in (("Aggregator–supplier master agreement", "master"), ("Member participation", "member")):
+        m = re.search(r"^\| " + re.escape(row) + r" \| (.+?) \|$", readme, re.M)
+        names = re.findall(r"[A-Z][A-Za-z]+(?:-[A-Z][A-Za-z]+)*", m.group(1)) if m else []
+        for n in names:
+            out.setdefault("UP:" + n, []).append(key)
+    return out
+
+
+def spec_ld(site, path, ttl, desc, raw):
+    return [{"@context": "https://schema.org", "@type": "TechArticle", "headline": f"Universal Paper specification: {ttl}",
+             "url": site.url(path), "description": desc, "author": CREATOR, "publisher": CREATOR, "license": LIC["ccby"][1],
+             "isPartOf": {"@id": site.url("/spec/#spec")}, "version": "UP/0.1-draft", "inLanguage": "en", "dateModified": TODAY,
+             "encoding": {"@type": "MediaObject", "contentUrl": site.url(raw), "encodingFormat": "text/markdown"}}]
+
+
+def doc_foot(site, raw, src_file, lead, extra=""):
+    edit = f' · <a href="{site.a.repo_url}/blob/main/{src_file}">View source</a>' if site.a.repo_url else ""
+    return f'{lead} <a href="{esc(raw)}">Plain Markdown</a>{extra}{edit}'
+
+
+def doc_chips(site, h, text, raw, src_file):
+    n = len(re.findall(r"<h2\b", h))
+    chips = f'<span class="chipx">{n} section{"" if n == 1 else "s"}</span><span class="chipx">~{L.read_minutes(text)} min read</span>'
+    links = [(raw, "Markdown")] + ([(f"{site.a.repo_url}/blob/main/{src_file}", "Source")] if site.a.repo_url else [])
+    return chips + L.chip_links(links)
+
+
+SPEC_FOOT = "Specification text by Uppercentile, licensed under <a href=\"/license/\">CC BY 4.0</a>. Working draft UP/0.1-draft."
+
+
 def build_spec(site):
     lmap = spec_link_map(site)
-    side_items = [(f"/spec/{slug}/", t) for _, slug, t, _ in SPEC_FILES]
     # copy machine-readable files
     for p in (site.repo / "spec/06-terms").glob("UP-*.json"):
         dst = site.out / "spec/terms" / p.name
@@ -558,52 +562,105 @@ def build_spec(site):
                 (site.out / "examples" / d).mkdir(parents=True, exist_ok=True)
                 shutil.copy(p, site.out / "examples" / d / p.name)
 
-    def page(src_file, path, ttl, desc, cur):
-        text = (site.repo / src_file).read_text(encoding="utf-8")
-        h, _ = render_md(site, src_file, text, lmap)
+    term_files = sorted((site.repo / "spec/06-terms").glob("UP-*.md"))
+    terms = {p.stem: json.loads((site.repo / "spec/06-terms" / (p.stem + ".json")).read_text(encoding="utf-8")) for p in term_files}
+    readme = (site.repo / "spec/06-terms/README.md").read_text(encoding="utf-8")
+    layers = term_layers(readme)
+
+    # reading order for the Previous / Next links
+    main_seq = [("/spec/", "Specification home")] + [(f"/spec/{slug}/", t) for _, slug, t, _ in SPEC_FILES] + [("/faq/", "Questions, answered plainly")]
+    term_seq = [("/spec/terms/", "All Terms")] + [(f"/spec/terms/{s}/", terms[s]["id"]) for s in terms] + [("/spec/mapping-guide/", "Mapping guide")]
+
+    def around(seq, path):
+        i = [p for p, _ in seq].index(path)
+        return (seq[i - 1] if i > 0 else None), (seq[i + 1] if i + 1 < len(seq) else None)
+
+    def spec_page(f, slug, ttl, desc):
+        path = f"/spec/{slug}/"
+        text = (site.repo / f).read_text(encoding="utf-8")
+        h, _ = render_md(site, f, text, lmap)
         raw = path.rstrip("/") + ".md"
         site.write(raw, text)
-        page_attr = ' aria-current="page"'
-        side = "".join(f'<a href="{u}"{page_attr if u == cur else ""}>{esc(t)}</a>' for u, t in side_items)
-        edit = f' · <a href="{site.a.repo_url}/blob/main/{src_file}">View source</a>' if site.a.repo_url else ""
-        body = f"""<div class="wrap" style="padding-top:40px"><div class="crumbs"><a href="/">Universal Paper</a> / <a href="/spec/">Specification</a> / {esc(ttl)}</div></div>
-<div class="wrap layout">
-  <nav class="side" aria-label="Specification"><b>UP/0.1-draft</b>{side}</nav>
-  <article class="prose">{h}
-  <p style="margin-top:56px;font-size:.85rem;color:var(--ink-3)">Specification text by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>. Working draft UP/0.1-draft. <a href="{esc(raw)}">Plain Markdown</a>{edit}</p></article>
-</div>"""
-        title = f"{ttl} | Universal Paper specification"
-        ld = [{"@context": "https://schema.org", "@type": "TechArticle", "headline": f"Universal Paper specification: {ttl}",
-               "url": site.url(path), "description": desc, "author": CREATOR, "publisher": CREATOR, "license": LIC["ccby"][1],
-               "isPartOf": {"@id": site.url("/spec/#spec")}, "version": "UP/0.1-draft", "inLanguage": "en", "dateModified": TODAY,
-               "encoding": {"@type": "MediaObject", "contentUrl": site.url(raw), "encodingFormat": "text/markdown"}}]
-        site.write(path.lstrip("/") + "index.html", shell(site, path, title, desc, body, kind="article", ld=ld, current="/spec/"))
+        lede, body, toc = L.article(h)
+        extra, scripts = "", ""
+        if slug == "terms":  # the library index: a filterable card grid above the README
+            extra, scripts = term_library(site.repo, terms, layers), TERM_LIBRARY_JS
+            toc = []
+        prev, nxt = around(main_seq, path)
+        main = L.doc_main(field=slug, tone=L.TONES.get(slug, "warm"),
+                          trail=[("/", "Universal Paper"), ("/spec/", "Specification"), ("", ttl)],
+                          eyebrow=f'{esc(f.split("/")[-1] if slug != "terms" else "spec/06-terms/")} · UP/0.1-draft', title=ttl, lede=lede,
+                          chips=doc_chips(site, body, text, raw, f), side=spec_side(path), body=body, toc=toc,
+                          foot=doc_foot(site, raw, f, SPEC_FOOT), pager=L.pager_html(prev, nxt))
+        if extra:
+            main = main.replace('  <div class="wrap docs">', extra + '\n  <div class="wrap docs">', 1)
+        site.write(path.lstrip("/") + "index.html", site.page(path, f"{ttl} | Universal Paper specification", desc, main,
+                                                              scripts=scripts, kind="article", ld=spec_ld(site, path, ttl, desc, raw)))
         site.add_page(path, "0.7", "monthly")
+        site.add_search(path, ttl, "Term library" if slug == "terms" else "Specification", "spec", main, rank=4 if slug == "terms" else 20)
+
+    def term_page(p):
+        j = terms[p.stem]
+        tid, ttitle = j.get("id", p.stem.replace("UP-", "UP:")), j.get("title", "")
+        path, src_file = f"/spec/terms/{p.stem}/", f"spec/06-terms/{p.name}"
+        ttl = f"{tid} ({ttitle})" if ttitle else tid
+        desc = (f"The {tid} Term of the Universal Paper library: {ttitle.lower() or 'definition'}, its typed parameters, clauses and "
+                "human-readable rendering. Value-neutral, free under CC BY 4.0.")
+        text = p.read_text(encoding="utf-8")
+        raw = path.rstrip("/") + ".md"
+        site.write(raw, text)
+        h, _ = render_md(site, src_file, text, lmap)
+        h = re.sub(r"^\s*<h1[^>]*>.*?</h1>\s*", "", h, count=1, flags=re.S)
+        h = re.sub(r"^\s*<p><strong>Family:</strong>.*?</p>\s*", "", h, count=1, flags=re.S)
+        lede, body, toc = L.article(h)
+        params, claims = sorted(j.get("params", {})), j.get("claims", {})
+        fam = term_family(text)
+        chips = (f'<span class="chipx">{esc(fam)}</span><span class="chipx">{len(params)} parameter{"" if len(params) == 1 else "s"}</span>'
+                 f'<span class="chipx">{len(claims)} claim type{"" if len(claims) == 1 else "s"}</span>'
+                 + L.chip_links([(f"/spec/terms/{p.stem}.json", "JSON"), (raw, "Markdown")]
+                                + ([(f"{site.a.repo_url}/blob/main/{src_file}", "Source")] if site.a.repo_url else [])))
+        side = L.side_html("Term library", "Term library", [("/spec/terms/", "06", "All Terms")] + [(f"/spec/terms/{s}/", "UP", s[3:]) for s in terms],
+                           path, mobile_label="All Terms")
+        prev, nxt = around(term_seq, path)
+        nav, mobile = side
+        pset = "".join(f"<span>{esc(x)}</span>" for x in params)
+        main = f"""<main id="main">
+  <div class="wrap thero"><div class="in">
+    <div class="txt">
+      {L.crumbs([("/", "Universal Paper"), ("/spec/terms/", "Term library"), ("", tid)])}
+      <code class="tid">{esc(tid)}</code>
+      <h1>{esc(ttitle or tid)}</h1>
+      {f'<p class="lede">{lede}</p>' if lede else ""}
+      <div class="chips" style="margin-top:auto;padding-top:28px">{chips}</div>
+    </div>
+    <div class="art" data-thumb="{esc(tid)}" aria-hidden="true"><div class="pset">{pset}</div><span class="mark"></span></div>
+  </div></div>
+  <div class="wrap docs">
+    {nav}
+    <div style="min-width:0">
+      {mobile}
+      <article class="prose">{body}
+  <p class="doc-foot">{doc_foot(site, raw, src_file, SPEC_FOOT)}</p></article>
+    </div>
+    {L.toc_html(toc)}
+  </div>
+  {L.pager_html(prev, nxt)}
+</main>"""
+        site.write(path.lstrip("/") + "index.html", site.page(path, f"{ttl} | Universal Paper specification", desc, main,
+                                                              kind="article", ld=spec_ld(site, path, ttl, desc, raw)))
+        site.add_page(path, "0.7", "monthly")
+        site.add_search(path, tid, ttitle, "term", main, rank=30)
 
     for f, slug, ttl, desc in SPEC_FILES:
-        page(f, f"/spec/{slug}/", ttl, desc, f"/spec/{slug}/")
-    for p in sorted((site.repo / "spec/06-terms").glob("UP-*.md")):
-        j = json.loads((site.repo / "spec/06-terms" / (p.stem + ".json")).read_text())
-        tid = j.get("id", p.stem.replace("UP-", "UP:"))
-        ttl = f"{tid} ({j.get('title', '')})" if j.get("title") else tid
-        desc = f"The {tid} Term of the Universal Paper library: {j.get('title', '').lower() or 'definition'}, its typed parameters, clauses and human-readable rendering. Value-neutral, free under CC BY 4.0."
-        page(f"spec/06-terms/{p.name}", f"/spec/terms/{p.stem}/", ttl, desc, "/spec/terms/")
+        spec_page(f, slug, ttl, desc)
+    for p in term_files:
+        term_page(p)
 
-    # /spec/ index
-    cards = "".join(f'<a class="card" href="/spec/{slug}/" style="text-decoration:none"><span class="lic">{esc(f.split("/")[-1] if "06-terms" not in f else "spec/06-terms/")}</span><h3 style="color:var(--ink)">{esc(t)}</h3><p>{esc(d)}</p></a>' for f, slug, t, d in SPEC_FILES)
-    body = f"""<div class="wrap page-hero">
-  <div class="crumbs"><a href="/">Universal Paper</a> / Specification</div>
-  <h1 class="display">The specification.</h1>
-  <p class="lead">Universal Paper is defined by this document, not by any software. A person with the specification, a SHA-256 implementation and an Ed25519 verifier can check any agreement by hand. Current version: <code>UP/0.1-draft</code>, a working draft.</p>
-  <p style="margin-top:20px"><a class="btn primary" href="/spec/overview/">Start with the overview</a> <a class="btn" href="/llms-full.txt">Full text for AI tools</a></p>
-</div>
-<div class="wrap prose" style="max-width:var(--maxw);padding-bottom:96px"><div class="cards">{cards}</div>
-<h2 id="machine-readable">Machine-readable files</h2>
-<ul><li>JSON Schemas: <a href="/schema/universal-paper.schema.json">universal-paper.schema.json</a>, <a href="/schema/trace.schema.json">trace.schema.json</a> (Apache-2.0)</li>
-<li>Term definitions as JSON: <code>/spec/terms/UP-*.json</code>, for example <a href="/spec/terms/UP-Admin-Fee.json">UP-Admin-Fee.json</a> (CC BY 4.0)</li>
-<li>Example bundles: <a href="/examples/conventional/bundle.json">conventional</a>, <a href="/examples/generative/bundle.json">generative</a>, <a href="/examples/overlay/bundle.json">overlay</a>, <a href="/examples/confidential/bundle.json">confidential</a>, <a href="/examples/mandate-cap/bundle.json">mandate-cap</a>, <a href="/examples/what-if/bundle.json">what-if</a> (CC0 1.0)</li>
-<li>Every page is also available as Markdown: add <code>.md</code> to its path, for example <a href="/spec/axioms.md">/spec/axioms.md</a></li></ul>
-<p style="font-size:.85rem;color:var(--ink-3)">Specification by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>.</p></div>"""
+    # /spec/ index (hand-designed: site/theme/pages/spec.html)
+    style, main, scripts = L.fragment("spec")
+    require_links("spec", main, [f"/spec/{slug}/" for _, slug, _, _ in SPEC_FILES]
+                  + ["/schema/universal-paper.schema.json", "/schema/trace.schema.json", "/llms-full.txt"]
+                  + [f"/examples/{d}/bundle.json" for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if")])
     title = "Universal Paper specification | UP/0.1-draft"
     desc = ("Read the Universal Paper specification: domain, axioms, inference, lifecycle, the 16-Term library, the EDI mapping guide and the neutrality charter. "
             "Free under CC BY 4.0.")
@@ -611,8 +668,73 @@ def build_spec(site):
            "version": "UP/0.1-draft", "creativeWorkStatus": "Draft", "url": site.url("/spec/"), "creator": CREATOR,
            "license": LIC["ccby"][1], "isAccessibleForFree": True, "description": desc,
            "hasPart": [{"@type": "TechArticle", "name": t, "url": site.url(f"/spec/{slug}/")} for _, slug, t, _ in SPEC_FILES]}]
-    site.write("spec/index.html", shell(site, "/spec/", title, desc, body, ld=ld, current="/spec/"))
+    site.write("spec/index.html", site.page("/spec/", title, desc, main, style=style, scripts=scripts, ld=ld))
     site.add_page("/spec/", "0.8", "monthly")
+    site.add_search("/spec/", "Specification", "UP/0.1-draft: the language, defined", "page", main, rank=2)
+
+
+def term_library(repo, terms, layers):
+    """The filterable grid of Terms on /spec/terms/, built from the JSON definitions and the README tables."""
+    fams = {s: term_family((repo / "spec/06-terms" / f"{s}.md").read_text(encoding="utf-8")) for s in terms}
+    counts = {}
+    for f in fams.values():
+        counts[f] = counts.get(f, 0) + 1
+    chips = "".join(f'<button type="button" class="fchip" aria-pressed="false" data-fam="{esc(f)}"><i class="t-{L.FAMILY_TONE.get(f, "sky")}"></i>{esc(f)} <b>{n}</b></button>'
+                    for f, n in sorted(counts.items(), key=lambda x: (-x[1], x[0])))
+    layer_name = {"master": "Master agreement", "member": "Member participation"}
+    cards = []
+    for s, j in terms.items():
+        tid, title, f = j["id"], j.get("title", ""), fams[s]
+        ps = sorted(j.get("params", {}))
+        lay = layers.get(tid, [])
+        m = re.search(r"^\*\*Family:.*?\n\n(.+?)\n", (repo / "spec/06-terms" / f"{s}.md").read_text(encoding="utf-8"), re.S | re.M)
+        purpose = m.group(1).strip() if m else ""
+        text = " ".join([tid.lower(), title.lower(), purpose.lower(), *ps])
+        cards.append(
+            f'<a class="tc" href="/spec/terms/{s}/" data-fam="{esc(f)}" data-layers="{" ".join(lay)}" data-text="{esc(text)}">'
+            f'<div class="tc-art" data-thumb="{esc(tid)}"><code>{esc(tid)}</code><span class="mark" aria-hidden="true"></span></div>'
+            f'<div class="tc-body"><div class="tc-tags"><span class="ftag t-{L.FAMILY_TONE.get(f, "sky")}">{esc(f)}</span>'
+            + "".join(f'<span class="ltag">{layer_name[x]}</span>' for x in lay)
+            + f'</div><h3>{esc(title)}</h3><p>{esc(purpose)}</p><div class="tc-ps">'
+            + ("".join(f"<span>{esc(x)}</span>" for x in ps) or '<span class="none">no parameters</span>')
+            + f'</div><div class="tc-foot"><span>{len(ps)} parameter{"" if len(ps) == 1 else "s"}</span><span class="go">Open {L.ico("arrow")}</span></div></div></a>')
+    n = len(terms)
+    return f"""  <section class="wrap tlib" aria-labelledby="tlib-h">
+  <div class="tlib-head">
+    <div><p class="eyebrow">The library</p><h2 class="h2" id="tlib-h">{NUMBER_WORDS.get(n, str(n))} standard Terms.</h2></div>
+    <p class="lede">Each Term is a reusable, value-neutral clause with typed parameters and no defaults. Filter by family, or by the layer of agreement it usually sits in.</p>
+  </div>
+  <div class="tlib-bar">
+    <div class="fchips" role="group" aria-label="Filter by family">
+      <button type="button" class="fchip" aria-pressed="true" data-fam="">All <b>{n}</b></button>
+      {chips}
+    </div>
+    <div class="tlib-tools">
+      <div class="seg" role="group" aria-label="Filter by layer"><button type="button" aria-pressed="true" data-layer="">All layers</button><button type="button" aria-pressed="false" data-layer="master">Master agreement</button><button type="button" aria-pressed="false" data-layer="member">Member participation</button></div>
+      <label class="tsearch">{L.ico("search")}<span class="sr">Filter Terms</span><input id="tq" placeholder="Filter by name or parameter…" autocomplete="off"></label>
+    </div>
+  </div>
+  <p class="tcount" id="tcount" role="status">Showing all {n} Terms.</p>
+  <div class="tgrid2" id="tgrid">{"".join(cards)}</div>
+  </section>"""
+
+
+NUMBER_WORDS = {12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen", 16: "Sixteen", 17: "Seventeen", 18: "Eighteen", 19: "Nineteen", 20: "Twenty"}
+
+TERM_LIBRARY_JS = """<script>
+(() => {
+  const cards = [...document.querySelectorAll('#tgrid .tc')], st = document.getElementById('tcount'), q = document.getElementById('tq');
+  let fam = '', layer = '';
+  const run = () => {
+    const v = q.value.trim().toLowerCase(); let n = 0;
+    cards.forEach(c => { const ok = (!fam || c.dataset.fam === fam) && (!layer || c.dataset.layers.split(' ').includes(layer)) && (!v || c.dataset.text.includes(v)); c.hidden = !ok; if (ok) n++; });
+    st.textContent = n === cards.length ? 'Showing all ' + n + ' Terms.' : n ? 'Showing ' + n + ' of ' + cards.length + ' Terms.' : 'No Terms match. Clear a filter to see more.';
+  };
+  document.querySelectorAll('.fchip').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.fchip').forEach(x => x.setAttribute('aria-pressed', x === b)); fam = b.dataset.fam; run(); }));
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b)); layer = b.dataset.layer; run(); }));
+  q.addEventListener('input', run);
+})();
+</script>"""
 
 
 # ----------------------------------------------------------------------------- optional integrations
@@ -838,6 +960,26 @@ def integrations_index(site):
     }
 
 
+# How each integration is shown on /integrations/ (art and labels only; the facts live in INTEGRATIONS and INTEGRATION_FACTS)
+INTEGRATION_CARDS = {"legal-context-protocol": ("Optional · discovery", "Read the mapping"),
+                     "verifiable-credentials": ("Optional · credentials", "See the payload"),
+                     "fingerprint-coordination": ("Optional · analytics", "Read the convention")}
+
+
+def integration_lede(desc):
+    """The first sentence of an integration's summary, without the "Optional:" prefix (the eyebrow says it)."""
+    d = re.sub(r"^Optional(?: analytics)?:\s*", "", desc)
+    first = re.split(r"(?<=[.)])\s+(?=[A-Z])", d, maxsplit=1)[0]
+    return first[:1].upper() + first[1:]
+
+
+def card_text(desc):
+    """An integration's summary for its card, with paths and field names set as code."""
+    d = re.sub(r"^Optional(?: analytics)?:\s*", "", desc)
+    d = esc(d[:1].upper() + d[1:])
+    return re.sub(r"(/\.well-known/[\w.-]+|\batrHash\b)", r'<code class="mono" style="font-size:.88em">\1</code>', d)
+
+
 def build_integrations(site):
     lmap = spec_link_map(site)
     # the LCP worked examples: copied byte for byte, because atrHash pins their exact bytes
@@ -851,19 +993,18 @@ def build_integrations(site):
         dst = site.out / "examples/integrations/vc" / p.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(p, dst)
-    # Fingerprint Coordination: the worked examples and schemas, plus the static demo (copied byte for byte, so its
-    # embedded profile keeps its fingerprint; its relative link ../demo-profile.json resolves next to it)
+    # Fingerprint Coordination: the worked examples and schemas, plus the demo (its embedded profile, scenario and
+    # HowTo are kept byte for byte; only the site header and footer are added around it)
     src = site.repo / FPC_DIR
     for p in sorted([*src.glob("*.json"), *src.glob("schemas/*.json")]):
         dst = site.out / FPC_DIR / p.relative_to(src)
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(p, dst)
-    demo = site.out / "integrations/fingerprint-coordination/demo/index.html"
-    demo.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(src / "demo/index.html", demo)
-    shutil.copyfile(src / "demo/scenario.json", demo.parent / "scenario.json")
-    shutil.copyfile(src / "demo-profile.json", demo.parent.parent / "demo-profile.json")
-    site.add_page("/integrations/fingerprint-coordination/demo/", "0.3", "monthly")
+    demo_dir = site.out / "integrations/fingerprint-coordination/demo"
+    demo_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(src / "demo/scenario.json", demo_dir / "scenario.json")
+    shutil.copyfile(src / "demo-profile.json", demo_dir.parent / "demo-profile.json")
+    build_fpc_demo(site, (src / "demo/index.html").read_text(encoding="utf-8"))
     index = integrations_index(site)
     site.write("integrations/index.json", json.dumps(index, indent=2, ensure_ascii=False) + "\n")
     idx_url = site.url("/integrations/index.json")
@@ -871,19 +1012,30 @@ def build_integrations(site):
                  "name": "Machine-readable index of Universal Paper optional integrations"}
     collection = {"@type": "CollectionPage", "@id": site.url("/integrations/"), "name": "Universal Paper optional integrations",
                   "url": site.url("/integrations/")}
-    note = ('<p class="lead" style="font-size:1rem">Optional. Universal Paper is self-contained and does not depend on any integration below. '
-            'Nothing here changes the language, its schemas, its fingerprints or its engines.</p>')
+    seq = [("/integrations/", "All integrations")] + [(f"/integrations/{s}/", t) for _, s, t, _ in INTEGRATIONS]
+    if any(INTEGRATION_FACTS[s].get("demo") for _, s, _, _ in INTEGRATIONS):
+        seq.append(("/integrations/fingerprint-coordination/demo/", "Coordination demo"))
+    side_items = [("/integrations/", "↖", "All integrations")] + [(f"/integrations/{s}/", "○", t) for _, s, t, _ in INTEGRATIONS]
+    side_items += [(INTEGRATION_FACTS[s]["demo"], "▶", "Coordination demo") for _, s, _, _ in INTEGRATIONS if INTEGRATION_FACTS[s].get("demo")]
     cards = []
-    for (f, slug, ttl, desc), item in zip(INTEGRATIONS, index["integrations"]):
+    for n, ((f, slug, ttl, desc), item) in enumerate(zip(INTEGRATIONS, index["integrations"])):
         path = f"/integrations/{slug}/"
         text = (site.repo / f).read_text(encoding="utf-8")
         h, _ = render_md(site, f, text, lmap)
         raw = path.rstrip("/") + ".md"
         site.write(raw, text)
-        edit = f' · <a href="{site.a.repo_url}/blob/main/{f}">View source</a>' if site.a.repo_url else ""
-        body = f"""<div class="wrap" style="padding-top:40px"><div class="crumbs"><a href="/">Universal Paper</a> / <a href="/integrations/">Integrations</a> / {esc(ttl)}</div></div>
-<div class="wrap"><article class="prose" style="max-width:820px;padding-bottom:96px">{h}
-  <p style="margin-top:56px;font-size:.85rem;color:var(--ink-3)">Optional integration documentation by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>. <a href="{esc(raw)}">Plain Markdown</a> · <a href="/integrations/index.json">Machine-readable summary (JSON)</a>{edit}</p></article></div>"""
+        h = re.sub(r"^\s*<h1[^>]*>.*?</h1>\s*", "", h, count=1, flags=re.S)
+        _lede, body, toc = L.article("<p></p>" + h)  # keep the opening notice in the article; the hero carries the summary
+        paths = [p for p, _ in seq]
+        i = paths.index(path)
+        main = L.doc_main(field=slug, tone=L.TONES.get(slug, "warm"),
+                          trail=[("/", "Universal Paper"), ("/integrations/", "Integrations"), ("", ttl)],
+                          eyebrow="Optional integration", title=ttl, lede=esc(integration_lede(desc)),
+                          chips=doc_chips(site, body, text, raw, f),
+                          side=L.side_html("Section", "Integrations", side_items, path), body=body, toc=toc,
+                          foot=doc_foot(site, raw, f, 'Optional integration documentation by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>.',
+                                        ' · <a href="/integrations/index.json">Machine-readable summary (JSON)</a>'),
+                          pager=L.pager_html(seq[i - 1], seq[i + 1] if i + 1 < len(seq) else None))
         helper = item["helper"]
         ld = [{"@context": "https://schema.org", "@type": "TechArticle", "@id": site.url(path),
                "headline": f"Universal Paper optional integration: {ttl}",
@@ -897,18 +1049,18 @@ def build_integrations(site):
                "isAccessibleForFree": True}]
         links = [("alternate", "text/markdown", raw, f"{ttl} (Markdown)"),
                  ("describedby", "application/json", "/integrations/index.json", "Integrations index (JSON)")]
-        site.write(path.lstrip("/") + "index.html", shell(site, path, f"{ttl} (optional integration) | Universal Paper", desc, body,
-                                                         kind="article", ld=ld, links=links))
+        site.write(path.lstrip("/") + "index.html", site.page(path, f"{ttl} (optional integration) | Universal Paper", desc, main,
+                                                              kind="article", ld=ld, links=links))
         site.add_page(path, "0.4", "monthly")
-        cards.append(f'<a class="card" href="{path}" style="text-decoration:none"><span class="lic">optional</span><h3 style="color:var(--ink)">{esc(ttl)}</h3><p>{esc(desc)}</p></a>')
-    body = f"""<div class="wrap page-hero">
-  <div class="crumbs"><a href="/">Universal Paper</a> / Integrations</div>
-  <h1 class="display">Optional integrations.</h1>
-  {note}
-</div>
-<div class="wrap prose" style="max-width:var(--maxw);padding-bottom:96px"><div class="cards">{"".join(cards)}</div>
-<p>Any channel that delivers an artifact's bytes and lets the receiver recompute its fingerprint binds a Universal Paper agreement equally well. These pages describe a few well-known ones; none has special status. Start with the <a href="/spec/">specification</a> instead if you are new to Universal Paper.</p>
-<p style="font-size:.9rem;color:var(--ink-3)">For agents: <a href="/integrations/index.json">integrations/index.json</a> lists each integration's docs, helper functions, claim shapes (JSON Schema), examples and the MCP tools to evaluate with. Each page is also available as plain Markdown.</p></div>"""
+        site.add_search(path, ttl, "Optional integration", "integration", main, rank=40)
+        glyph, more = INTEGRATION_CARDS.get(slug, ("Optional", "Read more"))
+        delay = f' style="transition-delay:{n * .06:.2f}s"' if n else ""
+        cards.append(f'<a class="int rv" href="{path}"{delay}>\n          <div class="artcard"><canvas data-field="{slug}" data-tone="{L.TONES.get(slug, "warm")}" aria-hidden="true"></canvas>'
+                     f'<span class="glyph">{esc(glyph)}</span></div>\n          <div class="body"><h3>{esc(ttl)}</h3><p>{card_text(desc)}</p>'
+                     f'<span class="more">{esc(more)} {L.ico("arrow")}</span></div>\n        </a>')
+    style, main, scripts = L.fragment("integrations")
+    main = fill(main, {"INTEGRATION_CARDS": "\n        ".join(cards)}, "integrations")
+    require_links("integrations", main, ["/integrations/index.json", "/integrations/fingerprint-coordination/demo/"])
     desc = ("Optional, external integrations for Universal Paper, such as the Legal Context Protocol, W3C Verifiable Credentials and Fingerprint Coordination "
             "analytics. Universal Paper does not depend on any of them.")
     ld = [{"@context": "https://schema.org", **collection, "description": desc, "publisher": CREATOR, "license": LIC["ccby"][1],
@@ -917,8 +1069,32 @@ def build_integrations(site):
                {"@type": "ListItem", "position": i, "name": t, "url": site.url(f"/integrations/{s}/")}
                for i, (_, s, t, _) in enumerate(INTEGRATIONS, 1)]}}]
     links = [("alternate", "application/json", "/integrations/index.json", "Integrations index (JSON)")]
-    site.write("integrations/index.html", shell(site, "/integrations/", "Optional integrations | Universal Paper", desc, body, ld=ld, links=links))
+    site.write("integrations/index.html", site.page("/integrations/", "Optional integrations | Universal Paper", desc, main,
+                                                     style=style, scripts=scripts, ld=ld, links=links))
     site.add_page("/integrations/", "0.3", "monthly")
+    site.add_search("/integrations/", "Integrations", "Optional: LCP, Verifiable Credentials, Fingerprint Coordination", "page", main, rank=6)
+
+
+def build_fpc_demo(site, page):
+    """The Fingerprint Coordination demo. Its source (examples/.../demo/index.html, kept up to date by regenerate.py) is a
+    complete page that also opens from disk; here its <main> and scripts get the site's header, footer and search."""
+    head = page[:page.index("</head>")]
+    title = html.unescape(re.search(r"<title>(.*?)</title>", head, re.S).group(1))
+    desc = html.unescape(re.search(r'<meta name="description" content="([^"]*)"', head).group(1))
+    howto = re.search(r'<script type="application/ld\+json" id="howto">.*?</script>', head, re.S).group(0)
+    style = "\n".join(re.findall(r"<style>.*?</style>", head, re.S))
+    body = page[page.index("<body"):]
+    i, j = re.search(r'<main id="main"[^>]*>', body).start(), body.rindex("</main>") + len("</main>")
+    main, tail = body[i:j], body[j:]
+    scripts = "\n".join(s for s in re.findall(r"<script\b[^>]*>.*?</script>", tail, re.S) if "src=" not in s.split(">", 1)[0])
+    path = "/integrations/fingerprint-coordination/demo/"
+    links = [("alternate", "application/json", "scenario.json", "Machine-readable scenario (JSON)"),
+             ("describedby", "application/json", "/integrations/index.json", "Integrations index (JSON)")]
+    out = site.page(path, title, desc, main, style=style, scripts=scripts, links=links)
+    out = out.replace("</head>", howto + "\n</head>", 1)  # regenerate.py owns the HowTo; keep its exact bytes
+    site.write(path.lstrip("/") + "index.html", out)
+    site.add_page(path, "0.3", "monthly")
+    site.add_search(path, "Coordination demo", "Simulated: what shared fingerprints can tell you", "integration", main, rank=41)
 
 
 # ----------------------------------------------------------------------------- misc files
@@ -926,16 +1102,15 @@ def build_misc(site):
     a = site.a
     site.write("CNAME", a.domain + "\n")
     site.write(".nojekyll", "")
-    # /playground/ -> /#playground
-    site.write("playground/index.html", f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Universal Paper Playground</title>
-<link rel="canonical" href="{site.url('/')}"><meta name="robots" content="noindex,follow">
-<meta http-equiv="refresh" content="0; url=/#playground"><script>location.replace("/#playground")</script></head>
-<body><p><a href="/#playground">Open the Universal Paper Playground</a></p></body></html>
-""")
-    body = """<div class="wrap page-hero"><div class="crumbs"><a href="/">Universal Paper</a> / 404</div>
-<h1 class="display">This page isn't on the paper.</h1><p class="lead">The link may be old or mistyped. Try one of these instead.</p>
-<p style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn primary" href="/">Home</a><a class="btn" href="/#playground">Playground</a><a class="btn" href="/developers/">Developers</a><a class="btn" href="/spec/">Specification</a><a class="btn" href="/faq/">FAQ</a></p></div>"""
-    site.write("404.html", shell(site, "/404.html", "Page not found | Universal Paper", "This page could not be found on universalpaper.org.", body).replace('content="index,follow"', 'content="noindex"'))
+    main = f"""<main id="main">
+  <div class="wrap phero" style="padding-bottom:clamp(64px,8vw,120px)">
+    {L.crumbs([("/", "Universal Paper"), ("", "404")])}
+    <h1 class="display">This page isn't on the paper.</h1>
+    <p class="lede">The link may be old or mistyped. Try one of these instead, or search the site.</p>
+    <div class="ctas" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px"><a class="btn dark" href="/">Home</a><a class="btn ghost" href="/playground/">Playground</a><a class="btn ghost" href="/developers/">Developers</a><a class="btn ghost" href="/spec/">Specification</a><a class="btn ghost" href="/faq/">FAQ</a><button class="btn ghost" type="button" data-search>Search {L.ico("search")}</button></div>
+  </div>
+</main>"""
+    site.write("404.html", site.page("/404.html", "Page not found | Universal Paper", "This page could not be found on universalpaper.org.", main, robots="noindex"))
     site.write("robots.txt", f"""# universalpaper.org: everything here is open (CC BY 4.0 / Apache-2.0 / CC0). Crawlers and AI agents are welcome.
 User-agent: *
 Allow: /
@@ -1087,7 +1262,8 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 
 ## Pages
 
-- [Home and Playground]({site.url('/')}): what Universal Paper is, a vision of apps and agents built on it, an in-browser Playground, and conformance results
+- [Home]({site.url('/')}): what Universal Paper is, agents acting under Mandates, the Term library and conformance results
+- [Playground]({site.url('/playground/')}): write an agreement in the browser and watch its fingerprint, signatures and obligations update
 - [Developers]({site.url('/developers/')}): primitives, the 16-Term library, code examples, the CLI and test vectors
 - [MCP server]({site.url('/developers/#mcp')}): the official, read-only Universal Paper MCP server
 - [FAQ]({site.url('/faq/')}): plain-language answers for GPOs, suppliers, members and developers
@@ -1149,7 +1325,12 @@ def build_assets(site, og):
     from PIL import Image
     ad = site.out / "assets"
     ad.mkdir(parents=True, exist_ok=True)
-    shutil.copy(site.repo / "explorer/src/tokens.css", ad / "tokens.css")
+    shutil.copy(site.repo / "explorer/src/tokens.css", ad / "tokens.css")  # still served: older pages and tools link it
+    shutil.copy(L.THEME / "site.css", ad / "site.css")
+    shutil.copy(L.THEME / "site.js", ad / "site.js")
+    for sub in ("fonts", "icons"):
+        shutil.copytree(L.THEME / sub, ad / sub)
+    shutil.copytree(L.THEME / "licenses", site.out / "licenses")  # the fonts' SIL Open Font License texts
     black = Image.open(site.repo / "assets/universal-paper-mark-black-512.png").convert("RGBA")
     white = Image.open(site.repo / "assets/universal-paper-mark-white-512.png").convert("RGBA")
     black.save(ad / "mark-black-512.png"); white.save(ad / "mark-white-512.png")
@@ -1210,7 +1391,6 @@ def main():
     ap = argparse.ArgumentParser()
     in_repo = (HERE.parent / "spec").is_dir()  # site/ inside the repository, or the project-files copy
     ap.add_argument("--repo", default=str(HERE.parent if in_repo else HERE.parent / "universal-paper"))
-    ap.add_argument("--explainer", default=str(HERE / "src/developers.html" if in_repo else HERE.parent / "universal-paper-explainer/index.html"))
     ap.add_argument("--out", default=str(HERE / "dist"))
     ap.add_argument("--domain", default="universalpaper.org")
     ap.add_argument("--repo-url", default="https://github.com/Uppercentile/universal-paper")
@@ -1222,7 +1402,8 @@ def main():
     site.out.mkdir(parents=True)
     build_assets(site, a.og)
     build_home(site)
-    build_developers(site, a.explainer)
+    build_developers(site)
+    build_playground(site)
     build_faq(site)
     build_license(site)
     build_spec(site)
@@ -1230,6 +1411,7 @@ def main():
     build_misc(site)
     build_llms(site)
     build_sitemap(site)
+    site.write("assets/search-index.js", L.search_index(sorted(site.search, key=lambda e: e["rank"])))
     n = sum(1 for _ in site.out.rglob("*") if _.is_file())
     print(f"built {n} files, {len(site.pages)} pages in sitemap -> {site.out}")
 

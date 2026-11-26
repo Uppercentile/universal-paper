@@ -40,6 +40,7 @@ FILE_ABOUT = {
     "test_integration_lcp.py": "Optional Legal Context Protocol integration, outside the language",
     "test_integration_vc.py": "Optional Verifiable Credentials convention, outside the language",
     "test_integrations_index.py": "The machine-readable index of optional integrations",
+    "test_site_pages.py": "The website build: every page, link, search entry and stated fact",
 }
 
 
