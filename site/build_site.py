@@ -53,11 +53,22 @@ SITE_DESC = ("Universal Paper is a free, open language for group purchasing agre
              "Every party holds the same agreement, every change is signed, and anyone can verify it offline. "
              "Created by Uppercentile, offered free under CC BY 4.0 and Apache-2.0.")
 
+TITLE_MAX, DESC_MAX = 60, 155  # what search results show before cutting off; the build enforces both
+
+
+def fit(*candidates, limit):
+    """The first candidate that fits in `limit` characters (titles and descriptions are cut off past that)."""
+    for c in candidates:
+        if len(c) <= limit:
+            return c
+    raise SystemExit(f"nothing fits in {limit} characters: {candidates[-1]!r}")
+
+
 SPEC_FILES = [  # (source path in repo, slug, title, description)
     ("spec/00-overview.md", "overview", "Overview",
-     "What Universal Paper is, why universality buys speed, its engineered properties, design principles and boundaries (antitrust, enforceability, regulation)."),
+     "What Universal Paper is, why universality buys speed, its properties, design principles and boundaries (antitrust, enforceability, regulation)."),
     ("spec/01-domain.md", "domain", "Domain",
-     "The things that exist in Universal Paper: canonical JSON and hashes, Identifier, Seal, Party, Role, Term, Agreement, Event, State, Mandate, Commitment and Bundle."),
+     "What exists in Universal Paper: canonical JSON and hashes, Identifier, Seal, Party, Role, Term, Agreement, Event, State, Mandate and Bundle."),
     ("spec/02-predicates-functions.md", "predicates-functions", "Predicates and functions",
      "What can be asked of a Universal Paper agreement: the predicates and functions every evaluator provides."),
     ("spec/03-axioms.md", "axioms", "Axioms",
@@ -130,6 +141,8 @@ class Site:
 
     def page(self, path, title, desc, main, *, style="", scripts="", kind="website", ld=(), links=(), robots="index,follow", announce=""):
         """A whole v7 page: shared header, footer, search and scripts around `main`."""
+        if len(title) > TITLE_MAX or len(desc) > DESC_MAX:
+            raise SystemExit(f"{path}: title ({len(title)}) or description ({len(desc)}) is over {TITLE_MAX}/{DESC_MAX} characters")
         return L.document(title=title, head=self.head_meta(path, title, desc, kind=kind, extra_ld=ld, robots=robots, links=links),
                           header_html=L.header(path, self.a.repo_url), footer_html=L.footer(self.legal_strip(), TAGLINE, self.a.repo_url),
                           main=main, style=style, scripts=scripts, announce=announce)
@@ -233,9 +246,9 @@ PLAYGROUND_REDIRECT = """<script>/* The Playground moved from /#playground to /p
 
 
 def build_home(site):
-    title = "Universal Paper | Open language for GPO, supplier and member agreements"
-    desc = ("Universal Paper is a free, open language for group purchasing agreements. GPOs, suppliers and members share the same paper: "
-            "every change is signed, every party computes the same state, fees and obligations. Try the Playground.")
+    title = "Universal Paper | The open language for GPO agreements"
+    desc = ("A free, open language for group purchasing agreements. GPOs, suppliers and members sign the same agreement, "
+            "and every system computes the same answers.")
     ld = [
         {"@context": "https://schema.org", "@type": "WebSite", "@id": site.url("/#website"), "name": "Universal Paper",
          "url": site.url("/"), "description": SITE_DESC, "inLanguage": "en", "publisher": CREATOR, "creator": CREATOR,
@@ -281,9 +294,9 @@ def playground_ld(site):
 
 
 def build_developers(site):
-    title = "Universal Paper for Developers | Spec, reference engine and CLI"
-    desc = ("Build on Universal Paper: canonical JSON (RFC 8785), SHA-256 content addresses, Ed25519 signatures, a 16-Term library, "
-            "a Python reference interpreter and CLI, and a JavaScript engine that matches it byte for byte. Free and open source.")
+    title = "Universal Paper for Developers | Spec, engine and CLI"
+    desc = ("Build on Universal Paper: canonical JSON, SHA-256 fingerprints, Ed25519 signatures, 16 Terms, a Python engine and CLI, "
+            "and an MCP server. Open source.")
     ld = [{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Universal Paper for Developers",
            "url": site.url("/developers/"), "description": desc, "author": CREATOR, "publisher": CREATOR,
            "license": LIC["ccby"][1], "isAccessibleForFree": True, "dateModified": TODAY, "inLanguage": "en",
@@ -313,9 +326,9 @@ def build_playground(site):
     app = app.replace("</head>", PLAYGROUND_EMBED_HEAD + "\n</head>", 1)
     app = app.replace("</body>", PLAYGROUND_EMBED_JS + "\n</body>", 1)
     site.write("playground/app.html", app)
-    title = "Playground | Write a Universal Paper agreement in your browser"
-    desc = ("Write a Universal Paper agreement in the browser: change the fee, the length or a party and watch the contract text, "
-            "its fingerprint and its signatures update. Compare versions or play out a year of reports and payments. Runs locally.")
+    title = "Playground | Write a Universal Paper agreement"
+    desc = ("Write a Universal Paper agreement in your browser. Change the fee, length or a party and watch the text, "
+            "fingerprint and signatures update. Runs locally.")
     main = f"""<main id="main">
   <div class="wrap phero" style="padding-bottom:8px">
     {L.crumbs([("/", "Universal Paper"), ("", "Playground")])}
@@ -424,9 +437,9 @@ FAQ_JS = """<script>
 
 def build_faq(site):
     main, ld_q = faq_main(site)
-    title = "Universal Paper FAQ | GPO, supplier and member agreements explained"
-    desc = ("Answers about Universal Paper: what the open agreement language is, who created it (Uppercentile), how hashes and signatures work, "
-            "confidential pricing, AI agents and the MCP server, optional integrations (LCP, Verifiable Credentials), EDI, legal status and licenses.")
+    title = "Universal Paper FAQ | GPO agreements explained"
+    desc = ("What Universal Paper is, who created it, how hashes and signatures work, confidential pricing, AI agents and MCP, "
+            "EDI, legal status and licenses.")
     ld = [{"@context": "https://schema.org", "@type": "FAQPage", "@id": site.url("/faq/"), "url": site.url("/faq/"), "name": title,
            "description": desc, "inLanguage": "en", "dateModified": TODAY,
            "isPartOf": {"@type": "WebSite", "name": "Universal Paper", "url": site.url("/")},
@@ -440,9 +453,9 @@ def build_faq(site):
 
 def build_license(site):
     style, main, scripts = L.fragment("license")
-    title = "Licenses | Universal Paper is free and open (CC BY 4.0, Apache-2.0, CC0)"
-    desc = ("Universal Paper was created by Uppercentile and is offered free to everyone: specification under CC BY 4.0, code under Apache-2.0, "
-            "example agreements under CC0. How to use it, credit it and contribute.")
+    title = "Licenses | Universal Paper is free and open"
+    desc = ("Created by Uppercentile and free to use: the spec under CC BY 4.0, code under Apache-2.0, examples under CC0. "
+            "How to use, credit and contribute.")
     require_links("license", main, [LIC["ccby"][1], LIC["apache"][1], LIC["cc0"][1], "/spec/neutrality-charter/"])
     site.write("license/index.html", site.page("/license/", title, desc, main, style=style, scripts=scripts))
     site.add_page("/license/", "0.7", "yearly")
@@ -613,8 +626,10 @@ def build_spec(site):
         tid, ttitle = j.get("id", p.stem.replace("UP-", "UP:")), j.get("title", "")
         path, src_file = f"/spec/terms/{p.stem}/", f"spec/06-terms/{p.name}"
         ttl = f"{tid} ({ttitle})" if ttitle else tid
-        desc = (f"The {tid} Term of the Universal Paper library: {ttitle.lower() or 'definition'}, its typed parameters, clauses and "
-                "human-readable rendering. Value-neutral, free under CC BY 4.0.")
+        page_title = fit(f"{ttitle} ({tid}) | Universal Paper", f"{ttitle} ({tid})", f"{tid} | Universal Paper Term", limit=TITLE_MAX)
+        desc = fit(f"{tid}, the {ttitle.lower()} Term of Universal Paper: typed parameters, clauses and readable text. Value-neutral, free under CC BY 4.0.",
+                   f"{tid}, the {ttitle.lower()} Term of Universal Paper: typed parameters, clauses and readable text. Free under CC BY 4.0.",
+                   f"{tid}: a value-neutral Universal Paper Term with typed parameters, clauses and readable text. Free under CC BY 4.0.", limit=DESC_MAX)
         text = p.read_text(encoding="utf-8")
         raw = path.rstrip("/") + ".md"
         site.write(raw, text)
@@ -655,7 +670,7 @@ def build_spec(site):
   </div>
   {L.pager_html(prev, nxt)}
 </main>"""
-        site.write(path.lstrip("/") + "index.html", site.page(path, f"{ttl} | Universal Paper specification", desc, main,
+        site.write(path.lstrip("/") + "index.html", site.page(path, page_title, desc, main,
                                                               kind="article", ld=spec_ld(site, path, ttl, desc, raw)))
         site.add_page(path, "0.7", "monthly")
         site.add_search(path, tid, ttitle, "term", main, rank=30)
@@ -671,8 +686,8 @@ def build_spec(site):
                   + ["/schema/", "/schema/universal-paper.schema.json", "/schema/trace.schema.json", "/llms-full.txt"]
                   + [f"/examples/{d}/bundle.json" for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if")])
     title = "Universal Paper specification | UP/0.1-draft"
-    desc = ("Read the Universal Paper specification: domain, axioms, inference, lifecycle, the 16-Term library, the EDI mapping guide and the neutrality charter. "
-            "Free under CC BY 4.0.")
+    desc = ("The Universal Paper specification: domain, axioms, inference, lifecycle, the 16-Term library, EDI mapping guide "
+            "and neutrality charter. CC BY 4.0.")
     ld = [{"@context": "https://schema.org", "@type": "CreativeWork", "@id": site.url("/spec/#spec"), "name": "Universal Paper specification",
            "version": "UP/0.1-draft", "creativeWorkStatus": "Draft", "url": site.url("/spec/"), "creator": CREATOR,
            "license": LIC["ccby"][1], "isAccessibleForFree": True, "description": desc,
@@ -749,14 +764,14 @@ TERM_LIBRARY_JS = """<script>
 # ----------------------------------------------------------------------------- optional integrations
 # Optional, external integrations (docs/integrations/). Linked modestly (footer, sitemap, llms.txt), never from core pages.
 INTEGRATIONS = [("docs/integrations/legal-context-protocol.md", "legal-context-protocol", "Legal Context Protocol",
-                 "Optional: publish a Universal Paper bundle at /.well-known/legal-context.json and pin it by its fingerprint (LCP atrHash). "
-                 "Universal Paper does not depend on it."),
+                 "Optional: publish a Universal Paper bundle at /.well-known/legal-context.json and pin it by fingerprint (LCP atrHash). "
+                 "Universal Paper does not need it."),
                 ("docs/integrations/verifiable-credentials.md", "verifiable-credentials", "Verifiable Credentials",
-                 "Optional: a W3C Verifiable Credential that references a Universal Paper fingerprint, for roster participation "
-                 "and role snapshots. A snapshot only: participation status still comes from a Universal Paper engine."),
+                 "Optional: a W3C Verifiable Credential that references a Universal Paper fingerprint. A snapshot only: "
+                 "participation still comes from the engine."),
                 ("docs/integrations/fingerprint-coordination.md", "fingerprint-coordination", "Fingerprint Coordination",
-                 "Optional analytics: share Universal Paper fingerprints under explicit rules and derive recomputable profiles: "
-                 "parameter ranges, variance, historical deltas and engine-checked Proposal seeds. Includes a simulated demo from public examples.")]
+                 "Optional analytics: share Universal Paper fingerprints under explicit rules and derive recomputable profiles, "
+                 "variance and engine-checked Proposal seeds.")]
 
 FPC_DIR = "examples/integrations/fingerprint-coordination"
 
@@ -1058,7 +1073,7 @@ def build_integrations(site):
                "isAccessibleForFree": True}]
         links = [("alternate", "text/markdown", raw, f"{ttl} (Markdown)"),
                  ("describedby", "application/json", "/integrations/index.json", "Integrations index (JSON)")]
-        site.write(path.lstrip("/") + "index.html", site.page(path, f"{ttl} (optional integration) | Universal Paper", desc, main,
+        site.write(path.lstrip("/") + "index.html", site.page(path, f"{ttl} | Universal Paper integration", desc, main,
                                                               kind="article", ld=ld, links=links))
         site.add_page(path, "0.4", "monthly")
         site.add_search(path, ttl, "Optional integration", "integration", main, rank=40)
@@ -1070,8 +1085,8 @@ def build_integrations(site):
     style, main, scripts = L.fragment("integrations")
     main = fill(main, {"INTEGRATION_CARDS": "\n        ".join(cards)}, "integrations")
     require_links("integrations", main, ["/integrations/index.json", "/integrations/fingerprint-coordination/demo/"])
-    desc = ("Optional, external integrations for Universal Paper, such as the Legal Context Protocol, W3C Verifiable Credentials and Fingerprint Coordination "
-            "analytics. Universal Paper does not depend on any of them.")
+    desc = ("Optional, external integrations for Universal Paper: Legal Context Protocol, W3C Verifiable Credentials and "
+            "Fingerprint Coordination. None is required.")
     ld = [{"@context": "https://schema.org", **collection, "description": desc, "publisher": CREATOR, "license": LIC["ccby"][1],
            "encoding": idx_media,
            "mainEntity": {"@type": "ItemList", "itemListElement": [

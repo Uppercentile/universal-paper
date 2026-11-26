@@ -525,10 +525,10 @@ section { padding-block: clamp(80px, 10vw, 150px); }
       <p class="lede">Two independent implementations, one in Python and one in JavaScript, must agree on every fingerprint, verdict and computed value.</p>
     </div>
     <div class="nums rv" id="nums">
-      <div class="num"><div class="v"><span data-count="{{TESTS_PASSED}}">0</span><small>/{{TESTS_TOTAL}}</small></div><div class="k">Tests passing</div><div class="bar"><i></i></div></div>
-      <div class="num"><div class="v"><span data-count="{{JS_PASSED}}">0</span><small>/{{JS_TOTAL}}</small></div><div class="k">Engines agree</div><div class="bar"><i></i></div></div>
-      <div class="num"><div class="v"><span data-count="{{LAB_RUNS}}">0</span></div><div class="k">Random seeds in CI</div><p>{{LAB_FAILURES}} failures across 8 invariants</p></div>
-      <div class="num"><div class="v"><span data-count="{{AUDIT_FIXED}}">0</span></div><div class="k">Audit findings fixed</div><p>{{AUDIT_HIGH}} high severity, each with a regression test</p></div>
+      <div class="num"><div class="v"><span data-count="{{TESTS_PASSED}}">{{TESTS_PASSED}}</span><small>/{{TESTS_TOTAL}}</small></div><div class="k">Tests passing</div><div class="bar"><i></i></div></div>
+      <div class="num"><div class="v"><span data-count="{{JS_PASSED}}">{{JS_PASSED}}</span><small>/{{JS_TOTAL}}</small></div><div class="k">Engines agree</div><div class="bar"><i></i></div></div>
+      <div class="num"><div class="v"><span data-count="{{LAB_RUNS}}">{{LAB_RUNS}}</span></div><div class="k">Random seeds in CI</div><p>{{LAB_FAILURES}} failures across 8 invariants</p></div>
+      <div class="num"><div class="v"><span data-count="{{AUDIT_FIXED}}">{{AUDIT_FIXED}}</span></div><div class="k">Audit findings fixed</div><p>{{AUDIT_HIGH}} high severity, each with a regression test</p></div>
     </div>
     <p class="note">Figures recorded from the last full test run, on {{RUN_DATE}}.</p>
   </div>

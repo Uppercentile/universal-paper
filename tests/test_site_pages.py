@@ -6,6 +6,7 @@ facts the hand-designed pages state (test counts, hashes, MCP tools) match the r
 """
 from __future__ import annotations
 
+import html
 import json
 import re
 import sys
@@ -237,3 +238,27 @@ def test_home_hero_copy(dist):
     # the underline is a background on <em>, drawn at every width (no ::after that a phone rule could hide)
     assert ".hero .display em { font-style: normal; background: linear-gradient(var(--coral)" in s
     assert ".hero .display em::after" not in s
+
+
+def test_titles_and_descriptions_fit_search_results(dist):
+    """Search results cut titles past ~60 characters and descriptions past ~155; every page stays within both."""
+    for f in dist.rglob("*.html"):
+        s = f.read_text(encoding="utf-8")
+        t = re.search(r"<title>(.*?)</title>", s, re.S)
+        m = re.search(r'<meta name="description" content="([^"]*)"', s)
+        assert t and len(html.unescape(t.group(1))) <= 60, (f, t and t.group(1))
+        assert m and len(html.unescape(m.group(1))) <= 155, (f, m and m.group(1))
+
+
+def test_counters_carry_real_numbers_without_script(dist):
+    """Crawlers and agents read the raw HTML, so each count-up holds its real value before any script runs."""
+    s = (dist / "index.html").read_text(encoding="utf-8")
+    counts = re.findall(r'<span data-count="(\d+)">([^<]*)</span>', s)
+    assert len(counts) == 4 and all(v == n for v, n in counts), counts
+    assert counts[0][0] == str(json.loads((ROOT / "explorer/conformance-results.json").read_text())["pytest"]["passed"])
+
+
+def test_developers_headline_is_agreement_led(dist):
+    s = (dist / "developers/index.html").read_text(encoding="utf-8")
+    assert '<h1 class="display">The agreement layer every system can read.</h1>' in s
+    assert "contract layer" not in s
