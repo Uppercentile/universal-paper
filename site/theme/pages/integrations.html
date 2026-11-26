@@ -1,0 +1,53 @@
+<style>
+.ints { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+@media (max-width: 980px) { .ints { grid-template-columns: minmax(0,1fr); } }
+.int { display: flex; flex-direction: column; border-radius: var(--r-xl); background: #fff; border: 1px solid var(--line); overflow: hidden; text-decoration: none; transition: transform .45s var(--ease), box-shadow .45s; }
+.int:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -36px rgba(25,23,63,.45); }
+.int .artcard { border-radius: 0; height: 240px; }
+.int .artcard::after { background: linear-gradient(180deg, rgba(16,14,43,0) 40%, rgba(16,14,43,.55)); }
+.int .artcard .glyph { position: absolute; left: 22px; bottom: 20px; font: 500 12px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: #fff; display: inline-flex; gap: 8px; align-items: center; padding: 8px 11px; border-radius: 999px; background: rgba(16,14,43,.5); backdrop-filter: blur(8px); }
+.int .body { padding: 26px 26px 28px; display: flex; flex-direction: column; flex: 1; }
+.int h3 { font: 400 32px/1.05 var(--serif); letter-spacing: -.02em; }
+.int p { margin: 12px 0 0; color: var(--ink-2); font-size: 16px; }
+.int .more { margin-top: auto; padding-top: 22px; display: inline-flex; gap: 8px; align-items: center; font-weight: 600; font-size: 15px; }
+.int .more .ico { transition: transform .3s var(--ease); }
+.int:hover .more .ico { transform: translateX(4px); }
+.principle { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 22px; align-items: start; }
+.principle .mark { width: 52px; height: 52px; color: var(--coral); }
+</style>
+<main id="main">
+  <div class="wrap phero">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Universal Paper</a><span aria-hidden="true">/</span><span>Integrations</span></nav>
+    <h1 class="display">Optional integrations.</h1>
+    <p class="lede">Optional. Universal Paper is self-contained and does not depend on any integration below. Nothing here changes the language, its schemas, its fingerprints or its engines.</p>
+  </div>
+  <section class="band tight" aria-label="Integrations">
+    <div class="wrap">
+      <div class="ints">
+        {{INTEGRATION_CARDS}}
+      </div>
+    </div>
+  </section>
+  <section class="band tight" aria-labelledby="demo-h">
+    <div class="wrap">
+      <a class="ccard c-sun has-go rv" href="/integrations/fingerprint-coordination/demo/" style="min-height:260px">
+        <span class="fn">Simulated demonstration · public example data only</span>
+        <h3 id="demo-h" style="font-size:clamp(34px,4vw,56px);max-width:18ch">What a shared set of fingerprints can tell you.</h3>
+        <p style="max-width:60ch">Variance maps, parameter ranges, historical deltas and a predictive redline, all recomputed in your browser from hypothetical example bundles. No network calls.</p>
+        <span class="go" style="opacity:1;transform:none"><svg class="ico"><use href="#i-play"/></svg></span>
+      </a>
+    </div>
+  </section>
+  <section class="band tight" aria-labelledby="any-h">
+    <div class="wrap">
+      <div class="panel white principle rv">
+        <span class="mark" aria-hidden="true"></span>
+        <div>
+          <h2 class="h3" id="any-h" style="font-size:clamp(28px,3vw,38px);max-width:24ch">Any channel that lets the receiver recompute the fingerprint works equally well.</h2>
+          <p class="lede" style="font-size:17px;margin-top:14px">These pages describe a few well-known ones; none has special status. Start with the <a href="/spec/" style="color:var(--ink);text-decoration-color:var(--coral);text-underline-offset:4px">specification</a> instead if you are new to Universal Paper.</p>
+          <p style="margin:18px 0 0;font-size:15px;color:var(--ink-2)">For agents: <a href="/integrations/index.json" style="color:var(--ink)">integrations/index.json</a> lists each integration’s docs, helper functions, claim shapes (JSON Schema), examples and the MCP tools to evaluate with. Each page is also available as plain Markdown.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

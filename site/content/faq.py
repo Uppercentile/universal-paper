@@ -77,7 +77,7 @@ SECTIONS = [
     ]),
     ("developers", "For developers", [
         ("how-do-i-try-universal-paper", "How do I try Universal Paper?",
-         "<p>Open the <a href=\"/#playground\">Playground</a> to write an agreement in your browser and watch its fingerprint, signatures and obligations update. To work locally, install the Python reference interpreter, which provides the <code>up</code> command (validate, apply, derive, simulate, render, trace, hash). The <a href=\"/developers/\">developer page</a> walks through both.</p>",
+         "<p>Open the <a href=\"/playground/\">Playground</a> to write an agreement in your browser and watch its fingerprint, signatures and obligations update. To work locally, install the Python reference interpreter, which provides the <code>up</code> command (validate, apply, derive, simulate, render, trace, hash). The <a href=\"/developers/\">developer page</a> walks through both.</p>",
          ""),
         ("how-is-the-reference-implementation-tested", "How is the reference implementation tested?",
          "<p>More than 200 tests cover every axiom, transition rule, clause form and Term. A second, independent engine in JavaScript must reproduce every Python trace, rendering and simulation byte for byte, and differential tests compare both engines on tens of thousands of random inputs. The results are published on the <a href=\"/#conformance\">conformance</a> section.</p>",

@@ -1,0 +1,76 @@
+<style>
+.lic { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+@media (max-width: 980px) { .lic { grid-template-columns: minmax(0,1fr); } }
+.lic .ccard { min-height: 380px; }
+.lic .ccard .lname { font: 400 clamp(44px, 4.6vw, 64px)/1 var(--serif); letter-spacing: -.035em; margin-top: 18px; }
+.lic .ccard h3 { margin-top: auto; font-size: 24px; }
+.lic .ccard a.lk { margin-top: 18px; font-weight: 600; font-size: 14.5px; color: inherit; text-underline-offset: 4px; }
+.can { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 760px) { .can { grid-template-columns: minmax(0,1fr); } }
+.can div { display: flex; gap: 14px; align-items: flex-start; padding: 22px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); font-size: 17px; }
+.can div .b { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--mint); color: var(--mint-ink); display: grid; place-items: center; }
+.can div .b .ico { width: 15px; height: 15px; }
+.credit { position: relative; padding: 26px 28px; border-radius: var(--r-lg); background: var(--navy); color: #E5E2FF; font: 400 15px/1.7 var(--mono); font-variation-settings: "MONO" 1; }
+.credit .cbtn { position: absolute; right: 16px; top: 16px; }
+.credit p { margin: 0; padding-right: 90px; overflow-wrap: anywhere; }
+.two > * { min-width: 0; }
+.two { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
+@media (max-width: 900px) { .two { grid-template-columns: minmax(0,1fr); } }
+.sect + .sect { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--line); }
+.sect .prose { font-size: 17px; }
+</style>
+<main id="main">
+  <div class="wrap phero">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Universal Paper</a><span aria-hidden="true">/</span><span>Licenses</span></nav>
+    <h1 class="display">Open by design. Free for everyone.</h1>
+    <p class="lede">Universal Paper was created by <a href="https://uppercentile.com" style="color:var(--ink);text-decoration-color:var(--coral);text-underline-offset:4px">Uppercentile</a>. Uppercentile offers it to the market for free, under open licenses that let anyone use, implement, extend, fork and sell products built on it, without permission or payment.</p>
+  </div>
+  <section class="band tight" aria-label="The three licenses">
+    <div class="wrap lic">
+      <div class="ccard c-lilac rv"><span class="fn">The language</span><span class="lname">CC BY 4.0</span><h3>Specification and documentation</h3><p>The specification, the Term library (prose and JSON definitions), the design notes, the mapping guide, the neutrality charter and the text of this website.</p><a class="lk" href="https://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International ↗</a></div>
+      <div class="ccard c-coral rv" style="transition-delay:.06s"><span class="fn">The code</span><span class="lname">Apache-2.0</span><h3>Code and schemas</h3><p>The Python reference interpreter and <code class="mono">up</code> CLI, the JavaScript engine, the Playground page, the JSON Schemas, build tools, tests and test vectors. Includes an express patent license from every contributor.</p><a class="lk" href="https://www.apache.org/licenses/LICENSE-2.0" rel="license">Apache License, Version 2.0 ↗</a></div>
+      <div class="ccard c-mint rv" style="transition-delay:.12s"><span class="fn">The examples</span><span class="lname">CC0 1.0</span><h3>Example agreements and traces</h3><p>The example agreements, bundles and traces in <code class="mono">examples/</code> are dedicated to the public domain, so any implementation, product or test suite can copy them freely, with no conditions.</p><a class="lk" href="https://creativecommons.org/publicdomain/zero/1.0/" rel="license">CC0 1.0 Universal ↗</a></div>
+    </div>
+  </section>
+  <section class="band tight" aria-labelledby="what-you-can-do">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">Permissions</p><h2 class="h2" id="what-you-can-do">What you can do.</h2></div><p class="lede">Using the language never requires an account, a fee, a license key or a connection to Uppercentile or anyone else. The <a href="/spec/neutrality-charter/" style="color:var(--ink);text-decoration-color:var(--coral);text-underline-offset:4px">neutrality charter</a> forbids the core from ever requiring one.</p></div>
+      <div class="can">
+        <div class="rv"><span class="b"><svg class="ico"><use href="#i-check"/></svg></span>Use Universal Paper for any agreement, commercial or not, at no cost.</div>
+        <div class="rv"><span class="b"><svg class="ico"><use href="#i-check"/></svg></span>Write your own implementation, in any language, open or closed source.</div>
+        <div class="rv"><span class="b"><svg class="ico"><use href="#i-check"/></svg></span>Build and sell products, services and agents that read, write or verify Universal Paper.</div>
+        <div class="rv"><span class="b"><svg class="ico"><use href="#i-check"/></svg></span>Copy, translate, adapt and redistribute the specification and the code.</div>
+      </div>
+    </div>
+  </section>
+  <section class="band tight" aria-labelledby="what-the-licenses-ask">
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">In return</p><h2 class="h2" id="what-the-licenses-ask">What the licenses ask.</h2>
+        <ul class="rows" style="margin-top:28px">
+          <li><div><b>CC BY 4.0</b><p>Give credit, link to the license, and say if you made changes. You may not suggest that Uppercentile endorses your version.</p></div></li>
+          <li><div><b>Apache-2.0</b><p>Keep the license and the NOTICE file with copies of the code, and mark files you changed.</p></div></li>
+          <li><div><b>CC0 1.0</b><p>Nothing at all.</p></div></li>
+        </ul>
+      </div>
+      <div class="rv">
+        <p class="eyebrow">Attribution</p><h2 class="h3" id="how-to-credit" style="font-size:clamp(30px,3vw,40px)">How to credit Universal Paper.</h2>
+        <p style="color:var(--ink-2);margin:12px 0 18px">A line like this satisfies CC BY 4.0 for the specification or the Term library:</p>
+        <div class="credit"><p id="creditLine">"Universal Paper" specification by Uppercentile, https://universalpaper.org, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: [describe, or "none"].</p><button class="cbtn" type="button" data-copy="#creditLine"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div>
+        <p style="color:var(--ink-2);margin:18px 0 0">For the code, keep the <code class="mono">LICENSE</code> and <code class="mono">NOTICE</code> files. The full license texts ship with the source in <a href="https://github.com/Uppercentile/universal-paper" style="color:var(--ink);text-decoration-color:var(--coral);text-underline-offset:4px">the repository</a>.</p>
+      </div>
+    </div>
+  </section>
+  <section class="band tight">
+    <div class="wrap" style="max-width:980px">
+      <div class="sect rv"><h2 class="h3" id="contributions" style="font-size:34px">Contributions</h2><div class="prose" style="margin-top:14px"><p>Contributions are accepted under the same licenses: changes to the specification under CC BY 4.0, changes to code under Apache-2.0, and new example agreements and traces under CC0 1.0. Contributors keep their copyright and license their work to everyone on the same terms.</p></div></div>
+      <div class="sect rv"><h2 class="h3" id="stewardship" style="font-size:34px">Stewardship, not ownership</h2><div class="prose" style="margin-top:14px"><p>Uppercentile created Universal Paper and is its current steward. The steward maintains the specification for everyone who uses it and does not own the language. Products built on Universal Paper, including any Uppercentile offers, are separate from it and may not claim to be required. The steward has committed to hand stewardship to a neutral body once the language has users across segments. See the <a href="/spec/neutrality-charter/">neutrality charter</a>.</p></div></div>
+      <div class="sect rv"><h2 class="h3" id="third-party" style="font-size:34px">Third-party material</h2><div class="prose" style="margin-top:14px"><ul>
+        <li>The web fonts Hedvig Letters Serif, Funnel Sans and Recursive are served from this site under the SIL Open Font License 1.1 (license texts: <a href="/licenses/HedvigLetters-OFL.txt">Hedvig Letters</a>, <a href="/licenses/Funnel-OFL.txt">Funnel</a>, <a href="/licenses/Recursive-OFL.txt">Recursive</a>). The JavaScript engine page in the repository (<code>explorer/</code>) may also load Inter, Inter Tight, JetBrains Mono and Source Serif 4 from Google Fonts, under the same license.</li>
+        <li>Some interface icons are adapted from <a href="https://lucide.dev">Lucide</a>, under the ISC License (<a href="/licenses/Lucide-LICENSE.txt">license text</a>).</li>
+        <li>Standards the language references (RFC 8785, RFC 8032, RFC 3339, ISO 4217, GS1, HIBCC, NDC and ASC X12) belong to their publishers. Universal Paper reuses their identifiers and does not redistribute their documents.</li>
+        <li>The Python reference interpreter depends on the <code>cryptography</code> package (Apache-2.0 or BSD). The JavaScript engine has no dependencies.</li>
+      </ul><p style="color:var(--ink-3);font-size:15px">This page summarizes the licenses for convenience. The license texts themselves govern. Nothing here is legal advice.</p></div></div>
+    </div>
+  </section>
+</main>

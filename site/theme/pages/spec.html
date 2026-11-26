@@ -1,0 +1,77 @@
+<style>
+.path { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0; margin-top: 28px; position: relative; }
+.path::before { content: ""; position: absolute; left: 14px; right: 14px; top: 13px; height: 2px; background: linear-gradient(90deg, var(--coral) 0 33%, var(--line-2) 33%); }
+.path div { position: relative; padding-top: 40px; }
+.path div::before { content: ""; position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 2px solid var(--line-2); }
+.path div.on::before { background: var(--coral); border-color: var(--coral); box-shadow: 0 0 0 6px rgba(255,106,74,.18); }
+.path b { font: 400 24px/1.1 var(--serif); }
+.path p { margin: 6px 0 0; font-size: 14.5px; color: var(--ink-3); }
+.status { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,.9fr); gap: 16px; }
+@media (max-width: 900px) { .status { grid-template-columns: minmax(0,1fr); } .path { grid-template-columns: minmax(0,1fr); gap: 18px; } .path::before { display: none; } }
+.kvs { display: grid; grid-template-columns: 130px minmax(0,1fr); margin: 0; }
+.kvs dt, .kvs dd { padding: 14px 0; border-top: 1px solid var(--line); margin: 0; }
+.kvs dt { font: 500 11px/1.6 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.kvs dd { font-size: 16px; min-width: 0; overflow-wrap: anywhere; }
+.kvs a { color: var(--ink); text-decoration-color: var(--coral); text-underline-offset: 3px; }
+</style>
+<main id="main">
+  <div class="wrap phero">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Universal Paper</a><span aria-hidden="true">/</span><span>Specification</span></nav>
+    <h1 class="display">The specification.</h1>
+    <p class="lede">Universal Paper is defined by this document, not by any software. A person with the specification, a SHA-256 implementation and an Ed25519 verifier can check any agreement by hand. Current version: <code class="mono" style="font-size:.9em">UP/0.1-draft</code>, a working draft.</p>
+    <div class="ctas"><a class="btn dark" href="/spec/overview/">Start with the overview <svg class="ico"><use href="#i-arrow"/></svg></a><a class="btn ghost" href="/llms-full.txt">Full text for AI tools <svg class="ico"><use href="#i-ext"/></svg></a></div>
+    <div class="facts"><span class="fact">Version <b>UP/0.1-draft</b></span><span class="fact"><b>13</b> axioms</span><span class="fact"><b>16</b> standard Terms</span><span class="fact"><b>7</b> primitives</span><span class="fact">Licensed <b>CC BY 4.0</b></span></div>
+  </div>
+
+  <section class="band tight" aria-labelledby="docs-h">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">Ten documents</p><h2 class="h2" id="docs-h">Read it in order, or jump in.</h2></div><p class="lede">Each document is short and checkable. The axioms are the consensus rules; everything else explains, defines or maps onto them.</p></div>
+      <div class="cgrid">
+        <a class="ccard c-navy span2 has-go rv" href="/spec/overview/" style="min-height:340px"><span class="big">00</span><span class="fn">00-overview.md</span><h3 style="font-size:44px;max-width:14ch">Overview</h3><p style="max-width:52ch">What Universal Paper is, why universality buys speed, its engineered properties, design principles and boundaries (antitrust, enforceability, regulation).</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-lilac has-go rv" href="/spec/domain/"><span class="big">01</span><span class="fn">01-domain.md</span><h3>Domain</h3><p>The things that exist in Universal Paper: canonical JSON and hashes, Identifier, Seal, Party, Role, Term, Agreement, Event, State, Mandate, Commitment and Bundle.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-paper has-go rv" href="/spec/predicates-functions/"><span class="big">02</span><span class="fn">02-predicates-functions.md</span><h3>Predicates and functions</h3><p>What can be asked of a Universal Paper agreement: the predicates and functions every evaluator provides.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-coral has-go rv" href="/spec/axioms/"><span class="big">03</span><span class="fn">03-axioms.md</span><h3>Axioms</h3><p>The thirteen consensus rules (A1 to A13) that every valid Universal Paper agreement and event satisfies.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-paper has-go rv" href="/spec/inference/"><span class="big">04</span><span class="fn">04-inference.md</span><h3>Inference</h3><p>How a State and an Event yield the next State: clause forms, exceptions and precedence, rendering and simulation.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-mint has-go rv" href="/spec/lifecycle/"><span class="big">05</span><span class="fn">05-lifecycle.md</span><h3>Lifecycle</h3><p>The agreement status model and the transition rule for every Event kind: who must sign and what must be true.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-sun span2 has-go rv" href="/spec/terms/"><span class="big">06</span><span class="fn">spec/06-terms/</span><h3 style="font-size:40px">Term library</h3><p style="max-width:52ch">The initial Universal Paper Term library: sixteen reusable, value-neutral clauses for GPO, supplier and member agreements.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-paper has-go rv" href="/spec/mapping-guide/"><span class="big">07</span><span class="fn">07-mapping-guide.md</span><h3>Mapping guide</h3><p>How rosters, eligibility files and ASC X12 845, 844, 849 and 867 EDI sets map onto Universal Paper events.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-sky has-go rv" href="/spec/neutrality-charter/"><span class="big">08</span><span class="fn">08-neutrality-charter.md</span><h3>Neutrality charter</h3><p>Who owns Universal Paper (no one), how the steward discloses affiliations, and how the specification changes.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+        <a class="ccard c-paper has-go rv" href="/spec/design-notes/"><span class="big">✎</span><span class="fn">DESIGN_NOTES.md</span><h3>Design notes</h3><p>What was cut, merged or added while drafting Universal Paper, and the open questions for the steward.</p><span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band tight" aria-labelledby="status-h">
+    <div class="wrap status">
+      <div class="panel white rv">
+        <p class="eyebrow">Status</p>
+        <h2 class="h3" id="status-h" style="font-size:clamp(30px,3vw,40px)">A public, versioned spec.</h2>
+        <p class="lede" style="font-size:17px;margin-top:12px">Every rule comes from the specification, and the spec is the only authority. It’s a working draft.</p>
+        <dl class="kvs" style="margin-top:26px">
+          <dt>Version</dt><dd>UP/0.1-draft</dd>
+          <dt>Maturity</dt><dd>Working draft</dd>
+          <dt>Steward</dt><dd>Uppercentile, offered free to everyone</dd>
+          <dt>Licenses</dt><dd>Spec CC BY 4.0 · Code Apache-2.0 · Examples CC0</dd>
+          <dt>Repository</dt><dd><a href="https://github.com/Uppercentile/universal-paper">github.com/Uppercentile/universal-paper</a></dd>
+        </dl>
+        <div class="path" aria-label="Illustrative path to 1.0"><div class="on"><b>Working draft</b><p>Where it stands today</p></div><div><b>Public review</b><p>Illustrative</p></div><div><b>Candidate 1.0</b><p>Illustrative</p></div></div>
+        <p style="margin:18px 0 0;font-size:13.5px;color:var(--ink-3)">An illustrative path. No stages or dates have been set.</p>
+      </div>
+      <div class="panel dark rv" style="transition-delay:.06s">
+        <p class="eyebrow">For machines</p>
+        <h2 class="h3" id="machine-readable" style="font-size:clamp(30px,3vw,40px);color:#fff">Machine-readable files.</h2>
+        <ul class="rows" style="margin-top:18px">
+          <li><div><b><a href="/schema/">JSON Schemas</a></b><p><a href="/schema/universal-paper.schema.json">universal-paper.schema.json</a>, <a href="/schema/trace.schema.json">trace.schema.json</a></p></div><span class="tag">Apache-2.0</span></li>
+          <li><div><b>Term definitions as JSON</b><p><code class="mono">/spec/terms/UP-*.json</code>, for example <a href="/spec/terms/UP-Admin-Fee.json">UP-Admin-Fee.json</a></p></div><span class="tag">CC BY 4.0</span></li>
+          <li><div><b>Example bundles</b><p><a href="/examples/conventional/bundle.json">conventional</a>, <a href="/examples/generative/bundle.json">generative</a>, <a href="/examples/overlay/bundle.json">overlay</a>, <a href="/examples/confidential/bundle.json">confidential</a>, <a href="/examples/mandate-cap/bundle.json">mandate-cap</a>, <a href="/examples/what-if/bundle.json">what-if</a></p></div><span class="tag">CC0 1.0</span></li>
+          <li><div><b>Every page as Markdown</b><p>Add <code class="mono">.md</code> to its path, for example <a href="/spec/axioms.md">/spec/axioms.md</a></p></div><span class="tag">.md</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band tight" aria-labelledby="cta-h">
+    <div class="wrap"><div class="cta"><canvas data-field="spec-cta" aria-hidden="true"></canvas><h2 class="display" id="cta-h">Check any agreement by hand.</h2><p class="lede">SHA-256, Ed25519 and these ten documents. That’s the whole dependency list.</p><div class="ctas"><a class="btn light" href="/spec/axioms/">Read the axioms <svg class="ico"><use href="#i-arrow"/></svg></a><a class="btn outline-l" href="/developers/">Run the reference code</a></div></div></div>
+  </section>
+  <p class="wrap" style="font-size:13.5px;color:var(--ink-3);padding-bottom:8px">Specification by Uppercentile, licensed under <a href="/license/">CC BY 4.0</a>.</p>
+</main>

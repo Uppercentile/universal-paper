@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://universal-paper.example/schema/UP-0.1-draft/trace.schema.json",
+  "$id": "https://universalpaper.org/schema/UP-0.1-draft/trace.schema.json",
   "title": "Universal Paper trace (up-trace/0.1)",
   "description": "Output of the reference interpreter's trace command. Each step records one event, every check each evaluator ran on it, whether each evaluator accepted it, each evaluator's independently computed state hashes, and the values derived after the step. Viewers such as the Explorer only play this back; they never compute validity themselves.",
   "type": "object",

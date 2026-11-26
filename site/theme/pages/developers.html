@@ -1,0 +1,372 @@
+<style>
+.for-agents { margin: 12px 0 0; font-size: 14px; color: var(--ink-3); }
+.for-agents code { font: 450 13px var(--mono); font-variation-settings: "MONO" 1; color: var(--ink-2); overflow-wrap: anywhere; }
+.term-panel .tp-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px 0; font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: rgba(229,226,255,.5); }
+.howstrip { border-radius: var(--r-xl); background: #fff; border: 1px solid var(--line); padding: clamp(24px, 3.4vw, 44px); }
+.hs-head { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 16px 48px; align-items: end; }
+.hs-head p { margin: 0; color: var(--ink-2); font-size: 16px; }
+.hs-head code { font: 450 13.5px var(--mono); font-variation-settings: "MONO" 1; color: var(--lilac-ink); background: #EEE9FF; padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+.hs-steps { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--line); border-radius: var(--r-md); overflow: hidden; counter-reset: hs; }
+.hs-steps li { counter-increment: hs; background: var(--canvas); padding: 18px 16px; }
+.hs-steps li::before { content: "0" counter(hs); display: block; font: 500 12px/1 var(--mono); font-variation-settings: "MONO" 1; color: var(--coral); margin-bottom: 12px; }
+.hs-steps b { display: block; font: 400 19px/1.15 var(--serif); }
+.hs-steps span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.45; color: var(--ink-2); }
+@media (max-width: 1100px) { .hs-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .hs-head { grid-template-columns: minmax(0,1fr); } }
+@media (max-width: 560px) { .hs-steps { grid-template-columns: minmax(0, 1fr); } }
+.dev-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(28px, 4vw, 64px); align-items: center; padding-top: clamp(48px, 6vw, 96px); }
+.dev-hero .display { font-size: clamp(46px, 5.4vw, 84px); color: var(--navy); max-width: 13ch; }
+.dev-hero .lede { margin-top: 24px; }
+.dev-hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.dev-hero .cmd { margin-top: 22px; max-width: 560px; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-top: 34px; max-width: 620px; }
+.kpis div { padding: 14px 16px; border-radius: var(--r-md); background: #fff; border: 1px solid var(--line); }
+.kpis b { display: block; font: 400 38px/1 var(--serif); letter-spacing: -.03em; color: var(--navy); }
+.kpis span { font-size: 13px; color: var(--ink-3); }
+@media (max-width: 980px) { .dev-hero { grid-template-columns: minmax(0,1fr); } }
+@media (max-width: 520px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.std { padding-block: 22px; border-block: 1px solid var(--line); overflow: hidden; margin-top: clamp(56px, 7vw, 96px); }
+.std .row { display: flex; gap: 12px; width: max-content; animation: tick 60s linear infinite; }
+.std:hover .row { animation-play-state: paused; }
+.std span { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; background: #fff; border: 1px solid var(--line); white-space: nowrap; font-size: 14.5px; }
+.std span b { font: 500 12.5px/1 var(--mono); font-variation-settings: "MONO" 1; }
+@keyframes tick { to { transform: translateX(-50%); } }
+.three { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+@media (max-width: 900px) { .three { grid-template-columns: minmax(0,1fr); } }
+.sysc { border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; }
+.sysc header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.sysc header b { font-weight: 600; font-size: 15px; } .sysc header small { font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; color: var(--ink-3); }
+.sysc pre { margin: 0; padding: 18px; font: 400 13.5px/1.7 var(--mono); font-variation-settings: "MONO" 1; color: var(--ink-2); flex: 1; white-space: pre-wrap; }
+.sysc footer { padding: 12px 18px; background: var(--mint); color: var(--mint-ink); font: 500 12.5px/1 var(--mono); font-variation-settings: "MONO" 1; display: flex; gap: 8px; align-items: center; }
+.allhash { margin-top: 16px; padding: 18px 22px; border-radius: var(--r-lg); background: var(--navy); color: #E5E2FF; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 15px; }
+.allhash code { font: 400 13.5px/1.5 var(--mono); font-variation-settings: "MONO" 1; color: #BDEFD6; word-break: break-all; }
+.story { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; counter-reset: st; }
+@media (max-width: 980px) { .story { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 640px) { .story { grid-template-columns: minmax(0,1fr); } }
+.story article { padding: 28px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); min-height: 260px; display: flex; flex-direction: column; }
+.story .k { font: 500 12px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--coral); }
+.story h3 { margin-top: auto; padding-top: 38px; font: 400 27px/1.1 var(--serif); letter-spacing: -.015em; }
+.story p { margin: 10px 0 0; font-size: 15.5px; color: var(--ink-2); }
+.qs { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+@media (max-width: 980px) { .qs { grid-template-columns: minmax(0,1fr); } }
+.qsteps { list-style: none; margin: 0; padding: 0; counter-reset: q; }
+.qsteps li { counter-increment: q; display: grid; grid-template-columns: 44px minmax(0,1fr); gap: 14px; padding: 18px 0; border-top: 1px solid var(--line); }
+.qsteps li::before { content: counter(q); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--navy); color: #fff; font: 400 18px/1 var(--serif); }
+.qsteps b { font: 400 22px/1.2 var(--serif); }
+.qsteps p { margin: 6px 0 0; font-size: 15px; color: var(--ink-2); }
+.qsteps code { font: 450 13px var(--mono); font-variation-settings: "MONO" 1; background: #EEE9FF; color: var(--lilac-ink); padding: 2px 6px; border-radius: 5px; overflow-wrap: anywhere; }
+.mcp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 980px) { .mcp { grid-template-columns: minmax(0,1fr); } }
+.mcp .cmd { border-radius: 14px; margin-top: 10px; }
+.mcp .cmd code::before { content: ""; }
+.mcp label { display: block; margin-top: 22px; font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: rgba(238,237,248,.6); }
+.tools { display: grid; gap: 10px; }
+.tool { padding: 18px 20px; border-radius: var(--r-md); background: #fff; border: 1px solid var(--line); }
+.tool code { font: 500 13px/1.5 var(--mono); font-variation-settings: "MONO" 1; color: var(--lilac-ink); }
+.tool p { margin: 6px 0 0; font-size: 15px; color: var(--ink-2); }
+.prims { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 980px) { .prims { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 600px) { .prims { grid-template-columns: minmax(0,1fr); } }
+.prim { padding: 22px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.prim small { font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.prim h3 { font: 400 28px/1 var(--serif); letter-spacing: -.02em; }
+.prim p { margin: 0; font-size: 15px; color: var(--ink-2); }
+.prim code { margin-top: auto; display: block; padding: 10px 12px; border-radius: 10px; background: var(--canvas); font: 400 12.5px/1.5 var(--mono); font-variation-settings: "MONO" 1; color: var(--ink); overflow-wrap: anywhere; }
+.prim.vt { background: var(--canvas-2); border-color: transparent; }
+.forms { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.forms span { padding: 12px 18px; border-radius: 14px; font: 400 22px/1 var(--serif); }
+.props { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1px; background: rgba(255,255,255,.12); border-radius: var(--r-lg); overflow: hidden; margin-top: 28px; }
+@media (max-width: 900px) { .props { grid-template-columns: minmax(0,1fr); } }
+.props div { background: var(--navy); padding: 24px; }
+.props b { font: 400 24px/1.15 var(--serif); color: #fff; }
+.props em { font: 500 11.5px/1 var(--mono); font-variation-settings: "MONO" 1; font-style: normal; color: var(--sun); margin-left: 8px; }
+.props p { margin: 8px 0 0; font-size: 15px; color: rgba(238,237,248,.75); }
+.lab { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 16px; }
+@media (max-width: 980px) { .lab { grid-template-columns: minmax(0,1fr); } }
+.lab .ctl { padding: 28px; border-radius: var(--r-xl); background: #fff; border: 1px solid var(--line); }
+.lab .rate { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 18px; }
+.lab .rate input { width: 140px; height: 48px; border-radius: 12px; border: 1px solid var(--line-2); padding: 0 14px; font: 500 18px var(--mono); font-variation-settings: "MONO" 1; background: var(--canvas); }
+.lab .rate input:focus { outline: none; border-color: var(--navy); background: #fff; }
+.pipe { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.pipe li { padding: 18px 20px; border-radius: var(--r-md); background: var(--navy); color: #E5E2FF; min-width: 0; }
+.pipe small { display: block; font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: rgba(229,226,255,.55); margin-bottom: 10px; }
+.pipe code { font: 400 12.5px/1.6 var(--mono); font-variation-settings: "MONO" 1; word-break: break-all; display: block; max-height: 112px; overflow: auto; }
+.pipe li.hash code { color: #BDEFD6; font-size: 14px; }
+.pipe li.hash.diff { background: var(--bad); }
+.pipe li.hash.diff code { color: #fff; }
+.vtbl { border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); overflow-x: auto; }
+.vtbl table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 720px; }
+.vtbl th { text-align: left; font: 500 11px/1.3 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); background: var(--canvas); padding: 13px 18px; }
+.vtbl td { padding: 15px 18px; border-top: 1px solid var(--line); vertical-align: top; }
+.vtbl td:first-child { font: 500 13px/1.4 var(--mono); font-variation-settings: "MONO" 1; color: var(--lilac-ink); }
+.vtbl .ok { color: var(--ok); font-weight: 600; } .vtbl .no { color: var(--bad); font-weight: 600; }
+.impl { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 16px; }
+@media (max-width: 900px) { .impl { grid-template-columns: minmax(0,1fr); } }
+.impl .ccard { min-height: 250px; }
+.impl .caps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.impl .caps span { font: 500 11.5px/1 var(--mono); font-variation-settings: "MONO" 1; padding: 6px 8px; border-radius: 7px; background: rgba(255,255,255,.45); }
+.impl .caps span.off { opacity: .4; text-decoration: line-through; }
+.apps { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(280px, 26vw, 340px); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); padding: 4px var(--gutter) 24px; scrollbar-width: none; }
+.apps::-webkit-scrollbar { display: none; }
+.app { scroll-snap-align: start; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; }
+.app .shot { position: relative; aspect-ratio: 4 / 3; padding: 18px; display: flex; flex-direction: column; justify-content: flex-end; }
+.app .shot .ui { position: relative; z-index: 1; border-radius: 14px; background: rgba(255,255,255,.88); backdrop-filter: blur(10px); padding: 12px 14px; font: 400 12px/1.55 var(--mono); font-variation-settings: "MONO" 1; color: var(--ink); box-shadow: 0 10px 30px -12px rgba(16,14,43,.4); }
+.app .shot .ui div { display: flex; justify-content: space-between; gap: 10px; }
+.app .shot .ui em { font-style: normal; color: var(--ok); } .app .shot .ui i { font-style: normal; color: var(--bad); }
+.app .meta { padding: 20px 22px 24px; }
+.app small { font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.app h3 { margin-top: 8px; font: 400 26px/1.1 var(--serif); letter-spacing: -.015em; }
+.app p { margin: 8px 0 0; font-size: 15px; color: var(--ink-2); }
+.app .tg { margin-top: 14px; display: flex; gap: 6px; flex-wrap: wrap; }
+.app .tg span { font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; padding: 6px 8px; border-radius: 7px; background: #EEE9FF; color: var(--lilac-ink); }
+</style>
+<main id="main">
+  <div class="wrap dev-hero">
+    <div>
+      <p class="eyebrow">Draft UP/0.1 spec and reference interpreter</p>
+      <h1 class="display">The contract layer every system can verify.</h1>
+      <p class="lede">Universal Paper is an open language for agreements between GPOs, suppliers and members. Every agreement, signature and change is plain JSON that any system can check for itself, offline.</p>
+      <div class="ctas"><a class="btn dark" href="#quick-start">Quick start <svg class="ico"><use href="#i-arrow"/></svg></a><a class="btn ghost" href="/spec/">Read the spec</a></div>
+<div class="cmd"><code>pip install universal-paper</code><button class="cbtn" type="button" data-copy="pip install universal-paper"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div>
+<p class="for-agents">For agents: <code>uvx universal-paper-mcp</code>, or the hosted server at <code>https://mcp.universalpaper.org/mcp</code></p>
+      <div class="kpis"><div><b>7</b><span>primitives</span></div><div><b>16</b><span>standard Terms</span></div><div><b>13</b><span>axioms</span></div><div><b>0</b><span>servers required</span></div></div>
+    </div>
+    <div class="term-panel rv" aria-label="Example output of up validate">
+      <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span style="font:500 13px var(--mono);font-variation-settings:'MONO' 1;color:rgba(229,226,255,.6)">~/universal-paper</span></div>
+<pre><span class="c">$</span> pip install universal-paper
+<span class="c">$</span> curl -O https://universalpaper.org/examples/conventional/bundle.json
+<span class="c">$</span> up validate bundle.json
+chain 0: Master agreement (hypothetical)
+  id    <span class="l">sha256:da1ba49ea857b0f6e695273246dfd4fd…</span>
+  <span class="g">[ok ]</span> #0 propose  2026-12-01T15:00:00Z
+  <span class="g">[ok ]</span> #1 accept   2026-12-05T10:00:00Z
+  …
+  state <span class="l">sha256:dcedbfcaf67081f19955e387ed70d5b9…</span>
+  status at latest event: <span class="y">active</span>
+<span class="g">Every event is valid.</span></pre>
+    </div>
+  </div>
+
+  <section class="band" id="quick-start" aria-labelledby="qs-h" style="background:#fff;border-block:1px solid var(--line)">
+    <div class="wrap qs">
+      <div>
+        <p class="eyebrow">Quick start</p><h2 class="h2" id="qs-h" style="font-size:clamp(36px,3.6vw,54px)">A verified agreement in four commands.</h2>
+        <p class="lede" style="margin-top:18px;font-size:17px">The Python interpreter is a reference you can use, port or replace: if your code produces the same hashes and verdicts, it speaks Universal Paper.</p>
+        <ol class="qsteps" style="margin-top:28px">
+          <li><div><b>Install</b><p><code>pip install universal-paper</code> (Python 3.11+). It gives you the <code>up</code> command.</p></div></li>
+          <li><div><b>Get a worked example</b><p><code>curl -O https://universalpaper.org/examples/conventional/bundle.json</code></p></div></li>
+          <li><div><b>Validate it</b><p><code>up validate bundle.json</code> checks every signature, hash and rule.</p></div></li>
+          <li><div><b>Ask what’s owed, read it as a contract</b><p><code>up derive bundle.json --at 2027-04-30T00:00:00Z</code> then <code>up render bundle.json --chain 0</code></p></div></li>
+        </ol>
+      </div>
+      <div class="term-panel rv">
+        <div class="bar" role="tablist" aria-label="Install method"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><button role="tab" id="t-pip" aria-controls="p-pip" aria-selected="true">pip</button><button role="tab" id="t-py" aria-controls="p-py" aria-selected="false" tabindex="-1">Python</button><button role="tab" id="t-src" aria-controls="p-src" aria-selected="false" tabindex="-1">Source install</button></div>
+        <div id="p-pip" role="tabpanel" aria-labelledby="t-pip"><div class="tp-head"><span>From PyPI</span><button class="cbtn" type="button" data-copy="#qsPip"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div><pre id="qsPip">pip install universal-paper
+curl -O https://universalpaper.org/examples/conventional/bundle.json
+
+up validate bundle.json
+up derive bundle.json --at 2027-04-30T00:00:00Z
+up render bundle.json --chain 0
+up trace bundle.json -o conventional.trace.json</pre></div>
+        <div id="p-py" role="tabpanel" aria-labelledby="t-py" hidden><div class="tp-head"><span>As a library</span><button class="cbtn" type="button" data-copy="#qsPy"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div><pre id="qsPy"><span class="l">import</span> json
+<span class="l">from</span> universal_paper.engine <span class="l">import</span> Bundle, Evaluator
+<span class="l">from</span> universal_paper.canon <span class="l">import</span> content_hash
+<span class="l">from</span> universal_paper.report <span class="l">import</span> snapshot
+
+bundle = Bundle(json.load(open(<span class="y">"bundle.json"</span>)))
+ev = Evaluator(bundle)
+chain_id = content_hash(bundle.chain_list[0][0])  <span class="c"># ChainId = hash of the genesis event</span>
+<span class="l">for</span> step <span class="l">in</span> ev.run(chain_id):
+    print(step.index, step.event[<span class="y">"kind"</span>], <span class="y">"ok"</span> <span class="l">if</span> step.accepted <span class="l">else</span> step.reason)
+print(ev.status(chain_id, <span class="y">"2027-04-30T00:00:00Z"</span>))  <span class="c"># "active"</span>
+report = snapshot(ev, <span class="y">"2027-04-30T00:00:00Z"</span>)  <span class="c"># statuses, tiers, prices, obligations</span></pre></div>
+        <div id="p-src" role="tabpanel" aria-labelledby="t-src" hidden><div class="tp-head"><span>Source install · for contributors and the test suite</span><button class="cbtn" type="button" data-copy="#qsSrc"><svg class="ico" style="width:14px;height:14px"><use href="#i-copy"/></svg>Copy</button></div><pre id="qsSrc">git clone https://github.com/Uppercentile/universal-paper.git
+cd universal-paper
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e '.[test]'
+
+up validate examples/conventional/bundle.json
+python -m pytest</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="mcp" aria-labelledby="mcp-h">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">For AI agents</p><h2 class="h2" id="mcp-h">The official MCP server.</h2></div><p class="lede">Give any agent the reference interpreter as tools. Every tool is read-only. The server holds no keys, signs nothing and writes nothing.</p></div>
+      <div class="mcp">
+        <div class="panel dark rv">
+          <p class="eyebrow">Hosted, nothing to install</p>
+          <h3 class="h3" style="color:#fff">Streamable HTTP, no sign-in.</h3>
+          <label>Endpoint</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>https://mcp.universalpaper.org/mcp</code><button class="cbtn" type="button" data-copy="https://mcp.universalpaper.org/mcp">Copy</button></div>
+          <label>Add it to Claude Code</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp</code><button class="cbtn" type="button" data-copy="claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp">Copy</button></div>
+<label>Or run it locally</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>uvx universal-paper-mcp</code><button class="cbtn" type="button" data-copy="uvx universal-paper-mcp">Copy</button></div>
+<label>Locally, in Claude Code</label><div class="cmd" style="background:rgba(255,255,255,.08)"><code>claude mcp add universal-paper -- uvx universal-paper-mcp</code><button class="cbtn" type="button" data-copy="claude mcp add universal-paper -- uvx universal-paper-mcp">Copy</button></div>
+          <p style="margin:24px 0 0;font-size:14.5px;color:rgba(238,237,248,.72)"><b style="color:#fff">Confidential by construction.</b> The hosted server is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths. It only counts calls per tool. In the MCP Registry as <code class="mono">io.github.Uppercentile/universal-paper</code>.</p>
+        </div>
+        <div class="tools">
+          <div class="tool rv"><code>validate_bundle · check_event</code><p>Every agreement and event against the axioms, with the rule that rejected what. Dry-run one signed event.</p></div>
+          <div class="tool rv"><code>derive_state · simulate_events · simulate_amendment</code><p>Status, tiers, prices and obligations at a time. Run hypothetical events forward, or try one change, under a Mandate’s limits. Try <code>example:mandate-cap</code> with a 5% price increase: it’s rejected.</p></div>
+          <div class="tool rv"><code>simulate_price_conformity · simulate_termination · simulate_eligibility</code><p>Whether prices conform to a member’s contract prices in its tier; whether a party may terminate, when it takes effect and what is still owed; whether a member is an active participant.</p></div>
+          <div class="tool rv"><code>render_text · hash_object</code><p>The agreement text fixed by its hash, or what an outsider sees of sealed values. Hash any JSON value.</p></div>
+          <div class="tool rv"><code>list_terms · explain_term · get_example</code><p>The 16-Term library and the worked example bundles.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="band tight" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="howstrip rv">
+      <div class="hs-head">
+        <div><p class="eyebrow">How it works</p><h2 class="h3" id="how-h">Three systems, three formats, one hash.</h2></div>
+        <p>The GPO’s contract system, the supplier’s ERP and the member’s spreadsheet each keep their own format. All three compute the same agreement hash: <code>sha256:b6f070ef…8f990f6d</code></p>
+      </div>
+      <ol class="hs-steps">
+        <li><b>Write it once</b><span>Plain JSON built from standard Terms.</span></li>
+        <li><b>Fingerprint it</b><span>RFC 8785 canonical JSON, then SHA-256.</span></li>
+        <li><b>Sign the fingerprint</b><span>Ed25519 over exactly that hash.</span></li>
+        <li><b>Let the data do the math</b><span>Every party derives the same fee.</span></li>
+        <li><b>Catch any change</b><span>One digit breaks the proof, offline.</span></li>
+        <li><b>Keep private terms private</b><span>Seals hide values and still verify (A10).</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+  <section class="band tight" aria-labelledby="concepts">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">Core concepts</p><h2 class="h2" id="concepts">Small enough to check by hand. Complete enough to run a contract.</h2></div><p class="lede">Seven primitives, two value types and six clause forms. The list is short on purpose because every primitive is a permanent commitment.</p></div>
+      <div class="prims">
+        <div class="prim rv"><small>Primitive</small><h3>Agreement</h3><p>The cover page: Parties in Roles, plus Clauses that apply standard Terms with values. Its hash is what everyone signs.</p><code>{"type": "Agreement", "spec": "UP/0.1-draft", "parties": […], "clauses": […]}</code></div>
+        <div class="prim rv"><small>Primitive</small><h3>Party</h3><p>Anything that can sign. A Party is its Ed25519 key.</p><code>"ed25519:315acb5c…"</code></div>
+        <div class="prim rv"><small>Primitive</small><h3>Role</h3><p>What a Party does in one Agreement.</p><code>aggregator · supplier · member</code></div>
+        <div class="prim rv"><small>Primitive</small><h3>Term</h3><p>Standard meaning with a stable id, pinned by hash.</p><code>"UP:Admin-Fee"</code></div>
+        <div class="prim rv"><small>Primitive</small><h3>Event</h3><p>A signed change. Only three kinds exist.</p><code>propose · accept · attest</code></div>
+        <div class="prim rv"><small>Primitive</small><h3>State</h3><p>Where an Agreement stands. Never written, always computed from its chain, so every evaluator gets the same answer.</p><code>"status": "executed", "height": 9</code></div>
+        <div class="prim rv"><small>Primitive</small><h3>Mandate</h3><p>Bounded authority for an agent.</p><code>"rate": {"max": "0.03"}</code></div>
+        <div class="prim vt rv"><small>Value type</small><h3>Identifier</h3><p>Reuses GTIN, GLN, HIN, NDC. Never mints IDs.</p><code>{"scheme": "GTIN", "id": "…"}</code></div>
+        <div class="prim vt rv"><small>Value type</small><h3>Seal</h3><p>A salted hash in place of a private value.</p><code>{"seal": "sha256:41135ba3…"}</code></div>
+      </div>
+      <div class="panel white rv" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:12px 32px;align-items:center;justify-content:space-between">
+        <div><p class="eyebrow" style="margin-bottom:6px">Clause forms</p><h3 class="h3">Six building blocks. A new Term never needs new code.</h3></div>
+        <div class="forms"><span class="c-lilac">Window</span><span class="c-coral">Exit</span><span class="c-mint">Selection</span><span class="c-sun">Valuation</span><span class="c-navy">Duty</span><span class="c-sky">Link</span></div>
+      </div>
+      <div class="panel dark rv" style="margin-top:16px">
+        <p class="eyebrow">Engineered properties</p><h3 class="h3" style="color:#fff">Each one maps to an axiom you can check.</h3>
+        <div class="props">
+          <div><b>Content-addressed</b><em>RFC 8785</em><p>Every object is named by the SHA-256 of its canonical JSON. Same content, same name, on every machine.</p></div>
+          <div><b>Deterministic</b><em>A4</em><p>State is computed from the chain, never stored. Two evaluators with the same events always agree.</p></div>
+          <div><b>Value-neutral</b><em>A6</em><p>Terms define meaning, never numbers. The library can’t suggest a price, rate or period.</p></div>
+          <div><b>Ricardian</b><em>A8</em><p>The signed contract text is generated from the data, under the same hash. They can’t drift.</p></div>
+          <div><b>Bounded delegation</b><em>A9</em><p>Agents act under Mandates. Anything outside the bounds is invalid for every evaluator.</p></div>
+          <div><b>Confidential by construction</b><em>A10</em><p>Seals hide private values while hashes, signatures and states still verify.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="proof" style="background:#fff;border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">Proof, not trust</p><h2 class="h2" id="proof">Every object has a fingerprint. Try to change one.</h2></div><p class="lede">The same content gives the same hash on any machine, in any language. That is what lets parties trust the math instead of each other.</p></div>
+      <div class="lab">
+        <div class="ctl rv">
+          <h3 class="h3">Edit the signed fee rate</h3>
+          <p style="color:var(--ink-2);margin:10px 0 0;font-size:15.5px">This lab hashes the real <code class="mono">fee</code> clause of the master agreement in <code class="mono">examples/conventional</code>, in your browser, with RFC 8785 canonical JSON and SHA-256.</p>
+          <div class="rate"><label for="rateIn" class="mono" style="font-size:14px">"rate":</label><input id="rateIn" value="0.02" inputmode="decimal" spellcheck="false" aria-describedby="rateMsg"><button class="btn ghost" type="button" id="rateTry" style="height:48px">Try 0.015</button><button class="linkbtn" type="button" id="rateReset" style="background:none;border:0;text-decoration:underline;cursor:pointer;font-size:14px">Reset</button></div>
+          <p id="rateMsg" role="status" style="margin:16px 0 0;font-weight:600"></p>
+          <p style="margin:18px 0 0;font-size:13px;color:var(--ink-3)">Checked against the reference engine’s <code class="mono">hash_object</code>: <span class="mono">sha256:4a9c9305…</span> as signed, <span class="mono">sha256:498d604e…</span> at 0.015.</p>
+        </div>
+        <ol class="pipe rv" style="transition-delay:.06s">
+          <li><small>1 · Clause object</small><code id="labObj"></code></li>
+          <li><small>2 · Canonical bytes · <span id="labN">…</span> bytes</small><code id="labCanon"></code></li>
+          <li class="hash" id="labHashBox"><small>3 · Content hash · live in your browser</small><code id="labHash">…</code></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="conf">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">Conformance</p><h2 class="h2" id="conf">Reproduce these results and your code speaks Universal Paper.</h2></div><p class="lede">There’s no certification program and nobody to ask for permission. The example traces are the test vectors: every evaluator has to reach the same verdict on every event and the same State hash at every step.</p></div>
+      <div class="vtbl rv"><table>
+        <thead><tr><th>Test vector</th><th>Scenario</th><th>Every evaluator must conclude</th></tr></thead>
+        <tbody>
+          <tr><td>conventional.trace.json</td><td>Tiered master, two members joining, monthly reports, fees and a tier change</td><td class="ok">All events valid. Master reaches state dcedbfca…</td></tr>
+          <tr><td>conventional.tamper-supplier-fee</td><td>The supplier’s copy had its fee rate changed after signing</td><td class="no">Rejected at event #0. The aggregator’s signature doesn’t verify</td></tr>
+          <tr><td>conventional.tamper-aggregator-missing-signature</td><td>The supplier’s signature on its acceptance is missing from one copy</td><td class="no">The acceptance carries no signatures. The master stays proposed</td></tr>
+          <tr><td>conventional.tamper-member-backdate</td><td>A tier attestation was re-signed with an earlier date</td><td class="no">Rejected as backdated. Past states can’t be altered</td></tr>
+          <tr><td>generative.trace.json</td><td>A GPO run entirely by an agent under a Mandate</td><td>Two out-of-bounds agent actions rejected (A9). Everything else valid</td></tr>
+          <tr><td>overlay.trace.json</td><td>A 2024 contract described by its document hash, without renegotiation</td><td class="ok">Valid. Duties start only from the overlay’s signing</td></tr>
+          <tr><td>confidential.trace.json</td><td>Every price, rate and amount sealed. The observer has no disclosures</td><td class="ok">Same verdicts and same State hash at every step (A10)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="impl">
+        <div class="ccard c-lilac rv"><span class="fn">Python · reference · Apache-2.0</span><h3>universal_paper</h3><p>The complete reference interpreter and CLI used to generate every trace.</p><div class="caps"><span>hash</span><span>verify</span><span>derive</span><span>simulate</span><span>render</span><span>trace</span></div></div>
+        <div class="ccard c-sun rv" style="transition-delay:.06s"><span class="fn">JavaScript · ~60 lines</span><h3>Hashing only</h3><p>Canonical JSON plus SHA-256. It reproduces the example agreement and all 16 Term hashes, but it doesn’t verify signatures.</p><div class="caps"><span>hash</span><span class="off">verify</span><span class="off">derive</span><span class="off">render</span></div></div>
+        <div class="ccard c-mint rv" style="transition-delay:.12s"><span class="fn">Your language · open</span><h3>Your implementation</h3><p>Port it to Go, Rust, Java or TypeScript, or into a CLM or ERP. If your verdicts and hashes match the traces, every counterparty can rely on them.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band tight" aria-labelledby="apps-h">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">What you could build</p><h2 class="h2" id="apps-h">Ten apps waiting to be written.</h2></div><div><p class="lede">Concepts, not products: each one only needs the language and the reference interpreter, and each works with every counterparty that speaks it.</p><div class="rail-ctl" data-rail="apps" style="margin-top:22px"><button type="button" data-prev aria-label="Previous apps" style="border-color:var(--line-2);color:var(--ink)"><svg class="ico"><use href="#i-left"/></svg></button><button type="button" data-next aria-label="Next apps" style="border-color:var(--line-2);color:var(--ink)"><svg class="ico"><use href="#i-arrow"/></svg></button></div></div></div>
+    </div>
+    <div class="apps" id="apps" tabindex="0" aria-label="Ten app ideas">
+      <article class="app"><div class="shot" data-thumb="Deal Desk"><div class="ui"><div><span>UP:Admin-Fee · rate</span><span>"0.025" → <em>"0.02"</em></span></div><div><span>UP:Renewing-Term · max_renewals</span><span>1 → <em>2</em></span></div><div><span>0 words of prose</span><em>ready to sign</em></div></div></div><div class="meta"><small>Business development</small><h3>Deal Desk</h3><p>Compose proposals from the Term library and negotiate only the parameters. The counterparty sees a value diff, never a redline.</p><div class="tg"><span>propose</span><span>render</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Activation Radar"><div class="ui"><div><span>Community Hospital</span><em>tier B · live</em></div><div><span>Regional Clinic</span><em>tier A · live</em></div><div><span>New member</span><span>2 of 3 signed</span></div><div><span>Rural Hospital</span><span>awaiting tier ack</span></div></div></div><div class="meta"><small>Procurement</small><h3>Activation Radar</h3><p>See which members are live, on which tier and price, right now. Every row is recomputed from the chains, never from a roster file.</p><div class="tg"><span>UP:Participation</span><span>selection()</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Fee Reconciler"><div class="ui"><div><span>Jan admin fee · USD 61.00</span><em>discharged</em></div><div><span>Feb admin fee · computed</span><em>discharged</em></div><div><span>Mar admin fee · due 04-30</span><span>open</span></div></div></div><div class="meta"><small>Finance</small><h3>Fee Reconciler</h3><p>Admin fees computed from reported sales and the signed rate, matched against payment attestations. Close without the true-up spreadsheet.</p><div class="tg"><span>obligations()</span><span>UP:Admin-Fee</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Kickoff Autopilot"><div class="ui"><div><span>Agreement executed</span><span>trigger</span></div><div><span>Load tier schedule</span><em>auto</em></div><div><span>Map 845 / 867 feeds</span><span>template</span></div><div><span>Invite members</span><span>3 drafted</span></div></div></div><div class="meta"><small>Implementation</small><h3>Kickoff Autopilot</h3><p>The moment an agreement executes, open the implementation plan with every term already structured: tiers, reporting cadence, fee schedule, notice periods.</p><div class="tg"><span>State.status</span><span>clause forms</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Procurement Agent"><div class="ui" style="font-family:var(--sans);font-size:12.5px">Tier A is outside my Mandate, so I attested B. Waiting on the supplier’s acknowledgment.</div></div><div class="meta"><small>Members &amp; GPOs</small><h3>Procurement Agent</h3><p>An agent with its own key and a Mandate. It can join agreements and attest within bounds, and anything outside them is rejected by every evaluator.</p><div class="tg"><span>Mandate</span><span>A9</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Price Sync"><div class="ui"><div><span>GTIN …0017 · 9.40 / 9.40</span><em>match</em></div><div><span>GTIN …0024 · 21.75 / 21.75</span><em>match</em></div><div><span>GTIN …0031 · 3.30 / 3.15</span><i>drift</i></div></div></div><div class="meta"><small>IT &amp; integrations</small><h3>Price Sync</h3><p>Push derived contract prices into the ERP and flag drift before it becomes a chargeback dispute. Existing EDI keeps running side by side.</p><div class="tg"><span>price()</span><span>mapping guide</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Renewal Calendar"><div class="ui"><div><span>Opt-out window opens</span><span>90 days before end</span></div></div></div><div class="meta"><small>Legal</small><h3>Renewal &amp; Notice Calendar</h3><p>Renewal dates, opt-out windows and notice deadlines computed from each agreement’s Window and Exit clauses, for every counterparty at once.</p><div class="tg"><span>UP:Renewing-Term</span><span>Exit form</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Overlay Importer"><div class="ui"><div><span>supply-agreement-2024.pdf</span><span>sha256:…</span></div><div><span>Tiers, fee, reporting</span><em>described</em></div><div><span>Indemnity, warranty</span><span>stays in PDF</span></div></div></div><div class="meta"><small>Legal &amp; operations</small><h3>Overlay Importer</h3><p>Describe the contracts you already have by their document hash, without renegotiating. Start getting computed obligations on day one.</p><div class="tg"><span>UP:Overlay</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Audit Room"><div class="ui"><div><span>Audit request</span><span>response in 30 d</span></div><div><span>Replay 9 events</span><em>all valid</em></div><div><span>Sealed values</span><span>disclose 2 of 14</span></div></div></div><div class="meta"><small>Compliance</small><h3>Audit Room</h3><p>Hand an auditor the bundle and only the disclosures they need. They replay the history offline and reach the same verdicts.</p><div class="tg"><span>UP:Audit</span><span>Seal</span></div></div></article>
+      <article class="app"><div class="shot" data-thumb="Portfolio Console"><div class="ui"><div><span>Agreements in force</span><span>tracked</span></div><div><span>Members live</span><span>tracked</span></div><div><span>Prices</span><span>sealed</span></div></div></div><div class="meta"><small>Leadership</small><h3>Portfolio Console</h3><p>Status, renewals and obligations across every agreement you’re party to, with each counterparty’s confidential values left sealed.</p><div class="tg"><span>State</span><span>A10</span></div></div></article>
+    </div>
+  </section>
+
+  <section class="band tight" aria-labelledby="devfaq">
+    <div class="wrap" style="max-width:980px">
+      <p class="eyebrow">Questions</p><h2 class="h2" id="devfaq" style="margin-bottom:32px">What developers ask first.</h2>
+      <details class="qa"><summary><h3>Is this a blockchain?</h3><span class="pm" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></summary><div class="a"><p>No. There’s no ledger, token, mining or global network. Each agreement has its own short chain of signed events, held by the parties to it. Hashes link the events and Ed25519 signatures authorize them, so any copy can be checked offline.</p><p class="ref">spec/04-inference.md · axiom A3</p></div></details>
+      <details class="qa"><summary><h3>Where do our agreements live?</h3><span class="pm" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></summary><div class="a"><p>With the parties. A bundle is plain JSON that you can store in your CLM, ERP or a file share. Hosted services can store and route bundles for you, but nobody needs one to verify, because every evaluator recomputes the same verdicts from the same events.</p><p class="ref">spec/08-neutrality-charter.md</p></div></details>
+      <details class="qa"><summary><h3>How does it fit with EDI?</h3><span class="pm" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></summary><div class="a"><p>Side by side. The mapping guide shows how rosters, eligibility files and the X12 845, 844, 849 and 867 sets correspond to events and projections. The main gap in v0 is the distributor Role, and it’s documented.</p><p class="ref">spec/07-mapping-guide.md</p></div></details>
+      <details class="qa"><summary><h3>What’s the license?</h3><span class="pm" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></summary><div class="a"><p>The specification and Term library are CC BY 4.0, the reference code and schemas are Apache-2.0, and the example agreements are CC0. No account, fee or license key is ever required. <a href="/license/">Licenses in detail</a>.</p></div></details>
+      <p style="margin-top:20px"><a class="btn ghost" href="/faq/">All questions, for every team <svg class="ico"><use href="#i-arrow"/></svg></a></p>
+    </div>
+  </section>
+
+  <section class="band tight" aria-labelledby="dev-cta">
+    <div class="wrap"><div class="cta"><canvas data-field="developers-cta" aria-hidden="true"></canvas><h2 class="display" id="dev-cta">Same paper for everyone.</h2><p class="lede">Proof for every change. Open language, open reference code, no gatekeeper. Pick an example, run the validator, and build the first app your team wishes it had.</p><div class="ctas"><a class="btn light" href="#quick-start">Quick start <svg class="ico"><use href="#i-arrow"/></svg></a><a class="btn outline-l" href="/playground/">Open the Playground <svg class="ico"><use href="#i-ext"/></svg></a></div></div></div>
+  </section>
+  <p class="wrap" style="font-size:13px;color:var(--ink-3)">All parties, identifiers, prices, rates, quantities and dates in the examples are hypothetical.</p>
+</main>
+<script>
+(() => {
+  const clause = { n: 'fee', term: 'UP:Admin-Fee', def: 'sha256:86262a69a7bfba34d47e0f3052aecb541702abea12286e098e60333fa1e24168', params: { due: { count: 30, unit: 'day' }, payee: 'aggregator', payer: 'supplier', period: { count: 1, unit: 'month' }, rate: '0.02', report_clause: 'reporting', rounding: { mode: 'half-even', scale: 2 } } };
+  const canon = v => Array.isArray(v) ? '[' + v.map(canon).join(',') + ']' : v && typeof v === 'object' ? '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}' : JSON.stringify(v);
+  const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
+  const inp = document.getElementById('rateIn'), msg = document.getElementById('rateMsg');
+  let base;
+  async function run() {
+    const v = inp.value.trim();
+    if (!/^\d+(\.\d+)?$/.test(v)) { msg.textContent = 'Use a Decimal like 0.02: digits, an optional point, no exponent.'; msg.style.color = 'var(--bad)'; return; }
+    const o = JSON.parse(JSON.stringify(clause)); o.params.rate = v;
+    const c = canon(o), h = await sha(c); base = base || h;
+    document.getElementById('labObj').textContent = JSON.stringify(o, null, 1).replace(/\n\s*/g, ' ');
+    document.getElementById('labCanon').textContent = c;
+    document.getElementById('labN').textContent = new TextEncoder().encode(c).length;
+    document.getElementById('labHash').textContent = 'sha256:' + h;
+    const same = h === base;
+    document.getElementById('labHashBox').classList.toggle('diff', !same);
+    msg.style.color = same ? 'var(--ok)' : 'var(--bad)';
+    msg.textContent = same ? 'Same clause, same hash, the one the reference engine computes.' : 'One digit changed the whole hash. The agreement hash changes with it, so both signatures fail.';
+  }
+  inp.addEventListener('input', run);
+  document.getElementById('rateTry').addEventListener('click', () => { inp.value = '0.015'; run(); });
+  document.getElementById('rateReset').addEventListener('click', () => { inp.value = '0.02'; run(); });
+  run();
+})();
+</script>
