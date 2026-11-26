@@ -1517,7 +1517,7 @@ h1 em{{font-style:normal;text-decoration:underline;text-decoration-color:#FF6A4A
 </style></head><body>
 <div class="g"></div>
 <div class="w"><div class="b"><img src="data:image/png;base64,{mark}">Universal Paper</div>
-<h1>From agreement, <em>everything</em>.</h1></div>
+<h1>Everything comes from <em>agreement</em>.</h1></div>
 <div class="f"><span>The open language for GPO, supplier and member agreements</span><span>{esc(site.a.domain)}</span></div>
 </body></html>"""
     tmp = HERE / "assets-cache/og.html"

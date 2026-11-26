@@ -232,5 +232,8 @@ def test_agent_json_describes_only_what_exists(dist):
 
 def test_home_hero_copy(dist):
     s = (dist / "index.html").read_text(encoding="utf-8")
-    assert '<h1 class="display">From agreement, <em>everything</em>.</h1>' in s
+    assert '<h1 class="display">Everything comes from <em>agreement</em>.</h1>' in s
     assert "Sign one, and every system and agent reaches the same answers." in s
+    # the underline is a background on <em>, drawn at every width (no ::after that a phone rule could hide)
+    assert ".hero .display em { font-style: normal; background: linear-gradient(var(--coral)" in s
+    assert ".hero .display em::after" not in s
