@@ -183,3 +183,19 @@ def test_spec_pages_keep_their_section_anchors(dist):
     assert s.count('<div class="check">') == 13
     d = (dist / "spec/domain/index.html").read_text(encoding="utf-8")
     assert 'id="33-what-may-be-sealed"' in d and '<pre data-lang="json"><code><span class="p">{</span>' in d
+
+
+def test_every_schema_is_served_at_its_id_and_no_placeholders_remain(dist):
+    sources = sorted((ROOT / "schema").glob("*.json")) + sorted((ROOT / "examples/integrations/fingerprint-coordination/schemas").glob("*.json"))
+    assert len(sources) >= 4
+    for p in sources:
+        sid = json.loads(p.read_text(encoding="utf-8"))["$id"]
+        assert sid.startswith("https://universalpaper.org/"), sid
+        served = dist / sid.removeprefix("https://universalpaper.org/")
+        assert served.read_bytes() == p.read_bytes(), sid
+    for name in ("universal-paper.schema.json", "trace.schema.json"):  # the unversioned alias keeps serving the current one
+        assert (dist / "schema" / name).read_bytes() == (ROOT / "schema" / name).read_bytes()
+    placeholder = re.compile(r"https?://[a-z0-9.-]*\.(?:example|invalid|test)(?:[/\"']|$)")
+    leaks = [str(f.relative_to(dist)) for f in dist.rglob("*") if f.suffix in (".json", ".html", ".txt", ".md")
+             and placeholder.search(f.read_text(encoding="utf-8"))]
+    assert not leaks, leaks

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://universal-paper.example/schema/UP-0.1-draft/universal-paper.schema.json",
+  "$id": "https://universalpaper.org/schema/UP-0.1-draft/universal-paper.schema.json",
   "title": "Universal Paper UP/0.1-draft primitives",
   "description": "Machine-readable shapes of every Universal Paper object. Structural validity only: the axioms in spec/03-axioms.md decide whether a well-shaped object is valid.",
   "oneOf": [

@@ -543,3 +543,4 @@ a.ccard:hover .go { opacity: 1; transform: none; }
 
 /* long URLs and identifiers wrap instead of running past a 320 px screen */
 .prose a, .prose code, .mcp code { overflow-wrap: anywhere; }
+.prose h2, .prose h3 { overflow-wrap: break-word; }

@@ -564,9 +564,6 @@ def build_spec(site):
         dst = site.out / "spec/terms" / p.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(p, dst)
-    for p in (site.repo / "schema").glob("*.json"):
-        (site.out / "schema").mkdir(parents=True, exist_ok=True)
-        shutil.copy(p, site.out / "schema" / p.name)
     for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if"):
         for p in (site.repo / "examples" / d).glob("*"):
             if p.suffix in (".json", ".txt"):
@@ -670,7 +667,7 @@ def build_spec(site):
     # /spec/ index (hand-designed: site/theme/pages/spec.html)
     style, main, scripts = L.fragment("spec")
     require_links("spec", main, [f"/spec/{slug}/" for _, slug, _, _ in SPEC_FILES]
-                  + ["/schema/universal-paper.schema.json", "/schema/trace.schema.json", "/llms-full.txt"]
+                  + ["/schema/", "/schema/universal-paper.schema.json", "/schema/trace.schema.json", "/llms-full.txt"]
                   + [f"/examples/{d}/bundle.json" for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if")])
     title = "Universal Paper specification | UP/0.1-draft"
     desc = ("Read the Universal Paper specification: domain, axioms, inference, lifecycle, the 16-Term library, the EDI mapping guide and the neutrality charter. "
@@ -1109,6 +1106,69 @@ def build_fpc_demo(site, page):
 
 
 # ----------------------------------------------------------------------------- misc files
+def build_schemas(site):
+    """The JSON Schemas. Each one's $id is a versioned URL on this site where that exact file is served, so a
+    validator can resolve it; /schema/<name> is the unversioned alias for the current version. Also /schema/."""
+    base = f"https://{site.a.domain}/"
+    rows, cards = [], []
+    sources = sorted((site.repo / "schema").glob("*.json"), key=lambda p: p.name != "universal-paper.schema.json") + sorted((site.repo / FPC_DIR / "schemas").glob("*.json"))
+    for p in sources:
+        sch = json.loads(p.read_text(encoding="utf-8"))
+        sid = sch.get("$id", "")
+        if not sid.startswith(base) or not sid.endswith("/" + p.name):
+            raise SystemExit(f"{p.relative_to(site.repo)}: $id {sid!r} must be a URL on {base} ending in /{p.name}")
+        served = sid[len(base):]
+        alias = f"schema/{p.name}" if p.parent == site.repo / "schema" else None
+        for rel in filter(None, (served, alias)):
+            (site.out / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(p, site.out / rel)
+        src = p.relative_to(site.repo).as_posix()
+        links = [(f"/{served}", "Download")] + ([(f"{site.a.repo_url}/blob/main/{src}", "Source")] if site.a.repo_url else [])
+        cards.append(f"""<h2 id="{esc(p.stem.replace('.schema', ''))}">{esc(sch.get("title", p.name))}</h2>
+<p>{esc(sch.get("description", ""))}</p>
+<div class="tablewrap"><table><tbody>
+<tr><th scope="row">$id</th><td><code>{esc(sid)}</code></td></tr>
+{f'<tr><th scope="row">Current version</th><td><code>{esc(base + alias)}</code></td></tr>' if alias else ""}
+<tr><th scope="row">Dialect</th><td><code>{esc(sch.get("$schema", ""))}</code></td></tr>
+<tr><th scope="row">Source</th><td><code>{esc(src)}</code></td></tr>
+</tbody></table></div>
+<p>{" · ".join(f'<a href="{esc(h)}">{t}</a>' for h, t in links)}</p>""")
+        rows.append(sid)
+    usage = esc("""import json, urllib.request
+import jsonschema  # pip install jsonschema
+
+url = "https://universalpaper.org/schema/UP-0.1-draft/universal-paper.schema.json"
+schema = json.load(urllib.request.urlopen(url))
+jsonschema.validate(json.load(open("bundle.json")), schema)""")
+    body = ("\n".join(cards[:2]) + f"""
+<h2 id="validate">Validate a bundle</h2>
+<p>A schema checks shape only. Whether a well-shaped agreement or event is valid is decided by the <a href="/spec/axioms/">axioms</a>, which the reference interpreter (<code>up validate</code>) and the <a href="/developers/#mcp">MCP server</a> apply.</p>
+<pre data-lang="python"><code>{usage}</code></pre>
+<h2 id="versioning">Versioning</h2>
+<p>Each <code>$id</code> names the specification version in its path and is served at exactly that URL, so a reference to it never changes meaning. The unversioned <code>/schema/…</code> addresses always serve the current version. Schemas are code, licensed under <a href="{LIC["apache"][1]}">Apache-2.0</a>.</p>
+<h2 id="integrations">Optional integration schemas</h2>
+<p>Schemas for the optional <a href="/integrations/fingerprint-coordination/">Fingerprint Coordination</a> convention. They are not part of the language.</p>
+""" + "\n".join(cards[2:]))
+    main = f"""<main id="main">
+  <div class="wrap phero">
+    {L.crumbs([("/", "Universal Paper"), ("/spec/", "Specification"), ("", "JSON Schemas")])}
+    <p class="eyebrow">Machine-readable</p>
+    <h1 class="display">JSON Schemas</h1>
+    <p class="lede">The shape of every Universal Paper object and of trace files, in JSON Schema 2020-12. Each <code>$id</code> is a real address on this site.</p>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(64px,8vw,120px)"><article class="prose" style="max-width:860px;min-width:0">{body}</article></div>
+</main>"""
+    ld = [{"@context": "https://schema.org", "@type": "Dataset", "name": "Universal Paper JSON Schemas", "url": site.url("/schema/"),
+           "description": "JSON Schema 2020-12 definitions for Universal Paper objects and trace files.", "creator": CREATOR,
+           "license": LIC["apache"][1], "isAccessibleForFree": True,
+           "distribution": [{"@type": "DataDownload", "contentUrl": u, "encodingFormat": "application/schema+json"} for u in rows]}]
+    title = "JSON Schemas | Universal Paper"
+    desc = "JSON Schema 2020-12 definitions for every Universal Paper object and for trace files, served at their $id URLs."
+    site.write("schema/index.html", site.page("/schema/", title, desc, main, ld=ld))
+    site.add_page("/schema/", "0.6", "monthly")
+    site.add_search("/schema/", "JSON Schemas", "Machine-readable shapes", "page", main, rank=30)
+
+
 def build_misc(site):
     a = site.a
     site.write("CNAME", a.domain + "\n")
@@ -1304,7 +1364,7 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
 ## Optional
 
 - [Full specification in one file]({site.url('/llms-full.txt')})
-- [JSON Schema]({site.url('/schema/universal-paper.schema.json')})
+- [JSON Schemas]({site.url('/schema/')}): the primitives schema ({site.url('/schema/UP-0.1-draft/universal-paper.schema.json')}) and the trace schema ({site.url('/schema/UP-0.1-draft/trace.schema.json')}), each served at its $id
 - [Example bundle: conventional GPO agreement]({site.url('/examples/conventional/bundle.json')})
 - [Optional integrations index, as JSON]({site.url('/integrations/index.json')}): for each optional integration, its docs, helper functions with signatures, claim shapes as JSON Schema, example files and the MCP tools to evaluate with. Universal Paper depends on none of them.
 - [Optional integration: Legal Context Protocol]({site.url('/integrations/legal-context-protocol.md')}): publish a bundle at /.well-known/legal-context.json, pinned by its fingerprint as atrHash. Universal Paper does not depend on it.
@@ -1419,6 +1479,7 @@ def main():
     build_license(site)
     build_spec(site)
     build_integrations(site)
+    build_schemas(site)
     build_misc(site)
     build_llms(site)
     build_sitemap(site)
