@@ -1,0 +1,64 @@
+<section class="band tight" aria-label="At a glance" style="padding-bottom:0">
+  <div class="wrap glance">
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>Report privately.</b> Use GitHub’s private vulnerability reporting, not a public issue.</span></div>
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>Acknowledged within 5 working days.</b> We then agree a disclosure date with you.</span></div>
+    <div><span class="b note"><svg class="ico"><use href="#i-i"/></svg></span><span><b>Use hypothetical data only.</b> Never send real agreements, real prices or private keys.</span></div>
+  </div>
+</section>
+<!-- body -->
+<h2>How to report a vulnerability</h2>
+<p>Use GitHub’s private vulnerability reporting for the repository: <a href="https://github.com/Uppercentile/universal-paper/security/advisories/new">open a private report</a>. Please do not open a public issue for a vulnerability.</p>
+<p>If you cannot use GitHub’s private reporting, email <a href="mailto:contact@uppercentile.com?subject=Universal%20Paper%3A%20security">contact@uppercentile.com</a> and ask for a private channel. Do not put the details in that first email.</p>
+<p>A good report includes:</p>
+<ul>
+  <li>the smallest bundle or input that shows the problem;</li>
+  <li>which engine is affected: Python, JavaScript or both;</li>
+  <li>what you expected to happen.</li>
+</ul>
+<blockquote><p>Use hypothetical data only. Never send real agreements, real prices or private keys.</p></blockquote>
+
+<h2>What happens next</h2>
+<ul>
+  <li>We aim to acknowledge your report within 5 working days.</li>
+  <li>We agree a disclosure date with you.</li>
+  <li>We credit you in the advisory and in the <a href="https://github.com/Uppercentile/universal-paper/blob/main/CHANGELOG.md">changelog</a>, unless you prefer otherwise.</li>
+</ul>
+
+<h2>What counts as a security bug</h2>
+<p>Roughly from most to least serious:</p>
+<ul>
+  <li>A forged, altered, backdated or unauthorized Event, Agreement or Mandate that an evaluator accepts.</li>
+  <li>Two evaluators that reach different verdicts, State hashes or derived values from the same Bundle. This breaks axiom A4.</li>
+  <li>A sealed value that can be recovered, or a validity check that depends on a sealed value (axiom A10).</li>
+  <li>A rendering that differs from what the hash commits to (axiom A8).</li>
+  <li>Input that makes an evaluator hang, exhaust memory or crash instead of rejecting it.</li>
+  <li>A weakness in the specification itself, even if both engines implement it faithfully.</li>
+</ul>
+<p>Typos and ordinary bugs that do not affect validity are welcome as <a href="https://github.com/Uppercentile/universal-paper/issues">public issues</a>.</p>
+
+<h2>Supported versions</h2>
+<p>Universal Paper is a pre-1.0 draft (<code>UP/0.1-draft</code>). Only the latest commit on the <code>main</code> branch receives fixes. Until 1.0, a security fix may change what is valid, and so change the hashes of Term definitions and examples. Such changes are called out in the changelog.</p>
+
+<h2>How the hosted services limit risk</h2>
+<ul>
+  <li><strong>The MCP server is read-only and stateless.</strong> It holds no keys, signs nothing, writes nothing and never reads file paths. It keeps no sessions, storage or access logs.</li>
+  <li><strong>No sign-in means no credentials to steal.</strong> There are no accounts, passwords or tokens.</li>
+  <li><strong>The Playground runs in your browser.</strong> It sends nothing to a server.</li>
+  <li><strong>Everything is served over HTTPS.</strong></li>
+  <li><strong>The website is static.</strong> It sets no cookies and runs no third-party scripts.</li>
+</ul>
+<p>The <a href="/privacy/">Privacy policy</a> describes what each service processes.</p>
+
+<h2>Things to know before you rely on it</h2>
+<ul>
+  <li><strong>Example keys are public.</strong> Keys and salts in the examples are derived from public seeds so the examples can be reproduced. They are not secret and must never be used for anything real. Real keys and salts must be random.</li>
+  <li><strong>The Playground is a demonstration, not a wallet.</strong> Do not use it to sign with real keys.</li>
+  <li><strong>The JavaScript Ed25519 code is written for clarity</strong> and is not constant-time. It is fine for verifying public data, and should not be used to sign with real keys.</li>
+</ul>
+
+<h2>Audit and policy files</h2>
+<ul>
+  <li>The audit done before publication is in <a href="https://github.com/Uppercentile/universal-paper/blob/main/AUDIT.md">AUDIT.md</a>.</li>
+  <li>The full policy is in <a href="https://github.com/Uppercentile/universal-paper/blob/main/SECURITY.md">SECURITY.md</a>. If this page and that file differ, the file governs.</li>
+  <li>Machine-readable contact details are in <a href="/.well-known/security.txt">security.txt</a>.</li>
+</ul>

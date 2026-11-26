@@ -566,3 +566,8 @@ a.ccard:hover .go { opacity: 1; transform: none; }
 /* long URLs and identifiers wrap instead of running past a 320 px screen */
 .prose a, .prose code, .mcp code { overflow-wrap: anywhere; }
 .prose h2, .prose h3 { overflow-wrap: break-word; }
+
+/* Footer: trust pages */
+.legal .trust { display: flex; flex-wrap: wrap; gap: 4px 18px; flex-basis: 100%; }
+.legal .trust a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); text-decoration: none; font-size: 14px; }
+.legal .trust a:hover, .legal .trust a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--coral); text-underline-offset: 4px; }

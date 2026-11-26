@@ -277,3 +277,52 @@ def test_hero_timeline_uses_the_real_fingerprint(dist):
     for label in ("Aggregator signed", "Supplier signed", "Status: active"):
         assert label in tl
     assert "animation: underline-in 2.8s" in s and "const START = 600, DRAW = 2800" in s  # CSS and script keep one clock
+
+
+TRUST = ("/privacy/", "/terms/", "/security/", "/support/", "/accessibility/")
+
+
+def test_trust_pages_are_served_and_linked_everywhere(dist):
+    """The five trust pages exist, every page's footer links all five, and llms.txt, agent.json and the sitemap list them."""
+    for p in TRUST:
+        s = (dist / p.strip("/") / "index.html").read_text(encoding="utf-8")
+        assert s.count("<h1") == 1 and f'<a href="{p}" aria-current="page">' in s
+    for f in dist.rglob("index.html"):
+        s = f.read_text(encoding="utf-8")
+        if '<footer' in s:
+            assert all(f'<a href="{p}"' in s for p in TRUST), f
+    llms, sitemap = (dist / "llms.txt").read_text(encoding="utf-8"), (dist / "sitemap.xml").read_text(encoding="utf-8")
+    agent = json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))["resources"]
+    for p in TRUST:
+        assert f"https://universalpaper.org{p}" in llms and f"<loc>https://universalpaper.org{p}</loc>" in sitemap
+        assert f"https://universalpaper.org{p}" in agent.values()
+
+
+def test_privacy_policy_matches_what_the_site_loads(dist):
+    """The privacy policy says the only third-party request is the SubmitLLMs footer badge. Keep that true on every page."""
+    hosts = set()
+    for f in dist.rglob("*.html"):
+        s = f.read_text(encoding="utf-8")
+        for m in re.finditer(r'<(?:script|img|iframe|link)\b[^>]*\b(?:src|href)="(https?://[^/"]+)[^"]*"', s):
+            tag = m.group(0)
+            if tag.startswith("<link") and not re.search(r'rel="(?:stylesheet|preconnect|icon|preload|modulepreload)"', tag):
+                continue
+            hosts.add(m.group(1))
+        assert "document.cookie" not in s, f
+    assert hosts <= {"https://submitllms.com"}, hosts
+    privacy = (dist / "privacy/index.html").read_text(encoding="utf-8")
+    assert "SubmitLLMs" in privacy and "mcp.universalpaper.org/stats" in privacy
+
+
+def test_security_fallback_matches_security_md(dist):
+    page = (dist / "security/index.html").read_text(encoding="utf-8")
+    policy = (ROOT / "SECURITY.md").read_text(encoding="utf-8")
+    assert "contact@uppercentile.com" in page and "email contact@uppercentile.com and ask for a private channel" in policy
+    assert "Contact: mailto:contact@uppercentile.com" in (dist / ".well-known/security.txt").read_text(encoding="utf-8")
+
+
+def test_no_page_shows_raw_css(dist):
+    """Page styles sit inside <style>; CSS never leaks into the page text."""
+    for f in dist.rglob("*.html"):
+        body = re.sub(r"<(style|script)\b.*?</\1>", "", f.read_text(encoding="utf-8").split("<body", 1)[-1], flags=re.S)
+        assert not re.search(r"\.[a-z-]+ \{ [a-z-]+: ", body), f

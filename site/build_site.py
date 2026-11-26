@@ -144,7 +144,7 @@ class Site:
         if len(title) > TITLE_MAX or len(desc) > DESC_MAX:
             raise SystemExit(f"{path}: title ({len(title)}) or description ({len(desc)}) is over {TITLE_MAX}/{DESC_MAX} characters")
         return L.document(title=title, head=self.head_meta(path, title, desc, kind=kind, extra_ld=ld, robots=robots, links=links),
-                          header_html=L.header(path, self.a.repo_url), footer_html=L.footer(self.legal_strip(), TAGLINE, self.a.repo_url),
+                          header_html=L.header(path, self.a.repo_url), footer_html=L.footer(self.legal_strip(path), TAGLINE, self.a.repo_url),
                           main=main, style=style, scripts=scripts, announce=announce)
 
     # ---- <head> pieces shared by every page
@@ -194,13 +194,15 @@ class Site:
         return "\n".join(lines)
 
     # ---- the legal row at the foot of every page
-    def legal_strip(self):
+    def legal_strip(self, path=""):
+        trust = "".join(f'<a href="{u}"' + (' aria-current="page"' if u == path else "") + f'>{t}</a>' for u, t, *_ in TRUST_PAGES)
         return (
             '<div class="legal"><span><b>Created by <a href="https://uppercentile.com">Uppercentile</a>, free for everyone.</b> '
             f'Specification and docs <a href="{LIC["ccby"][1]}" rel="license">CC BY 4.0</a> · '
             f'code <a href="{LIC["apache"][1]}" rel="license">Apache-2.0</a> · '
             f'example agreements and traces <a href="{LIC["cc0"][1]}" rel="license">CC0 1.0</a>. '
             'No account, fee or license key is ever required. <a href="/license/">How to use and credit it</a>.</span>'
+            f'<span class="trust">{trust}</span>'
             '<span class="up-badge">'
             # SubmitLLMs directory badge: its listing requires a live link to it (added at Joe's request, 2026-11-24)
             '<a href="https://submitllms.com/directory/universalpaper.org" target="_blank" rel="noopener noreferrer">'
@@ -323,6 +325,8 @@ def build_playground(site):
     app = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>\s*', "", app)
     app = re.sub(r'<link rel="preconnect"[^>]*>\s*', "", app)
     app = re.sub(r'<meta name="claude:[^"]*"[^>]*>\n?', "", app)
+    # The embed style self-hosts the fonts, so the explorer's Google Fonts request is dropped: the site makes no font requests to third parties.
+    app = re.sub(r'<link rel="(?:preconnect|stylesheet)" href="https://fonts\.(?:googleapis|gstatic)\.com[^"]*"[^>]*>\n?', "", app)
     app = app.replace("</head>", PLAYGROUND_EMBED_HEAD + "\n</head>", 1)
     app = app.replace("</body>", PLAYGROUND_EMBED_JS + "\n</body>", 1)
     site.write("playground/app.html", app)
@@ -460,6 +464,133 @@ def build_license(site):
     site.write("license/index.html", site.page("/license/", title, desc, main, style=style, scripts=scripts))
     site.add_page("/license/", "0.7", "yearly")
     site.add_search("/license/", "Licenses", "Free and open: CC BY 4.0, Apache-2.0, CC0", "page", main, rank=7)
+
+
+# ----------------------------------------------------------------------------- trust pages (site/theme/trust/)
+TRUST_DATE, TRUST_ISO = "26 November 2026", "2026-11-26"
+TRUST_PAGES = [  # (path, nav label, title, description, lede, meta line, sitemap priority, change frequency, search subtitle)
+    ("/privacy/", "Privacy policy", "Privacy policy | Universal Paper",
+     "Universal Paper collects almost nothing: no accounts, cookies or analytics, and the hosted MCP server stores nothing you send. Full details here.",
+     "The short version: we collect almost nothing. Universal Paper has no accounts, no cookies and no analytics, and the hosted MCP server "
+     "stores nothing you send it. This page sets out the details.", f"Effective {TRUST_DATE} · Uppercentile LLC", "0.3", "yearly",
+     "What is collected: almost nothing"),
+    ("/terms/", "Terms of use", "Terms of use | Universal Paper",
+     "The terms for using universalpaper.org, the Playground and the hosted MCP server. The language itself stays free under open licenses.",
+     "These terms cover the website, the Playground and the hosted MCP server. The language itself, with its specification, code and "
+     "examples, stays free under the open licenses, and nothing here narrows them.", f"Effective {TRUST_DATE} · Uppercentile LLC", "0.3", "yearly",
+     "Site, Playground and hosted MCP server"),
+    ("/security/", "Security", "Security | Universal Paper",
+     "How to report a vulnerability in Universal Paper privately, what counts as a security bug, and how the hosted services limit risk.",
+     "Universal Paper exists so that anyone can check an agreement without trusting anyone else. A flaw that breaks that is a security bug "
+     "in the strongest sense, and we want to hear about it privately.", f"Updated {TRUST_DATE} · UP/0.1-draft", "0.4", "monthly",
+     "Report a vulnerability privately"),
+    ("/support/", "Support and contact", "Support and contact | Universal Paper",
+     "Get help with Universal Paper: ask a question, report a bug, fix an MCP server connection, or contact Uppercentile, the steward.",
+     "Using Universal Paper never requires contacting anyone. When you do want help, these are the places to ask, and what to expect from each.",
+     f"Updated {TRUST_DATE}", "0.5", "monthly", "Get help and troubleshoot the MCP server"),
+    ("/accessibility/", "Accessibility", "Accessibility | Universal Paper",
+     "How universalpaper.org supports keyboard, screen reader and reduced-motion use, where it falls short today, and how to report a barrier.",
+     "An open language should be open to everyone who wants to read it. This page says what the site does to be usable, where it falls "
+     "short today, and how to tell us about a barrier.", f"Updated {TRUST_DATE}", "0.3", "yearly",
+     "What works, what falls short, how to report"),
+]
+TRUST_RELATED = [("/license/", "Licenses"), ("/spec/neutrality-charter/", "Neutrality charter"), ("/faq/", "FAQ")]
+TRUST_STYLE = """<style>
+.phero .display { max-width: 16ch; }
+.tmeta { margin: 22px 0 0; font: 500 12px/1.4 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.glance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-bottom: clamp(24px, 3vw, 40px); }
+@media (max-width: 980px) { .glance { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .glance { grid-template-columns: minmax(0, 1fr); } }
+.glance > div { display: flex; gap: 14px; align-items: flex-start; padding: 22px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); font-size: 16.5px; line-height: 1.45; color: var(--ink-2); min-width: 0; }
+.glance b { color: var(--ink); font-weight: 650; }
+.glance a { color: var(--ink); text-decoration-color: var(--coral); text-underline-offset: 4px; }
+.glance .b { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--mint); color: var(--mint-ink); display: grid; place-items: center; }
+.glance .b.note { background: var(--sun); color: var(--sun-ink); }
+.glance .b .ico { width: 15px; height: 15px; }
+.ways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: clamp(24px, 3vw, 40px); }
+@media (max-width: 980px) { .ways { grid-template-columns: minmax(0, 1fr); } }
+.ways .ccard { min-height: 300px; }
+.ways .ccard h3 { font-size: 28px; }
+.ways .ccard .lk { margin-top: 8px; display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: 15px; color: inherit; text-underline-offset: 4px; overflow-wrap: anywhere; }
+.docs.trust .side a { min-height: 44px; align-items: center; }
+.docs.trust { padding-top: clamp(16px, 2vw, 32px); }
+.prose td:first-child { font-weight: 600; }
+@media (max-width: 640px) {
+  .prose .tablewrap { border: 0; background: none; overflow: visible; }
+  .prose .tablewrap table, .prose .tablewrap tbody, .prose .tablewrap tr, .prose .tablewrap td { display: block; }
+  .prose .tablewrap thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .prose .tablewrap tr { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 8px 0 10px; margin-bottom: 12px; }
+  .prose .tablewrap td { border: 0; padding: 8px 18px; min-width: 0; font-size: 16px; }
+  .prose .tablewrap td::before { content: attr(data-th); display: block; font: 500 11px/1.3 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px; }
+  .prose .tablewrap td:first-child { font-size: 18px; padding-top: 12px; }
+  .prose .tablewrap td:first-child::before { display: none; }
+  .prose tbody tr:hover td { background: none; }
+}
+.prose .doc-foot p { margin: 0; }
+</style>"""
+
+
+def build_trust(site):
+    """Privacy, terms, security, support and accessibility. The text lives in site/theme/trust/<slug>.html: an optional
+    band above the article, then "<!-- body -->", then the article. Sections are numbered and listed in the page's table of contents."""
+    def side(cur):
+        links = "".join(f'<a href="{u}"' + (' aria-current="page"' if u == cur else "") + f'><span class="n">{i:02d}</span>{t}</a>'
+                        for i, (u, t, *_) in enumerate(TRUST_PAGES, 1))
+        rel = "".join(f'<a href="{u}"><span class="n">↗</span>{t}</a>' for u, t in TRUST_RELATED)
+        return f'<nav class="side" aria-label="Trust pages"><b>Trust</b>{links}<b>Related</b>{rel}</nav>'
+
+    for path, nav, title, desc, lede, meta, prio, freq, sub in TRUST_PAGES:
+        slug = path.strip("/")
+        src = (L.THEME / "trust" / f"{slug}.html").read_text(encoding="utf-8")
+        top, sep, body = src.partition("<!-- body -->\n")
+        if not sep:
+            top, body = "", src
+        toc = []
+
+        def sec(m, toc=toc):
+            t = m.group(1)
+            toc.append((gh_slug(re.sub(r"<[^>]+>", "", html.unescape(t))), t))
+            return f'<h2 id="{toc[-1][0]}" class="sec"><span class="sn">{len(toc):02d}</span><span>{t}</span></h2>'
+        body = re.sub(r"<h2>(.*?)</h2>", sec, body, flags=re.S)
+
+        def label_cells(m):  # each cell carries its column heading, so tables can stack on phones
+            heads = re.findall(r"<th>(.*?)</th>", m.group(1), re.S)
+
+            def row(r):
+                cells = iter(heads)
+                return "<tr>" + re.sub(r"<td>", lambda _: f'<td data-th="{esc(next(cells, ""))}">', r.group(1)) + "</tr>"
+            return "<table>" + re.sub(r"<tr>((?:<td>.*?</td>\s*)+)</tr>", row, m.group(1), flags=re.S) + "</table>"
+        body = re.sub(r"<table>(.*?)</table>", label_cells, body, flags=re.S)
+        toc_html = ('<aside class="toc" aria-label="On this page"><b>On this page</b>'
+                    + "".join(f'<a href="#{i}"><span class="tn">{k:02d}</span>{t}</a>' for k, (i, t) in enumerate(toc, 1)) + "</aside>")
+        main = f"""<main id="main">
+  <div class="wrap phero">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Universal Paper</a><span aria-hidden="true">/</span><span>{nav}</span></nav>
+    <h1 class="display">{nav}</h1>
+    <p class="lede">{lede}</p>
+    <p class="tmeta">{meta}</p>
+  </div>
+{top.strip()}
+  <div class="wrap docs trust">
+    {side(path)}
+    <div style="min-width:0">
+      <details class="side-mobile"><summary>Trust pages <svg class="ico"><use href="#i-down"/></svg></summary>{side(path)}</details>
+      <article class="prose">
+{body.strip()}
+      </article>
+    </div>
+    {toc_html}
+  </div>
+</main>"""
+        url = site.url(path)
+        ld = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+                  {"@type": "ListItem", "position": 1, "name": "Universal Paper", "item": site.url("/")},
+                  {"@type": "ListItem", "position": 2, "name": nav, "item": url}]},
+              {"@context": "https://schema.org", "@type": "WebPage", "@id": url, "url": url, "name": title, "description": desc,
+               "inLanguage": "en", "dateModified": TRUST_ISO, "isPartOf": {"@id": site.url("/#website")}, "publisher": CREATOR}]
+        site.write(path.lstrip("/") + "index.html", site.page(path, title, desc, main, style=TRUST_STYLE, ld=ld))
+        site.add_page(path, prio, freq)
+        site.add_search(path, nav, sub, "page", main, rank=8)
 
 
 # ----------------------------------------------------------------------------- spec pages
@@ -1237,7 +1368,7 @@ Sitemap: {site.url('/sitemap.xml')}
     # security.txt points at the repo's SECURITY policy
     if a.repo_url:
         exp = (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
-        site.write(".well-known/security.txt", f"Policy: {a.repo_url}/blob/main/SECURITY.md\nContact: {a.repo_url}/security/advisories/new\nExpires: {exp}T00:00:00Z\nPreferred-Languages: en\nCanonical: {site.url('/.well-known/security.txt')}\n")
+        site.write(".well-known/security.txt", f"Policy: {site.url('/security/')}\nContact: {a.repo_url}/security/advisories/new\nContact: mailto:contact@uppercentile.com\nExpires: {exp}T00:00:00Z\nPreferred-Languages: en\nCanonical: {site.url('/.well-known/security.txt')}\n")
 
 
 def mcp_tool_docs(site):
@@ -1289,6 +1420,11 @@ def build_agent_json(site):
             "examples": [u(f"/examples/{d}/bundle.json") for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if")],
             "integrations": u("/integrations/index.json"),
             "faq": u("/faq/"),
+            "privacy": u("/privacy/"),
+            "terms": u("/terms/"),
+            "security": u("/security/"),
+            "support": u("/support/"),
+            "accessibility": u("/accessibility/"),
             "contact": u("/partners.json"),
             "sitemap": u("/sitemap.xml"),
         },
@@ -1420,6 +1556,11 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 - [MCP server]({site.url('/developers/#mcp')}): the official, read-only Universal Paper MCP server
 - [FAQ]({site.url('/faq/')}): plain-language answers for GPOs, suppliers, members and developers
 - [Licenses]({site.url('/license/')}): what is licensed how, and how to credit it
+- [Privacy policy]({site.url('/privacy/')}): what the site and hosted MCP server process and keep (almost nothing)
+- [Terms of use]({site.url('/terms/')}): terms for the site, Playground and hosted MCP server
+- [Security]({site.url('/security/')}): how to report a vulnerability privately
+- [Support and contact]({site.url('/support/')}): where to ask, and MCP server troubleshooting
+- [Accessibility]({site.url('/accessibility/')}): accessibility statement
 - [Specification index]({site.url('/spec/')}){repo}
 
 ## MCP server for agents
@@ -1565,6 +1706,7 @@ def main():
     build_playground(site)
     build_faq(site)
     build_license(site)
+    build_trust(site)
     build_spec(site)
     build_integrations(site)
     build_schemas(site)

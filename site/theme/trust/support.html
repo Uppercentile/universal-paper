@@ -1,0 +1,55 @@
+<section class="band tight" aria-label="Ways to get help" style="padding-bottom:0">
+  <div class="wrap ways">
+    <div class="ccard c-lilac"><span class="fn">Questions and bugs</span><h3>Open an issue on GitHub.</h3><p>The best place for questions about the specification, bug reports and suggestions. Answers there help the next person too.</p><a class="lk" href="https://github.com/Uppercentile/universal-paper/issues">github.com/Uppercentile/universal-paper/issues ↗</a></div>
+    <div class="ccard c-coral"><span class="fn">Security</span><h3>Report a vulnerability privately.</h3><p>Use GitHub’s private reporting, never a public issue. Reports are acknowledged within 5 working days.</p><a class="lk" href="/security/">How to report</a></div>
+    <div class="ccard c-mint"><span class="fn">Everything else</span><h3>Email the steward.</h3><p>Privacy requests, a “Built with Universal Paper” listing, or anything that does not fit an issue.</p><a class="lk" href="mailto:contact@uppercentile.com">contact@uppercentile.com</a></div>
+  </div>
+</section>
+<!-- body -->
+<h2>Where to ask</h2>
+<div class="tablewrap"><table>
+  <thead><tr><th>You want to</th><th>Go to</th><th>What to expect</th></tr></thead>
+  <tbody>
+    <tr><td>Ask how something works</td><td>The <a href="/faq/">FAQ</a> first, then a <a href="https://github.com/Uppercentile/universal-paper/issues">GitHub issue</a>.</td><td>A public answer. There is no guaranteed response time.</td></tr>
+    <tr><td>Report a bug</td><td>A <a href="https://github.com/Uppercentile/universal-paper/issues">GitHub issue</a>, with the smallest bundle that shows it.</td><td>A public reply and, if confirmed, a fix on the <code>main</code> branch.</td></tr>
+    <tr><td>Report a vulnerability</td><td>The private channel on the <a href="/security/">Security page</a>.</td><td>An acknowledgment within 5 working days.</td></tr>
+    <tr><td>Make a privacy request</td><td><a href="mailto:contact@uppercentile.com?subject=Universal%20Paper%3A%20privacy">contact@uppercentile.com</a>, subject “Universal Paper: privacy”.</td><td>We aim to reply within 30 days. See the <a href="/privacy/">Privacy policy</a>.</td></tr>
+    <tr><td>Propose a change to the language</td><td>A pull request, following the <a href="https://github.com/Uppercentile/universal-paper/blob/main/CONTRIBUTING.md">contributing guide</a>.</td><td>Public review under the <a href="/spec/neutrality-charter/">neutrality charter</a>.</td></tr>
+    <tr><td>Tell us what you built</td><td><a href="mailto:contact@uppercentile.com?subject=Universal%20Paper%3A%20built%20with">contact@uppercentile.com</a>, subject “Universal Paper: built with”.</td><td>We read every message. A public listing is opt-in.</td></tr>
+  </tbody>
+</table></div>
+
+<h2>Troubleshooting the MCP server</h2>
+<p>The hosted server is at <code>https://mcp.universalpaper.org/mcp</code>. It uses the Streamable HTTP transport, needs no sign-in, and offers 13 read-only tools. The <a href="/developers/#mcp">developer page</a> has setup steps for each client.</p>
+<h3>My assistant cannot connect</h3>
+<ul>
+  <li>Check that the address ends in <code>/mcp</code>. The bare domain returns a status summary, not the MCP endpoint.</li>
+  <li>Choose HTTP or “Streamable HTTP” as the transport, and leave authentication empty.</li>
+  <li>Open <a href="https://mcp.universalpaper.org/">mcp.universalpaper.org</a> in a browser. If it shows the server name and version, the server is up and the problem is on the client side.</li>
+</ul>
+<h3>I get “Invalid Content-Type header”</h3>
+<p>You are calling the endpoint directly and the request is missing a header. Send <code>Content-Type: application/json</code> and <code>Accept: application/json, text/event-stream</code>.</p>
+<h3>A tool says my action was rejected</h3>
+<p>That is a result, not a failure. The tools report what the language decides, and a rejection names the rule that was broken, such as axiom A9 when an agent goes beyond its Mandate. The <a href="/spec/axioms/">axioms</a> explain each one.</p>
+<h3>I have no agreement to test with</h3>
+<p>Every tool that takes a bundle accepts a built-in example in its place. Try <code>example:mandate-cap</code> or <code>example:what-if</code>, or call <code>get_example</code> to see what is available.</p>
+<h3>I am working with confidential data</h3>
+<p>Run the server on your own machine with <code>uvx universal-paper-mcp</code>. Nothing then leaves your computer. The hosted server stores nothing you send it, as the <a href="/privacy/">Privacy policy</a> explains, but running it locally removes the question.</p>
+<h3>The server seems slow or unavailable</h3>
+<p>The hosted server is a free convenience with no guaranteed uptime. The local server gives the same answers and does not depend on ours.</p>
+
+<h2>Troubleshooting everything else</h2>
+<ul>
+  <li><strong>Installing the Python package.</strong> <code>pip install universal-paper</code> needs Python 3.11 or later and gives you the <code>up</code> command.</li>
+  <li><strong>Hashes that do not match.</strong> Compare your canonical JSON byte for byte with the reference interpreter’s. The <a href="/developers/">developer page</a> walks through how a fingerprint is computed.</li>
+  <li><strong>The Playground.</strong> It runs entirely in your browser. If it misbehaves, reload the page; clearing the site’s data in your browser resets it.</li>
+</ul>
+
+<h2>What Uppercentile does not offer</h2>
+<p>Uppercentile is the steward of the language. It does not offer consulting, sales calls, pilots or implementation services for Universal Paper, and contacting it is never required to use the language.</p>
+
+<h2>For AI agents</h2>
+<p>Agents are welcome to write. An agent must say that it is an agent, who operates it, and which person or organization it acts for. The expected message format is published at <a href="/partners.json">partners.json</a>.</p>
+
+<h2>Contact details</h2>
+<p><strong>Uppercentile LLC</strong><br>Email: <a href="mailto:contact@uppercentile.com">contact@uppercentile.com</a><br>Source and issues: <a href="https://github.com/Uppercentile/universal-paper">github.com/Uppercentile/universal-paper</a></p>
