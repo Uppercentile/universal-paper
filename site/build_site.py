@@ -1225,6 +1225,71 @@ Sitemap: {site.url('/sitemap.xml')}
         site.write(".well-known/security.txt", f"Policy: {a.repo_url}/blob/main/SECURITY.md\nContact: {a.repo_url}/security/advisories/new\nExpires: {exp}T00:00:00Z\nPreferred-Languages: en\nCanonical: {site.url('/.well-known/security.txt')}\n")
 
 
+def mcp_tool_docs(site):
+    """The MCP server's tool names and descriptions, read from mcp_server.py without importing it."""
+    tree = ast.parse((site.repo / "src/universal_paper/mcp_server.py").read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.AnnAssign) and getattr(node.target, "id", "") == "TOOL_DOCS":
+            return ast.literal_eval(node.value)
+    raise SystemExit("src/universal_paper/mcp_server.py: TOOL_DOCS not found")
+
+
+def first_sentence(text):
+    m = re.match(r"(.+?\.)(?:\s|$)", text.strip())
+    return m.group(1) if m else text.strip()
+
+
+def build_agent_json(site):
+    """/.well-known/agent.json (and a root copy): one machine-readable entry point for AI agents. It describes only
+    what exists: the site, the read-only MCP server and its tools, the spec, schemas, examples and llms.txt. The site is
+    not itself an A2A agent and serves no A2A endpoint, so it does not publish an A2A Agent Card (agent-card.json)."""
+    server = json.loads((site.repo / "server.json").read_text(encoding="utf-8"))
+    pkg = server["packages"][0]
+    tools = mcp_tool_docs(site)
+    u = site.url
+    doc = {
+        "$comment": "Discovery document for AI agents. Universal Paper is a language, not a service: this site is static and "
+                    "is not an A2A agent. Agents use Universal Paper through the read-only MCP server below, or by reading the "
+                    "specification and running the open reference interpreter themselves.",
+        "name": "Universal Paper",
+        "description": SITE_DESC,
+        "url": u("/"),
+        "version": "UP/0.1-draft",
+        "provider": {"organization": "Uppercentile", "url": "https://uppercentile.com", "role": "creator and steward"},
+        "license": {"specification": LIC["ccby"][1], "code": LIC["apache"][1], "examples": LIC["cc0"][1]},
+        "documentationUrl": u("/developers/"),
+        "mcp": {
+            "url": MCP["endpoint"], "transport": MCP["transport"], "auth": MCP["auth"], "readOnly": MCP["readOnly"], "stateless": True,
+            "holdsKeys": False, "registryName": server["name"], "version": server["version"],
+            "package": {"registry": pkg["registryType"], "name": pkg["identifier"], "version": pkg["version"], "run": f"uvx {pkg['identifier']}", "transport": pkg["transport"]["type"]},
+            "docs": MCP["docs"],
+            "tools": [{"name": n, "description": first_sentence(d)} for n, d in tools.items()],
+        },
+        "resources": {
+            "llms": u("/llms.txt"),
+            "llmsFull": u("/llms-full.txt"),
+            "specification": u("/spec/"),
+            "termLibrary": u("/spec/terms/"),
+            "schemas": [u("/schema/UP-0.1-draft/universal-paper.schema.json"), u("/schema/UP-0.1-draft/trace.schema.json")],
+            "examples": [u(f"/examples/{d}/bundle.json") for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if")],
+            "integrations": u("/integrations/index.json"),
+            "faq": u("/faq/"),
+            "contact": u("/partners.json"),
+            "sitemap": u("/sitemap.xml"),
+        },
+        "referenceImplementation": {"language": "Python", "package": "universal-paper", "install": "pip install universal-paper", "cli": "up",
+                                    "source": site.a.repo_url or None},
+    }
+    for path in [p for p in doc["resources"].values() if isinstance(p, str)] + doc["resources"]["schemas"] + doc["resources"]["examples"]:
+        rel = path.replace(u("/"), "", 1)
+        f = site.out / rel
+        if not (f.is_file() or (f / "index.html").is_file()):
+            raise SystemExit(f"agent.json lists {path}, which the site does not serve")
+    text = json.dumps(doc, indent=2, ensure_ascii=False) + "\n"
+    site.write(".well-known/agent.json", text)
+    site.write("agent.json", text)
+
+
 MCP = {
     "endpoint": "https://mcp.universalpaper.org/mcp",
     "transport": "streamable-http",
@@ -1365,6 +1430,7 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
 ## Optional
 
 - [Full specification in one file]({site.url('/llms-full.txt')})
+- [Agent discovery document]({site.url('/.well-known/agent.json')}): the read-only MCP server, its tools and every machine-readable resource, in one JSON file
 - [JSON Schemas]({site.url('/schema/')}): the primitives schema ({site.url('/schema/UP-0.1-draft/universal-paper.schema.json')}) and the trace schema ({site.url('/schema/UP-0.1-draft/trace.schema.json')}), each served at its $id
 - [Example bundle: conventional GPO agreement]({site.url('/examples/conventional/bundle.json')})
 - [Optional integrations index, as JSON]({site.url('/integrations/index.json')}): for each optional integration, its docs, helper functions with signatures, claim shapes as JSON Schema, example files and the MCP tools to evaluate with. Universal Paper depends on none of them.
@@ -1432,23 +1498,26 @@ def build_assets(site, og):
 
 
 def render_og(site, dst):
+    """The Open Graph card, in the v7 design: the home page's headline on the canvas colour, self-hosted fonts."""
     import base64
     mark = base64.b64encode((site.repo / "assets/universal-paper-mark-black-512.png").read_bytes()).decode()
+    fonts = (L.THEME / "fonts").as_uri()
     htmls = f"""<!doctype html><html><head><meta charset="utf-8">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap">
-<style>body{{margin:0;width:1200px;height:630px;background:#f7f5f0;color:#15171b;font-family:Inter,sans-serif;position:relative;overflow:hidden}}
-.o{{position:absolute;border:1px solid #cfc8b9;border-radius:50%}}
-.w{{position:absolute;left:84px;top:80px;right:84px}}
-.b{{display:flex;align-items:center;gap:16px;font:500 28px Inter}}
-.b img{{width:56px;height:56px}}
-h1{{font:300 76px/1.02 "Inter Tight";letter-spacing:-.035em;margin:64px 0 0;max-width:900px}}
-h1 em{{font-style:normal;color:#2f45c6}}
-.f{{position:absolute;left:84px;bottom:64px;right:84px;display:flex;justify-content:space-between;font:400 20px "JetBrains Mono";color:#4d525a}}
+<style>@font-face{{font-family:"Hedvig Serif";src:url("{fonts}/hedvig-brand-serif-variable-latin.woff2")}}
+@font-face{{font-family:"Funnel Sans";src:url("{fonts}/funnel-product-sans-roman-latin.woff2");font-weight:300 800}}
+@font-face{{font-family:"Recursive";src:url("{fonts}/recursive-interface-variable-latin.woff2");font-weight:300 1000}}
+body{{margin:0;width:1200px;height:630px;background:#F5F2EC;color:#16143A;font-family:"Funnel Sans",sans-serif;position:relative;overflow:hidden}}
+.g{{position:absolute;right:-120px;top:-140px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#CDBEFF 0,#FF9C7A 38%,#FFD873 62%,transparent 72%);opacity:.55;filter:blur(8px)}}
+.w{{position:absolute;left:84px;top:76px;right:84px}}
+.b{{display:flex;align-items:center;gap:16px;font:400 34px "Hedvig Serif"}}
+.b img{{width:52px;height:52px}}
+h1{{font:400 92px/1.0 "Hedvig Serif";letter-spacing:-.03em;margin:70px 0 0;max-width:980px}}
+h1 em{{font-style:normal;text-decoration:underline;text-decoration-color:#FF6A4A;text-decoration-thickness:8px;text-underline-offset:14px}}
+.f{{position:absolute;left:84px;bottom:60px;right:84px;display:flex;justify-content:space-between;font:400 21px "Recursive";color:#4A4766}}
 </style></head><body>
-<div class="o" style="width:760px;height:760px;right:-260px;top:-180px"></div>
-<div class="o" style="width:520px;height:520px;right:-140px;top:-60px;border-style:dashed"></div>
+<div class="g"></div>
 <div class="w"><div class="b"><img src="data:image/png;base64,{mark}">Universal Paper</div>
-<h1>One agreement. <em>Every party.</em> Same answer.</h1></div>
+<h1>Agree once. <em>Everything else</em> follows.</h1></div>
 <div class="f"><span>The open language for GPO, supplier and member agreements</span><span>{esc(site.a.domain)}</span></div>
 </body></html>"""
     tmp = HERE / "assets-cache/og.html"
@@ -1456,7 +1525,10 @@ h1 em{{font-style:normal;color:#2f45c6}}
     tmp.write_text(htmls)
     js = f"""const {{chromium}}=require('playwright');(async()=>{{const b=await chromium.launch();const p=await b.newPage({{viewport:{{width:1200,height:630}},deviceScaleFactor:1}});
 await p.goto('file://{tmp}');await p.waitForTimeout(1500);await p.screenshot({{path:'{dst}'}});await b.close();}})();"""
-    subprocess.run(["node", "-e", js], check=True)
+    try:
+        subprocess.run(["node", "-e", js], check=True)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def main():
@@ -1484,6 +1556,7 @@ def main():
     build_misc(site)
     build_llms(site)
     build_sitemap(site)
+    build_agent_json(site)  # last: it checks that everything it lists is served
     site.write("assets/search-index.js", L.search_index(sorted(site.search, key=lambda e: e["rank"])))
     n = sum(1 for _ in site.out.rglob("*") if _.is_file())
     print(f"built {n} files, {len(site.pages)} pages in sitemap -> {site.out}")

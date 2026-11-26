@@ -2,9 +2,9 @@
 /* Hero */
 .hero { text-align: center; padding-top: clamp(40px, 6vw, 80px); }
 .hero .display { max-width: 13ch; margin-inline: auto; color: var(--navy); }
-.hero .display em { font-style: normal; position: relative; white-space: nowrap; }
-.hero .display em::after { content: ""; position: absolute; left: .02em; right: .02em; bottom: .04em; height: .09em; border-radius: 99px; background: var(--coral); transform-origin: left; animation: underline 1.2s .5s var(--ease) both; }
-@keyframes underline { from { transform: scaleX(0); } }
+.hero .display { line-height: 1; }
+.hero .display em { font-style: normal; text-decoration: underline var(--coral); text-decoration-thickness: .085em; text-underline-offset: .09em; text-decoration-skip-ink: none; animation: underline-in 1s .5s var(--ease) both; }
+@keyframes underline-in { from { text-decoration-color: transparent; } to { text-decoration-color: var(--coral); } }
 .hero .lede { margin: 30px auto 0; text-align: center; max-width: 54ch; }
 .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 36px; }
 /* Three-beat stage */
@@ -319,8 +319,8 @@ section { padding-block: clamp(80px, 10vw, 150px); }
 <!-- Hero -->
 <div class="hero">
   <div class="wrap">
-    <h1 class="display">One agreement. <em>Every system</em> agrees.</h1>
-    <p class="lede">Universal Paper is an open language for agreements between purchasing groups, suppliers and members. Write one once, and every person, system and agent reads it the same way.</p>
+    <h1 class="display">Agree once. <em>Everything else</em> follows.</h1>
+    <p class="lede">An open language for agreements between purchasing groups, suppliers and members. Sign one, and every system and agent reaches the same answers.</p>
     <div class="ctas">
       <a class="btn dark" href="/spec/">Read the specification <svg class="ico"><use href="#i-arrow"/></svg></a>
       <a class="btn ghost" href="#story">Follow one agreement</a>
