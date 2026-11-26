@@ -208,9 +208,11 @@ def test_page_surface_for_agents_and_people():
     assert ">Machine-readable scenario (JSON)</a>" in PAGE and 'href="../demo-profile.json"' in PAGE
     assert regenerate.AGENT_SENTENCE in PAGE and SCENARIO["agents"] == regenerate.AGENT_SENTENCE
     assert SCENARIO["disclaimer"] in PAGE
-    for tag in ('<button class="btn" type="button" id="pt-play">', 'id="pt-step"', 'id="pt-reset"', '<ol class="pt-steps"', 'aria-live="polite"'):
+    for tag in ('<button class="btn" type="button" id="pt-play"', 'id="pt-step"', 'id="pt-reset"', '<ol class="pt-steps"', 'aria-live="polite"'):
         assert tag in PAGE, tag
-    assert "prefers-reduced-motion: reduce" in PAGE and "autoplay" not in PAGE.lower()
+    # It advances by itself (Joe, 2026-11-26), but only on screen, with a pause control, and never for reduced motion.
+    assert "prefers-reduced-motion: reduce" in PAGE and "IntersectionObserver" in PAGE and 'aria-pressed="false">Pause</button>' in PAGE
+    assert "function running(){ return !reduce && !userPaused" in PAGE
     # the full cycle is in the static HTML (no JavaScript needed): both fingerprints and the delta
     static = _block(r"<!-- scenario:begin -->(.*?)<!-- scenario:end -->")
     for v in (SCENARIO["result"]["supersedes"], SCENARIO["result"]["newAgreement"], "26.06 USD", "17.37 USD"):

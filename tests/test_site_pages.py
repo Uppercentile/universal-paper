@@ -61,6 +61,7 @@ def test_every_page_has_the_shared_chrome(dist):
         assert "Created by <a href=\"https://uppercentile.com\">Uppercentile</a>" in s, path
         assert "submitllms.com/directory/universalpaper.org" in s, path  # the listing requires this badge link
         assert "design preview" not in s.lower(), path
+        assert "Fonts: Hedvig" not in s, path  # the font credit lives on /license/ only (Joe, 2026-11-26)
         if path != "/404.html":
             assert f'<link rel="canonical" href="https://universalpaper.org{path}">' in s, path
 
@@ -199,3 +200,15 @@ def test_every_schema_is_served_at_its_id_and_no_placeholders_remain(dist):
     leaks = [str(f.relative_to(dist)) for f in dist.rglob("*") if f.suffix in (".json", ".html", ".txt", ".md")
              and placeholder.search(f.read_text(encoding="utf-8"))]
     assert not leaks, leaks
+
+
+def test_faq_list_is_full_width_on_phones(dist):
+    """An inline grid on the FAQ once overrode the phone layout and squeezed every answer into half the screen."""
+    s = (dist / "faq/index.html").read_text(encoding="utf-8")
+    assert re.search(r'<div class="wrap docs faqdocs">', s) and "grid-template-columns:232px" not in s.split("<main", 1)[1]
+    assert "@media (max-width:860px){.faqdocs{grid-template-columns:minmax(0,1fr)}" in s
+
+
+def test_playground_frame_links_stay_on_the_site():
+    app = (ROOT / "explorer/index.html").read_text(encoding="utf-8")
+    assert "claude.ai/artifact" not in app

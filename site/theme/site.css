@@ -438,19 +438,41 @@ a.ccard:hover .go { opacity: 1; transform: none; }
 .demo .pt-steps { margin: 0; padding-left: 22px; font-size: 15px; }
 .demo .pt-steps li { padding: 7px 0 7px 4px; overflow-wrap: anywhere; }
 .demo .pt-steps li::marker { font: 500 .85em var(--mono); color: var(--coral); }
-.pt-js .pt-steps li { color: var(--ink-3); }
-.pt-js .pt-steps li.on { color: var(--ink); }
-.pt-js .pt-steps li.now { color: var(--ink); font-weight: 600; }
 .demo .pt-outcome { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 16px; background: var(--canvas); min-width: 0; }
 .demo .pt-outcome .kv dd { font-size: 11.5px; }
 .demo .pt-wait { color: var(--ink-3); font-size: 14px; margin: 0; }
-.demo .fp .flip { background: var(--sun); color: #2E1F00; border-radius: 3px; }
-.demo .pt-ctrl { display: flex; gap: 8px; flex-wrap: wrap; }
 .demo .pt-focus { outline: 2px solid var(--coral); outline-offset: 3px; border-radius: 8px; }
 .demo .cell.pt-moved { background: var(--mint) !important; color: var(--mint-ink) !important; }
-.pt-js .pt-only-js { display: flex; }
+/* playthrough: without JavaScript, or with reduced motion, the steps are a plain list and the result shows at once */
 .demo .pt-only-js { display: none; }
+.pt-js .demo .pt-only-js { display: flex; }
 @media (prefers-reduced-motion: reduce) { .demo .pt-only-js { display: none !important; } }
+.demo .pt-bar { flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin: 6px 0 4px; }
+.demo .pt-ctrl { display: flex; gap: 8px; flex-wrap: wrap; }
+.demo .pt-ctrl .btn { padding: 9px 16px; font-size: 14px; }
+.demo .pt-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; flex: 1 1 420px; min-width: 0; }
+.demo .pt-tab { position: relative; overflow: hidden; display: flex; align-items: baseline; gap: 8px; padding: 10px 12px 13px; border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; color: var(--ink-3); font: 500 13px/1.2 var(--sans); text-align: left; cursor: pointer; min-width: 0; }
+.demo .pt-tab b { font: 500 12px/1 var(--mono); font-variation-settings: "MONO" 1; color: var(--coral); }
+.demo .pt-tab span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.demo .pt-tab i { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--coral); }
+.demo .pt-tab.done i { width: 100%; background: var(--line); }
+.demo .pt-tab[aria-current] { color: var(--ink); border-color: var(--ink); }
+.demo .pt-tab[aria-current] i { width: 100%; }
+.demo .pt-tab.run i { width: 0; animation: pt-fill var(--pt-dur, 5s) linear forwards; }
+@keyframes pt-fill { to { width: 100%; } }
+.demo .pt-tab:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+.pt-js .demo .pt-steps { display: grid; list-style: none; padding: 0; counter-reset: pt; overflow: hidden; border-radius: var(--r-lg); }
+.pt-js .demo .pt-steps li { grid-area: 1 / 1; counter-increment: pt; padding: 22px 24px; border-radius: var(--r-lg); background: var(--navy); color: #EEEDF8; font: 400 clamp(19px, 1.7vw, 23px)/1.4 var(--serif); letter-spacing: -.005em;
+  opacity: 0; visibility: hidden; transform: translateX(28px); transition: opacity .5s var(--ease), transform .6s var(--ease), visibility 0s linear .6s; }
+.pt-js .demo .pt-steps li::before { content: "Step " counter(pt) " of 4"; display: block; margin-bottom: 12px; font: 500 12px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; text-transform: uppercase; color: var(--coral); }
+.pt-js .demo .pt-steps li.done { transform: translateX(-28px); }
+.pt-js .demo .pt-steps li.now { opacity: 1; visibility: visible; transform: none; transition: opacity .5s var(--ease) .1s, transform .6s var(--ease) .1s, visibility 0s; }
+.demo .pt-outcome .pt-note { display: none; }
+.pt-js .demo .pt-outcome { transition: background .4s; }
+.pt-js .demo .pt-outcome.pt-pending .pt-note { display: block; margin: 0 0 10px; font: 500 12px/1.3 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.pt-js .demo .pt-outcome.pt-pending .pill.ok, .pt-js .demo .pt-outcome.pt-pending #pt-fp-new, .pt-js .demo .pt-outcome.pt-pending #pt-fp-new + dd, .pt-js .demo .pt-outcome.pt-pending ins { visibility: hidden; }
+.pt-js .demo .pt-outcome:not(.pt-pending) { background: #F1FBF5; border-color: #BDE5CF; }
+@media (max-width: 760px) { .demo .pt-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); flex-basis: 100%; } .pt-js .demo .pt-steps li { padding: 18px; } }
 .demo .toggle { margin-top: 12px; }
 
 /* CTA art band + search bar (shared) */

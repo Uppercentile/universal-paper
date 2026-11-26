@@ -192,8 +192,7 @@ class Site:
             # SubmitLLMs directory badge: its listing requires a live link to it (added at Joe's request, 2026-11-24)
             '<a href="https://submitllms.com/directory/universalpaper.org" target="_blank" rel="noopener noreferrer">'
             '<img src="https://submitllms.com/api/badge/universalpaper.org" alt="AI Ready on SubmitLLMs" height="20" loading="lazy" '
-            'style="height:20px;width:auto;display:inline-block;vertical-align:middle;opacity:.9"></a>'
-            ' Fonts: Hedvig Letters Serif, Funnel Sans, Recursive (<a href="/license/#third-party">SIL OFL 1.1</a>)</span></div>'
+            'style="height:20px;width:auto;display:inline-block;vertical-align:middle;opacity:.9"></a></span></div>'
         )
 
 
@@ -352,7 +351,8 @@ html[data-embed] body{background:var(--bg)}
 html[data-embed] .site-header,html[data-embed] .site-footer,html[data-embed] main>section:not(#playground),html[data-embed] .scrolly,
 html[data-embed] #playground .sec-head,html[data-embed] #pg-bar,html[data-embed] #pg-peek,html[data-embed] .up-legal{display:none!important}
 html[data-embed] #playground{padding:24px 0!important;margin:0!important}
-html[data-embed] .fpbar,html[data-embed] .fpmini{position:static!important} /* the frame never scrolls, so sticky bars would sit mid-page */
+html[data-embed] .fpbar{display:none!important} /* the frame never scrolls, so the sticky fingerprint bar would only repeat the fingerprint card below */
+html[data-embed] .fpmini{position:static!important}
 html[data-embed] [class*="mono"],html[data-embed] code,html[data-embed] .fp{font-variation-settings:"MONO" 1}
 html[data-embed] .h2,html[data-embed] h2,html[data-embed] h3,html[data-embed] h4{font-weight:400}
 </style>"""
@@ -394,7 +394,7 @@ def faq_main(site):
   <div class="wrap">
     <div class="cgrid" style="grid-template-columns:repeat({len(FAQ)},minmax(0,1fr));gap:10px" id="faqCats">{"".join(cats)}</div>
   </div>
-  <div class="wrap docs" style="grid-template-columns:232px minmax(0,1fr);padding-top:24px">
+  <div class="wrap docs faqdocs">
     <nav class="side" aria-label="FAQ sections"><b>Sections</b>{"".join(side)}<b>More</b><a href="/license/">Licenses</a><a href="/spec/">Specification</a></nav>
     <div style="min-width:0;max-width:860px" id="faqList">{"".join(groups)}</div>
   </div>
@@ -404,7 +404,8 @@ def faq_main(site):
 
 
 FAQ_STYLE = ("<style>@media (max-width:980px){#faqCats{grid-template-columns:repeat(3,minmax(0,1fr))!important}}"
-             "@media (max-width:560px){#faqCats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}@media (max-width:860px){.docs .side{display:none}}</style>")
+             "@media (max-width:560px){#faqCats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}.faqdocs{grid-template-columns:232px minmax(0,1fr);padding-top:24px}"
+             "@media (max-width:860px){.faqdocs{grid-template-columns:minmax(0,1fr)}.docs .side{display:none}}</style>")
 FAQ_JS = """<script>
 (() => {
   const q = document.getElementById('faqq'), st = document.getElementById('faqStatus');
