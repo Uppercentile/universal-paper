@@ -55,10 +55,13 @@
       <p class="sub">One seed, step by step: from a variance in the pooled profile to an engine-checked change with a new fingerprint. Everything below is read from <a href="scenario.json">scenario.json</a>, which is rebuilt from the profile.</p>
       <div class="pt-head"><span class="pill">simulated from public examples</span><span class="pill">no network calls</span>
         <a href="scenario.json">Machine-readable scenario (JSON)</a> · <a href="../demo-profile.json">demo-profile.json</a></div>
-      <div class="pt-ctrl pt-only-js" role="group" aria-label="Playthrough controls">
-        <button class="btn" type="button" id="pt-play">Play</button>
-        <button class="btn ghost" type="button" id="pt-step">Step</button>
-        <button class="btn ghost" type="button" id="pt-reset">Reset</button>
+      <div class="pt-bar pt-only-js">
+        <div class="pt-tabs" id="pt-tabs" role="group" aria-label="Steps"></div>
+        <div class="pt-ctrl" role="group" aria-label="Playthrough controls">
+          <button class="btn" type="button" id="pt-play" aria-pressed="false">Pause</button>
+          <button class="btn ghost" type="button" id="pt-step">Next step</button>
+          <button class="btn ghost" type="button" id="pt-reset">Replay</button>
+        </div>
       </div>
       <div class="pt-wrap" style="margin-top:14px">
     <!-- scenario:begin -->
@@ -252,11 +255,15 @@
       el("p", {"class": "sub", style: "margin:10px 0 0;font-size:12px", text: s.note})]));
   });
 
-  // predictive-redline playthrough, driven only by scenario.json (embedded copy, rebuilt by regenerate.py)
+  // predictive-redline playthrough, driven only by scenario.json (embedded copy, rebuilt by regenerate.py).
+  // It advances by itself while it is on screen, one step at a time, and loops. Visitors who ask for reduced
+  // motion get every step and the result at once, with nothing moving.
   var S = JSON.parse(document.getElementById("scenario").textContent);
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var steps = Array.prototype.slice.call(document.querySelectorAll("#pt-steps li"));
-  var outcome = $("pt-outcome"), saved = outcome.innerHTML, at = -1, timer = null;
+  var outcome = $("pt-outcome"), at = 0, timer = null, userPaused = false, hovering = false, onScreen = false;
+  var DWELL = [5200, 5200, 7600, 6400];  // ms per step; the engine step carries the most to read
+  var LABEL = {variance: "Variance", seed: "Seed", engine: "Engine check", median: "At the median"};
   function flipHTML(h, other){
     var out = "";
     for (var i = 0; i < h.length; i++) { var ch = h.charAt(i); out += (other.charAt(i) !== ch && i >= 7) ? '<span class="flip">' + ch + "</span>" : ch; }
@@ -267,46 +274,60 @@
     for (var i = 0; i < a.length; i++) if (a.charAt(i) !== b.charAt(i)) n++;
     return el("dd", {"class": "sub", style: "grid-column:2;margin:0", text: n + " of " + a.length + " hex characters differ: one parameter changed, so the whole fingerprint changes."});
   }
+  $("pt-fp-new").innerHTML = flipHTML(S.result.newAgreement, S.result.supersedes);
+  $("pt-fp-new").after(diffNote());
+  var engineAt = S.steps.map(function(s){ return s.id; }).indexOf("engine");
+  outcome.querySelector(".pt-res").prepend(el("p", {"class": "pt-note", text: "Engine result: shown from step " + (engineAt + 1)}));
+  var tabs = S.steps.map(function(s, i){
+    var b = el("button", {type: "button", "class": "pt-tab", "data-go": String(i)});
+    b.append(el("b", {text: String(i + 1)}), el("span", {text: LABEL[s.id] || s.id}), el("i", {"aria-hidden": "true"}));
+    b.addEventListener("click", function(){ go(i, true); });
+    $("pt-tabs").append(b);
+    return b;
+  });
   function apply(){
-    steps.forEach(function(li, i){ li.classList.toggle("on", reduce || i <= at); li.classList.toggle("now", !reduce && i === at); if (i === at) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current"); });
-    var show = function(n){ return reduce || at >= n; };
+    steps.forEach(function(li, i){
+      li.classList.toggle("now", !reduce && i === at); li.classList.toggle("done", !reduce && i < at); li.classList.toggle("on", reduce || i <= at);
+      if (!reduce) li.setAttribute("aria-hidden", i === at ? "false" : "true");
+    });
+    tabs.forEach(function(t, i){ t.classList.toggle("done", i < at); if (i === at) t.setAttribute("aria-current", "step"); else t.removeAttribute("aria-current"); });
     document.querySelectorAll('[data-key="' + S.parameter.key + '"]').forEach(function(n){
       var mine = !n.dataset.col || n.dataset.col === S.target.row;
-      n.classList.toggle("pt-focus", !reduce && mine && at >= 0 && at < 3);
+      n.classList.toggle("pt-focus", !reduce && mine && at < steps.length - 1);
     });
     var cell = document.querySelector('.cell[data-key="' + S.parameter.key + '"][data-col="' + S.target.row + '"]');
     if (cell) {
       if (!cell.dataset.orig) cell.dataset.orig = cell.textContent;
-      var moved = show(3); cell.classList.toggle("pt-moved", moved); cell.textContent = moved ? "= median" : cell.dataset.orig;
+      var moved = reduce || at === steps.length - 1; cell.classList.toggle("pt-moved", moved); cell.textContent = moved ? "= median" : cell.dataset.orig;
     }
-    if (show(2)) {
-      if (!outcome.querySelector(".pt-res")) {
-        outcome.innerHTML = saved;
-        $("pt-fp-new").innerHTML = flipHTML(S.result.newAgreement, S.result.supersedes);
-        $("pt-fp-new").after(diffNote());
-      }
-    } else if (!outcome.querySelector(".pt-wait")) {
-      outcome.innerHTML = '<p class="pt-wait">The engine result appears at step 3. Every step is listed beside the controls.</p>';
-    }
+    outcome.classList.toggle("pt-pending", !reduce && at < engineAt);
   }
   window.upPlaythrough = apply;
-  function stop(){ if (timer) { clearInterval(timer); timer = null; } $("pt-play").textContent = "Play"; }
+  function running(){ return !reduce && !userPaused && !hovering && onScreen && !document.hidden; }
+  function schedule(){
+    clearTimeout(timer); timer = null;
+    var cur = tabs[at];
+    tabs.forEach(function(t){ t.classList.remove("run"); t.style.removeProperty("--pt-dur"); });
+    $("pt-play").textContent = userPaused ? "Play" : "Pause"; $("pt-play").setAttribute("aria-pressed", String(userPaused));
+    document.body.classList.toggle("pt-held", !running());
+    if (!running()) return;
+    cur.style.setProperty("--pt-dur", DWELL[at] + "ms"); void cur.offsetWidth; cur.classList.add("run");
+    timer = setTimeout(function(){ at = (at + 1) % steps.length; apply(); schedule(); }, DWELL[at]);
+  }
+  function go(i, byUser){ at = i; if (byUser) userPaused = true; apply(); schedule(); }
   if (!reduce) {
     document.body.classList.add("pt-js");
-    $("pt-step").addEventListener("click", function(){ stop(); at = Math.min(at + 1, steps.length - 1); apply(); });
-    $("pt-reset").addEventListener("click", function(){ stop(); at = -1; apply(); });
-    $("pt-play").addEventListener("click", function(){
-      if (timer) { stop(); return; }
-      if (at >= steps.length - 1) at = -1;
-      at++; apply(); this.textContent = "Pause";
-      if (at >= steps.length - 1) { stop(); return; }
-      timer = setInterval(function(){ at++; apply(); if (at >= steps.length - 1) stop(); }, 1800);
-    });
-  } else {
-    $("pt-fp-new").innerHTML = flipHTML(S.result.newAgreement, S.result.supersedes);
-    $("pt-fp-new").after(diffNote());
+    var box = $("predictive-redline");
+    $("pt-step").addEventListener("click", function(){ go((at + 1) % steps.length, true); });
+    $("pt-reset").addEventListener("click", function(){ userPaused = false; go(0, false); });
+    $("pt-play").addEventListener("click", function(){ userPaused = !userPaused; if (!userPaused && at === steps.length - 1) at = 0; apply(); schedule(); });
+    box.addEventListener("pointerenter", function(e){ if (e.pointerType === "mouse") { hovering = true; schedule(); } });
+    box.addEventListener("pointerleave", function(){ if (hovering) { hovering = false; schedule(); } });
+    document.addEventListener("visibilitychange", schedule);
+    if ("IntersectionObserver" in window) new IntersectionObserver(function(es){ onScreen = es[0].isIntersecting; schedule(); }, {threshold: 0.35}).observe(box);
+    else onScreen = true;
   }
-  apply();
+  apply(); if (!reduce) schedule();
 
   // raw JSON + fingerprint check (JCS + SHA-256, the Universal Paper rule)
   $("raw").textContent = JSON.stringify(P, null, 2);
