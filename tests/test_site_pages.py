@@ -232,5 +232,5 @@ def test_agent_json_describes_only_what_exists(dist):
 
 def test_home_hero_copy(dist):
     s = (dist / "index.html").read_text(encoding="utf-8")
-    assert '<h1 class="display">Agree once. <em>Everything else</em> follows.</h1>' in s
+    assert '<h1 class="display">From agreement, <em>everything</em>.</h1>' in s
     assert "Sign one, and every system and agent reaches the same answers." in s
