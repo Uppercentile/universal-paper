@@ -262,3 +262,18 @@ def test_developers_headline_is_agreement_led(dist):
     s = (dist / "developers/index.html").read_text(encoding="utf-8")
     assert '<h1 class="display">The agreement layer every system can read.</h1>' in s
     assert "contract layer" not in s
+
+
+def test_hero_timeline_uses_the_real_fingerprint(dist):
+    """The underline under "agreement" plays out the conventional example: its real fingerprint, both signatures, active."""
+    s = (dist / "index.html").read_text(encoding="utf-8")
+    sys.path.insert(0, str(ROOT / "src"))
+    from universal_paper.canon import content_hash
+    agreement = json.loads((ROOT / "examples/conventional/bundle.json").read_text(encoding="utf-8"))["chains"][0][0]["body"]["agreement"]
+    h = content_hash(agreement).split(":", 1)[1]
+    tl = s[s.index('<div class="tl" id="tl"'):s.index("</div>", s.index('<div class="tl" id="tl"'))]
+    assert 'aria-hidden="true" hidden' in tl  # decorative; script reveals it, so no-JS readers get the plain headline
+    assert f"{h[:8]}…{h[-8:]}" in tl
+    for label in ("Aggregator signed", "Supplier signed", "Status: active"):
+        assert label in tl
+    assert "animation: underline-in 2.8s" in s and "const START = 600, DRAW = 2800" in s  # CSS and script keep one clock

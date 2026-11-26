@@ -3,8 +3,23 @@
 .hero { text-align: center; padding-top: clamp(40px, 6vw, 80px); }
 .hero .display { max-width: 13ch; margin-inline: auto; color: var(--navy); }
 .hero .display { line-height: 1; }
-.hero .display em { font-style: normal; background: linear-gradient(var(--coral), var(--coral)) no-repeat 0 92% / 100% .085em; padding-bottom: .02em; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: underline-in 1.1s .5s var(--ease) both; }
+.hero .display em { font-style: normal; background: linear-gradient(var(--coral), var(--coral)) no-repeat 0 92% / 100% .085em; padding-bottom: .02em; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: underline-in 2.8s .6s cubic-bezier(.65, 0, .35, 1) both; }
 @keyframes underline-in { from { background-size: 0 .085em; } }
+/* The underline as an agreement: proposed (fingerprint), signed by each party, active. Placed by script; hidden without it. */
+.hero-h { position: relative; }
+.tl { position: absolute; inset: 0; pointer-events: none; }
+.tl-n { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--bg, #F5F2EC); border: 2px solid var(--coral); transform: scale(0); transition: transform .45s var(--ease); }
+.tl-n.on { transform: scale(1); }
+.tl-c { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 7px 14px 7px 8px; border-radius: 999px; background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 24px -14px rgba(16, 14, 43, .35); font: 500 15px/1.1 var(--sans); color: var(--ink); opacity: 0; transform: translateY(6px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.tl-c.on { opacity: 1; transform: none; }
+.tl[data-mode="compact"] .tl-c:not(.on) { transition-duration: .2s; }
+.tl-c code { font: 500 13.5px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: -.01em; }
+.tl-c .fp { width: 20px; height: 20px; border-radius: 50%; background: conic-gradient(from 210deg, #F7B58E, #C9B8FF, #8FD3C1, #F7B58E); }
+.tl-c .ok { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #E2F3E8; color: #1F7A4C; }
+.tl-c .ok svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2.6; fill: none; }
+.tl-c .dot { width: 10px; height: 10px; margin: 0 3px 0 5px; border-radius: 50%; background: #2E9D62; box-shadow: 0 0 0 4px #DDF2E5; }
+.tl[data-mode="wide"] .tl-c:not(.tl-s)::before { content: ""; position: absolute; left: var(--stem, 50%); bottom: 100%; width: 1px; height: var(--sh, 12px); background: var(--line-2); }
+@media (max-width: 520px) { .tl-c { font-size: 14px; } .tl-c code { font-size: 12.5px; } }
 .hero .lede { margin: 30px auto 0; text-align: center; max-width: 54ch; }
 .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 36px; }
 /* Three-beat stage */
@@ -319,7 +334,16 @@ section { padding-block: clamp(80px, 10vw, 150px); }
 <!-- Hero -->
 <div class="hero">
   <div class="wrap">
-    <h1 class="display">Everything comes from <em>agreement</em>.</h1>
+    <div class="hero-h" id="hero-h">
+      <h1 class="display">Everything comes from <em>agreement</em>.</h1>
+      <div class="tl" id="tl" aria-hidden="true" hidden>
+        <i class="tl-n"></i><i class="tl-n"></i><i class="tl-n"></i>
+        <span class="tl-c"><i class="fp"></i><code title="Fingerprint of the example master agreement">{{AGREEMENT_HEX_SHORT}}</code></span>
+        <span class="tl-c"><span class="ok"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></span>Aggregator signed</span>
+        <span class="tl-c"><span class="ok"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></span>Supplier signed</span>
+        <span class="tl-c tl-s"><i class="dot"></i>Status: active</span>
+      </div>
+    </div>
     <p class="lede">An open language for agreements between purchasing groups, suppliers and members. Sign one, and every system and agent reaches the same answers.</p>
     <div class="ctas">
       <a class="btn dark" href="/spec/">Read the specification <svg class="ico"><use href="#i-arrow"/></svg></a>
@@ -562,6 +586,58 @@ section { padding-block: clamp(80px, 10vw, 150px); }
 </section>
 </main>
 <script>
+/* Hero: the underline under "agreement" plays out the example master agreement: its fingerprint, each party's
+   signature, then active. Wide screens show a chip under each node; narrow ones show one chip that steps through. */
+(() => {
+const wrap = document.getElementById('hero-h'), tl = document.getElementById('tl'); if (!wrap || !tl) return;
+const em = wrap.querySelector('em'), h1 = wrap.querySelector('h1');
+const nodes = [...tl.querySelectorAll('.tl-n')], chips = [...tl.querySelectorAll('.tl-c')];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const START = 600, DRAW = 2800;  /* the underline-in animation: delay and duration */
+let step = reduce ? 4 : 0;
+tl.hidden = false;
+em.style.animation = 'none'; void em.offsetWidth; em.style.animation = '';  /* restart, so the nodes keep time with it */
+function layout() {
+  const W = wrap.getBoundingClientRect(), r = [...em.getClientRects()].pop(); if (!r || !W.width) return;
+  const fs = parseFloat(getComputedStyle(em).fontSize), bar = .085 * fs;
+  const y = r.top - W.top + (r.height - bar) * .92 + bar / 2, x0 = r.left - W.left, x1 = r.right - W.left, xs = [x0, (x0 + x1) / 2, x1];
+  nodes.forEach((n, i) => { n.style.left = xs[i] + 'px'; n.style.top = y + 'px'; });
+  const ws = chips.map(c => c.offsetWidth), ch = chips[0].offsetHeight, gap = Math.max(18, fs * .2), cy = y + gap;
+  const lefts = xs.map((x, i) => Math.max(0, Math.min(W.width - ws[i], x - ws[i] / 2)));
+  const rg = document.createRange(); rg.selectNodeContents(h1); const end = [...rg.getClientRects()].pop();
+  const sl = (end ? end.right - W.left : x1) + 16;
+  const wide = lefts[0] + ws[0] + 10 <= lefts[1] && lefts[1] + ws[1] + 10 <= lefts[2] && sl + ws[3] <= W.width;
+  tl.dataset.mode = wide ? 'wide' : 'compact';
+  chips.forEach((c, i) => {
+    if (wide && i < 3) { c.style.left = lefts[i] + 'px'; c.style.top = cy + 'px'; c.style.setProperty('--stem', (xs[i] - lefts[i]) + 'px'); c.style.setProperty('--sh', (gap - 7) + 'px'); }
+    else if (wide) { c.style.left = sl + 'px'; c.style.top = (r.top - W.top + r.height * .5 - c.offsetHeight / 2) + 'px'; }
+    else { c.style.left = Math.max(0, Math.min(W.width - ws[i], (x0 + x1) / 2 - ws[i] / 2)) + 'px'; c.style.top = cy + 'px'; }
+  });
+  wrap.style.paddingBottom = Math.max(0, cy + ch + 6 - h1.offsetHeight) + 'px';
+  paint();
+}
+function paint() {  /* step: 0 nothing, 1 fingerprint, 2 aggregator, 3 supplier, 4 active */
+  const wide = tl.dataset.mode === 'wide';
+  nodes.forEach((n, i) => n.classList.toggle('on', step > i));
+  chips.forEach((c, i) => c.classList.toggle('on', wide ? step > i : (step - 1 === i || (i === 3 && step === 4))));
+  if (!wide && step === 4) chips.slice(0, 3).forEach(c => c.classList.remove('on'));
+}
+layout();
+new ResizeObserver(layout).observe(wrap);
+document.fonts?.ready.then(layout);
+/* Follow the underline's own clock, so each node lights as the line reaches it (its easing is symmetric, so the
+   line is halfway at half time). */
+const anim = em.getAnimations ? em.getAnimations()[0] : null, t0 = performance.now();
+const tick = () => {
+  const t = anim ? (anim.currentTime ?? 0) : performance.now() - t0;
+  const s = t >= START + DRAW ? 3 : t >= START + DRAW / 2 ? 2 : t >= START ? 1 : 0;
+  if (s !== step) { step = s; paint(); }
+  if (step < 3) requestAnimationFrame(tick);
+  else setTimeout(() => { step = 4; paint(); }, 800);  /* both signed: active */
+};
+if (!reduce) requestAnimationFrame(tick);
+})();
+
 (() => {
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = s => document.querySelector(s);
