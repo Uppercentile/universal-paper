@@ -2,6 +2,10 @@
 
 You are installing the official, read-only Universal Paper MCP server. It needs no API key, account or environment variables, and it never signs or writes anything.
 
+## In Claude
+
+Universal Paper is listed in Claude's connector directory: https://claude.ai/directory/universal-paper. Add it from there, or search for "Universal Paper" in Claude's Connectors directory. Guide: https://universalpaper.org/docs/claude/
+
 ## Preferred: the hosted server (nothing to install)
 
 Add a remote MCP server with Streamable HTTP transport:
