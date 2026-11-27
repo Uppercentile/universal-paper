@@ -400,7 +400,10 @@ def test_chatgpt_plugin_guide_is_served_and_linked(dist):
     for path in ("index.html", "developers/index.html", "support/index.html", "faq/index.html"):
         s = (dist / path).read_text(encoding="utf-8")
         assert d in s and "https://claude.ai/directory/universal-paper" in s, path
-    assert 'class="listed"' in (dist / "index.html").read_text(encoding="utf-8")  # footer, every page
+    home = (dist / "index.html").read_text(encoding="utf-8")
+    foot = home.split("<footer>", 1)[1]
+    assert "Listed in <a" in foot and 'class="lpill"' not in foot  # footer, every page: plain text links, no buttons
+    assert 'class="listed on-dark"' in (dist / "developers/index.html").read_text(encoding="utf-8")  # the pills stay here
     assert 'href="/docs/chatgpt/#troubleshooting"' in (dist / "support/index.html").read_text(encoding="utf-8")
     for f in ("llms.txt", "sitemap.xml"):
         assert "https://universalpaper.org/docs/chatgpt/" in (dist / f).read_text(encoding="utf-8"), f
