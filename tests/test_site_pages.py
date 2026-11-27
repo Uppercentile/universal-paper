@@ -326,3 +326,14 @@ def test_no_page_shows_raw_css(dist):
     for f in dist.rglob("*.html"):
         body = re.sub(r"<(style|script)\b.*?</\1>", "", f.read_text(encoding="utf-8").split("<body", 1)[-1], flags=re.S)
         assert not re.search(r"\.[a-z-]+ \{ [a-z-]+: ", body), f
+
+
+def test_shared_assets_are_versioned_by_content(dist):
+    """Every page asks for site.css and site.js by a hash of their content, so a phone never pairs fresh
+    HTML with a cached old stylesheet after a deploy (GitHub Pages caches assets for ten minutes)."""
+    import hashlib
+
+    want = hashlib.sha256((dist / "assets/site.css").read_bytes() + (dist / "assets/site.js").read_bytes()).hexdigest()[:10]
+    for path in ("index.html", "privacy/index.html", "faq/index.html"):
+        s = (dist / path).read_text(encoding="utf-8")
+        assert f'/assets/site.css?v={want}"' in s and f'/assets/site.js?v={want}"' in s, path
