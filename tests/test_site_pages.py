@@ -337,3 +337,14 @@ def test_shared_assets_are_versioned_by_content(dist):
     for path in ("index.html", "privacy/index.html", "faq/index.html"):
         s = (dist / path).read_text(encoding="utf-8")
         assert f'/assets/site.css?v={want}"' in s and f'/assets/site.js?v={want}"' in s, path
+
+
+def test_trust_pages_promise_no_reply_time_and_keep_the_audit_caveat(dist):
+    """Joe's rule: replies to email are best effort, never a promised time. The audit stays labelled as our own."""
+    for path in ("privacy/index.html", "support/index.html"):
+        s = (dist / path).read_text(encoding="utf-8")
+        assert "30 days" not in s and "best-effort" in s.replace("best effort", "best-effort"), path
+    sec = (dist / "security/index.html").read_text(encoding="utf-8")
+    for fact in ("signed provenance attestation", "trusted publishing", "Dependabot", "read-only token", "non-root user",
+                 "16 issues", "our own team"):
+        assert fact in sec, fact
