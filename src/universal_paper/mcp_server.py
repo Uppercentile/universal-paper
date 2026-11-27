@@ -362,6 +362,23 @@ TOOL_DOCS: dict[str, str] = {
         "agent's price factor bounded by its Mandate; what-if: participations for the simulate_* what-if tools."),
 }
 
+# What a person sees: a short name for each tool, shown by clients in place of the function name.
+TOOL_TITLES: dict[str, str] = {
+    "validate_bundle": "Validate a bundle",
+    "derive_state": "Read agreement state",
+    "check_event": "Check a signed event",
+    "simulate_events": "Simulate events",
+    "simulate_amendment": "Simulate an amendment",
+    "simulate_price_conformity": "Check price conformity",
+    "simulate_termination": "Simulate a termination",
+    "simulate_eligibility": "Check member eligibility",
+    "render_text": "Render agreement text",
+    "hash_object": "Hash a JSON value",
+    "list_terms": "List standard Terms",
+    "explain_term": "Explain a Term",
+    "get_example": "Get an example bundle",
+}
+
 PARAM_DOCS: dict[str, dict[str, str]] = {
     "validate_bundle": {"bundle": _BUNDLE},
     "derive_state": {"bundle": _BUNDLE, "at": _AT},
@@ -489,10 +506,22 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
         if "return" in hints:
             fn.__annotations__["return"] = hints["return"]
 
-        try:
-            server.tool(name=fn.__name__, description=description, annotations=read_only)(fn)
-        except TypeError:  # older SDKs without annotations
-            server.tool(name=fn.__name__, description=description)(fn)
+        # The title goes on the tool and in its annotations, so a client finds it in either place.
+        title = TOOL_TITLES[fn.__name__]
+        ann = {**read_only, "title": title}
+        attempts: list[dict[str, Any]] = [
+            {"title": title, "annotations": ann},
+            {"annotations": ann},  # SDKs without tool titles
+            {},  # older SDKs without annotations
+        ]
+        for extra in attempts:
+            try:
+                server.tool(name=fn.__name__, description=description, **extra)(fn)
+                break
+            except TypeError:
+                continue
+        else:
+            raise SystemExit(f"up-mcp could not register {fn.__name__} with this version of the MCP SDK")
 
     for name in TOOL_DOCS:
         tool(globals()[name], TOOL_DOCS[name])
