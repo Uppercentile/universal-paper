@@ -100,6 +100,24 @@ def test_every_tool_has_a_title_on_the_tool_and_in_its_annotations():
             assert t.title == title, t.name
 
 
+def test_every_tool_parameter_has_a_json_schema_type():
+    """Directories reject a parameter with no type; a union counts when every branch has one."""
+    pytest.importorskip("mcp")
+    import anyio
+
+    for t in anyio.run(m.build_server().list_tools):
+        schema = getattr(t, "input_schema", None) or t.inputSchema
+        for param, spec in schema.get("properties", {}).items():
+            branches = spec.get("anyOf") or [spec]
+            assert all("type" in b for b in branches), f"{t.name}.{param} has no type"
+    # Typed Any in Python: the schema names the JSON types, and validation still accepts them.
+    assert m.hash_object([1, "a", True, {"k": "1.5"}]).startswith("sha256:")
+    types = {name: spec.get("type") for t in anyio.run(m.build_server().list_tools)
+             for name, spec in (getattr(t, "input_schema", None) or t.inputSchema)["properties"].items()
+             if name in ("obj", "value")}
+    assert "null" not in types["obj"] and "number" not in types["obj"]  # spec 01 §1: no null, no fractions
+
+
 def test_hosted_mode_refuses_file_paths_and_local_mode_restores_them():
     pytest.importorskip("mcp")
     path = str(EX / "conventional" / "bundle.json")

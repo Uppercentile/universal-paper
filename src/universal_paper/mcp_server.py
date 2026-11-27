@@ -379,6 +379,13 @@ TOOL_TITLES: dict[str, str] = {
     "get_example": "Get an example bundle",
 }
 
+# Parameters typed Any in Python still get an explicit JSON Schema type, so clients and directories know what to
+# send. Validation is unchanged: the schema only describes what the tool already accepts.
+PARAM_TYPES: dict[tuple[str, str], list[str]] = {
+    ("hash_object", "obj"): ["object", "array", "string", "integer", "boolean"],  # spec 01 §1: no null, no fractions
+    ("simulate_amendment", "value"): ["string", "number", "boolean", "object", "array"],  # numbers become strings
+}
+
 PARAM_DOCS: dict[str, dict[str, str]] = {
     "validate_bundle": {"bundle": _BUNDLE},
     "derive_state": {"bundle": _BUNDLE, "at": _AT},
@@ -441,7 +448,8 @@ PARAM_DOCS: dict[str, dict[str, str]] = {
         "hashes_only": ("true to ignore the bundle's disclosures and show sealed values as hashes only, as an outsider sees "
                         "them. Default false."),
     },
-    "hash_object": {"obj": "Any JSON value (object, array, string, number, boolean or null). A `sigs` member is ignored."},
+    "hash_object": {"obj": "Any Universal Paper JSON value: an object, array, string, integer or boolean. There is no null, and a fractional "
+                    "number must be a Decimal string (\"1.05\"). A `sigs` member is ignored."},
     "list_terms": {},
     "explain_term": {"term_id": "The Term id from list_terms, e.g. \"UP:Admin-Fee\" (the \"UP-Admin-Fee\" spelling also works)."},
     "get_example": {"name": "The example's name, one of: " + ", ".join(EXAMPLES) + "."},
@@ -451,6 +459,11 @@ PARAM_DOCS: dict[str, dict[str, str]] = {
 # ---------------------------------------------------------------------------
 # MCP wiring
 # ---------------------------------------------------------------------------
+
+def _schema_type(tool: str, param: str) -> dict[str, Any] | None:
+    types = PARAM_TYPES.get((tool, param))
+    return {"type": types} if types else None
+
 
 def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], None] | None = None):
     """The MCP server. `hosted` refuses file paths; `on_call(tool, ok, seconds)` sees only the tool name and outcome."""
@@ -500,7 +513,8 @@ def build_server(hosted: bool = False, on_call: Callable[[str, bool, float], Non
         hints = typing.get_type_hints(impl)
         sig = inspect.signature(impl)
         fn.__signature__ = sig.replace(parameters=[  # type: ignore[attr-defined]
-            p.replace(annotation=Annotated[hints[p.name], Field(description=PARAM_DOCS[impl.__name__][p.name])])
+            p.replace(annotation=Annotated[hints[p.name], Field(description=PARAM_DOCS[impl.__name__][p.name],
+                                            json_schema_extra=_schema_type(impl.__name__, p.name))])
             for p in sig.parameters.values()])
         fn.__annotations__ = {p.name: p.annotation for p in fn.__signature__.parameters.values()}  # type: ignore[attr-defined]
         if "return" in hints:
