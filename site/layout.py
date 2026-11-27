@@ -17,6 +17,13 @@ SPRITE = (THEME / "sprite.svg").read_text(encoding="utf-8").strip()
 # top navigation (desktop) and the phone menu sheet
 MCP_URL = "https://mcp.universalpaper.org/mcp"
 CLAUDE_DIRECTORY = "https://claude.ai/directory/universal-paper"  # the connector's listing in Claude's directory
+CHATGPT_DIRECTORY = "https://chatgpt.com/plugins/plugin_asdk_app_6b09c3ea78c48191a51566aae625917a"  # the plugin's listing in ChatGPT
+
+
+def listed_in(extra_class=""):
+    """The "Listed in Claude · ChatGPT" pill row: where the hosted server can be added in one step, in each assistant."""
+    pills = "".join(f'<a class="lpill" href="{h}">{t}</a>' for h, t in ((CLAUDE_DIRECTORY, "Claude"), (CHATGPT_DIRECTORY, "ChatGPT")))
+    return f'<p class="listed{(" " + extra_class) if extra_class else ""}"><span>Listed in</span>{pills}</p>'
 
 NAV = [("/developers/", "Developers"), ("/spec/", "Specification"), ("/spec/terms/", "Terms"),
        ("/integrations/", "Integrations"), ("/faq/", "FAQ")]
@@ -80,8 +87,9 @@ def footer(legal, tagline, repo_url, extra_build=()):
            f'<div class="cmd url" style="max-width:460px"><code>{mcp}</code><button class="cbtn" type="button" '
            f'data-copy="{mcp}">{ico("copy", "width:14px;height:14px")}Copy</button></div>\n'
            '<p class="fine" style="margin-top:10px">Or run it locally: <code class="mono" style="color:var(--ink)">uvx universal-paper-mcp</code></p>\n'
-           f'<p class="fine" style="margin-top:6px">In Claude: <a href="{CLAUDE_DIRECTORY}">find it in the connector directory</a>.</p>')
-    build = [("/developers/", "Developers"), ("/developers/#mcp", "MCP server"), ("/docs/claude/", "Claude connector"), ("/playground/", "Playground"),
+           + listed_in())
+    build = [("/developers/", "Developers"), ("/developers/#mcp", "MCP server"), ("/docs/claude/", "Claude connector"), ("/docs/chatgpt/", "ChatGPT plugin"),
+             ("/playground/", "Playground"),
              ("/integrations/", "Integrations"), *extra_build]
     if repo_url:
         build.append((repo_url, "GitHub ↗"))

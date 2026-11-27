@@ -380,3 +380,29 @@ def test_claude_directory_listing_is_the_claude_option(dist):
     assert "claude mcp add --transport http" in dev and "uvx universal-paper-mcp" in dev
     assert d in (dist / "llms.txt").read_text(encoding="utf-8")
     assert json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))["mcp"]["claudeDirectory"] == d
+
+
+def test_chatgpt_plugin_guide_is_served_and_linked(dist):
+    """/docs/chatgpt/ mirrors the Claude guide for the ChatGPT plugin listing; its address is permanent too."""
+    d = "https://chatgpt.com/plugins/plugin_asdk_app_6b09c3ea78c48191a51566aae625917a"
+    page = (dist / "docs/chatgpt/index.html").read_text(encoding="utf-8")
+    assert "<h1 class=\"display\">Universal Paper in ChatGPT</h1>" in page
+    assert page.count('type="application/ld+json"') >= 3 and '"@type":"HowTo"' in page.replace('": "', '":"')
+    assert "13 read-only tools" in page and "https://mcp.universalpaper.org/mcp" in page and page.count(d) >= 2
+    assert "Let&rsquo;s build an app using Universal Paper" in page and 'id="build-an-app"' in page
+    for tool in ("validate_bundle", "simulate_price_conformity", "get_example"):
+        assert f"<code>{tool}</code>" in page
+    article = page.split('<article class="prose">', 1)[1].split("</article>", 1)[0]
+    assert "Anthropic" not in article and "Claude" not in article.replace('Using Claude? See the <a href="/docs/claude/">Claude connector guide</a>', "")
+    # Both guides list each other, and every Claude placement now offers ChatGPT beside it.
+    claude = (dist / "docs/claude/index.html").read_text(encoding="utf-8")
+    assert 'href="/docs/chatgpt/"' in claude and 'href="/docs/claude/"' in page
+    for path in ("index.html", "developers/index.html", "support/index.html", "faq/index.html"):
+        s = (dist / path).read_text(encoding="utf-8")
+        assert d in s and "https://claude.ai/directory/universal-paper" in s, path
+    assert 'class="listed"' in (dist / "index.html").read_text(encoding="utf-8")  # footer, every page
+    assert 'href="/docs/chatgpt/#troubleshooting"' in (dist / "support/index.html").read_text(encoding="utf-8")
+    for f in ("llms.txt", "sitemap.xml"):
+        assert "https://universalpaper.org/docs/chatgpt/" in (dist / f).read_text(encoding="utf-8"), f
+    agent = json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))
+    assert agent["mcp"]["chatgptDirectory"] == d and agent["resources"]["chatgptGuide"].endswith("/docs/chatgpt/")
