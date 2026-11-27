@@ -1,0 +1,109 @@
+<section class="band tight" aria-label="At a glance" style="padding-bottom:0">
+  <div class="wrap glance">
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>No accounts.</b> Nothing here asks you to sign in, register or pay.</span></div>
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>No cookies, analytics or ads.</b> The site sets no cookies and runs no tracking scripts.</span></div>
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>The MCP server stores nothing you send.</b> Each request is processed in memory and discarded.</span></div>
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>The Playground stays on your device.</b> What you type is never sent to us.</span></div>
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>We never sell personal information</b> or use it for advertising or profiling.</span></div>
+    <div><span class="b note"><svg class="ico"><use href="#i-i"/></svg></span><span><b>One third-party image.</b> A directory badge in the footer loads from SubmitLLMs. <a href="#who-else-is-involved">Details below</a>.</span></div>
+  </div>
+</section>
+<!-- body -->
+<h2>Who we are and what this covers</h2>
+<p>Universal Paper is an open language for agreements, created and stewarded by <strong>Uppercentile LLC</strong>, a California limited liability company (“Uppercentile”, “we”, “us”). Uppercentile is responsible for the personal information described in this policy.</p>
+<p>This policy covers:</p>
+<ul>
+  <li>the website at <code>universalpaper.org</code>, including the Playground;</li>
+  <li>the hosted Universal Paper MCP server at <code>mcp.universalpaper.org</code>;</li>
+  <li>email you send us about Universal Paper.</li>
+</ul>
+<p>It does not cover:</p>
+<ul>
+  <li><strong>Software you run yourself.</strong> The reference interpreter, the <code>up</code> command line tool and the local MCP server (<code>uvx universal-paper-mcp</code>) run on your own machine and send us nothing.</li>
+  <li><strong>The AI assistant you connect.</strong> If you use the MCP server through an assistant such as Claude, that provider handles your conversation under its own privacy policy.</li>
+  <li><strong>GitHub and PyPI.</strong> Issues, pull requests, security reports and package downloads happen on those platforms under their own policies.</li>
+  <li><strong>Uppercentile’s own website</strong>, which has <a href="https://www.uppercentile.com/terms-conditions">its own terms and privacy policy</a>.</li>
+</ul>
+
+<h2>What is processed, and what we keep</h2>
+<p>“Processed” means the information passes through a system so it can do its job. “Kept” means it is still there afterward.</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>Where</th><th>What is processed</th><th>Do we keep it?</th><th>For how long</th></tr></thead>
+  <tbody>
+    <tr><td>Website pages</td><td>Your IP address, your browser type and the address of the page you ask for. Our web host needs these to send you the page.</td><td>No. Our host, GitHub Pages, does not give us visitor logs.</td><td>Set by GitHub.</td></tr>
+    <tr><td>Footer badge</td><td>The same technical details, sent to SubmitLLMs when your browser loads its badge image.</td><td>No.</td><td>Set by SubmitLLMs.</td></tr>
+    <tr><td>Playground, search and copy buttons</td><td>The values you type and the Playground’s saved state.</td><td>No. They stay in your browser. The Playground may save its state in your browser’s local storage.</td><td>Until you clear your browser’s site data.</td></tr>
+    <tr><td>Hosted MCP server</td><td>The tool name and the arguments your assistant sends, such as an agreement bundle, and your IP address at the network level.</td><td>No. Arguments and results are held in memory for that one request. We keep only a count of calls per tool name.</td><td>The count resets when the server restarts.</td></tr>
+    <tr><td>Email</td><td>Your email address, your name and whatever you write.</td><td>Yes, in our mailbox.</td><td>As long as we need it to answer you and keep a record of the conversation. We delete it on request.</td></tr>
+    <tr><td>“Built with Universal Paper” listing</td><td>The organization, project name, link and description you ask us to publish.</td><td>Yes, and it is public. A listing is opt-in.</td><td>Until you ask us to remove it.</td></tr>
+  </tbody>
+</table></div>
+
+<h2>The website</h2>
+<ul>
+  <li><strong>No cookies.</strong> The site does not set any.</li>
+  <li><strong>No analytics or advertising.</strong> There are no tracking scripts, session recorders, advertising pixels or fingerprinting.</li>
+  <li><strong>Self-hosted files.</strong> Fonts, icons, styles and scripts are served from <code>universalpaper.org</code>. The one exception is the footer badge described under <a href="#who-else-is-involved">Who else is involved</a>.</li>
+  <li><strong>Search runs in your browser</strong> against an index that ships with the page. What you type into it is not sent anywhere.</li>
+  <li><strong>The Playground runs in your browser.</strong> It may save its state in your browser’s local storage so your work survives a reload. That data never leaves your device, and clearing your browser’s site data removes it.</li>
+  <li><strong>Copy buttons</strong> write to your clipboard and nothing else.</li>
+</ul>
+<p>Your browser may tell websites that you prefer not to be tracked, through Do Not Track or Global Privacy Control. There is no tracking here to switch off, so every visitor is treated as if that signal were set.</p>
+
+<h2>The hosted MCP server</h2>
+<p>The hosted server gives AI assistants the reference interpreter as read-only tools. It needs no sign-in.</p>
+<ul>
+  <li><strong>What reaches it.</strong> Only the tool name and the arguments your assistant chooses to send, for example an agreement bundle to validate. The server cannot see your conversation, your assistant’s memory or your files.</li>
+  <li><strong>What happens to it.</strong> The server computes an answer and returns it. It keeps no sessions, storage, access logs or telemetry, so the arguments and the result are gone when the request ends.</li>
+  <li><strong>What it counts.</strong> The number of calls per tool name since the server last started, published at <a href="https://mcp.universalpaper.org/stats">mcp.universalpaper.org/stats</a>. No arguments, addresses or identities are kept.</li>
+  <li><strong>What it cannot do.</strong> It holds no keys, signs nothing, writes nothing and never reads file paths.</li>
+  <li><strong>What the network sees.</strong> Our hosting provider, Fly.io, handles your IP address to route the request and may keep its own operational records.</li>
+</ul>
+<p>Two habits keep sensitive data out of the hosted server altogether. Private values such as prices can be replaced by a Seal before a bundle leaves your systems. And you can run the same server on your own machine with <code>uvx universal-paper-mcp</code>, in which case nothing reaches us.</p>
+<blockquote><p>Never send a private signing key to any service, including this one. The server does not need one.</p></blockquote>
+
+<h2>How we use information</h2>
+<p>We use the little that reaches us to:</p>
+<ul>
+  <li>deliver the pages and tool responses you ask for;</li>
+  <li>answer you when you write to us;</li>
+  <li>publish a listing you asked for;</li>
+  <li>keep the website and the server secure and working.</li>
+</ul>
+<p>We do not sell or rent personal information, share it for advertising, build profiles of people, or make automated decisions about anyone. Nothing you send to the MCP server is kept, so it is not used to train AI models or for any other purpose.</p>
+<p>Where the law asks for a legal basis, ours is our legitimate interest in running and securing a public website and server and in answering people who write to us. For a public listing it is your consent, which you can withdraw at any time.</p>
+
+<h2>Who else is involved</h2>
+<p>A few providers handle information for us or alongside us. Each one works under its own privacy policy.</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>Provider</th><th>What it does</th><th>What it receives</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub</a></td><td>Hosts this website and the source code.</td><td>Your IP address and browser details when you load a page, and anything you post on GitHub.</td></tr>
+    <tr><td><a href="https://fly.io/legal/privacy-policy">Fly.io</a></td><td>Hosts the MCP server.</td><td>Your IP address and the request traffic it routes.</td></tr>
+    <tr><td><a href="https://submitllms.com/privacy">SubmitLLMs</a></td><td>Serves the “AI Ready” directory badge shown in the footer.</td><td>Your IP address, your browser details and the address of the page that loaded the badge.</td></tr>
+    <tr><td>Our email provider</td><td>Delivers and stores email sent to us.</td><td>The messages you send us.</td></tr>
+    <tr><td><a href="https://policies.python.org/pypi.org/Privacy-Notice/">PyPI</a></td><td>Distributes the Python packages.</td><td>Details of your download request, if you install a package.</td></tr>
+  </tbody>
+</table></div>
+<p>These providers may process information in the United States and in other countries.</p>
+<p>We disclose information when the law requires it. If stewardship of Universal Paper passes to another organization, as the <a href="/spec/neutrality-charter/">neutrality charter</a> anticipates, we will update this page to say so.</p>
+
+<h2>Your choices and rights</h2>
+<p>Depending on where you live, you may have the right to ask for a copy of the personal information we hold about you, to have it corrected or deleted, to object to or restrict how it is used, to receive it in a portable form, to withdraw consent, and to complain to your data protection authority.</p>
+<p>If you live in California, you have the right to know what we collect, to have it deleted or corrected, and not to be treated differently for asking. We do not sell or share personal information as California law defines those terms.</p>
+<p>To make a request, email <a href="mailto:contact@uppercentile.com?subject=Universal%20Paper%3A%20privacy">contact@uppercentile.com</a> with the subject “Universal Paper: privacy”. We aim to reply within 30 days, and we may ask for enough detail to confirm that the request concerns you.</p>
+<p>For most visitors we hold nothing to look up. We cannot connect a page view or a tool call to a person.</p>
+
+<h2>Children</h2>
+<p>Universal Paper is a tool for organizations and developers. It is not directed at children under 16, and we do not knowingly collect their personal information.</p>
+
+<h2>Security</h2>
+<p>The website and the server are served only over HTTPS, and the server is stateless and read-only by design. Holding almost nothing is the main protection. No system is perfectly secure, so if you find a weakness please report it privately as described on the <a href="/security/">Security page</a>.</p>
+
+<h2>Changes to this policy</h2>
+<p>We will post any change on this page and update the effective date at the top. If a change is significant, we will say so at the top of the page.</p>
+
+<h2>Contact</h2>
+<p><strong>Uppercentile LLC</strong><br>California, USA<br>Email: <a href="mailto:contact@uppercentile.com?subject=Universal%20Paper%3A%20privacy">contact@uppercentile.com</a></p>
+<p>Security reports go through a separate, private channel described on the <a href="/security/">Security page</a>. For everything else, see <a href="/support/">Support and contact</a>.</p>
+<div class="doc-foot"><p>The server’s source code is public, so the statements about it on this page can be checked in <a href="https://github.com/Uppercentile/universal-paper">the repository</a>.</p></div>

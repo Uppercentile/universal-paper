@@ -17,7 +17,7 @@ Typos and ordinary bugs that do not affect validity are welcome as public issues
 
 ## How to report
 
-Use GitHub's private vulnerability reporting for this repository (**Security → Report a vulnerability**). If that is not available to you, contact the maintainers at the address in the repository profile and ask for a private channel. Do not open a public issue for a vulnerability.
+Use GitHub's private vulnerability reporting for this repository (**Security → Report a vulnerability**). If that is not available to you, email contact@uppercentile.com and ask for a private channel. Do not put the details in that first email. Do not open a public issue for a vulnerability.
 
 Please include the smallest Bundle or input that shows the problem, which engine (Python, JavaScript, or both), and what you expected. Use hypothetical data only. Never send real agreements, real prices, or private keys.
 
