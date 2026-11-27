@@ -24,7 +24,7 @@ Or run it locally with [uv](https://docs.astral.sh/uv/):
 uvx universal-paper-mcp
 ```
 
-Claude Code: `claude mcp add universal-paper -- uvx universal-paper-mcp`, or for the hosted one `claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp`.
+Claude: listed in [Claude's connector directory](https://claude.ai/directory/universal-paper); search for Universal Paper in Claude and add it. Claude Code: `claude mcp add universal-paper -- uvx universal-paper-mcp`, or for the hosted one `claude mcp add --transport http universal-paper https://mcp.universalpaper.org/mcp`.
 
 Other clients:
 

@@ -366,3 +366,17 @@ def test_claude_connector_guide_is_served_and_linked(dist):
     assert json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))["resources"]["claudeGuide"].endswith("/docs/claude/")
     short = (dist / "claude/index.html").read_text(encoding="utf-8")
     assert 'url=/docs/claude/' in short and 'content="noindex"' in short and "/claude/" not in (dist / "sitemap.xml").read_text(encoding="utf-8").replace("/docs/claude/", "")
+
+
+def test_claude_directory_listing_is_the_claude_option(dist):
+    """The connector is published in Claude's directory: Claude users are sent there, other clients keep every option."""
+    d = "https://claude.ai/directory/universal-paper"
+    guide = (dist / "docs/claude/index.html").read_text(encoding="utf-8")
+    assert guide.count(d) >= 2 and "add-custom-connector" not in guide
+    assert "https://mcp.universalpaper.org/mcp" in guide  # the custom-connector fallback stays
+    for path in ("index.html", "developers/index.html", "support/index.html", "faq/index.html"):
+        assert d in (dist / path).read_text(encoding="utf-8"), path
+    dev = (dist / "developers/index.html").read_text(encoding="utf-8")
+    assert "claude mcp add --transport http" in dev and "uvx universal-paper-mcp" in dev
+    assert d in (dist / "llms.txt").read_text(encoding="utf-8")
+    assert json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))["mcp"]["claudeDirectory"] == d

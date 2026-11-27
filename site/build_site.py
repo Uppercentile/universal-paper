@@ -604,8 +604,8 @@ CLAUDE_GUIDE = dict(
           ("Go deeper", [("/playground/", "Playground", "↗"), ("/developers/", "Developers", "↗"), ("/spec/", "Specification", "↗"), ("/faq/", "FAQ", "↗")]),
           ("Trust", [("/privacy/", "Privacy policy", "↗"), ("/security/", "Security", "↗"), ("/support/", "Support and contact", "↗")])],
     steps=[("Add the connector", "add-the-connector",
-            "In Claude, open the Connectors directory, select Add, then Add custom connector. Enter the name Universal Paper and the "
-            "address https://mcp.universalpaper.org/mcp. The server needs no sign-in."),
+            "Universal Paper is listed in Claude's connector directory at https://claude.ai/directory/universal-paper. Open the listing, "
+            "or search for Universal Paper in Claude's Connectors directory, and add it. The server needs no sign-in."),
            ("Turn it on in a chat", "turn-it-on", "In a new chat, select + in the message box, find Universal Paper under Connectors, and turn its toggle on."),
            ("Send a first prompt", "first-prompt",
             "Ask: Walk me through a Universal Paper agreement using the conventional example. Who are the parties, what does it say, and is it valid?")],
@@ -1524,7 +1524,7 @@ def build_agent_json(site):
             "url": MCP["endpoint"], "transport": MCP["transport"], "auth": MCP["auth"], "readOnly": MCP["readOnly"], "stateless": True,
             "holdsKeys": False, "registryName": server["name"], "version": server["version"],
             "package": {"registry": pkg["registryType"], "name": pkg["identifier"], "version": pkg["version"], "run": f"uvx {pkg['identifier']}", "transport": pkg["transport"]["type"]},
-            "docs": MCP["docs"],
+            "docs": MCP["docs"], "claudeDirectory": MCP["claudeDirectory"], "claudeGuide": u("/docs/claude/"),
             "tools": [{"name": n, "description": first_sentence(d)} for n, d in tools.items()],
         },
         "resources": {
@@ -1563,6 +1563,7 @@ MCP = {
     "transport": "streamable-http",
     "pypi": "universal-paper-mcp",
     "registry": "io.github.Uppercentile/universal-paper",
+    "claudeDirectory": "https://claude.ai/directory/universal-paper",
     "stats": "https://mcp.universalpaper.org/stats",
     "docs": "https://universalpaper.org/developers/#mcp",
     "readOnly": True,
@@ -1687,6 +1688,7 @@ The official Universal Paper MCP server gives an agent the reference interpreter
 
 - Hosted (Streamable HTTP, no sign-in): {MCP["endpoint"]}
 - Local: `uvx {MCP["pypi"]}` (PyPI), or `up-mcp` from the universal-paper package
+- In Claude: listed in Claude's connector directory ({MCP["claudeDirectory"]}); search for "Universal Paper" in Claude. Guide: {site.url('/docs/claude/')}
 - MCP Registry name: {MCP["registry"]}
 - The hosted server is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths (pass bundles as JSON). It only counts calls per tool name, shown at {MCP["stats"]}.
 
