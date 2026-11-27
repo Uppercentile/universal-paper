@@ -1,0 +1,380 @@
+<section class="band tight" aria-label="At a glance" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="cg-demo">
+      <div class="cg-start">
+        <p class="eyebrow">Connect</p>
+        <h2 class="h3">A ChatGPT plugin. No sign-in.</h2>
+        <p class="cg-sub">Universal Paper is listed in ChatGPT&rsquo;s plugin directory. Add it, mention it in a chat, and ask.</p>
+        <div class="cmd"><code>https://mcp.<wbr>universalpaper.org<wbr>/mcp</code><button class="cbtn" type="button" data-copy="https://mcp.universalpaper.org/mcp">Copy</button></div>
+        <div class="cg-ctas">
+          <a class="btn light" href="https://chatgpt.com/plugins/plugin_asdk_app_6b09c3ea78c48191a51566aae625917a">Get it in ChatGPT <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn outline-l" href="#quickstart">Quickstart</a>
+        </div>
+      </div>
+      <figure class="cg-win">
+        <figcaption>Example<span class="cg-tag">Build an app</span></figcaption>
+        <div class="cg-thread">
+          <p class="cg-you"><span class="cg-who">You</span><span class="cg-at">@Universal Paper</span> Let&rsquo;s build an app using Universal Paper</p>
+          <div class="cg-claude">
+            <p class="cg-who">ChatGPT</p>
+            <p class="cg-ans">Absolutely. Let&rsquo;s build a <b>Universal Paper-powered app</b> around the actual agreement engine, not just a mockup.</p>
+          </div>
+        </div>
+        <p class="cg-foot">ChatGPT plans the app. Every verdict it relies on comes from the reference interpreter.</p>
+      </figure>
+    </div>
+    <div class="glance">
+      <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>Read-only.</b> All 13 tools only read and compute. The plugin signs nothing and changes nothing.</span></div>
+      <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>No account.</b> No sign-in and no setup. The server keeps no record of what you send.</span></div>
+      <div><span class="b note"><svg class="ico"><use href="#i-i"/></svg></span><span><b>Examples built in.</b> Six worked agreements with hypothetical parties, so every prompt here works as written.</span></div>
+    </div>
+  </div>
+</section>
+<!-- body -->
+<p class="intro">Universal Paper is an open language that writes a purchasing agreement once as signed, fingerprinted data. This guide is for people using it through ChatGPT. It gets you connected, then walks through six things to try, each with a prompt you can copy and the result it returned.</p>
+
+<h2 data-g="Start">Quickstart</h2>
+<p>Three steps to a first answer.</p>
+
+<ol class="steps">
+  <li>
+    <h3 id="add-the-plugin">Add the plugin</h3>
+    <p>Universal Paper is listed in ChatGPT&rsquo;s plugin directory, so you can add it without typing an address.</p>
+    <div class="tabs">
+      <div role="tablist" aria-label="Where you use it">
+        <button role="tab" type="button" id="t-app" aria-controls="tp-app" aria-selected="true">ChatGPT</button>
+        <button role="tab" type="button" id="t-other" aria-controls="tp-other" aria-selected="false" tabindex="-1">Other clients</button>
+      </div>
+      <div role="tabpanel" id="tp-app" aria-labelledby="t-app">
+        <ol>
+          <li>Open the <a href="https://chatgpt.com/plugins/plugin_asdk_app_6b09c3ea78c48191a51566aae625917a">Universal Paper listing</a> in ChatGPT, or select <strong>Plugins</strong> in the sidebar and search for <strong>Universal Paper</strong>.</li>
+          <li>Add it. The server needs no sign-in, so there is nothing else to set up.</li>
+        </ol>
+        <p class="fine">On Enterprise and Edu workspaces, an administrator may need to enable plugins in Workspace settings first.</p>
+      </div>
+      <div role="tabpanel" id="tp-other" aria-labelledby="t-other" hidden>
+        <p>Any client that speaks the Model Context Protocol can connect. Using Claude? See the <a href="/docs/claude/">Claude connector guide</a>.</p>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Address</td><td><code>https://mcp.universalpaper.org/mcp</code></td></tr>
+            <tr><td>Transport</td><td>Streamable HTTP</td></tr>
+            <tr><td>Authentication</td><td>None</td></tr>
+            <tr><td>Run locally</td><td><code>uvx universal-paper-mcp</code></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </li>
+  <li>
+    <h3 id="use-it-in-a-chat">Use it in a chat</h3>
+    <p>Start a new chat. Type <strong>@</strong> and choose Universal Paper, or pick it from the <strong>+</strong> menu in the message box. Its name then appears in front of your message, so ChatGPT knows to use it.</p>
+  </li>
+  <li>
+    <h3 id="first-prompt">Send a first prompt</h3>
+    <div class="ask">
+      <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-first">Copy prompt</button></div>
+      <p id="p-first">Walk me through a Universal Paper agreement using the conventional example. Who are the parties, what does it say, and is it valid?</p>
+    </div>
+    <p>If ChatGPT asks you to confirm a tool call, allow it. Every tool is read-only, so allowing one changes nothing on any system.</p>
+    <p><strong>You should see</strong> ChatGPT load the example, check it and read it back: a master agreement between Hypothetical Health Purchasing Alliance (the aggregator) and Example Medical Supply Co. (the supplier), with eight clauses, and valid. If you see that, you are connected. If not, go to <a href="#troubleshooting">Troubleshooting</a>.</p>
+  </li>
+</ol>
+
+<h2 data-g="Start">How it works</h2>
+<p>ChatGPT does the writing and the reading. The plugin does the computing.</p>
+<div class="flow">
+  <div><span class="fn">01</span><b>You ask</b><p>In plain words. No syntax to learn.</p></div>
+  <div><span class="fn">02</span><b>ChatGPT picks a tool</b><p>It builds the input from your words or from an agreement you give it.</p></div>
+  <div><span class="fn">03</span><b>Universal Paper computes</b><p>The reference interpreter applies the rules of the language and returns the answer with the rule and the reason.</p></div>
+</div>
+<p>That split matters. When ChatGPT reads a contract on its own, you get an interpretation. Here the answer comes from a rule engine, and the same input gives every party the same answer. ChatGPT&rsquo;s wording will vary from chat to chat. The verdicts, amounts, dates and fingerprints will not.</p>
+<p>Five words appear throughout this guide:</p>
+<dl class="gloss">
+  <div><dt>Bundle</dt><dd>One file holding agreements and their history. Every tool that takes a bundle also accepts a built-in example, such as <code>example:what-if</code>.</dd></div>
+  <div><dt>Term</dt><dd>A standard clause with typed values, such as an admin fee or a price tier. There are 16.</dd></div>
+  <div><dt>Fingerprint</dt><dd>A 64-character hash of an agreement. If two parties hold the same fingerprint, they hold the same agreement.</dd></div>
+  <div><dt>Event</dt><dd>A signed step in an agreement&rsquo;s history: propose, accept or attest.</dd></div>
+  <div><dt>Mandate</dt><dd>Signed limits on what an AI agent may do for a party.</dd></div>
+</dl>
+
+<div class="tries" aria-label="Six things to try">
+  <a class="c-lilac" href="#draft-a-deal"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><b>Draft a deal</b><span>Plain words in, checked agreement out.</span></a>
+  <a class="c-coral" href="#give-an-agent-limits-everyone-can-check"><svg class="ico" aria-hidden="true"><use href="#i-bot"/></svg><b>Give an agent limits</b><span>Test an action against its mandate.</span></a>
+  <a class="c-mint" href="#know-what-is-owed"><svg class="ico" aria-hidden="true"><use href="#i-hash"/></svg><b>Know what is owed</b><span>Fees and due dates, computed.</span></a>
+  <a class="c-sun" href="#check-invoices"><svg class="ico" aria-hidden="true"><use href="#i-compare"/></svg><b>Check invoices</b><span>Find the lines that are off.</span></a>
+  <a class="c-sky" href="#test-a-change-before-anyone-signs"><svg class="ico" aria-hidden="true"><use href="#i-git"/></svg><b>Test a change</b><span>See the effect before anyone signs.</span></a>
+  <a class="c-navy" href="#start-from-the-contract-you-have"><svg class="ico" aria-hidden="true"><use href="#i-link"/></svg><b>Start from paper</b><span>Compute on a contract you already signed.</span></a>
+</div>
+
+<h2 data-g="Things to try">Draft a deal</h2>
+<p>Describe the terms in plain words. ChatGPT builds the agreement from the standard Terms, the plugin checks that it is well formed, and you get the contract text and its fingerprint back. Nobody has signed anything at this point: the result is a proposal.</p>
+<div class="xch">
+  <div class="ask">
+    <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-draft">Copy prompt</button></div>
+    <p id="p-draft">Draft a master agreement like the conventional example, but with a 3% admin fee and 60 days' termination notice. Check it, then show me the contract text and its fingerprint.</p>
+  </div>
+  <p class="calls"><span>ChatGPT calls</span><code>get_example</code><code>simulate_events</code><code>render_text</code><code>hash_object</code></p>
+  <figure class="got">
+    <figcaption><span class="who">What came back</span><span class="vd ok"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Accepted as a proposal</span></figcaption>
+    <div class="paper">
+      <p class="pt">4. Administrative fee</p>
+      <p>For each period of 1 calendar month, the Supplier pays the Aggregator an administrative fee equal to <mark>3%</mark> of the net sales reported for that period, rounded to 2 decimal places, rounding half to even, within 30 days after the period ends.</p>
+      <p class="pt">6. Termination for convenience</p>
+      <p>The Aggregator or the Supplier may terminate this Agreement without cause by notice. Termination takes effect <mark>60 days</mark> after the notice is given.</p>
+    </div>
+    <p class="fp"><span>Fingerprint</span><code>sha256:11f687fa4663107713c56a8231e6938c7806a0abd4884c973afe5e84a02bdb50</code></p>
+  </figure>
+</div>
+<p>Your fingerprint will differ unless every value matches, including the title. That is the point of it: change one character and the fingerprint changes.</p>
+<h3 id="when-a-draft-is-wrong">When a draft is wrong</h3>
+<p>The check names the clause and the value at fault. A draft that makes a &ldquo;distributor&rdquo; pay the fee comes back as:</p>
+<pre data-lang="result"><code>The proposed agreement is invalid: clause 'fee': 'distributor' is not a role.</code></pre>
+<h3 id="draft-next">Try next</h3>
+<ul class="next">
+  <li><span>Rename the parties to &ldquo;Northside Buying Group&rdquo; and &ldquo;Acme Supply&rdquo;, drop the audit clause, and check it again.</span></li>
+  <li><span>List the standard Terms I can build with, then explain UP:Tiers.</span></li>
+</ul>
+<blockquote><p><strong>Keep the example&rsquo;s parties while you draft.</strong> A party is identified by a public key, and the one proposing must be a party to the agreement. Renaming a party is fine. Swapping in a made-up key is rejected.</p></blockquote>
+
+<h2 data-g="Things to try">Give an agent limits everyone can check</h2>
+<p>A Mandate is a signed statement of what an AI agent may do for a party: which actions, which clauses and which values. Because the limit is data, the supplier, the buyer and every system enforce it the same way. Use this before an agent acts, to see whether its action would be valid for everyone.</p>
+<div class="xch">
+  <div class="ask">
+    <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-agent">Copy prompt</button></div>
+    <p id="p-agent">In the mandate-cap example, can the agent raise the price factor to 1.05? What about 1.02?</p>
+  </div>
+  <p class="calls"><span>ChatGPT calls</span><code>simulate_amendment</code></p>
+  <figure class="got">
+    <figcaption><span class="who">What came back</span><span class="vd bad"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg>1.05 rejected</span><span class="vd ok"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>1.02 accepted</span></figcaption>
+    <div class="scale" role="img" aria-label="The mandate allows a price factor from 0.98 to 1.02. The factor is 1.00 today. A proposal of 1.02 is inside the range. A proposal of 1.05 is outside it.">
+      <div class="track"><i class="range" style="left:20%;width:40%"></i><i class="pin now" style="left:40%"><b>1.00</b><em>today</em></i><i class="pin ok" style="left:60%"><b>1.02</b><em>accepted</em></i><i class="pin bad" style="left:90%"><b>1.05</b><em>rejected</em></i></div>
+      <div class="ends"><span style="left:20%">0.98 lowest</span></div>
+      <p class="cap">Allowed by the mandate: 0.98 to 1.02</p>
+    </div>
+    <dl class="kv">
+      <div><dt>Rule</dt><dd>A9, bounded delegation</dd></div>
+      <div><dt>Reason</dt><dd>UP:Price-Reference parameter &lsquo;factor&rsquo;: 1.05 is above the maximum 1.02. Out-of-bounds agent actions are invalid by definition.</dd></div>
+    </dl>
+  </figure>
+</div>
+<h3 id="agent-next">Try next</h3>
+<ul class="next">
+  <li><span>What exactly is this agent allowed to do, and until when?</span></li>
+  <li><span>What happens if the agent proposes a factor of 0.97?</span></li>
+</ul>
+<p>The second one is rejected too: 0.97 is below the minimum of 0.98. A mandate can bound a value from both sides.</p>
+
+<h2 data-g="Things to try">Know what is owed</h2>
+<p>Fees in Universal Paper are computed from what was reported. Add a month&rsquo;s sales and the plugin returns the fee and its due date under the agreement&rsquo;s own rate, rounding and payment period. Nothing is recorded: this is a what-if on a copy.</p>
+<div class="xch">
+  <div class="ask">
+    <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-owed">Copy prompt</button></div>
+    <p id="p-owed">In the what-if example, suppose the supplier reports these January 2027 sales to Hypothetical Community Hospital: 100 units of GTIN 00000000000017 for 940.00, 20 units of 00000000000024 for 435.00, 50 units of 00000000000017 for 455.00 and 400 units of 00000000000031 for 1,220.00, all in USD. What admin fee is owed, and when is it due?</p>
+  </div>
+  <p class="calls"><span>ChatGPT calls</span><code>derive_state</code><code>simulate_events</code></p>
+  <figure class="got">
+    <figcaption><span class="who">What came back</span><span class="vd ok"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Report accepted</span></figcaption>
+    <p class="sum"><b>USD 61.00</b> due <b>March 3, 2027</b><span>3,050.00 reported &times; 2% admin fee</span></p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Duty</th><th>Period</th><th>Before the report</th><th>After the report</th></tr></thead>
+      <tbody>
+        <tr><td>Sales report</td><td>January 2027</td><td>Overdue since February 16</td><td>Discharged</td></tr>
+        <tr><td>Admin fee</td><td>January 2027</td><td>No base reported yet</td><td>USD 61.00, due March 3</td></tr>
+        <tr><td>Admin fee</td><td>February 2027</td><td>No base reported yet</td><td>No base reported yet</td></tr>
+      </tbody>
+    </table></div>
+  </figure>
+</div>
+<h3 id="owed-next">Try next</h3>
+<ul class="next">
+  <li><span>In the what-if example, what is overdue right now, and who owes it to whom?</span></li>
+  <li><span>In the conventional example, list every fee that was owed, what was paid and when.</span></li>
+</ul>
+
+<h2 data-g="Things to try">Check invoices</h2>
+<p>Give ChatGPT the prices on an invoice or a quote. The plugin compares each one with the contract price in the tier that applies to that member and tells you which lines are off and by how much.</p>
+<div class="xch">
+  <div class="ask">
+    <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-inv">Copy prompt</button></div>
+    <p id="p-inv">In the what-if example, Hypothetical Community Hospital was invoiced 9.40 for GTIN 00000000000017, 22.10 for 00000000000024 and 3.15 for 00000000000031. Which lines match its contract price?</p>
+  </div>
+  <p class="calls"><span>ChatGPT calls</span><code>simulate_price_conformity</code></p>
+  <figure class="got">
+    <figcaption><span class="who">What came back</span><span class="vd bad"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg>1 of 3 lines off</span></figcaption>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Item (GTIN)</th><th>Invoiced</th><th>Contract, tier B</th><th>Difference</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><code>00000000000017</code></td><td>9.40</td><td>9.40</td><td>0.00</td><td><span class="vd ok sm">Matches</span></td></tr>
+        <tr class="off"><td><code>00000000000024</code></td><td>22.10</td><td>21.75</td><td>+0.35</td><td><span class="vd bad sm">Above contract</span></td></tr>
+        <tr><td><code>00000000000031</code></td><td>3.15</td><td>3.15</td><td>0.00</td><td><span class="vd ok sm">Matches</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="fine">Prices in USD. The member&rsquo;s tier is B because the member attested it and the supplier acknowledged it. A tier is never worked out from volume.</p>
+  </figure>
+</div>
+<h3 id="invoice-next">Try next</h3>
+<ul class="next">
+  <li><span>What would those three items cost in tier A?</span></li>
+  <li><span>Is Hypothetical Community Hospital an eligible member right now, and since when?</span></li>
+</ul>
+
+<h2 data-g="Things to try">Test a change before anyone signs</h2>
+<p>Ask what would happen before you commit to it. For a termination, the plugin says whether the party may terminate, under which clause, when it would take effect and what is still owed. For an amendment by an agent, see <a href="#give-an-agent-limits-everyone-can-check">agent limits</a> above.</p>
+<div class="xch">
+  <div class="ask">
+    <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-term">Copy prompt</button></div>
+    <p id="p-term">In the what-if example, can the aggregator terminate the master agreement now? When would it take effect, and what is still owed?</p>
+  </div>
+  <p class="calls"><span>ChatGPT calls</span><code>simulate_termination</code></p>
+  <figure class="got">
+    <figcaption><span class="who">What came back</span><span class="vd ok"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Allowed, for convenience</span></figcaption>
+    <ol class="tl">
+      <li><time datetime="2027-03-01">March 1, 2027</time><b>Notice given</b><span>Under the exit clause, with 90 days&rsquo; notice.</span></li>
+      <li class="dim"><time datetime="2027-03-31">March 31, 2027</time><b>Termination for cause opens</b><span>Not available today. A breach notice was given on March 1 and its cure period has not ended. Earliest effect by that route: April 30.</span></li>
+      <li><time datetime="2027-05-30">May 30, 2027</time><b>Termination takes effect</b><span>One member participation stops with it.</span></li>
+    </ol>
+    <dl class="kv">
+      <div><dt>Still owed</dt><dd>8 duties for periods ending by May 30 are not yet discharged. 4 of them are fee payments.</dd></div>
+    </dl>
+  </figure>
+</div>
+<h3 id="change-next">Try next</h3>
+<ul class="next">
+  <li><span>What if the supplier gives notice instead?</span></li>
+  <li><span>List each duty that would still be owed, with its due date.</span></li>
+</ul>
+
+<h2 data-g="Things to try">Start from the contract you have</h2>
+<p>You do not have to renegotiate anything. An overlay describes a contract you already signed on paper, identified by the hash of its document, and adds just enough structure to compute reports and fees. The paper stays in charge: if the two disagree, the signed contract wins.</p>
+<div class="xch">
+  <div class="ask">
+    <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-over">Copy prompt</button></div>
+    <p id="p-over">Load the overlay example. What does it say about the original signed contract, and what is owed under it?</p>
+  </div>
+  <p class="calls"><span>ChatGPT calls</span><code>render_text</code><code>derive_state</code></p>
+  <figure class="got">
+    <figcaption><span class="who">What came back</span><span class="vd ok"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Active</span></figcaption>
+    <div class="paper">
+      <p class="pt">1. Overlay of an existing agreement</p>
+      <p>This record describes the agreement titled Hypothetical Group Purchasing Agreement, signed on 1 March 2024, 00:00 UTC, whose document has the hash sha256:dd996670&hellip;42497b08. It does not amend or replace that agreement. <mark>If this record and that agreement are inconsistent, the existing agreement controls.</mark></p>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Duty</th><th>Period</th><th>Due</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Sales report</td><td>February 2027</td><td>March 16, 2027</td><td>Discharged on March 12</td></tr>
+        <tr><td>Admin fee</td><td>February 2027</td><td>March 31, 2027</td><td>USD 72.00, open</td></tr>
+      </tbody>
+    </table></div>
+  </figure>
+</div>
+<h3 id="overlay-next">Try next</h3>
+<ul class="next">
+  <li><span>Adapt the overlay example: change the contract title to &ldquo;My Supply Agreement&rdquo; and the admin fee to 2.5%, then check it.</span></li>
+</ul>
+<blockquote><p><strong>The plugin never reads your document.</strong> You give it the document&rsquo;s hash, which you compute yourself from the signed file. ChatGPT can read contract text you paste and model its terms, and the plugin then checks that model. The model is ChatGPT&rsquo;s reading of your contract, so review it.</p></blockquote>
+
+<h2 data-g="Your own work">Build an app</h2>
+<p>ChatGPT can help you build software on Universal Paper too. With the plugin on, it reads the Terms and the examples through the plugin, so the app it plans works on real agreements instead of a mockup.</p>
+<div class="xch">
+  <div class="ask">
+    <div class="ask-h"><span class="who">You ask</span><button class="cbtn light" type="button" data-copy="#p-app">Copy prompt</button></div>
+    <p id="p-app">Let's build an app using Universal Paper.</p>
+  </div>
+</div>
+<p>Type <strong>@</strong> and choose Universal Paper before you send it, as in the example at the top of this page. ChatGPT writes the plan and the code. The answers the app depends on, such as whether an agreement is valid and what is owed, come from the reference interpreter, which you can install with <code>pip install universal-paper</code>.</p>
+<h3 id="app-next">Try next</h3>
+<ul class="next">
+  <li><span>Make it a fee checker for suppliers: enter a month of sales and show the admin fee owed under the what-if example.</span></li>
+  <li><span>Show me the Python to validate a bundle and list what is owed, using the universal-paper package.</span></li>
+</ul>
+<p>The <a href="/developers/">developer page</a> has the quick start, the CLI and the test vectors.</p>
+
+<h2 data-g="Your own work">Use your own agreement</h2>
+<p>The examples are a starting point. There are three ways to work on a real agreement.</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>You have</th><th>Do this</th><th>Keep in mind</th></tr></thead>
+  <tbody>
+    <tr><td>A deal in your head</td><td>Start from an example and tell ChatGPT what to change, as in <a href="#draft-a-deal">Draft a deal</a>.</td><td>The result is an unsigned proposal.</td></tr>
+    <tr><td>A signed paper contract</td><td>Describe it as an overlay, as in <a href="#start-from-the-contract-you-have">Start from the contract you have</a>.</td><td>The paper still controls.</td></tr>
+    <tr><td>A Universal Paper bundle</td><td>Paste the JSON or attach the file and ask your question.</td><td>ChatGPT sends the bundle to the server to compute on it.</td></tr>
+  </tbody>
+</table></div>
+<p>Signing happens outside ChatGPT. The plugin holds no keys and cannot sign, accept or publish anything. To sign and exchange agreements, use the reference interpreter described on the <a href="/developers/">developer page</a>.</p>
+
+<h2 data-g="Reference">Tools</h2>
+<p>You never need to name a tool. This table is here so you can recognize what ChatGPT is asking to run.</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>Tool</th><th>What it answers</th><th>Ask for it like this</th></tr></thead>
+  <tbody>
+    <tr><td>Validate a bundle<br><code>validate_bundle</code></td><td>Are the signatures, fingerprints and history sound, and did every agent stay inside its mandate?</td><td>&ldquo;Is this agreement valid?&rdquo;</td></tr>
+    <tr><td>Read agreement state<br><code>derive_state</code></td><td>What is in force on a date, at which tier and prices, and what is owed?</td><td>&ldquo;What is owed as of April 30?&rdquo;</td></tr>
+    <tr><td>Render agreement text<br><code>render_text</code></td><td>What does the agreement say, in words?</td><td>&ldquo;Show me the contract text.&rdquo;</td></tr>
+    <tr><td>Hash a JSON value<br><code>hash_object</code></td><td>What is the fingerprint of this agreement?</td><td>&ldquo;What is its fingerprint?&rdquo;</td></tr>
+    <tr><td>Simulate events<br><code>simulate_events</code></td><td>What happens if these unsigned steps are taken, in order?</td><td>&ldquo;Check this draft.&rdquo;</td></tr>
+    <tr><td>Simulate an amendment<br><code>simulate_amendment</code></td><td>May this agent change this one value under its mandate?</td><td>&ldquo;Can the agent set the factor to 1.02?&rdquo;</td></tr>
+    <tr><td>Check price conformity<br><code>simulate_price_conformity</code></td><td>Do these prices match the member&rsquo;s contract prices?</td><td>&ldquo;Which invoice lines are off?&rdquo;</td></tr>
+    <tr><td>Simulate a termination<br><code>simulate_termination</code></td><td>May this party terminate, when would it take effect and what is still owed?</td><td>&ldquo;Can we terminate now?&rdquo;</td></tr>
+    <tr><td>Check member eligibility<br><code>simulate_eligibility</code></td><td>Is this member an active participant on a date?</td><td>&ldquo;Is this member covered?&rdquo;</td></tr>
+    <tr><td>Check a signed event<br><code>check_event</code></td><td>Would this signed step be accepted if it were added now?</td><td>&ldquo;Would this signed event be accepted?&rdquo;</td></tr>
+    <tr><td>List standard Terms<br><code>list_terms</code></td><td>Which clauses can an agreement be built from?</td><td>&ldquo;What Terms are there?&rdquo;</td></tr>
+    <tr><td>Explain a Term<br><code>explain_term</code></td><td>What does one Term mean and which values does it take?</td><td>&ldquo;Explain UP:Admin-Fee.&rdquo;</td></tr>
+    <tr><td>Get an example bundle<br><code>get_example</code></td><td>Can I see a worked example?</td><td>&ldquo;Load the what-if example.&rdquo;</td></tr>
+  </tbody>
+</table></div>
+
+<h2 data-g="Reference">Built-in examples</h2>
+<p>Name any of these in a prompt. All parties, prices and dates in them are hypothetical.</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>Example</th><th>What it holds</th><th>Good for</th></tr></thead>
+  <tbody>
+    <tr><td><code>conventional</code></td><td>A signed master agreement, two member participations, and three months of reports and fees.</td><td>A first look, and reading what was owed and paid.</td></tr>
+    <tr><td><code>what-if</code></td><td>A master agreement with an overdue report, plus members who are active, terminated and not yet fully signed.</td><td>Fees, invoices, eligibility and termination.</td></tr>
+    <tr><td><code>mandate-cap</code></td><td>An agent whose price factor is bounded by its mandate.</td><td>Agent limits.</td></tr>
+    <tr><td><code>generative</code></td><td>Agent actions, two of them rejected by their mandate.</td><td>Seeing a rejection in a real history.</td></tr>
+    <tr><td><code>confidential</code></td><td>An agreement whose prices are sealed.</td><td>What an outsider can verify without seeing the numbers.</td></tr>
+    <tr><td><code>overlay</code></td><td>A paper contract referenced by its document hash.</td><td>Starting from a contract you already have.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 data-g="Reference">Limits</h2>
+<ul>
+  <li><strong>Group purchasing only, today.</strong> The 16 Terms cover agreements between a buying group, its suppliers and its members. It will not model an NDA or an employment contract.</li>
+  <li><strong>It does not read documents.</strong> No PDFs and no Word files. It works on agreements written in Universal Paper.</li>
+  <li><strong>It cannot act.</strong> It does not sign, send, accept or pay. Every result marked hypothetical changes nothing.</li>
+  <li><strong>It has no opinion on your numbers.</strong> It checks structure, signatures and rules. A fee of 30% is as valid to it as a fee of 3%.</li>
+  <li><strong>It is a draft.</strong> The language is at version <code>UP/0.1-draft</code>, before 1.0, and the Terms have not been reviewed by counsel.</li>
+  <li><strong>It is not legal advice.</strong> The tools report what an agreement written in this language says.</li>
+</ul>
+
+<h2 data-g="Reference">Privacy and data</h2>
+<div class="tablewrap"><table>
+  <thead><tr><th>Question</th><th>Answer</th></tr></thead>
+  <tbody>
+    <tr><td>What does the server receive?</td><td>Only what ChatGPT puts in a tool call: the bundle or values for that question.</td></tr>
+    <tr><td>What does it keep?</td><td>Nothing you send. No sessions, storage or access logs. It counts calls per tool name and nothing else.</td></tr>
+    <tr><td>Does it need my account?</td><td>No. There is no sign-in and no key.</td></tr>
+    <tr><td>Can I keep everything on my machine?</td><td>Yes. Run <code>uvx universal-paper-mcp</code> and connect to that instead.</td></tr>
+  </tbody>
+</table></div>
+<p>The full details are in the <a href="/privacy/">Privacy policy</a> and on the <a href="/security/">Security page</a>. Your conversation with ChatGPT is covered by OpenAI&rsquo;s own terms, not by ours.</p>
+
+<h2 data-g="Reference">Troubleshooting</h2>
+<div class="faq">
+  <details><summary>ChatGPT answers without using the plugin<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></summary><div><p>Start your message with <strong>@</strong> and choose Universal Paper, so its name shows in front of your words. If you added the plugin during this chat, start a new one. Then say what you want it used for, for example &ldquo;Use Universal Paper to check this.&rdquo;</p></div></details>
+  <details><summary>Universal Paper is not in the @ list<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></summary><div><p>Check that the plugin is added: select <strong>Plugins</strong> in the sidebar and look for Universal Paper. On a work account, ask your administrator whether plugins are enabled. To check the server itself, open <a href="https://mcp.universalpaper.org/">mcp.universalpaper.org</a> in a browser: if it shows the server name and version, the server is up and the problem is on the client side.</p></div></details>
+  <details><summary>A result says &ldquo;rejected&rdquo;. Is that an error?<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></summary><div><p>No. A rejection is an answer. The tools report what the language decides, and a rejection names the rule that was broken, such as A9 when an agent goes beyond its mandate. The <a href="/spec/axioms/">axioms</a> explain each rule.</p></div></details>
+  <details><summary>A tool reports that the input could not be processed<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></summary><div><p>The message says what was wrong, for example an unknown example name with the list of valid ones. Ask ChatGPT to fix the input and try again. If you pasted a bundle, check that it is complete JSON.</p></div></details>
+  <details><summary>ChatGPT invented a party or a key and the draft was rejected<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></summary><div><p>Ask it to keep the parties from the example and change only their names. The one proposing an agreement must be one of its parties.</p></div></details>
+  <details><summary>I am working with confidential terms<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></summary><div><p>Run the server on your own machine with <code>uvx universal-paper-mcp</code>, or seal the private values. The <code>confidential</code> example shows what a sealed agreement looks like.</p></div></details>
+  <details><summary>The tools ChatGPT lists look out of date<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></summary><div><p>Start a new chat. If the list is still old, remove Universal Paper under <strong>Plugins</strong> and add it again, so ChatGPT reads the tool list afresh.</p></div></details>
+</div>
+
+<h2 data-g="Reference">Get help</h2>
+<p>For questions and bugs, open an <a href="https://github.com/Uppercentile/universal-paper/issues">issue on GitHub</a>. For anything else, see <a href="/support/">Support and contact</a> or write to <a href="mailto:contact@uppercentile.com?subject=Universal%20Paper%20in%20ChatGPT">contact@uppercentile.com</a>. To report a vulnerability, use the private channel on the <a href="/security/">Security page</a>.</p>
+<div class="ways2">
+  <a class="ccard c-paper" href="/playground/"><span class="fn">See it</span><h3>Playground</h3><p>Write an agreement in the browser and watch its fingerprint change.</p></a>
+  <a class="ccard c-paper" href="/spec/"><span class="fn">Read it</span><h3>Specification</h3><p>The language itself: Terms, axioms and lifecycle.</p></a>
+  <a class="ccard c-paper" href="/developers/"><span class="fn">Build on it</span><h3>Developers</h3><p>The reference interpreter, the CLI and the test vectors.</p></a>
+</div>
+<div class="doc-foot"><p>Sample results on this page were returned by the hosted server on November 26, 2026, using the built-in examples. ChatGPT&rsquo;s wording will differ. The verdicts, amounts, dates and fingerprints should not. Universal Paper is created by Uppercentile and is free under Apache-2.0 and CC BY 4.0.</p></div>

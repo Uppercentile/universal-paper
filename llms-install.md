@@ -6,6 +6,10 @@ You are installing the official, read-only Universal Paper MCP server. It needs 
 
 Universal Paper is listed in Claude's connector directory: https://claude.ai/directory/universal-paper. Add it from there, or search for "Universal Paper" in Claude's Connectors directory. Guide: https://universalpaper.org/docs/claude/
 
+## In ChatGPT
+
+Universal Paper is listed as a ChatGPT plugin: https://chatgpt.com/plugins/plugin_asdk_app_6b09c3ea78c48191a51566aae625917a. Add it, then type @Universal Paper in a chat. Guide: https://universalpaper.org/docs/chatgpt/
+
 ## Preferred: the hosted server (nothing to install)
 
 Add a remote MCP server with Streamable HTTP transport:

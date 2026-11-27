@@ -593,16 +593,20 @@ def build_trust(site):
         site.add_search(path, nav, sub, "page", main, rank=8)
 
 
-# ----------------------------------------------------------------------------- docs: Claude connector guide
+# ----------------------------------------------------------------------------- docs: Claude and ChatGPT guides
+GUIDE_SIDE_CLIENTS = [("Assistants", [("/docs/claude/", "Claude", "01"), ("/docs/chatgpt/", "ChatGPT", "02")])]
 CLAUDE_GUIDE = dict(
     path="/docs/claude/", nav="Claude connector guide", h1="Universal Paper in Claude",
     title="Claude connector guide | Universal Paper",
     desc="Connect Universal Paper to Claude, then draft an agreement, check agent limits, compute fees owed and test changes, with prompts and real results.",
     lede="Connect once, and Claude can write a purchasing agreement as signed data, check it, and compute what is owed, allowed and in force.",
     updated="26 November 2026", iso="2026-11-26",
-    side=[("For Claude", [("/docs/claude/", "Connector guide", "01")]),
+    side=GUIDE_SIDE_CLIENTS + [
           ("Go deeper", [("/playground/", "Playground", "↗"), ("/developers/", "Developers", "↗"), ("/spec/", "Specification", "↗"), ("/faq/", "FAQ", "↗")]),
           ("Trust", [("/privacy/", "Privacy policy", "↗"), ("/security/", "Security", "↗"), ("/support/", "Support and contact", "↗")])],
+    src="claude", client="Claude", short="claude/",
+    search="Connect Universal Paper to Claude: quickstart, six worked prompts, tools, limits and troubleshooting",
+    howto=("Connect Universal Paper to Claude", "Add the Universal Paper connector to Claude and get a first answer."),
     steps=[("Add the connector", "add-the-connector",
             "Universal Paper is listed in Claude's connector directory at https://claude.ai/directory/universal-paper. Open the listing, "
             "or search for Universal Paper in Claude's Connectors directory, and add it. The server needs no sign-in."),
@@ -612,14 +616,36 @@ CLAUDE_GUIDE = dict(
 )
 
 
-def build_claude_guide(site):
-    """/docs/claude/: how to use the hosted MCP server from Claude. The text lives in site/theme/docs/claude.html (a band, then
-    "<!-- body -->", then the article) and its styles in claude.css. Each <h2 data-g="Group"> becomes a numbered section with a
-    link to itself, listed under its group in the table of contents. The build fails on a duplicate id or a dangling #link."""
-    g = CLAUDE_GUIDE
-    top, sep, body = (L.THEME / "docs" / "claude.html").read_text(encoding="utf-8").partition("<!-- body -->\n")
+CHATGPT_GUIDE = dict(
+    path="/docs/chatgpt/", nav="ChatGPT plugin guide", h1="Universal Paper in ChatGPT",
+    title="ChatGPT plugin guide | Universal Paper",
+    desc="Add Universal Paper to ChatGPT, then draft an agreement, check agent limits, compute fees owed and build an app, with prompts and real results.",
+    lede="Add the plugin once, and ChatGPT can write a purchasing agreement as signed data, check it, compute what is owed, and build apps on it.",
+    updated="27 November 2026", iso="2026-11-27",
+    side=GUIDE_SIDE_CLIENTS + [
+          ("Go deeper", [("/playground/", "Playground", "↗"), ("/developers/", "Developers", "↗"), ("/spec/", "Specification", "↗"), ("/faq/", "FAQ", "↗")]),
+          ("Trust", [("/privacy/", "Privacy policy", "↗"), ("/security/", "Security", "↗"), ("/support/", "Support and contact", "↗")])],
+    src="chatgpt", client="ChatGPT", short=None,
+    search="Use Universal Paper in ChatGPT: add the plugin, six worked prompts, build an app, tools, limits and troubleshooting",
+    howto=("Add Universal Paper to ChatGPT", "Add the Universal Paper plugin to ChatGPT and get a first answer."),
+    steps=[("Add the plugin", "add-the-plugin",
+            "Universal Paper is listed in ChatGPT's plugin directory at " + L.CHATGPT_DIRECTORY + ". Open the listing, "
+            "or select Plugins in the ChatGPT sidebar and search for Universal Paper, and add it. The server needs no sign-in."),
+           ("Use it in a chat", "use-it-in-a-chat", "Start a new chat, type @ and choose Universal Paper, or pick it from the + menu in the message box."),
+           ("Send a first prompt", "first-prompt",
+            "Ask: Walk me through a Universal Paper agreement using the conventional example. Who are the parties, what does it say, and is it valid?")],
+)
+
+
+def build_guide(site, g):
+    """/docs/claude/ and /docs/chatgpt/: how to use the hosted MCP server from an assistant. The text lives in
+    site/theme/docs/<src>.html (a band, then "<!-- body -->", then the article); both share claude.css. Each <h2 data-g="Group">
+    becomes a numbered section with a link to itself, listed under its group in the table of contents. The build fails on a
+    duplicate id, a dangling #link or a Tools table that does not match the server."""
+    name = f"site/theme/docs/{g['src']}.html"
+    top, sep, body = (L.THEME / "docs" / f"{g['src']}.html").read_text(encoding="utf-8").partition("<!-- body -->\n")
     if not sep:
-        raise SystemExit("site/theme/docs/claude.html: missing <!-- body --> marker")
+        raise SystemExit(f"{name}: missing <!-- body --> marker")
     plain = lambda t: re.sub(r"<[^>]+>", "", html.unescape(t))  # noqa: E731
     toc = []
 
@@ -634,17 +660,17 @@ def build_claude_guide(site):
     ids = re.findall(r'\bid="([^"]+)"', top + body)
     dups = sorted({i for i in ids if ids.count(i) > 1})
     if dups:
-        raise SystemExit(f"claude guide: duplicate ids {dups}")
+        raise SystemExit(f"{name}: duplicate ids {dups}")
     for ref in set(re.findall(r'<a\b[^>]*\bhref="#([^"]+)"|data-copy="#([^"]+)"|aria-controls="([^"]+)"', top + body)):
         for r in filter(None, ref):
             if r not in ids:
-                raise SystemExit(f"claude guide: #{r} points at nothing")
+                raise SystemExit(f"{name}: #{r} points at nothing")
 
-    # The Tools table must name every tool the server offers, by the title Claude shows.
+    # The Tools table must name every tool the server offers, by its title.
     titles = mcp_tool_docs(site, "TOOL_TITLES")
     listed = dict((n, html.unescape(t)) for t, n in re.findall(r"<tr><td>([^<]+)<br><code>(\w+)</code></td>", body))
     if listed != titles:
-        raise SystemExit(f"claude guide: the Tools table does not match the MCP server's tools and titles: {listed} != {titles}")
+        raise SystemExit(f"{name}: the Tools table does not match the MCP server's tools and titles: {listed} != {titles}")
 
     def label_cells(m):  # each cell carries its column heading, so tables can stack on phones
         heads = re.findall(r"<th>(.*?)</th>", m.group(1), re.S)
@@ -694,16 +720,16 @@ def build_claude_guide(site):
            "isPartOf": {"@id": site.url("/#website")}, "author": CREATOR, "publisher": CREATOR,
            "about": {"@type": "SoftwareApplication", "name": "Universal Paper MCP server", "applicationCategory": "DeveloperApplication",
                      "operatingSystem": "Any", "url": MCP["endpoint"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}},
-          {"@context": "https://schema.org", "@type": "HowTo", "name": "Connect Universal Paper to Claude",
-           "description": "Add the Universal Paper connector to Claude and get a first answer.",
+          {"@context": "https://schema.org", "@type": "HowTo", "name": g["howto"][0], "description": g["howto"][1],
            "step": [{"@type": "HowToStep", "position": k, "name": n, "text": t, "url": f"{url}#{a}"} for k, (n, a, t) in enumerate(g["steps"], 1)]}]
     style = TRUST_STYLE.replace("</style>", (L.THEME / "docs" / "claude.css").read_text(encoding="utf-8") + "</style>")
     site.write(g["path"].lstrip("/") + "index.html", site.page(g["path"], g["title"], g["desc"], main, style=style, ld=ld))
     site.add_page(g["path"], "0.8", "monthly")
-    site.add_search(g["path"], g["nav"], "Connect Universal Paper to Claude: quickstart, six worked prompts, tools, limits and troubleshooting",
-                    "page", main, rank=6)
-    # /claude/ is the short address first proposed for this page: keep it working, pointing here.
-    site.write("claude/index.html", f'<!doctype html><meta charset="utf-8"><title>{esc(g["title"])}</title>'
+    site.add_search(g["path"], g["nav"], g["search"], "page", main, rank=6)
+    if not g["short"]:
+        return
+    # /claude/ is the short address first proposed for the Claude guide: keep it working, pointing here.
+    site.write(g["short"] + "index.html", f'<!doctype html><meta charset="utf-8"><title>{esc(g["title"])}</title>'
                                     f'<meta name="description" content="{esc(g["desc"])}"><link rel="canonical" href="{url}"><meta name="robots" content="noindex">'
                                     f'<meta http-equiv="refresh" content="0; url={g["path"]}"><a href="{g["path"]}">{esc(g["nav"])}</a>')
 
@@ -1525,6 +1551,7 @@ def build_agent_json(site):
             "holdsKeys": False, "registryName": server["name"], "version": server["version"],
             "package": {"registry": pkg["registryType"], "name": pkg["identifier"], "version": pkg["version"], "run": f"uvx {pkg['identifier']}", "transport": pkg["transport"]["type"]},
             "docs": MCP["docs"], "claudeDirectory": MCP["claudeDirectory"], "claudeGuide": u("/docs/claude/"),
+            "chatgptDirectory": MCP["chatgptDirectory"], "chatgptGuide": u("/docs/chatgpt/"),
             "tools": [{"name": n, "description": first_sentence(d)} for n, d in tools.items()],
         },
         "resources": {
@@ -1537,6 +1564,7 @@ def build_agent_json(site):
             "integrations": u("/integrations/index.json"),
             "faq": u("/faq/"),
             "claudeGuide": u("/docs/claude/"),
+            "chatgptGuide": u("/docs/chatgpt/"),
             "privacy": u("/privacy/"),
             "terms": u("/terms/"),
             "security": u("/security/"),
@@ -1563,7 +1591,8 @@ MCP = {
     "transport": "streamable-http",
     "pypi": "universal-paper-mcp",
     "registry": "io.github.Uppercentile/universal-paper",
-    "claudeDirectory": "https://claude.ai/directory/universal-paper",
+    "claudeDirectory": L.CLAUDE_DIRECTORY,
+    "chatgptDirectory": L.CHATGPT_DIRECTORY,
     "stats": "https://mcp.universalpaper.org/stats",
     "docs": "https://universalpaper.org/developers/#mcp",
     "readOnly": True,
@@ -1673,6 +1702,7 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 - [Developers]({site.url('/developers/')}): primitives, the 16-Term library, code examples, the CLI and test vectors
 - [MCP server]({site.url('/developers/#mcp')}): the official, read-only Universal Paper MCP server
 - [Claude connector guide]({site.url('/docs/claude/')}): connect Universal Paper to Claude, with six worked prompts and their results
+- [ChatGPT plugin guide]({site.url('/docs/chatgpt/')}): add Universal Paper to ChatGPT, with the same worked prompts and building an app on it
 - [FAQ]({site.url('/faq/')}): plain-language answers for GPOs, suppliers, members and developers
 - [Licenses]({site.url('/license/')}): what is licensed how, and how to credit it
 - [Privacy policy]({site.url('/privacy/')}): what the site and hosted MCP server process and keep (almost nothing)
@@ -1689,6 +1719,7 @@ The official Universal Paper MCP server gives an agent the reference interpreter
 - Hosted (Streamable HTTP, no sign-in): {MCP["endpoint"]}
 - Local: `uvx {MCP["pypi"]}` (PyPI), or `up-mcp` from the universal-paper package
 - In Claude: listed in Claude's connector directory ({MCP["claudeDirectory"]}); search for "Universal Paper" in Claude. Guide: {site.url('/docs/claude/')}
+- In ChatGPT: listed as a plugin ({MCP["chatgptDirectory"]}); add it, then type @Universal Paper in a chat. Guide: {site.url('/docs/chatgpt/')}
 - MCP Registry name: {MCP["registry"]}
 - The hosted server is stateless: no sessions, storage, access logs or telemetry, and it never reads file paths (pass bundles as JSON). It only counts calls per tool name, shown at {MCP["stats"]}.
 
@@ -1827,7 +1858,8 @@ def main():
     build_faq(site)
     build_license(site)
     build_trust(site)
-    build_claude_guide(site)
+    build_guide(site, CLAUDE_GUIDE)
+    build_guide(site, CHATGPT_GUIDE)
     build_spec(site)
     build_integrations(site)
     build_schemas(site)

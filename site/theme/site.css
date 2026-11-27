@@ -571,3 +571,14 @@ a.ccard:hover .go { opacity: 1; transform: none; }
 .legal .trust { display: flex; flex-wrap: wrap; gap: 4px 18px; flex-basis: 100%; }
 .legal .trust a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); text-decoration: none; font-size: 14px; }
 .legal .trust a:hover, .legal .trust a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--coral); text-underline-offset: 4px; }
+
+/* "Listed in Claude · ChatGPT": the hosted MCP server's one-step listings (footer, developer page) */
+.listed { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0 0; font-size: 13.5px; color: var(--ink-3); }
+.listed > span { margin-right: 2px; }
+.lpill { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-2); background: #fff; color: var(--ink); font: 500 14px/1 var(--sans); text-decoration: none; }
+.lpill:hover { border-color: var(--ink-3); }
+.lmark { flex: none; width: 14px; height: 14px; fill: #000; }
+.listed.on-dark .lmark { fill: #fff; }
+.listed.on-dark > span { color: rgba(238,237,248,.62); }
+.listed.on-dark .lpill { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); color: #fff; }
+.listed.on-dark .lpill:hover { background: rgba(255,255,255,.16); }

@@ -217,3 +217,5 @@ dl.gloss dd { margin: 0; font-size: 15.5px; line-height: 1.5; color: var(--ink-2
 .cg .prose td { min-width: 0; }
 @media (min-width: 641px) { .cg .prose th, .cg .prose td { min-width: 96px; } }
 @media print { .nav, .side, .toc, .side-mobile, footer, .cbtn, .cg-ctas { display: none !important; } .docs.cg { display: block; } .faq details > div { display: block; } }
+/* ChatGPT guide: the plugin mention in front of the prompt, as ChatGPT shows it */
+.cg-at { font-weight: 600; color: var(--lilac); }
