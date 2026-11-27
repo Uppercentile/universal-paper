@@ -85,6 +85,21 @@ def test_server_lists_every_tool_as_read_only():
         assert getattr(ann, "read_only_hint", getattr(ann, "readOnlyHint", None)) is True
 
 
+def test_every_tool_has_a_title_on_the_tool_and_in_its_annotations():
+    """Clients show the title to people in place of the function name, and directories require one."""
+    pytest.importorskip("mcp")
+    import anyio
+
+    assert set(m.TOOL_TITLES) == set(m.TOOL_DOCS)
+    assert len(set(m.TOOL_TITLES.values())) == len(m.TOOL_TITLES)
+    for t in anyio.run(m.build_server().list_tools):
+        title = m.TOOL_TITLES[t.name]
+        assert 3 <= len(title) <= 40 and title[0].isupper() and not title.endswith(".")
+        assert getattr(t.annotations, "title", None) == title, t.name
+        if hasattr(t, "title"):  # SDKs with tool titles
+            assert t.title == title, t.name
+
+
 def test_hosted_mode_refuses_file_paths_and_local_mode_restores_them():
     pytest.importorskip("mcp")
     path = str(EX / "conventional" / "bundle.json")
@@ -275,5 +290,6 @@ def test_every_tool_and_parameter_is_described_for_agents():
         assert siblings, f"{t.name} names no sibling tool to choose between"
     # Scope decisions: no volume thresholds for tiers, no net-new-business, no early-termination fee.
     text = " ".join(m.TOOL_DOCS.values()) + " ".join(d for p in m.PARAM_DOCS.values() for d in p.values())
+    text += " " + " ".join(m.TOOL_TITLES.values())
     for banned in ("net new", "net-new", "early termination fee", "threshold"):
         assert banned not in text.lower()
