@@ -4,6 +4,10 @@ All notable changes to the specification, the Term library, and the reference im
 
 ## [Unreleased]
 
+### Changed
+
+- MCP tools: `hash_object`'s `obj` and `simulate_amendment`'s `value` now declare their JSON types in the input schema, and a test checks that every tool parameter has a type. `obj`'s description no longer says null is accepted: as spec 01 §1 says, Universal Paper JSON has no null and no fractional numbers. No change to what any tool accepts or computes.
+
 ## [0.1.3] - 2026-11-27
 
 ### Added
