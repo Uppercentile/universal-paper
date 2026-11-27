@@ -53,15 +53,24 @@ def section_of(path):
 
 
 # ----------------------------------------------------------------------------- chrome
+def github_star(repo_url):
+    """The nav's GitHub control: one fixed-size pill, [GitHub mark] GitHub | [star] Star. GitHub has no way to star
+    from another site, and the privacy policy rules out loading its button or API, so this links to the repository,
+    where the Star button is; site.js opens it in a compact window on desktop (a new tab otherwise). No star count: it would be fetched from GitHub and is tiny at launch."""
+    return (f'<a class="gh-star" href="{repo_url}" target="_blank" rel="noopener" data-star aria-label="Star Universal Paper on GitHub (opens GitHub)">'
+            f'<span class="gs-repo">{ico("github")}<span class="gs-name">GitHub</span></span>'
+            f'<span class="gs-act">{ico("star")}Star</span></a>')
+
+
 def header(path, repo_url):
     cur = section_of(path)
     links = "".join(f'<li><a href="{h}"' + (' aria-current="page"' if h == cur else "") + f">{t}</a></li>" for h, t in NAV)
     sheet = "".join(f'<a href="{h}">{t}<small>' + ("You are here" if h == cur else "") + "</small></a>" for h, t in NAV)
     sheet += '<a href="/playground/">Playground<small>Runs in your browser</small></a>'
     if repo_url:
-        sheet += f'<a href="{repo_url}">GitHub<small>Source ↗</small></a>'
+        sheet += f'<a href="{repo_url}" target="_blank" rel="noopener" data-star>Star on GitHub<small class="gs-sheet">{ico("star")}Source ↗</small></a>'
     sheet += '<a href="/license/">Licenses<small></small></a>'
-    gh = f'\n      <a class="txt" href="{repo_url}">GitHub</a>' if repo_url else ""
+    gh = f'\n      {github_star(repo_url)}' if repo_url else ""
     return f"""<header class="nav" id="nav">
   <div class="wrap">
     <a class="brand" href="/" aria-label="Universal Paper home"><span class="mark" aria-hidden="true"></span>Universal Paper</a>
