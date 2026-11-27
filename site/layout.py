@@ -5,6 +5,7 @@ icons live in site/theme/ and are served from /assets/. Hand-designed page bodie
 specification index, integrations, licenses) live in site/theme/pages/ as fragments: an optional <style>, one
 <main id="main"> and optional <script>s. Everything else is generated.
 """
+import hashlib
 import html
 import json
 import re
@@ -107,6 +108,18 @@ SEARCH = """<dialog class="sd" id="search" aria-label="Search">
 </dialog>"""
 
 
+def _asset_version():
+    """Short hash of site.css + site.js. Pages caches assets for ten minutes, so without it a phone can
+    pair fresh HTML with a stale stylesheet right after a deploy."""
+    h = hashlib.sha256()
+    for name in ("site.css", "site.js"):
+        h.update((THEME / name).read_bytes())
+    return h.hexdigest()[:10]
+
+
+ASSET_V = _asset_version()
+
+
 def document(*, title, head, header_html, footer_html, main, style="", scripts="", announce=""):
     """A whole page. `head` is the generated meta block (description, canonical, Open Graph, JSON-LD)."""
     return f"""<!doctype html>
@@ -117,7 +130,7 @@ def document(*, title, head, header_html, footer_html, main, style="", scripts="
 <title>{esc(title)}</title>
 {head}
 <link rel="preload" href="/assets/fonts/hedvig-brand-serif-variable-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.css?v={ASSET_V}">
 {style}
 </head>
 <body>
@@ -132,8 +145,8 @@ def document(*, title, head, header_html, footer_html, main, style="", scripts="
 
 {SEARCH}
 
-<script src="/assets/search-index.js"></script>
-<script src="/assets/site.js"></script>
+<script src="/assets/search-index.js?v={ASSET_V}"></script>
+<script src="/assets/site.js?v={ASSET_V}"></script>
 {scripts}
 </body>
 </html>

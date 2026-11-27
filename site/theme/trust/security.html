@@ -46,8 +46,16 @@
   <li><strong>The Playground runs in your browser.</strong> It sends nothing to a server.</li>
   <li><strong>Everything is served over HTTPS.</strong></li>
   <li><strong>The website is static.</strong> It sets no cookies and runs no third-party scripts.</li>
+  <li><strong>The hosted server is locked down.</strong> Its container runs as a non-root user, holds no secrets and pins its dependency versions.</li>
 </ul>
 <p>The <a href="/privacy/">Privacy policy</a> describes what each service processes.</p>
+
+<h2>How releases and code are protected</h2>
+<ul>
+  <li><strong>Releases are signed.</strong> Version 0.1.2 on PyPI carries a signed provenance attestation that ties it to <a href="https://github.com/Uppercentile/universal-paper/blob/main/.github/workflows/release.yml">release.yml</a> in the repository. Publishing uses trusted publishing, so there are no stored upload tokens to steal.</li>
+  <li><strong>Dependencies are updated automatically.</strong> Dependabot checks the Python packages and GitHub Actions monthly.</li>
+  <li><strong>Two engines are checked against each other.</strong> On every change, CI runs differential tests between the Python and JavaScript engines, plus fuzz tests, with a read-only token.</li>
+</ul>
 
 <h2>Things to know before you rely on it</h2>
 <ul>
@@ -58,7 +66,7 @@
 
 <h2>Audit and policy files</h2>
 <ul>
-  <li>The audit done before publication is in <a href="https://github.com/Uppercentile/universal-paper/blob/main/AUDIT.md">AUDIT.md</a>.</li>
+  <li><strong>A pre-release audit found 16 issues.</strong> All are fixed, each with a regression test. The audit was done by our own team and is not a substitute for an independent review. Read it in <a href="https://github.com/Uppercentile/universal-paper/blob/main/AUDIT.md">AUDIT.md</a>.</li>
   <li>The full policy is in <a href="https://github.com/Uppercentile/universal-paper/blob/main/SECURITY.md">SECURITY.md</a>. If this page and that file differ, the file governs.</li>
   <li>Machine-readable contact details are in <a href="/.well-known/security.txt">security.txt</a>.</li>
 </ul>

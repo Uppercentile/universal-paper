@@ -559,7 +559,7 @@ def build_trust(site):
             def row(r):
                 cells = iter(heads)
                 return "<tr>" + re.sub(r"<td>", lambda _: f'<td data-th="{esc(next(cells, ""))}">', r.group(1)) + "</tr>"
-            return "<table>" + re.sub(r"<tr>((?:<td>.*?</td>\s*)+)</tr>", row, m.group(1), flags=re.S) + "</table>"
+            return "<table>" + re.sub(r"<tr>(.*?)</tr>", row, m.group(1), flags=re.S) + "</table>"
         body = re.sub(r"<table>(.*?)</table>", label_cells, body, flags=re.S)
         toc_html = ('<aside class="toc" aria-label="On this page"><b>On this page</b>'
                     + "".join(f'<a href="#{i}"><span class="tn">{k:02d}</span>{t}</a>' for k, (i, t) in enumerate(toc, 1)) + "</aside>")
@@ -1241,7 +1241,7 @@ def build_fpc_demo(site, page):
     body = page[page.index("<body"):]
     i, j = re.search(r'<main id="main"[^>]*>', body).start(), body.rindex("</main>") + len("</main>")
     main, tail = body[i:j], body[j:]
-    scripts = "\n".join(s for s in re.findall(r"<script\b[^>]*>.*?</script>", tail, re.S) if "src=" not in s.split(">", 1)[0])
+    scripts = "\n".join(s for s in re.findall(r"<script\b[^>]*>.*?</script\b[^>]*>", tail, re.S | re.I) if "src=" not in s.split(">", 1)[0])
     path = "/integrations/fingerprint-coordination/demo/"
     links = [("alternate", "application/json", "scenario.json", "Machine-readable scenario (JSON)"),
              ("describedby", "application/json", "/integrations/index.json", "Integrations index (JSON)")]
