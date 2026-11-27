@@ -4,6 +4,8 @@ All notable changes to the specification, the Term library, and the reference im
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-11-27
+
 ### Added
 
 - Optional Legal Context Protocol integration, outside the language: `docs/integrations/legal-context-protocol.md`, a reference adapter in `integrations/lcp/`, worked examples in `examples/integrations/lcp/`, and an optional page at universalpaper.org/integrations/. No change to the spec, schemas, fingerprints, Terms or engines.
