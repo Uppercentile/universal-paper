@@ -134,15 +134,6 @@ if (toc.length) {
   addEventListener('scroll', spy, { passive: true }); spy();
 }
 
-/* ── GitHub star: open the repo in a compact window on desktop (GitHub can't be starred from here); a new tab otherwise ── */
-$$('[data-star]').forEach(a => a.addEventListener('click', e => {
-  if (e.metaKey || e.ctrlKey || e.shiftKey || e.button || !matchMedia('(min-width: 721px) and (pointer: fine)').matches) return;
-  const w = Math.min(1080, screen.availWidth - 80), h = Math.min(760, screen.availHeight - 80);
-  const x = (screen.availLeft || 0) + (screen.availWidth - w) / 2, y = (screen.availTop || 0) + (screen.availHeight - h) / 2;
-  const win = window.open(a.href, 'up-github-star', `popup,width=${w},height=${h},left=${x},top=${y}`);
-  if (win) { e.preventDefault(); try { win.opener = null; } catch {} win.focus(); }
-}));
-
 /* ── Copy buttons ── */
 $$('[data-copy]').forEach(b => b.addEventListener('click', async () => {
   const src = b.dataset.copy.startsWith('#') ? $(b.dataset.copy)?.innerText : b.dataset.copy;
