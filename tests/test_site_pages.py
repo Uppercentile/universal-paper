@@ -418,10 +418,10 @@ def test_nav_github_star_is_a_plain_link(dist):
         s = f.read_text(encoding="utf-8")
         if 'id="nav"' not in s:
             continue
-        m = re.search(r'<a class="gh-star" href="([^"]+)" aria-label="Star Universal Paper on GitHub">(.*?)</a>', s)
+        m = re.search(r'<a class="gh-star" href="([^"]+)" target="_blank" rel="noopener" data-star aria-label="Star Universal Paper on GitHub \(opens GitHub\)">(.*?)</a>', s)
         assert m, f
         assert m.group(1) == "https://github.com/Uppercentile/universal-paper", f
         assert "#i-github" in m.group(2) and "#i-star" in m.group(2) and not re.search(r"\d", re.sub(r"<[^>]+>", "", m.group(2))), f
-        assert f'<a href="{m.group(1)}">Star on GitHub<small' in s, f
+        assert f'<a href="{m.group(1)}" target="_blank" rel="noopener" data-star>Star on GitHub<small' in s, f
     css = (ROOT / "site" / "theme" / "site.css").read_text(encoding="utf-8")
     assert re.search(r"\.gh-star \{[^}]*height: 36px", css) and "buttons.github.io" not in css
