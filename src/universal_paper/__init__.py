@@ -4,4 +4,4 @@ The interpreter is a convenience, not a dependency: every result it produces
 can be reproduced by hand from the specification in spec/.
 """
 SPEC = "UP/0.1-draft"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
