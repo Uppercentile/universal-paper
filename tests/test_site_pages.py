@@ -409,3 +409,19 @@ def test_chatgpt_plugin_guide_is_served_and_linked(dist):
         assert "https://universalpaper.org/docs/chatgpt/" in (dist / f).read_text(encoding="utf-8"), f
     agent = json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))
     assert agent["mcp"]["chatgptDirectory"] == d and agent["resources"]["chatgptGuide"].endswith("/docs/chatgpt/")
+
+
+def test_nav_github_star_is_a_plain_link(dist):
+    """Every page's nav carries the GitHub star pill: a fixed-size, self-hosted link to the repository (no GitHub
+    button script, no API call, no count), and the phone menu offers the same link."""
+    for f in dist.rglob("*.html"):
+        s = f.read_text(encoding="utf-8")
+        if 'id="nav"' not in s:
+            continue
+        m = re.search(r'<a class="gh-star" href="([^"]+)" aria-label="Star Universal Paper on GitHub">(.*?)</a>', s)
+        assert m, f
+        assert m.group(1) == "https://github.com/Uppercentile/universal-paper", f
+        assert "#i-github" in m.group(2) and "#i-star" in m.group(2) and not re.search(r"\d", re.sub(r"<[^>]+>", "", m.group(2))), f
+        assert f'<a href="{m.group(1)}">Star on GitHub<small' in s, f
+    css = (ROOT / "site" / "theme" / "site.css").read_text(encoding="utf-8")
+    assert re.search(r"\.gh-star \{[^}]*height: 36px", css) and "buttons.github.io" not in css

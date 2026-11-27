@@ -75,9 +75,21 @@ p { text-wrap: pretty; }
 .navlinks a { text-decoration: none; font-size: 16px; color: var(--ink); opacity: .82; }
 .navlinks a:hover { opacity: 1; }
 .nav .right { margin-left: auto; display: flex; align-items: center; gap: 20px; }
-.nav .right .txt { text-decoration: none; font-size: 16px; }
+/* GitHub star pill: fixed height and icon sizes so it can't mis-size; label shortens, then hides into the menu */
+.gh-star { display: inline-flex; align-items: stretch; flex: none; box-sizing: border-box; height: 36px; border: 1px solid var(--line-2); border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.55); color: var(--ink); text-decoration: none; font: 500 14px/1 var(--sans); white-space: nowrap; transition: background .2s, border-color .2s; }
+.gh-star > span { display: inline-flex; align-items: center; gap: 7px; padding: 0 12px; }
+.gh-star .gs-act { border-left: 1px solid var(--line-2); }
+.gh-star .ico { width: 16px; height: 16px; }
+.gh-star .gs-act .ico { transition: fill .2s, color .2s, transform .3s var(--ease); }
+.gh-star:hover { background: #fff; border-color: var(--ink-3); }
+.gh-star:hover .gs-act .ico { fill: var(--sun); color: var(--sun-ink); transform: rotate(-12deg) scale(1.12); }
+@media (prefers-reduced-motion: reduce) { .gh-star:hover .gs-act .ico { transform: none; } }
+.menu-sheet small.gs-sheet { display: inline-flex; align-items: center; gap: 6px; }
+.menu-sheet small.gs-sheet .ico { width: 13px; height: 13px; }
+@media (max-width: 1399px) { .gh-star .gs-name { display: none; } .gh-star .gs-repo { padding: 0 10px 0 12px; } }
+@media (max-width: 720px) { .gh-star { display: none; } }
 .nav .btn { height: 44px; padding: 0 20px; font-size: 15px; }
-@media (max-width: 1040px) { .navlinks, .nav .right .txt { display: none; } }
+@media (max-width: 1040px) { .navlinks { display: none; } }
 @media (max-width: 520px) { .nav .wrap { gap: 12px; height: 64px; } .brand { font-size: 20px; } .brand .mark { width: 26px; height: 26px; } .nav .btn { height: 40px; padding: 0 16px; font-size: 14px; } }
 @media (max-width: 900px) { .chain ol { grid-template-columns: repeat(2, minmax(0,1fr)); row-gap: 14px; } .chain ol::before { display: none; } }
 
@@ -143,8 +155,8 @@ kbd { font: 500 11.5px/1 var(--mono); font-variation-settings: "MONO" 1; padding
 .menu-sheet[hidden] { display: none; }
 .menu-sheet a { padding: 14px 4px; border-bottom: 1px solid var(--line); text-decoration: none; font: 400 24px/1.1 var(--serif); letter-spacing: -.01em; display: flex; justify-content: space-between; align-items: center; }
 .menu-sheet a small { font: 500 11px/1 var(--mono); font-variation-settings: "MONO" 1; letter-spacing: .1em; color: var(--ink-3); text-transform: uppercase; }
-@media (max-width: 1240px) { .nav .right .txt { display: none; } .search-btn { min-width: 0; } .search-btn span, .search-btn kbd { display: none; } .search-btn { width: 44px; padding: 0; justify-content: center; } }
-@media (max-width: 1100px) { .menu-btn { display: grid; } .navlinks { display: none; } }
+@media (max-width: 1320px) { .search-btn { min-width: 0; } .search-btn span, .search-btn kbd { display: none; } .search-btn { width: 44px; padding: 0; justify-content: center; } }
+@media (max-width: 1140px) { .menu-btn { display: grid; } .navlinks { display: none; } }
 @media (max-width: 520px) { .nav .right { gap: 8px; } .nav .right .btn.dark { display: none; } .menu-sheet { inset: 64px 0 auto 0; } }
 
 /* Search dialog */
