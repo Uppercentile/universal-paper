@@ -79,7 +79,7 @@ def footer(legal, tagline, repo_url, extra_build=()):
            f'<div class="cmd url" style="max-width:460px"><code>{mcp}</code><button class="cbtn" type="button" '
            f'data-copy="{mcp}">{ico("copy", "width:14px;height:14px")}Copy</button></div>\n'
            '<p class="fine" style="margin-top:10px">Or run it locally: <code class="mono" style="color:var(--ink)">uvx universal-paper-mcp</code></p>')
-    build = [("/developers/", "Developers"), ("/developers/#mcp", "MCP server"), ("/playground/", "Playground"),
+    build = [("/developers/", "Developers"), ("/developers/#mcp", "MCP server"), ("/docs/claude/", "Claude connector"), ("/playground/", "Playground"),
              ("/integrations/", "Integrations"), *extra_build]
     if repo_url:
         build.append((repo_url, "GitHub ↗"))

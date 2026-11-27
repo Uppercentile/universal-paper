@@ -593,6 +593,121 @@ def build_trust(site):
         site.add_search(path, nav, sub, "page", main, rank=8)
 
 
+# ----------------------------------------------------------------------------- docs: Claude connector guide
+CLAUDE_GUIDE = dict(
+    path="/docs/claude/", nav="Claude connector guide", h1="Universal Paper in Claude",
+    title="Claude connector guide | Universal Paper",
+    desc="Connect Universal Paper to Claude, then draft an agreement, check agent limits, compute fees owed and test changes, with prompts and real results.",
+    lede="Connect once, and Claude can write a purchasing agreement as signed data, check it, and compute what is owed, allowed and in force.",
+    updated="26 November 2026", iso="2026-11-26",
+    side=[("For Claude", [("/docs/claude/", "Connector guide", "01")]),
+          ("Go deeper", [("/playground/", "Playground", "↗"), ("/developers/", "Developers", "↗"), ("/spec/", "Specification", "↗"), ("/faq/", "FAQ", "↗")]),
+          ("Trust", [("/privacy/", "Privacy policy", "↗"), ("/security/", "Security", "↗"), ("/support/", "Support and contact", "↗")])],
+    steps=[("Add the connector", "add-the-connector",
+            "In Claude, open the Connectors directory, select Add, then Add custom connector. Enter the name Universal Paper and the "
+            "address https://mcp.universalpaper.org/mcp. The server needs no sign-in."),
+           ("Turn it on in a chat", "turn-it-on", "In a new chat, select + in the message box, find Universal Paper under Connectors, and turn its toggle on."),
+           ("Send a first prompt", "first-prompt",
+            "Ask: Walk me through a Universal Paper agreement using the conventional example. Who are the parties, what does it say, and is it valid?")],
+)
+
+
+def build_claude_guide(site):
+    """/docs/claude/: how to use the hosted MCP server from Claude. The text lives in site/theme/docs/claude.html (a band, then
+    "<!-- body -->", then the article) and its styles in claude.css. Each <h2 data-g="Group"> becomes a numbered section with a
+    link to itself, listed under its group in the table of contents. The build fails on a duplicate id or a dangling #link."""
+    g = CLAUDE_GUIDE
+    top, sep, body = (L.THEME / "docs" / "claude.html").read_text(encoding="utf-8").partition("<!-- body -->\n")
+    if not sep:
+        raise SystemExit("site/theme/docs/claude.html: missing <!-- body --> marker")
+    plain = lambda t: re.sub(r"<[^>]+>", "", html.unescape(t))  # noqa: E731
+    toc = []
+
+    def sec(m):
+        grp, t = m.group(1), m.group(2)
+        toc.append((gh_slug(plain(t)), t, grp))
+        i = toc[-1][0]
+        return (f'<h2 id="{i}" class="sec"><span class="sn">{len(toc):02d}</span><span>{t}</span>'
+                f'<a class="anchor" href="#{i}" aria-label="Link to this section: {esc(plain(t))}">#</a></h2>')
+    body = re.sub(r'<h2(?: data-g="([^"]*)")?>(.*?)</h2>', sec, body, flags=re.S)
+
+    ids = re.findall(r'\bid="([^"]+)"', top + body)
+    dups = sorted({i for i in ids if ids.count(i) > 1})
+    if dups:
+        raise SystemExit(f"claude guide: duplicate ids {dups}")
+    for ref in set(re.findall(r'<a\b[^>]*\bhref="#([^"]+)"|data-copy="#([^"]+)"|aria-controls="([^"]+)"', top + body)):
+        for r in filter(None, ref):
+            if r not in ids:
+                raise SystemExit(f"claude guide: #{r} points at nothing")
+
+    # The Tools table must name every tool the server offers, by the title Claude shows.
+    titles = mcp_tool_docs(site, "TOOL_TITLES")
+    listed = dict((n, html.unescape(t)) for t, n in re.findall(r"<tr><td>([^<]+)<br><code>(\w+)</code></td>", body))
+    if listed != titles:
+        raise SystemExit(f"claude guide: the Tools table does not match the MCP server's tools and titles: {listed} != {titles}")
+
+    def label_cells(m):  # each cell carries its column heading, so tables can stack on phones
+        heads = re.findall(r"<th>(.*?)</th>", m.group(1), re.S)
+
+        def row(r):
+            cells = iter(heads)
+            return f"<tr{r.group(1)}>" + re.sub(r"<td>", lambda _: f'<td data-th="{esc(plain(next(cells, "")))}">', r.group(2)) + "</tr>"
+        return "<table>" + re.sub(r"<tr([^>]*)>(.*?)</tr>", row, m.group(1), flags=re.S) + "</table>"
+    body = re.sub(r"<table>(.*?)</table>", label_cells, body, flags=re.S)
+
+    side = '<nav class="side" aria-label="Guide and related pages">' + "".join(
+        f"<b>{grp}</b>" + "".join(f'<a href="{h}"' + (' aria-current="page"' if h == g["path"] else "") + f'><span class="n">{n}</span>{t}</a>'
+                                  for h, t, n in links) for grp, links in g["side"]) + "</nav>"
+    toc_html, last = '<aside class="toc" aria-label="On this page">', None
+    for k, (i, t, grp) in enumerate(toc, 1):
+        if grp and grp != last:
+            toc_html += f"<b>{grp}</b>"
+        last = grp
+        short = t.replace(" everyone can check", "").replace(" before anyone signs", "")
+        toc_html += f'<a href="#{i}"><span class="tn">{k:02d}</span>{short}</a>'
+    toc_html += "</aside>"
+    main = f"""<main id="main">
+  <div class="wrap phero cg-hero">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Universal Paper</a><span aria-hidden="true">/</span><span>{g["nav"]}</span></nav>
+    <h1 class="display">{g["h1"]}</h1>
+    <p class="lede">{g["lede"]}</p>
+    <p class="tmeta">Updated {g["updated"]} · {len(titles)} read-only tools · No sign-in</p>
+  </div>
+{top.strip()}
+  <div class="wrap docs trust cg">
+    {side}
+    <div style="min-width:0">
+      <details class="side-mobile"><summary>Guide and related pages <svg class="ico"><use href="#i-down"/></svg></summary>{side}</details>
+      <article class="prose">
+{body.strip()}
+      </article>
+    </div>
+    {toc_html}
+  </div>
+</main>"""
+    url = site.url(g["path"])
+    ld = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "Universal Paper", "item": site.url("/")},
+              {"@type": "ListItem", "position": 2, "name": g["nav"], "item": url}]},
+          {"@context": "https://schema.org", "@type": "TechArticle", "@id": url, "url": url, "headline": g["h1"], "name": g["title"],
+           "description": g["desc"], "inLanguage": "en", "dateModified": g["iso"], "proficiencyLevel": "Beginner",
+           "isPartOf": {"@id": site.url("/#website")}, "author": CREATOR, "publisher": CREATOR,
+           "about": {"@type": "SoftwareApplication", "name": "Universal Paper MCP server", "applicationCategory": "DeveloperApplication",
+                     "operatingSystem": "Any", "url": MCP["endpoint"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}},
+          {"@context": "https://schema.org", "@type": "HowTo", "name": "Connect Universal Paper to Claude",
+           "description": "Add the Universal Paper connector to Claude and get a first answer.",
+           "step": [{"@type": "HowToStep", "position": k, "name": n, "text": t, "url": f"{url}#{a}"} for k, (n, a, t) in enumerate(g["steps"], 1)]}]
+    style = TRUST_STYLE.replace("</style>", (L.THEME / "docs" / "claude.css").read_text(encoding="utf-8") + "</style>")
+    site.write(g["path"].lstrip("/") + "index.html", site.page(g["path"], g["title"], g["desc"], main, style=style, ld=ld))
+    site.add_page(g["path"], "0.8", "monthly")
+    site.add_search(g["path"], g["nav"], "Connect Universal Paper to Claude: quickstart, six worked prompts, tools, limits and troubleshooting",
+                    "page", main, rank=6)
+    # /claude/ is the short address first proposed for this page: keep it working, pointing here.
+    site.write("claude/index.html", f'<!doctype html><meta charset="utf-8"><title>{esc(g["title"])}</title>'
+                                    f'<meta name="description" content="{esc(g["desc"])}"><link rel="canonical" href="{url}"><meta name="robots" content="noindex">'
+                                    f'<meta http-equiv="refresh" content="0; url={g["path"]}"><a href="{g["path"]}">{esc(g["nav"])}</a>')
+
+
 # ----------------------------------------------------------------------------- spec pages
 def gh_slug(value, separator="-"):
     v = value.strip().lower()
@@ -1371,13 +1486,14 @@ Sitemap: {site.url('/sitemap.xml')}
         site.write(".well-known/security.txt", f"Policy: {site.url('/security/')}\nContact: {a.repo_url}/security/advisories/new\nContact: mailto:contact@uppercentile.com\nExpires: {exp}T00:00:00Z\nPreferred-Languages: en\nCanonical: {site.url('/.well-known/security.txt')}\n")
 
 
-def mcp_tool_docs(site):
-    """The MCP server's tool names and descriptions, read from mcp_server.py without importing it."""
+def mcp_tool_docs(site, name="TOOL_DOCS"):
+    """The MCP server's tool names and descriptions (or, with name="TOOL_TITLES", display titles), read from mcp_server.py
+    without importing it."""
     tree = ast.parse((site.repo / "src/universal_paper/mcp_server.py").read_text(encoding="utf-8"))
     for node in tree.body:
-        if isinstance(node, ast.AnnAssign) and getattr(node.target, "id", "") == "TOOL_DOCS":
+        if isinstance(node, ast.AnnAssign) and getattr(node.target, "id", "") == name:
             return ast.literal_eval(node.value)
-    raise SystemExit("src/universal_paper/mcp_server.py: TOOL_DOCS not found")
+    raise SystemExit(f"src/universal_paper/mcp_server.py: {name} not found")
 
 
 def first_sentence(text):
@@ -1420,6 +1536,7 @@ def build_agent_json(site):
             "examples": [u(f"/examples/{d}/bundle.json") for d in ("conventional", "generative", "overlay", "confidential", "mandate-cap", "what-if")],
             "integrations": u("/integrations/index.json"),
             "faq": u("/faq/"),
+            "claudeGuide": u("/docs/claude/"),
             "privacy": u("/privacy/"),
             "terms": u("/terms/"),
             "security": u("/security/"),
@@ -1554,6 +1671,7 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 - [Playground]({site.url('/playground/')}): write an agreement in the browser and watch its fingerprint, signatures and obligations update
 - [Developers]({site.url('/developers/')}): primitives, the 16-Term library, code examples, the CLI and test vectors
 - [MCP server]({site.url('/developers/#mcp')}): the official, read-only Universal Paper MCP server
+- [Claude connector guide]({site.url('/docs/claude/')}): connect Universal Paper to Claude, with six worked prompts and their results
 - [FAQ]({site.url('/faq/')}): plain-language answers for GPOs, suppliers, members and developers
 - [Licenses]({site.url('/license/')}): what is licensed how, and how to credit it
 - [Privacy policy]({site.url('/privacy/')}): what the site and hosted MCP server process and keep (almost nothing)
@@ -1707,6 +1825,7 @@ def main():
     build_faq(site)
     build_license(site)
     build_trust(site)
+    build_claude_guide(site)
     build_spec(site)
     build_integrations(site)
     build_schemas(site)

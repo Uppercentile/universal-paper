@@ -348,3 +348,21 @@ def test_trust_pages_promise_no_reply_time_and_keep_the_audit_caveat(dist):
     for fact in ("signed provenance attestation", "trusted publishing", "Dependabot", "read-only token", "non-root user",
                  "16 issues", "our own team"):
         assert fact in sec, fact
+
+
+def test_claude_connector_guide_is_served_and_linked(dist):
+    """/docs/claude/ is the documentation link on the Claude directory listing, so its address is permanent."""
+    page = (dist / "docs/claude/index.html").read_text(encoding="utf-8")
+    assert "<h1 class=\"display\">Universal Paper in Claude</h1>" in page
+    assert page.count('type="application/ld+json"') >= 3 and '"@type":"HowTo"' in page.replace('": "', '":"')
+    assert "13 read-only tools" in page and "https://mcp.universalpaper.org/mcp" in page
+    for tool in ("validate_bundle", "simulate_price_conformity", "get_example"):
+        assert f"<code>{tool}</code>" in page
+    assert 'href="/docs/claude/"' in (dist / "index.html").read_text(encoding="utf-8")  # footer, every page
+    assert "/docs/claude/" in (dist / "developers/index.html").read_text(encoding="utf-8").split('id="mcp"', 1)[1]
+    assert 'href="/docs/claude/#troubleshooting"' in (dist / "support/index.html").read_text(encoding="utf-8")
+    assert "https://universalpaper.org/docs/claude/" in (dist / "llms.txt").read_text(encoding="utf-8")
+    assert "https://universalpaper.org/docs/claude/" in (dist / "sitemap.xml").read_text(encoding="utf-8")
+    assert json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))["resources"]["claudeGuide"].endswith("/docs/claude/")
+    short = (dist / "claude/index.html").read_text(encoding="utf-8")
+    assert 'url=/docs/claude/' in short and 'content="noindex"' in short and "/claude/" not in (dist / "sitemap.xml").read_text(encoding="utf-8").replace("/docs/claude/", "")
