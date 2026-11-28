@@ -60,7 +60,7 @@ def test_every_page_has_the_shared_chrome(dist):
         assert "/assets/site.css" in s and "/assets/site.js" in s and "/assets/search-index.js" in s, path
         assert 'id="up-scroll-top"' in s, path
         assert "Created by <a href=\"https://uppercentile.com\">Uppercentile</a>" in s, path
-        assert "submitllms.com/directory/universalpaper.org" in s, path  # the listing requires this badge link
+        assert "submitllms" not in s.lower(), path  # badge removed (Joe, 2026-11-28)
         assert "design preview" not in s.lower(), path
         assert "Fonts: Hedvig" not in s, path  # the font credit lives on /license/ only (Joe, 2026-11-26)
         if path != "/404.html":
@@ -299,19 +299,35 @@ def test_trust_pages_are_served_and_linked_everywhere(dist):
 
 
 def test_privacy_policy_matches_what_the_site_loads(dist):
-    """The privacy policy says the only third-party request is the SubmitLLMs footer badge. Keep that true on every page."""
-    hosts = set()
-    for f in dist.rglob("*.html"):
+    """The privacy policy says pages make no third-party requests. Keep that true for every page, stylesheet and script."""
+    resource = re.compile(
+        r'<(?:script|img|iframe|link|source|video|audio|embed|object|track|input)\b[^>]*?\b(?:src|href|srcset|data|poster)="((?:https?:)?//[^/"\s]+)[^"]*"'
+    )
+    css_url = re.compile(r'(?:url\(\s*[\'"]?|@import\s+[\'"])((?:https?:)?//[^/\'")\s]+)')
+    js_fetch = re.compile(r'(?:fetch|importScripts|import)\(\s*[\'"`]((?:https?:)?//[^/\'"`\s]+)')
+    hosts = {}
+    for f in sorted(dist.rglob("*")):
+        if f.suffix not in {".html", ".css", ".js"}:
+            continue
         s = f.read_text(encoding="utf-8")
-        for m in re.finditer(r'<(?:script|img|iframe|link)\b[^>]*\b(?:src|href)="(https?://[^/"]+)[^"]*"', s):
-            tag = m.group(0)
-            if tag.startswith("<link") and not re.search(r'rel="(?:stylesheet|preconnect|icon|preload|modulepreload)"', tag):
-                continue
-            hosts.add(m.group(1))
-        assert "document.cookie" not in s, f
-    assert hosts <= {"https://submitllms.com"}, hosts
+        found = []
+        if f.suffix == ".html":
+            for m in resource.finditer(s):
+                tag = m.group(0)
+                if tag.startswith("<link") and not re.search(r'rel="(?:stylesheet|preconnect|dns-prefetch|prefetch|prerender|icon|preload|modulepreload|manifest)"', tag):
+                    continue
+                found.append(m.group(1))
+        found += [m.group(1) for m in css_url.finditer(s)] + [m.group(1) for m in js_fetch.finditer(s)]
+        for h in found:
+            host = h.split("//", 1)[1]
+            if host != "universalpaper.org":
+                hosts.setdefault(host, str(f.relative_to(dist)))
+        if f.suffix == ".html":
+            assert "document.cookie" not in s, f
+    assert not hosts, hosts
     privacy = (dist / "privacy/index.html").read_text(encoding="utf-8")
-    assert "SubmitLLMs" in privacy and "mcp.universalpaper.org/stats" in privacy
+    assert "No third-party requests." in privacy and "mcp.universalpaper.org/stats" in privacy
+    assert "submitllms" not in privacy.lower()
 
 
 def test_security_fallback_matches_security_md(dist):

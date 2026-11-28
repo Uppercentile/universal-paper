@@ -202,12 +202,7 @@ class Site:
             f'code <a href="{LIC["apache"][1]}" rel="license">Apache-2.0</a> · '
             f'example agreements and traces <a href="{LIC["cc0"][1]}" rel="license">CC0 1.0</a>. '
             'No account, fee or license key is ever required. <a href="/license/">How to use and credit it</a>.</span>'
-            f'<span class="trust">{trust}</span>'
-            '<span class="up-badge">'
-            # SubmitLLMs directory badge: its listing requires a live link to it (added at Joe's request, 2026-11-24)
-            '<a href="https://submitllms.com/directory/universalpaper.org" target="_blank" rel="noopener noreferrer">'
-            '<img src="https://submitllms.com/api/badge/universalpaper.org" alt="AI Ready on SubmitLLMs" height="20" loading="lazy" '
-            'style="height:20px;width:auto;display:inline-block;vertical-align:middle;opacity:.9"></a></span></div>'
+            f'<span class="trust">{trust}</span></div>'
         )
 
 
@@ -468,11 +463,12 @@ def build_license(site):
 
 # ----------------------------------------------------------------------------- trust pages (site/theme/trust/)
 TRUST_DATE, TRUST_ISO = "26 November 2026", "2026-11-26"
+PRIVACY_DATE, PRIVACY_ISO = "28 November 2026", "2026-11-28"  # footer badge removed: no third-party requests
 TRUST_PAGES = [  # (path, nav label, title, description, lede, meta line, sitemap priority, change frequency, search subtitle)
     ("/privacy/", "Privacy policy", "Privacy policy | Universal Paper",
      "Universal Paper collects almost nothing: no accounts, cookies or analytics, and the hosted MCP server stores nothing you send. Full details here.",
      "The short version: we collect almost nothing. Universal Paper has no accounts, no cookies and no analytics, and the hosted MCP server "
-     "stores nothing you send it. This page sets out the details.", f"Effective {TRUST_DATE} · Uppercentile LLC", "0.3", "yearly",
+     "stores nothing you send it. This page sets out the details.", f"Effective {PRIVACY_DATE} · Uppercentile LLC", "0.3", "yearly",
      "What is collected: almost nothing"),
     ("/terms/", "Terms of use", "Terms of use | Universal Paper",
      "The terms for using universalpaper.org, the Playground and the hosted MCP server. The language itself stays free under open licenses.",
@@ -587,7 +583,7 @@ def build_trust(site):
                   {"@type": "ListItem", "position": 1, "name": "Universal Paper", "item": site.url("/")},
                   {"@type": "ListItem", "position": 2, "name": nav, "item": url}]},
               {"@context": "https://schema.org", "@type": "WebPage", "@id": url, "url": url, "name": title, "description": desc,
-               "inLanguage": "en", "dateModified": TRUST_ISO, "isPartOf": {"@id": site.url("/#website")}, "publisher": CREATOR}]
+               "inLanguage": "en", "dateModified": PRIVACY_ISO if path == "/privacy/" else TRUST_ISO, "isPartOf": {"@id": site.url("/#website")}, "publisher": CREATOR}]
         site.write(path.lstrip("/") + "index.html", site.page(path, title, desc, main, style=TRUST_STYLE, ld=ld))
         site.add_page(path, prio, freq)
         site.add_search(path, nav, sub, "page", main, rank=8)
