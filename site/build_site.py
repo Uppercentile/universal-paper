@@ -464,6 +464,8 @@ def build_license(site):
 # ----------------------------------------------------------------------------- trust pages (site/theme/trust/)
 TRUST_DATE, TRUST_ISO = "26 November 2026", "2026-11-26"
 PRIVACY_DATE, PRIVACY_ISO = "28 November 2026", "2026-11-28"  # footer badge removed: no third-party requests
+LEGAL_DATE, LEGAL_ISO = "28 November 2026", "2026-11-28"
+TRUST_ISO_BY_PATH = {"/privacy/": PRIVACY_ISO, "/legal/": LEGAL_ISO}
 TRUST_PAGES = [  # (path, nav label, title, description, lede, meta line, sitemap priority, change frequency, search subtitle)
     ("/privacy/", "Privacy policy", "Privacy policy | Universal Paper",
      "Universal Paper collects almost nothing: no accounts, cookies or analytics, and the hosted MCP server stores nothing you send. Full details here.",
@@ -475,6 +477,11 @@ TRUST_PAGES = [  # (path, nav label, title, description, lede, meta line, sitema
      "These terms cover the website, the Playground and the hosted MCP server. The language itself, with its specification, code and "
      "examples, stays free under the open licenses, and nothing here narrows them.", f"Effective {TRUST_DATE} · Uppercentile LLC", "0.3", "yearly",
      "Site, Playground and hosted MCP server"),
+    ("/legal/", "Legal and compliance", "Legal and compliance | Universal Paper",
+     "For counsel: who holds the data, which safe harbors apply, who owns it, and how signatures, overlays and axiom A6 map to E-SIGN, UETA and antitrust law.",
+     "For lawyers and compliance teams. The first questions counsel ask, answered plainly, then how Universal Paper's signatures, overlays and "
+     "price neutrality map onto the law you already apply, with a citation and a specification link for each point.",
+     f"Updated {LEGAL_DATE} · UP/0.1-draft · Not legal advice", "0.4", "yearly", "For counsel: data, safe harbors, E-SIGN, antitrust"),
     ("/security/", "Security", "Security | Universal Paper",
      "How to report a vulnerability in Universal Paper privately, what counts as a security bug, and how the hosted services limit risk.",
      "Universal Paper exists so that anyone can check an agreement without trusting anyone else. A flaw that breaks that is a security bug "
@@ -583,7 +590,7 @@ def build_trust(site):
                   {"@type": "ListItem", "position": 1, "name": "Universal Paper", "item": site.url("/")},
                   {"@type": "ListItem", "position": 2, "name": nav, "item": url}]},
               {"@context": "https://schema.org", "@type": "WebPage", "@id": url, "url": url, "name": title, "description": desc,
-               "inLanguage": "en", "dateModified": PRIVACY_ISO if path == "/privacy/" else TRUST_ISO, "isPartOf": {"@id": site.url("/#website")}, "publisher": CREATOR}]
+               "inLanguage": "en", "dateModified": TRUST_ISO_BY_PATH.get(path, TRUST_ISO), "isPartOf": {"@id": site.url("/#website")}, "publisher": CREATOR}]
         site.write(path.lstrip("/") + "index.html", site.page(path, title, desc, main, style=TRUST_STYLE, ld=ld))
         site.add_page(path, prio, freq)
         site.add_search(path, nav, sub, "page", main, rank=8)
@@ -1572,6 +1579,7 @@ def build_agent_json(site):
             "chatgptGuide": u("/docs/chatgpt/"),
             "privacy": u("/privacy/"),
             "terms": u("/terms/"),
+            "legal": u("/legal/"),
             "security": u("/security/"),
             "support": u("/support/"),
             "accessibility": u("/accessibility/"),
@@ -1715,6 +1723,7 @@ When citing, use: "Universal Paper, created by Uppercentile, {site.url('/')}".
 - [Licenses]({site.url('/license/')}): what is licensed how, and how to credit it
 - [Privacy policy]({site.url('/privacy/')}): what the site and hosted MCP server process and keep (almost nothing)
 - [Terms of use]({site.url('/terms/')}): terms for the site, Playground and hosted MCP server
+- [Legal and compliance]({site.url('/legal/')}): for counsel: data held (none), safe harbors, ownership and licenses, E-SIGN/UETA, UP:Overlay, antitrust and axiom A6
 - [Security]({site.url('/security/')}): how to report a vulnerability privately
 - [Support and contact]({site.url('/support/')}): where to ask, and MCP server troubleshooting
 - [Accessibility]({site.url('/accessibility/')}): accessibility statement
