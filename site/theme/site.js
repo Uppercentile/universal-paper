@@ -102,7 +102,7 @@ if (mb && sheet) {
 /* ── Search (⌘K) ── */
 const sd = $('#search'), si = $('#searchInput'), sl = $('#searchList');
 if (sd && si && sl && window.UP_SEARCH) {
-  const KIND = { spec: ['SPEC', '#EEE9FF', '#2F2275'], term: ['TERM', '#FFE1D8', '#7A1E0C'], page: ['PAGE', '#DDF5E8', '#0F4D33'], integration: ['INT', '#FFF1C7', '#5C3D00'] };
+  const KIND = { spec: ['SPEC', '#EEE9FF', '#2F2275'], term: ['TERM', '#FFE1D8', '#7A1E0C'], page: ['PAGE', '#DDF5E8', '#0F4D33'], integration: ['INT', '#FFF1C7', '#5C3D00'], research: ['RES', '#EEE9FF', '#2F2275'] };
   const docs = []; for (const p of window.UP_SEARCH) { docs.push({ t: p.t, sub: p.s, u: p.u, k: p.k, w: 3 }); for (const [hid, ht] of p.h || []) docs.push({ t: ht, sub: p.t, u: p.u + '#' + hid, k: p.k, w: 1 }); }
   let sel = 0, results = [];
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -156,4 +156,54 @@ const io = new IntersectionObserver(es => es.forEach(e => {
   e.target.querySelectorAll('[data-count]').forEach(n => { const to = +n.dataset.count; if (reduce) { n.textContent = to; return; } const t0 = performance.now(); const tick = now => { const k = Math.min(1, (now - t0) / 1400); n.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); });
 }), { threshold: .12 });
 $$('.rv').forEach(n => io.observe(n));
+})();
+
+/* Header dropdowns: click or hover to open, Escape or click outside to close, arrow down to enter a panel. */
+(function () {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var btns = Array.prototype.slice.call(nav.querySelectorAll('.nx-btn'));
+  if (!btns.length) return;
+  var open = null, timer = 0, byHover = false; // byHover: the open panel was opened by hovering, not by a click
+  function panel(b) { return document.getElementById(b.getAttribute('aria-controls')); }
+  function hide() {
+    clearTimeout(timer);
+    if (!open) return;
+    open.setAttribute('aria-expanded', 'false');
+    panel(open).hidden = true;
+    open = null;
+  }
+  function show(b) {
+    clearTimeout(timer);
+    if (open === b) return;
+    hide();
+    open = b;
+    b.setAttribute('aria-expanded', 'true');
+    panel(b).hidden = false;
+  }
+  var hover = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
+  btns.forEach(function (b) {
+    // A click on a panel that hovering just opened keeps it open; otherwise a click toggles it.
+    b.addEventListener('click', function () { if (open === b && !byHover) hide(); else show(b); byHover = false; });
+    b.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown') return;
+      e.preventDefault();
+      show(b);
+      var first = panel(b).querySelector('a');
+      if (first) first.focus();
+    });
+    if (hover) b.addEventListener('mouseenter', function () { clearTimeout(timer); timer = setTimeout(function () { if (open !== b) { show(b); byHover = true; } }, open ? 0 : 90); });
+  });
+  if (hover) {
+    nav.addEventListener('mouseleave', function () { clearTimeout(timer); timer = setTimeout(hide, 220); });
+    nav.addEventListener('mouseenter', function () { if (open) clearTimeout(timer); });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !open) return;
+    var b = open;
+    hide();
+    b.focus();
+  });
+  document.addEventListener('click', function (e) { if (open && !nav.contains(e.target)) hide(); });
+  document.addEventListener('focusin', function (e) { if (open && !nav.contains(e.target)) hide(); });
 })();

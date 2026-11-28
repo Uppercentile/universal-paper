@@ -37,6 +37,7 @@ sys.path.insert(0, str(HERE / "content"))
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "src"))  # the reference canonicalizer (standard library only), for hashes the pages show
 import layout as L  # noqa: E402
+import research  # noqa: E402
 from faq import SECTIONS as FAQ  # noqa: E402
 
 from universal_paper.canon import content_hash, jcs  # noqa: E402
@@ -139,23 +140,22 @@ class Site:
     def add_search(self, path, title, sub, kind, main_html="", rank=50):
         self.search.append({"t": title, "s": sub, "u": path, "k": kind, "h": L.headings(main_html), "rank": rank})
 
-    def page(self, path, title, desc, main, *, style="", scripts="", kind="website", ld=(), links=(), robots="index,follow", announce=""):
-        """A whole v7 page: shared header, footer, search and scripts around `main`."""
+    def page(self, path, title, desc, main, *, style="", scripts="", kind="website", ld=(), links=(), robots="index,follow", announce="", crumbs=None):
+        """A whole v7 page: shared header, footer, search and scripts around `main`. `crumbs` replaces the default
+        two-step breadcrumb (home, this page) with a longer trail of (name, absolute URL)."""
         if len(title) > TITLE_MAX or len(desc) > DESC_MAX:
             raise SystemExit(f"{path}: title ({len(title)}) or description ({len(desc)}) is over {TITLE_MAX}/{DESC_MAX} characters")
-        return L.document(title=title, head=self.head_meta(path, title, desc, kind=kind, extra_ld=ld, robots=robots, links=links),
+        return L.document(title=title, head=self.head_meta(path, title, desc, kind=kind, extra_ld=ld, robots=robots, links=links, crumbs=crumbs),
                           header_html=L.header(path, self.a.repo_url), footer_html=L.footer(self.legal_strip(path), TAGLINE, self.a.repo_url),
                           main=main, style=style, scripts=scripts, announce=announce)
 
     # ---- <head> pieces shared by every page
-    def head_meta(self, path, title, desc, kind="website", extra_ld=(), robots="index,follow", links=()):
+    def head_meta(self, path, title, desc, kind="website", extra_ld=(), robots="index,follow", links=(), crumbs=None):
         url = self.url(path)
         og = self.url("/assets/og-image.png")
-        crumbs = None
-        if path != "/":
-            crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Universal Paper", "item": self.url("/")},
-                {"@type": "ListItem", "position": 2, "name": title.split(" | ")[0], "item": url}]}
+        trail = crumbs or ([("Universal Paper", self.url("/")), (title.split(" | ")[0], url)] if path != "/" else None)
+        crumbs = trail and {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": i, "name": n, "item": u} for i, (n, u) in enumerate(trail, 1)]}
         lines = [
             f'<meta name="description" content="{esc(desc)}">',
             f'<link rel="canonical" href="{url}">',
@@ -186,7 +186,7 @@ class Site:
             '<link rel="sitemap" type="application/xml" href="/sitemap.xml">',
         ]
         # extra <link>s, as (rel, type, href, title): e.g. a page's plain Markdown or a JSON descriptor
-        lines += [f'<link rel="{rel}" type="{typ}" href="{esc(href)}"' + (f' title="{esc(t)}"' if t else "") + ">" for rel, typ, href, t in links]
+        lines += [f'<link rel="{rel}"' + (f' type="{typ}"' if typ else "") + f' href="{esc(href)}"' + (f' title="{esc(t)}"' if t else "") + ">" for rel, typ, href, t in links]
         if crumbs:
             lines.append(jsonld(crumbs))
         for o in extra_ld:
@@ -732,6 +732,15 @@ def build_guide(site, g):
     site.write(g["short"] + "index.html", f'<!doctype html><meta charset="utf-8"><title>{esc(g["title"])}</title>'
                                     f'<meta name="description" content="{esc(g["desc"])}"><link rel="canonical" href="{url}"><meta name="robots" content="noindex">'
                                     f'<meta http-equiv="refresh" content="0; url={g["path"]}"><a href="{g["path"]}">{esc(g["nav"])}</a>')
+
+
+# ----------------------------------------------------------------------------- research (not part of the language)
+def build_research(site, sample=0):
+    """/research/: notes, experiments, reusable files and open questions (site/research.py). Every page carries the
+    Research notice; the research schemas are served under /research/schema/0/, apart from the language's /schema/."""
+    style = TRUST_STYLE.replace("</style>", (L.THEME / "docs" / "claude.css").read_text(encoding="utf-8")
+                                + (L.THEME / "research" / "research.css").read_text(encoding="utf-8") + "</style>")
+    site.research = research.Research(site, style=style, sample=sample).build()
 
 
 # ----------------------------------------------------------------------------- spec pages
@@ -1573,10 +1582,13 @@ def build_agent_json(site):
             "contact": u("/partners.json"),
             "sitemap": u("/sitemap.xml"),
         },
+        "research": site.research.agent_block(),
         "referenceImplementation": {"language": "Python", "package": "universal-paper", "install": "pip install universal-paper", "cli": "up",
                                     "source": site.a.repo_url or None},
     }
-    for path in [p for p in doc["resources"].values() if isinstance(p, str)] + doc["resources"]["schemas"] + doc["resources"]["examples"]:
+    rs = doc["research"]
+    for path in ([p for p in doc["resources"].values() if isinstance(p, str)] + doc["resources"]["schemas"] + doc["resources"]["examples"]
+                 + [rs["index"], rs["feed"], rs["page"]] + rs["schemas"]):
         rel = path.replace(u("/"), "", 1)
         f = site.out / rel
         if not (f.is_file() or (f / "index.html").is_file()):
@@ -1745,6 +1757,7 @@ Built something with Universal Paper? Uppercentile (the steward) would love to h
 - [Optional integration: Verifiable Credentials]({site.url('/integrations/verifiable-credentials.md')}): a W3C VC referencing a Universal Paper fingerprint, for roster participation and role snapshots. A snapshot only; participation status comes from a Universal Paper engine (simulate_eligibility). Universal Paper does not issue, verify or require VCs.
 - [Optional integration: Fingerprint Coordination]({site.url('/integrations/fingerprint-coordination.md')}): share Universal Paper fingerprints under explicit rules and derive recomputable profiles (parameter ranges, variance, historical deltas, engine-checked Proposal seeds). Privacy by default: sealed values never counted, minimum cohort. [Simulated demo from public examples]({site.url('/integrations/fingerprint-coordination/demo/')}). Universal Paper does not operate or depend on any analytics.
 
+{site.research.llms_section()}
 ## FAQ
 """ + "\n".join(faq_md)
     site.write("llms.txt", head)
@@ -1846,6 +1859,9 @@ def main():
     ap.add_argument("--domain", default="universalpaper.org")
     ap.add_argument("--repo-url", default="https://github.com/Uppercentile/universal-paper")
     ap.add_argument("--og", action="store_true", help="re-render the Open Graph image")
+    ap.add_argument("--research-sample", type=int, default=0, metavar="N",
+                    help="add sample Research entries up to N, to check the library layout at scale. The build is marked "
+                         "'Preview only' and noindex: never publish it")
     a = ap.parse_args()
     site = Site(a)
     if site.out.exists():
@@ -1860,6 +1876,7 @@ def main():
     build_trust(site)
     build_guide(site, CLAUDE_GUIDE)
     build_guide(site, CHATGPT_GUIDE)
+    build_research(site, a.research_sample)
     build_spec(site)
     build_integrations(site)
     build_schemas(site)

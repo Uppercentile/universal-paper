@@ -7,7 +7,7 @@ The look is the v7 design: Hedvig Letters Serif, Funnel Sans and Recursive (self
 | Source | Becomes |
 |---|---|
 | `site/theme/site.css`, `site.js`, `fonts/`, `icons/` | `/assets/...` (shared by every page) |
-| `site/layout.py` | the shared header, footer, search dialog and document layout, and the Markdown post-processing (numbered sections, axiom checks, JSON highlighting, tables of contents) |
+| `site/layout.py` | the shared header (three dropdown groups, Language, Build and Research, plus FAQ; the grouped phone menu below 1100 px), footer, search dialog and document layout, and the Markdown post-processing (numbered sections, axiom checks, JSON highlighting, tables of contents) |
 | `site/theme/pages/home.html` | `/` (figures filled from `explorer/conformance-results.json` and `AUDIT.md`, the Term rail from `spec/06-terms/*.json`) |
 | `site/theme/pages/developers.html` | `/developers/` |
 | `site/theme/pages/spec.html`, `integrations.html`, `license.html` | `/spec/`, `/integrations/` (cards generated), `/license/` |
@@ -15,6 +15,7 @@ The look is the v7 design: Hedvig Letters Serif, Funnel Sans and Recursive (self
 | `site/content/faq.py` | `/faq/`, plus the FAQ in `llms.txt` and FAQPage structured data |
 | `spec/**/*.md`, `DESIGN_NOTES.md` | `/spec/...` pages and the raw `.md` next to each; `/spec/terms/` adds a filterable grid of the Terms |
 | `docs/integrations/*.md` | `/integrations/...` pages, plus `/integrations/index.json` |
+| `site/research_library.py`, `research_schemas.py`, `research.py`, `site/theme/research/` | `/research/` (not part of the language): the index, one page, `entry.json` and `.md` per entry, `index.json`, `feed.xml`, the four schemas at their `$id` under `/research/schema/0/`, and the example files at `/research/query-test-vectors/` (served byte for byte). Add an entry by adding a dict to `ENTRIES`; the build stops on a bad kind, topic or status. `--research-sample N` adds sample rows to check the layout at scale; that build is noindex and must never be published |
 | `examples/integrations/fingerprint-coordination/demo/index.html` | `/integrations/fingerprint-coordination/demo/` (its `<main>` and scripts, inside the site chrome) |
 | generated | `sitemap.xml`, `robots.txt`, `llms.txt`, `llms-full.txt`, `404.html`, `assets/search-index.js`, icons, `CNAME` |
 

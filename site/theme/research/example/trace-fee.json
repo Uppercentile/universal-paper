@@ -1,0 +1,64 @@
+{
+  "format": "up-research/query-trace/0",
+  "spec": "UP/0.1-draft",
+  "simulated": true,
+  "manifest": "sha256:44bb1bb2ebbbd0bd3e05f9c3f7b539c5057b43d194f56a027d458167d3d293ae",
+  "question": "fee",
+  "call": "derive_state",
+  "inputs": {
+    "at": "2027-03-01T00:00:00Z"
+  },
+  "state": [
+    {
+      "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+      "fingerprint": "sha256:c198cefe6c519bf30af389a71fb0bc346f5fd3906865d1662941b47db3e31424"
+    }
+  ],
+  "verdict": {
+    "obligations": [
+      {
+        "clause": "fee",
+        "duty": "pay",
+        "obligor": {
+          "role": "supplier",
+          "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678"
+        },
+        "obligee": {
+          "role": "aggregator",
+          "key": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5"
+        },
+        "period": {
+          "start": "2027-01-01T00:00:00Z",
+          "end": "2027-02-01T00:00:00Z"
+        },
+        "due": "2027-03-03T00:00:00Z",
+        "amount": {
+          "value": "21.89",
+          "currency": "USD"
+        },
+        "status": "discharged",
+        "discharged_at": "2027-02-20T12:05:00Z",
+        "late": false
+      },
+      {
+        "clause": "fee",
+        "duty": "pay",
+        "obligor": {
+          "role": "supplier",
+          "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678"
+        },
+        "obligee": {
+          "role": "aggregator",
+          "key": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5"
+        },
+        "period": {
+          "start": "2027-02-01T00:00:00Z",
+          "end": "2027-03-01T00:00:00Z"
+        },
+        "due": "2027-03-31T00:00:00Z",
+        "amount": "no base reported yet",
+        "status": "open"
+      }
+    ]
+  }
+}

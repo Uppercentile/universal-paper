@@ -1,0 +1,40 @@
+<div class="tabs rs-x" id="explorer">
+  <div role="tablist" aria-label="The three questions">
+    <button role="tab" type="button" id="rt-0" aria-controls="rp-0" aria-selected="true">Is this member covered?</button>
+    <button role="tab" type="button" id="rt-1" aria-controls="rp-1" aria-selected="false" tabindex="-1">What fee is owed?</button>
+    <button role="tab" type="button" id="rt-2" aria-controls="rp-2" aria-selected="false" tabindex="-1">Would this change pass?</button>
+  </div>
+
+  <div role="tabpanel" id="rp-0" aria-labelledby="rt-0" class="rs-panel" data-trace="0">
+    <p class="rs-asks">Is Hypothetical Rural Hospital covered by Master X on March 1, 2027?</p>
+    <p class="calls"><span>Engine call</span><code>simulate_eligibility</code></p>
+    <dl class="kv">
+      <div><dt>Inputs</dt><dd>Member <b>Hypothetical Rural Hospital</b>, at <code>2027-03-01T00:00:00Z</code>, under <code title="{{CHAIN_X}}">{{SHORT:CHAIN_X}}</code></dd></div>
+      <div><dt>State</dt><dd><code title="{{STATE_X}}">{{SHORT:STATE_X}}</code> Master X<br><code title="{{STATE_PX}}">{{SHORT:STATE_PX}}</code> Participation of Hypothetical Rural Hospital under X</dd></div>
+      <div><dt>Verdict</dt><dd><span class="vd ok">{{ICO:check}}Eligible</span> An active participant on tier <b data-field="0">B</b>.</dd></div>
+    </dl>
+    {{CHECK:0}}
+  </div>
+
+  <div role="tabpanel" id="rp-1" aria-labelledby="rt-1" class="rs-panel" data-trace="1" hidden>
+    <p class="rs-asks">What administrative fee is owed under Master X on March 1, 2027, and has it been paid?</p>
+    <p class="calls"><span>Engine call</span><code>derive_state</code><code>obligations of clause fee</code></p>
+    <dl class="kv">
+      <div><dt>Inputs</dt><dd>At <code>2027-03-01T00:00:00Z</code></dd></div>
+      <div><dt>State</dt><dd><code title="{{STATE_X}}">{{SHORT:STATE_X}}</code> Master X</dd></div>
+      <div><dt>Verdict</dt><dd><span class="vd ok">{{ICO:check}}Paid</span> January 2027: <b data-field="1">$21.89</b>, 2.5% of $875.50 in reported sales, due March 3.<br><span class="vd sm rs-open">Open</span> February 2027: due March 31. No sales reported yet, so no amount.</dd></div>
+    </dl>
+    {{CHECK:1}}
+  </div>
+
+  <div role="tabpanel" id="rp-2" aria-labelledby="rt-2" class="rs-panel" data-trace="2" hidden>
+    <p class="rs-asks">Would a fee rate of 3.5% be accepted if the aggregator&rsquo;s agent proposed it under its Mandate?</p>
+    <p class="calls"><span>Engine call</span><code>simulate_amendment</code></p>
+    <dl class="kv">
+      <div><dt>Inputs</dt><dd>Clause <code>fee</code>, parameter <code>rate</code>, value <code>0.035</code>, at <code>2027-03-01T00:00:00Z</code>, Mandate <code title="{{MANDATE}}">{{SHORT:MANDATE}}</code></dd></div>
+      <div><dt>State</dt><dd><code title="{{STATE_X}}">{{SHORT:STATE_X}}</code> Master X</dd></div>
+      <div><dt>Verdict</dt><dd><span class="vd bad" data-field="2">{{ICO:x}}Rejected</span> Rule A9, bounded delegation. The rate is 2.5% now and the Mandate allows at most 3%. A rate of 3% is accepted. The bundle records the agent trying 3.5% on January 25, 2027, and every evaluator rejected it.</dd></div>
+    </dl>
+    {{CHECK:2}}
+  </div>
+</div>

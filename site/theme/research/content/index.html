@@ -1,0 +1,73 @@
+    <section class="band tight" aria-label="Start here" style="padding-bottom:0">
+      <div class="wrap">
+{{FEATURED}}
+{{LATEST}}
+      </div>
+    </section>
+
+{{LIBRARY}}
+
+    <section class="band tight" id="kinds" aria-labelledby="kinds-h" style="padding-top:0">
+      <div class="wrap">
+        <p class="eyebrow">Kinds</p>
+        <h2 class="h2" id="kinds-h" style="max-width:14ch">Four kinds of entry.</h2>
+        <div class="rs-topics rs-kindgrid">
+{{KINDS}}
+        </div>
+        <p class="rs-kindnote">A note is the whole argument. The experiments it ran, the files it produced and the questions it left open are entries of their own, each linked back to the note they came from. You can read one without the others.</p>
+      </div>
+    </section>
+
+    <section class="band tight" id="topics" aria-labelledby="topics-h" style="padding-top:0">
+      <div class="wrap">
+        <p class="eyebrow">Topics</p>
+        <h2 class="h2" id="topics-h" style="max-width:16ch">Nine subjects, each defined.</h2>
+        <div class="rs-topics">
+{{TOPICS}}
+        </div>
+        <div class="rs-how" aria-label="How entries are organized">
+          <div><b>One primary topic</b><p>Every entry has one, and at most two more. The list is fixed and changes on purpose, so there are no near-duplicate tags.</p></div>
+          <div><b>Built on</b><p>The Terms, rules and engine calls an entry uses are listed by their real names, so a search for <code>A9</code> or <code>UP:Admin-Fee</code> finds it.</p></div>
+          <div><b>Language impact</b><p>Each entry says whether it needs a change to the language. Most should not.</p></div>
+          <div><b>A number for good</b><p>An entry keeps its number and its address, even after it is withdrawn.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tight" id="rules" aria-labelledby="rules-h" style="padding-top:0">
+      <div class="wrap">
+        <p class="eyebrow">Ground rules</p>
+        <h2 class="h2" id="rules-h" style="max-width:18ch">How research relates to the language.</h2>
+        <div class="rs-rules">
+          <div><span class="fn">01</span><b>Outside the language</b><p>Nothing here is a Term, an Event kind or a rule. The <a href="/spec/">specification</a> is the only source for those.</p></div>
+          <div><span class="fn">02</span><b>Honest about cost</b><p>Each entry says what it would add to the language. The first note adds nothing.</p></div>
+          <div><span class="fn">03</span><b>Checkable</b><p>Every example names its inputs by fingerprint, so you can recompute it with an engine on your own machine.</p></div>
+          <div><span class="fn">04</span><b>Free to end</b><p>An entry may grow, change, or be withdrawn. Agreements do not depend on it.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tight" aria-labelledby="status-h" style="padding-top:0">
+      <div class="wrap rs-two">
+        <div>
+          <p class="eyebrow">Status</p>
+          <h2 class="h3" id="status-h">What the labels mean.</h2>
+          <dl class="rs-labels">
+{{LABELS}}
+          </dl>
+          <p class="fine">Open and Answered are for questions. If an idea is ever proposed for the language, that happens in the specification, under its own review.</p>
+        </div>
+        <div class="panel dark rs-agents" id="agents">
+          <p class="eyebrow">For agents and tools</p>
+          <h2 class="h3">Read it without the page.</h2>
+          <p>Start at the index. It lists every entry with its kind, status, topics, what it is built on, and the entries it came from.</p>
+          <div class="cmd url"><code>https://universalpaper.org/research/index.json</code><button class="cbtn" type="button" data-copy="https://universalpaper.org/research/index.json">Copy</button></div>
+          <ol class="rs-walk">
+            <li>Fetch the index and filter by <code>kind</code>, <code>topics</code>, <code>status</code> or <code>built_on</code>.</li>
+            <li>Follow an entry&rsquo;s <code>json</code> address for the full record, or <code>markdown</code> for the text.</li>
+            <li>Follow <code>parent</code> and <code>parts</code> to move between a note and what came out of it.</li>
+          </ol>
+          <p class="fine"><a href="/research/index.json">Open the index</a> · <a href="/research/feed.xml">Feed</a> · <a href="/research/schema/0/entry.schema.json">Schema</a> · <a href="/llms.txt">llms.txt</a></p>
+        </div>
+      </div>
+    </section>

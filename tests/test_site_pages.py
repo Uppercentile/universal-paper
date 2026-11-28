@@ -409,3 +409,184 @@ def test_chatgpt_plugin_guide_is_served_and_linked(dist):
         assert "https://universalpaper.org/docs/chatgpt/" in (dist / f).read_text(encoding="utf-8"), f
     agent = json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))
     assert agent["mcp"]["chatgptDirectory"] == d and agent["resources"]["chatgptGuide"].endswith("/docs/chatgpt/")
+
+
+# ----------------------------------------------------------------------------- Research (not part of the language)
+import research  # noqa: E402
+import research_library  # noqa: E402
+
+RESEARCH_NOTICE = "Research is not part of the Universal Paper language. It may grow, change, or be withdrawn. Agreements do not depend on it."
+RESEARCH_PAGES = ["/research/"] + [f"/research/{e['slug']}/" for e in research_library.ENTRIES]
+EXAMPLE = ROOT / "site/theme/research/example"
+# the published fingerprints of the four example files (Reusable 003); they must never change
+EXAMPLE_FINGERPRINTS = {
+    "manifest.json": "sha256:44bb1bb2ebbbd0bd3e05f9c3f7b539c5057b43d194f56a027d458167d3d293ae",
+    "trace-eligibility.json": "sha256:0da4824fb755d7c1acb3a7b85c21a11a063db5666adac06ac333fd057e262e38",
+    "trace-fee.json": "sha256:c398d0b7052d0c4ee706011a41363091198a66a3c2906ba1130ceb97d52326d0",
+    "trace-amendment.json": "sha256:5210769fdb99b09fe422cc202350117c5f77b369d1258a211029769558eee6df",
+}
+
+
+def test_header_groups_on_every_page(dist):
+    """Three dropdown groups (Language, Build, Research) plus FAQ, each button wired to its panel, and the same groups
+    in the phone menu. Research pages mark the Research group as current."""
+    for f in dist.rglob("*.html"):
+        s = f.read_text(encoding="utf-8")
+        if '<header class="nav" id="nav">' not in s:
+            continue  # redirects and the framed Playground app
+        head = s[s.index('<header class="nav" id="nav">'):s.index("</header>")]
+        assert re.findall(r'aria-controls="(nx-\w+)"', head) == ["nx-language", "nx-build", "nx-research"], f
+        for g in ("language", "build", "research"):
+            assert f'<div class="nx-panel" id="nx-{g}" role="group"' in head and f"nx-{g}\" role=\"group\" aria-label=" in head, f
+        assert '<li><a href="/faq/"' in head and head.count('<details class="nx-group"') == 3, f
+        assert 'href="/research/"' in head and 'href="https://github.com/Uppercentile/universal-paper">GitHub</a>' in head, f
+        foot = s.split("<footer>", 1)[1]
+        assert '<h4>Project</h4><ul>' in foot and '<li><a href="/research/">Research</a></li>' in foot, f
+    page = (dist / "research/trace-freshness/index.html").read_text(encoding="utf-8")
+    assert 'aria-controls="nx-research" data-current="true"' in page and '<details class="nx-group" open><summary>Research' in page
+    spec = (dist / "spec/axioms/index.html").read_text(encoding="utf-8")
+    assert 'aria-controls="nx-language" data-current="true"' in spec and 'class="nx-link" href="/spec/axioms/" aria-current="page"' in spec
+    css, js = (ROOT / "site/theme/site.css").read_text(encoding="utf-8"), (ROOT / "site/theme/site.js").read_text(encoding="utf-8")
+    assert ".nx-panel {" in css and "@media (max-width: 1100px) { .nx-panel { display: none !important; } }" in css
+    assert "Header dropdowns: click or hover to open" in js
+
+
+def test_research_pages_carry_the_notice_and_files(dist):
+    paths = sitemap_paths(dist)
+    for p in RESEARCH_PAGES:
+        assert p in paths, p
+        s = page_file(dist, p).read_text(encoding="utf-8")
+        notice = ('<div class="announce rs-notice" role="note" aria-label="Research notice"><div class="wrap"><span class="pill">Research</span>'
+                  f"<span>{RESEARCH_NOTICE}</span></div></div>")
+        assert notice in s.split("<header", 1)[0], p  # word for word, above the header
+        assert '<meta name="robots" content="index,follow">' in s and "Preview only" not in s and "sample-" not in s, p
+        assert "<style>" in s and ".rs-hero .display" in s, p
+    for e in research_library.ENTRIES:
+        s = page_file(dist, f"/research/{e['slug']}/").read_text(encoding="utf-8")
+        assert f'data-research-kind="{e["kind"]}" data-research-number="{e["n"]}"' in s
+        assert "/* A thin progress line while reading a note. */" in s  # research-read.js on every entry
+        assert ("Research note: recompute each example trace" in s) == (e["kind"] == "experiment")  # research.js on the experiment only
+        assert (dist / "research" / e["slug"] / "entry.json").is_file() and (dist / "research" / f"{e['slug']}.md").is_file()
+        ld = [json.loads(x) for x in re.findall(r'<script type="application/ld\+json">(.*?)</script>', s, re.S)]
+        crumbs = [x for x in ld if x["@type"] == "BreadcrumbList"]
+        assert len(crumbs) == 1 and len(crumbs[0]["itemListElement"]) == 4
+    index = (dist / "research/index.html").read_text(encoding="utf-8")
+    assert "Research library: search, facets, sort and paging" in index and index.count('<li class="rs-row"') == len(research_library.ENTRIES)
+    exp = (dist / "research/three-traces-recomputed/index.html").read_text(encoding="utf-8")
+    assert '<p class="rs-result-v">Held in part</p>' in exp and "The repository&#39;s JavaScript engine was not run for this experiment." in exp
+    # the research schemas live apart from the language's /schema/
+    assert not list((dist / "schema").rglob("*research*")) and not (dist / "schema/entry.schema.json").exists()
+    search = (dist / "assets/search-index.js").read_text(encoding="utf-8")
+    for p in RESEARCH_PAGES:
+        assert f'"u":"{p}"' in search, p
+
+
+def test_research_example_files_are_served_byte_for_byte(dist):
+    for name, fp in EXAMPLE_FINGERPRINTS.items():
+        served = (dist / "research/query-test-vectors" / name).read_bytes()
+        assert served == (EXAMPLE / name).read_bytes(), name
+        assert content_hash(json.loads(served)) == fp, name
+    summary = json.loads((EXAMPLE / "summary.json").read_text(encoding="utf-8"))
+    assert summary["manifest"]["fingerprint"] == EXAMPLE_FINGERPRINTS["manifest.json"]
+    assert [t["fingerprint"] for t in summary["example"]["traces"]] == [EXAMPLE_FINGERPRINTS[f"trace-{q}.json"] for q in ("eligibility", "fee", "amendment")]
+
+
+def test_research_trace_states_are_the_reference_engines():
+    """Every state fingerprint the example traces name is the one the reference interpreter derives from the public bundle."""
+    bundle = json.loads((ROOT / "examples/generative/bundle.json").read_text(encoding="utf-8"))
+    derived = mcp_server.derive_state(bundle, "2027-03-01T00:00:00Z")
+    state = {content_hash(bundle["chains"][c["chain"]][0]): c["state_hash"] for c in derived["chains"]}
+    assert state["sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af"] == "sha256:c198cefe6c519bf30af389a71fb0bc346f5fd3906865d1662941b47db3e31424"
+    for name in EXAMPLE_FINGERPRINTS:
+        if name.startswith("trace-"):
+            for s in json.loads((EXAMPLE / name).read_text(encoding="utf-8"))["state"]:
+                assert state[s["chain"]] == s["fingerprint"], (name, s["chain"])
+
+
+def _research_validator(dist):
+    """A standard draft 2020-12 validator (jsonschema), with the four research schemas registered at their $id."""
+    jsonschema = pytest.importorskip("jsonschema")
+    referencing = pytest.importorskip("referencing")
+    schemas = {n: json.loads((dist / "research/schema/0" / f"{n}.schema.json").read_text(encoding="utf-8"))
+               for n in ("entry", "index", "query-manifest", "query-trace")}
+    registry = referencing.Registry().with_resources(
+        (s["$id"], referencing.Resource.from_contents(s, default_specification=referencing.jsonschema.DRAFT202012)) for s in schemas.values())
+    for s in schemas.values():
+        jsonschema.Draft202012Validator.check_schema(s)  # each schema is itself valid draft 2020-12
+    fmt = jsonschema.Draft202012Validator.FORMAT_CHECKER
+    return {n: jsonschema.Draft202012Validator(s, registry=registry, format_checker=fmt) for n, s in schemas.items()}
+
+
+def test_research_json_validates_against_its_schemas(dist):
+    v = _research_validator(dist)
+    for n, s in ((n, json.loads((dist / "research/schema/0" / f"{n}.schema.json").read_text(encoding="utf-8"))) for n in v):
+        assert s["$id"] == f"https://universalpaper.org/research/schema/0/{n}.schema.json"  # served at its $id
+        assert s["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+    index = json.loads((dist / "research/index.json").read_text(encoding="utf-8"))
+    errors = {"index.json": [e.message for e in v["index"].iter_errors(index)]}
+    assert len(index["entries"]) == len(research_library.ENTRIES)
+    for row in index["entries"]:
+        full = json.loads((dist / "research" / row["slug"] / "entry.json").read_text(encoding="utf-8"))
+        errors[f"{row['slug']}/entry.json"] = [e.message for e in v["entry"].iter_errors(full)]
+        assert {k: full[k] for k in row} == row, row["slug"]  # each entry.json agrees with its row in the index
+    vec = dist / "research/query-test-vectors"
+    errors["manifest.json"] = [e.message for e in v["query-manifest"].iter_errors(json.loads((vec / "manifest.json").read_text()))]
+    for q in ("eligibility", "fee", "amendment"):
+        errors[f"trace-{q}.json"] = [e.message for e in v["query-trace"].iter_errors(json.loads((vec / f"trace-{q}.json").read_text()))]
+    assert len(errors) == 1 + 9 + 1 + 3 and not any(errors.values()), {k: x for k, x in errors.items() if x}
+    for k in ("summary.json",):
+        json.loads((dist / "research/query-surfaces" / k).read_text(encoding="utf-8"))
+
+
+def test_research_schemas_refuse_bad_records(dist):
+    """The six records validate.rb refuses are refused by a standard validator too."""
+    v = _research_validator(dist)
+    question = json.loads((dist / "research/who-may-name-questions/entry.json").read_text(encoding="utf-8"))
+    note = json.loads((dist / "research/query-surfaces/entry.json").read_text(encoding="utf-8"))
+    manifest = json.loads((dist / "research/query-test-vectors/manifest.json").read_text(encoding="utf-8"))
+    bad = [("a question with status exploring", "entry", {**question, "status": "exploring"}),
+           ("an unknown kind", "entry", {**question, "kind": "paper"}),
+           ("four topics", "entry", {**question, "topics": ["queries", "fees", "pricing", "sealing"]}),
+           ("an answered question with no answered_by", "entry", {**question, "status": "answered"}),
+           ("a note with a parent", "entry", {**note, "parent": 2}),
+           ("a manifest that names a new engine call", "query-manifest", {**manifest, "questions": [{**manifest["questions"][0], "call": "my_new_call"}]})]
+    accepted = [label for label, schema, data in bad if v[schema].is_valid(data)]
+    assert not accepted, accepted
+    assert v["entry"].is_valid(question) and v["entry"].is_valid(note) and v["query-manifest"].is_valid(manifest)
+
+
+def test_research_check_stops_the_build_on_a_bad_entry():
+    good = research_library.ENTRIES
+    research_library.check(good)
+    q = next(e for e in good if e["kind"] == "question")
+    for change, why in [({"kind": "paper"}, "unknown kind"), ({"status": "exploring"}, "not allowed"), ({"topics": ["queries", "fees", "pricing", "sealing"]}, "one to three"),
+                        ({"topics": ["queries", "queries"]}, "one to three"), ({"topics": ["nope"]}, "unknown topic"), ({"impact": "maybe"}, "impact"),
+                        ({"parent": 99}, "does not exist"), ({"status": "answered"}, "answered_by")]:
+        with pytest.raises(SystemExit, match=why):
+            research_library.check([e if e is not q else {**q, **change} for e in good])
+    with pytest.raises(SystemExit, match="a note has no parent"):
+        research_library.check([e if e["n"] != 1 else {**e, "parent": 2} for e in good])
+    with pytest.raises(SystemExit, match="used twice"):
+        research_library.check(good + [{**q, "n": 99}])
+
+
+def test_research_wording_is_kept():
+    """The nine entries keep Joe's wording; a few phrases the README singles out are pinned here."""
+    by = {e["n"]: e for e in research_library.ENTRIES}
+    assert [e["n"] for e in research_library.ENTRIES] == list(range(1, 10)) and by[2]["outcome"] == "held_in_part"
+    assert len(by[2]["limits"]) == 4 and by[2]["limits"][0] == "One engine derived the verdicts. The repository's JavaScript engine was not run for this experiment."
+    assert "`no base reported yet`" in by[6]["known"][2]
+
+
+def test_research_discovery_files(dist):
+    llms = (dist / "llms.txt").read_text(encoding="utf-8")
+    assert "## Research (not part of the language)\n\n" + RESEARCH_NOTICE in llms
+    for e in research_library.ENTRIES:
+        assert f"- [{e['title']}](https://universalpaper.org/research/{e['slug']}.md): " in llms
+    agent = json.loads((dist / ".well-known/agent.json").read_text(encoding="utf-8"))["research"]
+    assert agent["notice"] == RESEARCH_NOTICE and agent["kinds"] == ["note", "experiment", "reusable", "question"]
+    for u in [agent["index"], agent["feed"], agent["page"], *agent["schemas"]]:
+        f = dist / u.removeprefix("https://universalpaper.org/")
+        assert f.is_file() or (f / "index.html").is_file(), u
+    feed = (dist / "research/feed.xml").read_text(encoding="utf-8")
+    assert feed.count("<entry>") == len(research_library.ENTRIES) and research.NOTICE in feed

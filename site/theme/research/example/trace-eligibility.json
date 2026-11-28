@@ -1,0 +1,34 @@
+{
+  "format": "up-research/query-trace/0",
+  "spec": "UP/0.1-draft",
+  "simulated": true,
+  "manifest": "sha256:44bb1bb2ebbbd0bd3e05f9c3f7b539c5057b43d194f56a027d458167d3d293ae",
+  "question": "eligibility",
+  "call": "simulate_eligibility",
+  "inputs": {
+    "at": "2027-03-01T00:00:00Z",
+    "member": "ed25519:cbc69eb9202b2b08ea7e717c774f5fb866d9d186bda8dd16fe05ae348d7e48b1",
+    "parent": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af"
+  },
+  "state": [
+    {
+      "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+      "fingerprint": "sha256:c198cefe6c519bf30af389a71fb0bc346f5fd3906865d1662941b47db3e31424"
+    },
+    {
+      "chain": "sha256:05abdba1a9767eb41cda54473f08571bf772c177079382567f14f1917c929059",
+      "fingerprint": "sha256:a2089a7aab47d8fb55cbb29702f75a4a12a11636d5d7f11ee835f1525c268965"
+    }
+  ],
+  "verdict": {
+    "eligible": true,
+    "participations": [
+      {
+        "chain": "sha256:05abdba1a9767eb41cda54473f08571bf772c177079382567f14f1917c929059",
+        "parent": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+        "status": "active",
+        "tier": "B"
+      }
+    ]
+  }
+}
