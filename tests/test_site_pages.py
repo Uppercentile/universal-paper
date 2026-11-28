@@ -590,3 +590,12 @@ def test_research_discovery_files(dist):
         assert f.is_file() or (f / "index.html").is_file(), u
     feed = (dist / "research/feed.xml").read_text(encoding="utf-8")
     assert feed.count("<entry>") == len(research_library.ENTRIES) and research.NOTICE in feed
+
+
+def test_research_index_spaces_the_library_like_every_other_section(dist):
+    """Each band on the Research index ends with the band's own bottom padding; none may zero it, or the next section
+    sits flush against it (the Library once touched the featured note)."""
+    s = (dist / "research/index.html").read_text(encoding="utf-8")
+    main = s.split('<main id="main">', 1)[1].split("</main>", 1)[0]
+    assert '<section class="band tight" aria-label="Start here">' in main
+    assert "padding-bottom:0" not in main
