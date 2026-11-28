@@ -5,7 +5,7 @@
     <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>The MCP server stores nothing you send.</b> Each request is processed in memory and discarded.</span></div>
     <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>The Playground stays on your device.</b> What you type is never sent to us.</span></div>
     <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>We never sell personal information</b> or use it for advertising or profiling.</span></div>
-    <div><span class="b note"><svg class="ico"><use href="#i-i"/></svg></span><span><b>One third-party image.</b> A directory badge in the footer loads from SubmitLLMs. <a href="#who-else-is-involved">Details below</a>.</span></div>
+    <div><span class="b"><svg class="ico"><use href="#i-check"/></svg></span><span><b>No third-party requests.</b> Every page loads only from <code>universalpaper.org</code>.</span></div>
   </div>
 </section>
 <!-- body -->
@@ -31,7 +31,6 @@
   <thead><tr><th>Where</th><th>What is processed</th><th>Do we keep it?</th><th>For how long</th></tr></thead>
   <tbody>
     <tr><td>Website pages</td><td>Your IP address, your browser type and the address of the page you ask for. Our web host needs these to send you the page.</td><td>No. Our host, GitHub Pages, does not give us visitor logs.</td><td>Set by GitHub.</td></tr>
-    <tr><td>Footer badge</td><td>The same technical details, sent to SubmitLLMs when your browser loads its badge image.</td><td>No.</td><td>Set by SubmitLLMs.</td></tr>
     <tr><td>Playground, search and copy buttons</td><td>The values you type and the Playground’s saved state.</td><td>No. They stay in your browser. The Playground may save its state in your browser’s local storage.</td><td>Until you clear your browser’s site data.</td></tr>
     <tr><td>Hosted MCP server</td><td>The tool name and the arguments your assistant sends, such as an agreement bundle, and your IP address at the network level.</td><td>No. Arguments and results are held in memory for that one request. We keep only a count of calls per tool name.</td><td>The count resets when the server restarts.</td></tr>
     <tr><td>Email</td><td>Your email address, your name and whatever you write.</td><td>Yes, in our mailbox.</td><td>As long as we need it to answer you and keep a record of the conversation. We delete it on request.</td></tr>
@@ -43,7 +42,7 @@
 <ul>
   <li><strong>No cookies.</strong> The site does not set any.</li>
   <li><strong>No analytics or advertising.</strong> There are no tracking scripts, session recorders, advertising pixels or fingerprinting.</li>
-  <li><strong>Self-hosted files.</strong> Fonts, icons, styles and scripts are served from <code>universalpaper.org</code>. The one exception is the footer badge described under <a href="#who-else-is-involved">Who else is involved</a>.</li>
+  <li><strong>Self-hosted files.</strong> Fonts, icons, styles and scripts are served from <code>universalpaper.org</code>. Pages make no requests to any other site.</li>
   <li><strong>Search runs in your browser</strong> against an index that ships with the page. What you type into it is not sent anywhere.</li>
   <li><strong>The Playground runs in your browser.</strong> It may save its state in your browser’s local storage so your work survives a reload. That data never leaves your device, and clearing your browser’s site data removes it.</li>
   <li><strong>Copy buttons</strong> write to your clipboard and nothing else.</li>
@@ -80,7 +79,6 @@
   <tbody>
     <tr><td><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub</a></td><td>Hosts this website and the source code.</td><td>Your IP address and browser details when you load a page, and anything you post on GitHub.</td></tr>
     <tr><td><a href="https://fly.io/legal/privacy-policy">Fly.io</a></td><td>Hosts the MCP server.</td><td>Your IP address and the request traffic it routes.</td></tr>
-    <tr><td><a href="https://submitllms.com/privacy">SubmitLLMs</a></td><td>Serves the “AI Ready” directory badge shown in the footer.</td><td>Your IP address, your browser details and the address of the page that loaded the badge.</td></tr>
     <tr><td>Our email provider</td><td>Delivers and stores email sent to us.</td><td>The messages you send us.</td></tr>
     <tr><td><a href="https://policies.python.org/pypi.org/Privacy-Notice/">PyPI</a></td><td>Distributes the Python packages.</td><td>Details of your download request, if you install a package.</td></tr>
   </tbody>
