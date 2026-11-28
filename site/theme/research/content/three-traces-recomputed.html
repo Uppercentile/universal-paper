@@ -1,0 +1,32 @@
+<p class="intro">Note 001 says that two parties holding the same bytes get the same answer and can show it. This experiment tests the part of that claim that can be tested today: the fingerprints.</p>
+
+{{RESULT}}
+
+<h2>The claim</h2>
+<p class="rs-pull">{{CLAIM}}</p>
+<p>If this holds, a party does not have to trust whoever computed an answer. It computes the fingerprint itself and compares. The claim comes from <a href="/research/query-surfaces/">Note 001, Agreements as query surfaces</a>.</p>
+
+<h2>What was run</h2>
+{{METHOD}}
+<p>Everything used is public. The bundle is <a href="{{BUNDLE_URL}}">the generative example</a> in the repository, with hypothetical parties. The manifest and the three traces are published as files in <a href="/research/query-test-vectors/">Reusable 003</a>.</p>
+
+<h2>Check it here</h2>
+<p>Each tab is one question. The page recomputes the trace fingerprint in your browser, with no request to any server. Change one value and the fingerprint stops matching.</p>
+{{EXPLORER}}
+
+<h2>What matched</h2>
+{{CHECKS}}
+<p>The state fingerprint is not something this experiment added. Every event already carries one as <code>prev</code>, and <code>derive_state</code> returns it as <code>state_hash</code>.</p>
+<p class="fp"><span>State fingerprint of Master X</span><code>{{STATE_X}}</code></p>
+<p class="fp"><span>Manifest fingerprint</span><code>{{MANIFEST_FP}}</code></p>
+
+<h2>What this does not show</h2>
+{{LIMITS}}
+<p>The missing step is a second engine deriving the three verdicts by itself. <a href="/research/wording-in-the-fingerprint/">Question 006</a> describes that run and what it would settle.</p>
+
+<h2>Run it yourself</h2>
+<p><strong>The MCP server is a convenience, not the source.</strong> The answer comes from the bytes, and a local engine must be able to recompute every trace.</p>
+{{WAYS}}
+<p class="fine">The <a href="{{REPO}}/blob/main/examples/traces/generative.trace.json">trace file in the repository</a>, written by the reference interpreter, carries the same state fingerprint for the same history.</p>
+
+<div class="doc-foot"><p>Research experiment by <a href="https://uppercentile.com">Uppercentile</a>, licensed under <a href="/license/">CC BY 4.0</a>. Example data is CC0 1.0. Run November 27, 2026.</p></div>

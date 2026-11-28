@@ -1,0 +1,66 @@
+{
+  "format": "up-research/query-manifest/0",
+  "spec": "UP/0.1-draft",
+  "status": "research",
+  "simulated": true,
+  "note": "Simulated research example. Not part of the Universal Paper language. Parties and values are hypothetical, and no party signed this.",
+  "agreement": {
+    "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+    "fingerprint": "sha256:e4175fa94d9835f2c6c5f97e7a837c9b4d638940f5239e020f04d38ae609745a",
+    "label": "Master X (agent-run cooperative, hypothetical)"
+  },
+  "source": {
+    "bundle": "examples/generative/bundle.json",
+    "url": "https://github.com/Uppercentile/universal-paper/blob/main/examples/generative/bundle.json",
+    "license": "CC0-1.0"
+  },
+  "named_by": {
+    "role": "aggregator",
+    "key": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5",
+    "name": "Hypothetical Agent-Run Purchasing Cooperative"
+  },
+  "questions": [
+    {
+      "id": "eligibility",
+      "asks": "Is this member covered by this agreement at this time?",
+      "call": "simulate_eligibility",
+      "fixed": {
+        "parent": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af"
+      },
+      "open": [
+        "member",
+        "at"
+      ]
+    },
+    {
+      "id": "fee",
+      "asks": "What administrative fee is owed under this agreement at this time, and has it been paid?",
+      "call": "derive_state",
+      "fixed": {},
+      "open": [
+        "at"
+      ],
+      "reads": {
+        "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+        "obligations": {
+          "clause": "fee"
+        }
+      }
+    },
+    {
+      "id": "amendment",
+      "asks": "Would this fee rate be accepted if the aggregator's agent proposed it under its Mandate?",
+      "call": "simulate_amendment",
+      "fixed": {
+        "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+        "clause": "fee",
+        "param": "rate",
+        "mandate": "sha256:39b55f724b9ee68bc51ce7c01ef72c640dc7ed0dd7cc2ccccf13095ef4277918"
+      },
+      "open": [
+        "value",
+        "at"
+      ]
+    }
+  ]
+}

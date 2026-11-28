@@ -20,11 +20,44 @@ CLAUDE_DIRECTORY = "https://claude.ai/directory/universal-paper"  # the connecto
 CHATGPT_DIRECTORY = "https://chatgpt.com/plugins/plugin_asdk_app_6b09c3ea78c48191a51566aae625917a"  # the plugin's listing in ChatGPT
 LISTINGS = ((CLAUDE_DIRECTORY, "Claude"), (CHATGPT_DIRECTORY, "ChatGPT"))  # one-step listings; the developer page shows them as pills
 
-NAV = [("/developers/", "Developers"), ("/spec/", "Specification"), ("/spec/terms/", "Terms"),
-       ("/integrations/", "Integrations"), ("/faq/", "FAQ")]
+# The header: three dropdown groups (Language, Build, Research) and one plain link (FAQ). Each group has two columns
+# of (href, label, one-line description) and a navy card. Below 1100 pixels the panels are off and the phone menu shows
+# the same groups as collapsible sections.
+GROUPS = [
+    {"id": "language", "label": "Language", "paths": ["/spec/"],
+     "cols": [("Read", [("/spec/", "Specification", "The UP/0.1 draft, start to finish"),
+                        ("/spec/overview/", "Overview", "What the language is for"),
+                        ("/spec/axioms/", "Axioms", "The rules every engine checks"),
+                        ("/spec/terms/", "Term library", "The standard clauses and their parameters")]),
+              ("Understand", [("/spec/mapping-guide/", "Mapping guide", "From a paper contract to Terms"),
+                              ("/spec/design-notes/", "Design notes", "Why it is built this way"),
+                              ("/spec/neutrality-charter/", "Neutrality charter", "Who the language answers to")])],
+     "feat": {"eyebrow": "UP/0.1 draft", "title": "The draft is open for review.", "text": "Read it, run the examples, and tell us what is wrong.",
+              "href": "/spec/", "cta": "Read the spec"}},
+    {"id": "build", "label": "Build", "paths": ["/developers/", "/playground/", "/docs/", "/integrations/"],
+     "cols": [("Start", [("/developers/", "Developers", "Run the engine and write a first agreement"),
+                         ("/playground/", "Playground", "Try it in your browser"),
+                         ("/developers/#mcp", "MCP server", "Give an agent the reference engine")]),
+              ("Connect", [("/docs/claude/", "Claude connector", "Use it inside Claude"),
+                           ("/docs/chatgpt/", "ChatGPT plugin", "Use it inside ChatGPT"),
+                           ("/integrations/", "Integrations", "Optional links to other standards")])],
+     "feat": {"eyebrow": "Hosted MCP, no sign-in", "title": "Give your agent the engine.", "copy": MCP_URL, "href": "/developers/#mcp", "cta": "How it works"}},
+    {"id": "research", "label": "Research", "paths": ["/research/"],
+     "cols": [("Kinds", [("/research/?kind=note#library", "Notes", "Ideas argued in full"),
+                         ("/research/?kind=experiment#library", "Experiments", "Claims that were run"),
+                         ("/research/?kind=reusable#library", "Reusables", "Files to build on"),
+                         ("/research/?kind=question#library", "Questions", "Open problems")]),
+              ("Find", [("/research/", "All research", "Search every entry"),
+                        ("/research/#topics", "Topics", "Nine subjects, each defined"),
+                        ("/research/#agents", "For agents", "Index, schemas and feed"),
+                        ("/research/query-surfaces/", "Agreements as query surfaces", "Note 001 · Start here")])],
+     "feat": {"eyebrow": "Notice", "title": "Not part of the language.", "text": "Research may grow, change, or be withdrawn. Agreements do not depend on it.",
+              "href": "/research/#rules", "cta": "Ground rules"}},
+]
+PLAIN = [("/faq/", "FAQ")]
 # which top-level item a path belongs to
 SECTIONS = [("/spec/terms/", "/spec/terms/"), ("/spec/", "/spec/"), ("/integrations/", "/integrations/"),
-            ("/developers/", "/developers/"), ("/faq/", "/faq/")]
+            ("/developers/", "/developers/"), ("/faq/", "/faq/"), ("/research/", "/research/")]
 
 # art for each document hero: the seeded flow field and its palette
 TONES = {"overview": "warm", "domain": "lilac", "predicates-functions": "coral", "axioms": "mint", "inference": "warm",
@@ -53,26 +86,60 @@ def section_of(path):
 
 
 # ----------------------------------------------------------------------------- chrome
-def header(path, repo_url):
-    cur = section_of(path)
-    links = "".join(f'<li><a href="{h}"' + (' aria-current="page"' if h == cur else "") + f">{t}</a></li>" for h, t in NAV)
-    sheet = "".join(f'<a href="{h}">{t}<small>' + ("You are here" if h == cur else "") + "</small></a>" for h, t in NAV)
-    sheet += '<a href="/playground/">Playground<small>Runs in your browser</small></a>'
+def _ico(name):
+    return f'<svg class="ico" aria-hidden="true"><use href="#i-{name}"/></svg>'
+
+
+def _in_group(g, path):
+    return any(path.startswith(p) for p in g["paths"])
+
+
+def nav_links(path):
+    """The desktop row: one button per group, then the plain links."""
+    btns = "".join(f'<li><button class="nx-btn" type="button" aria-expanded="false" aria-controls="nx-{g["id"]}"'
+                   + (' data-current="true"' if _in_group(g, path) else "") + f'>{g["label"]}{_ico("down")}</button></li>' for g in GROUPS)
+    return btns + "".join(f'<li><a href="{h}"' + (' aria-current="page"' if path.startswith(h) else "") + f">{t}</a></li>" for h, t in PLAIN)
+
+
+def nav_panels(path):
+    out = []
+    for g in GROUPS:
+        cols = "".join('<div class="nx-col"><p class="nx-h">' + head + "</p>" + "".join(
+            f'<a class="nx-link" href="{h}"' + (' aria-current="page"' if h == path else "") + f"><b>{t}</b><span>{d}</span></a>" for h, t, d in items) + "</div>"
+            for head, items in g["cols"])
+        f = g["feat"]
+        body = (f'<div class="cmd url"><code>{f["copy"]}</code><button class="cbtn" type="button" data-copy="{f["copy"]}">Copy</button></div>'
+                if f.get("copy") else f'<p>{f["text"]}</p>')
+        feat = (f'<div class="nx-feat"><p class="nx-h">{f["eyebrow"]}</p><b>{f["title"]}</b>{body}'
+                f'<a class="nx-cta" href="{f["href"]}">{f["cta"]} {_ico("arrow")}</a></div>')
+        out.append(f'<div class="nx-panel" id="nx-{g["id"]}" role="group" aria-label="{g["label"]}" hidden><div class="wrap"><div class="nx-card">{cols}{feat}</div></div></div>')
+    return "\n".join(out)
+
+
+def nav_sheet(path, repo_url):
+    """The phone menu: one disclosure per group, then the plain links, GitHub and Licenses."""
+    sheet = "".join('<details class="nx-group"' + (" open" if _in_group(g, path) else "") + f'><summary>{g["label"]}{_ico("down")}</summary>'
+                    + "".join(f'<a href="{h}">{t}</a>' for _, items in g["cols"] for h, t, _ in items) + "</details>" for g in GROUPS)
+    sheet += "".join(f'<a href="{h}">{t}<small></small></a>' for h, t in PLAIN)
     if repo_url:
         sheet += f'<a href="{repo_url}">GitHub<small>Source ↗</small></a>'
-    sheet += '<a href="/license/">Licenses<small></small></a>'
+    return sheet + '<a href="/license/">Licenses<small></small></a>'
+
+
+def header(path, repo_url):
     gh = f'\n      <a class="txt" href="{repo_url}">GitHub</a>' if repo_url else ""
     return f"""<header class="nav" id="nav">
   <div class="wrap">
     <a class="brand" href="/" aria-label="Universal Paper home"><span class="mark" aria-hidden="true"></span>Universal Paper</a>
-    <ul class="navlinks">{links}</ul>
+    <ul class="navlinks nx">{nav_links(path)}</ul>
     <div class="right">
       <button class="search-btn" type="button" data-search aria-label="Search the site">{ico("search")}<span>Search</span><kbd>⌘K</kbd></button>{gh}
       <a class="btn dark" href="/spec/">Read the spec</a>
       <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu">{ico("menu")}</button>
     </div>
   </div>
-  <nav class="menu-sheet" id="menu" aria-label="Site" hidden>{sheet}</nav>
+  <nav class="menu-sheet" id="menu" aria-label="Site" hidden>{nav_sheet(path, repo_url)}</nav>
+{nav_panels(path)}
 </header>"""
 
 
@@ -99,7 +166,7 @@ def footer(legal, tagline, repo_url, extra_build=()):
       </div>
       <div><h4>Protocol</h4><ul>{col([("/spec/", "Specification"), ("/spec/overview/", "Overview"), ("/spec/axioms/", "Axioms"), ("/spec/terms/", "Term library"), ("/spec/mapping-guide/", "Mapping guide")])}</ul></div>
       <div><h4>Build</h4><ul>{col(build)}</ul></div>
-      <div><h4>Project</h4><ul>{col([("/faq/", "FAQ"), ("/license/", "Licenses"), ("/spec/neutrality-charter/", "Neutrality charter"), ("/spec/design-notes/", "Design notes")])}</ul></div>
+      <div><h4>Project</h4><ul>{col([("/faq/", "FAQ"), ("/license/", "Licenses"), ("/spec/neutrality-charter/", "Neutrality charter"), ("/spec/design-notes/", "Design notes"), ("/research/", "Research")])}</ul></div>
     </div>
     <div class="giant" aria-hidden="true"><span class="mark"></span>Universal Paper</div>
     {legal}
@@ -308,7 +375,8 @@ def headings(main_html, level="h2"):
     """(id, text) for every heading with an id in a page body, for the search index."""
     out = []
     for m in re.finditer(rf'<{level}\b[^>]*\bid="([^"]+)"[^>]*>(.*?)</{level}>', main_html, re.S):
-        text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", m.group(2)))).strip()
+        inner = re.sub(r'<a class="anchor"[^>]*>.*?</a>', "", m.group(2), flags=re.S)
+        text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", inner))).strip()
         text = re.sub(r"^(A\d+|\d{2})\s+", "", text)
         if text:
             out.append((m.group(1), text))

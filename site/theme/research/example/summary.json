@@ -1,0 +1,249 @@
+{
+  "type": "ResearchNote",
+  "id": "query-surfaces",
+  "title": "Agreements as query surfaces",
+  "status": "exploring",
+  "language_change": "none",
+  "notice": "Research is not part of the Universal Paper language. It may grow, change, or be withdrawn. Agreements do not depend on it.",
+  "url": "https://universalpaper.org/research/query-surfaces/",
+  "markdown": "https://universalpaper.org/research/query-surfaces.md",
+  "claim": "A signed agreement can name the questions it will answer. Anyone holding the bytes runs an engine and gets a trace: inputs, state fingerprint, verdict. A second engine recomputes the same trace, and equal fingerprints mean the same answer.",
+  "adds_to_language": {
+    "terms": 0,
+    "event_kinds": 0,
+    "required_fields": 0
+  },
+  "source_of_truth": "The agreement bytes and an engine run locally. The hosted MCP server is a convenience for running the same engine, not the source of an answer.",
+  "engines": {
+    "local_server": "uvx universal-paper-mcp",
+    "reference_interpreter": "python -m universal_paper derive <bundle.json> --at <time>, from a clone of the repository",
+    "second_engine": "explorer/src/up-engine.js (JavaScript)",
+    "hosted": "https://mcp.universalpaper.org/mcp",
+    "source": "https://github.com/Uppercentile/universal-paper"
+  },
+  "questions": [
+    {
+      "id": "eligibility",
+      "asks": "Is this member covered by this agreement at this time?",
+      "call": "simulate_eligibility",
+      "fixed": {
+        "parent": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af"
+      },
+      "open": [
+        "member",
+        "at"
+      ]
+    },
+    {
+      "id": "fee",
+      "asks": "What administrative fee is owed under this agreement at this time, and has it been paid?",
+      "call": "derive_state",
+      "fixed": {},
+      "open": [
+        "at"
+      ],
+      "reads": {
+        "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+        "obligations": {
+          "clause": "fee"
+        }
+      }
+    },
+    {
+      "id": "amendment",
+      "asks": "Would this fee rate be accepted if the aggregator's agent proposed it under its Mandate?",
+      "call": "simulate_amendment",
+      "fixed": {
+        "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+        "clause": "fee",
+        "param": "rate",
+        "mandate": "sha256:39b55f724b9ee68bc51ce7c01ef72c640dc7ed0dd7cc2ccccf13095ef4277918"
+      },
+      "open": [
+        "value",
+        "at"
+      ]
+    }
+  ],
+  "manifest": {
+    "url": "https://universalpaper.org/research/query-test-vectors/manifest.json",
+    "schema": "https://universalpaper.org/research/schema/0/query-manifest.schema.json",
+    "fingerprint": "sha256:44bb1bb2ebbbd0bd3e05f9c3f7b539c5057b43d194f56a027d458167d3d293ae",
+    "optional": true,
+    "fingerprint_rule": "RFC 8785 canonical JSON, then SHA-256, with any sigs member left out (spec/01-domain, section 1)"
+  },
+  "trace_shape": {
+    "format": "up-research/query-trace/0",
+    "schema": "https://universalpaper.org/research/schema/0/query-trace.schema.json",
+    "fields": {
+      "manifest": "fingerprint of the manifest the question came from",
+      "question": "id of the question in that manifest",
+      "call": "the existing engine call that was run",
+      "inputs": "every argument the call was given, including the time `at`; chains are named by ChainId, never by position",
+      "state": "one entry per chain the answer read: its ChainId and its state fingerprint (the state_hash that derive_state returns, and the value the next event on that chain must carry as prev)",
+      "verdict": "the values the call returned that the specification determines; the engine's explanatory text is left out"
+    },
+    "fingerprint": "content hash of the whole trace, by the same rule as the manifest",
+    "match_rule": "Two parties who compute equal trace fingerprints hold the same question, inputs, state and verdict."
+  },
+  "example": {
+    "simulated": true,
+    "bundle": {
+      "bundle": "examples/generative/bundle.json",
+      "url": "https://github.com/Uppercentile/universal-paper/blob/main/examples/generative/bundle.json",
+      "license": "CC0-1.0"
+    },
+    "at": "2027-03-01T00:00:00Z",
+    "traces": [
+      {
+        "fingerprint": "sha256:0da4824fb755d7c1acb3a7b85c21a11a063db5666adac06ac333fd057e262e38",
+        "url": "https://universalpaper.org/research/query-test-vectors/trace-eligibility.json",
+        "trace": {
+          "format": "up-research/query-trace/0",
+          "spec": "UP/0.1-draft",
+          "simulated": true,
+          "manifest": "sha256:44bb1bb2ebbbd0bd3e05f9c3f7b539c5057b43d194f56a027d458167d3d293ae",
+          "question": "eligibility",
+          "call": "simulate_eligibility",
+          "inputs": {
+            "at": "2027-03-01T00:00:00Z",
+            "member": "ed25519:cbc69eb9202b2b08ea7e717c774f5fb866d9d186bda8dd16fe05ae348d7e48b1",
+            "parent": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af"
+          },
+          "state": [
+            {
+              "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+              "fingerprint": "sha256:c198cefe6c519bf30af389a71fb0bc346f5fd3906865d1662941b47db3e31424"
+            },
+            {
+              "chain": "sha256:05abdba1a9767eb41cda54473f08571bf772c177079382567f14f1917c929059",
+              "fingerprint": "sha256:a2089a7aab47d8fb55cbb29702f75a4a12a11636d5d7f11ee835f1525c268965"
+            }
+          ],
+          "verdict": {
+            "eligible": true,
+            "participations": [
+              {
+                "chain": "sha256:05abdba1a9767eb41cda54473f08571bf772c177079382567f14f1917c929059",
+                "parent": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+                "status": "active",
+                "tier": "B"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "fingerprint": "sha256:c398d0b7052d0c4ee706011a41363091198a66a3c2906ba1130ceb97d52326d0",
+        "url": "https://universalpaper.org/research/query-test-vectors/trace-fee.json",
+        "trace": {
+          "format": "up-research/query-trace/0",
+          "spec": "UP/0.1-draft",
+          "simulated": true,
+          "manifest": "sha256:44bb1bb2ebbbd0bd3e05f9c3f7b539c5057b43d194f56a027d458167d3d293ae",
+          "question": "fee",
+          "call": "derive_state",
+          "inputs": {
+            "at": "2027-03-01T00:00:00Z"
+          },
+          "state": [
+            {
+              "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+              "fingerprint": "sha256:c198cefe6c519bf30af389a71fb0bc346f5fd3906865d1662941b47db3e31424"
+            }
+          ],
+          "verdict": {
+            "obligations": [
+              {
+                "clause": "fee",
+                "duty": "pay",
+                "obligor": {
+                  "role": "supplier",
+                  "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678"
+                },
+                "obligee": {
+                  "role": "aggregator",
+                  "key": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5"
+                },
+                "period": {
+                  "start": "2027-01-01T00:00:00Z",
+                  "end": "2027-02-01T00:00:00Z"
+                },
+                "due": "2027-03-03T00:00:00Z",
+                "amount": {
+                  "value": "21.89",
+                  "currency": "USD"
+                },
+                "status": "discharged",
+                "discharged_at": "2027-02-20T12:05:00Z",
+                "late": false
+              },
+              {
+                "clause": "fee",
+                "duty": "pay",
+                "obligor": {
+                  "role": "supplier",
+                  "key": "ed25519:316f1ea96d89f15c8ab6f0c9fc4d4a83192676dc12cdeae66a197dc77c1a5678"
+                },
+                "obligee": {
+                  "role": "aggregator",
+                  "key": "ed25519:f2c6a4097ba421030bb8a63272e05e2f802e59f400beb4190c54fa261a20a5b5"
+                },
+                "period": {
+                  "start": "2027-02-01T00:00:00Z",
+                  "end": "2027-03-01T00:00:00Z"
+                },
+                "due": "2027-03-31T00:00:00Z",
+                "amount": "no base reported yet",
+                "status": "open"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "fingerprint": "sha256:5210769fdb99b09fe422cc202350117c5f77b369d1258a211029769558eee6df",
+        "url": "https://universalpaper.org/research/query-test-vectors/trace-amendment.json",
+        "trace": {
+          "format": "up-research/query-trace/0",
+          "spec": "UP/0.1-draft",
+          "simulated": true,
+          "manifest": "sha256:44bb1bb2ebbbd0bd3e05f9c3f7b539c5057b43d194f56a027d458167d3d293ae",
+          "question": "amendment",
+          "call": "simulate_amendment",
+          "inputs": {
+            "at": "2027-03-01T00:00:00Z",
+            "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+            "clause": "fee",
+            "param": "rate",
+            "mandate": "sha256:39b55f724b9ee68bc51ce7c01ef72c640dc7ed0dd7cc2ccccf13095ef4277918",
+            "value": "0.035"
+          },
+          "state": [
+            {
+              "chain": "sha256:306149286ea760f5a855d1ea2ad9da8ed7a349a272d0d9ed0128c179c09fc3af",
+              "fingerprint": "sha256:c198cefe6c519bf30af389a71fb0bc346f5fd3906865d1662941b47db3e31424"
+            }
+          ],
+          "verdict": {
+            "accepted": false,
+            "change": {
+              "clause": "fee",
+              "param": "rate",
+              "from": "0.025",
+              "to": "0.035"
+            },
+            "failed": [
+              {
+                "rule": "A9",
+                "label": "Bounded delegation"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "entry": "https://universalpaper.org/research/query-surfaces/entry.json",
+  "index": "https://universalpaper.org/research/index.json"
+}

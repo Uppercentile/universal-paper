@@ -1,0 +1,161 @@
+    <section class="band tight" aria-label="The idea in one picture" style="padding-bottom:0">
+      <div class="wrap">
+        <div class="cg-demo rs-demo">
+          <div class="cg-start">
+            <p class="eyebrow">In one picture</p>
+            <h2 class="h3">One question. Two engines. One fingerprint.</h2>
+            <p class="cg-sub">Each side runs its own engine on the same bytes. Equal fingerprints mean the same answer, with nobody in between.</p>
+            <ul class="rs-none">
+              <li>{{ICO:check}}No account</li>
+              <li>{{ICO:check}}No vendor API</li>
+              <li>{{ICO:check}}No shared database</li>
+            </ul>
+          </div>
+          <figure class="cg-win rs-fig">
+            <figcaption>Example<span class="cg-tag">Simulated</span></figcaption>
+            <div class="rs-pic">
+              <div class="rs-src">
+                <span class="cg-who">The signed agreement</span>
+                <b>Master X</b>
+                <code>{{SHORT:AGREEMENT}}</code>
+              </div>
+              <p class="rs-q"><span class="cg-who">Question it named</span>Is this member covered at this time?</p>
+              <div class="rs-pair">
+                <div><span class="cg-who">Your engine</span><code>{{SHORT:T0}}</code></div>
+                <span class="rs-eq" aria-label="equals">=</span>
+                <div><span class="cg-who">Their engine</span><code>{{SHORT:T0}}</code></div>
+              </div>
+              <p class="rs-ans"><span class="vd ok">{{ICO:check}}Same trace</span>Eligible, tier B</p>
+            </div>
+            <p class="cg-foot">The fingerprints match because the bytes match. Nothing else has to be trusted.</p>
+          </figure>
+        </div>
+        <div class="glance">
+          <div><span class="b">{{ICO:check}}</span><span><b>No new language.</b> No Term, no Event kind and no required field is added.</span></div>
+          <div><span class="b">{{ICO:check}}</span><span><b>Recomputable.</b> Every answer names its inputs by fingerprint, so a local engine can check it.</span></div>
+          <div><span class="b note">{{ICO:i}}</span><span><b>Simulated example.</b> Built from a public example bundle with hypothetical parties.</span></div>
+        </div>
+      </div>
+    </section>
+<!-- body -->
+<p class="intro">To learn what an agreement says about you today, you ask whoever holds it and trust the reply. This note tests another arrangement: the agreement answers for itself, and anyone can check the answer.</p>
+
+<aside class="rs-brief" aria-label="In brief">
+  <p class="rs-brief-h">In brief</p>
+  <ul>
+    <li><b>The idea.</b> An agreement names the questions it will answer, and anyone holding it can compute the answer.</li>
+    <li><b>The proof.</b> An answer is a trace with a fingerprint. Two parties who get the same fingerprint have the same answer.</li>
+    <li><b>The cost.</b> Nothing is added to the language. The questions use engine calls that already exist.</li>
+    <li><b>The status.</b> An idea with one simulated example. None of it is built into a product.</li>
+    <li><b>The parts.</b> One experiment, one set of files to reuse, and six open questions, each on its own page.</li>
+  </ul>
+</aside>
+<details class="rs-words">
+  <summary>Five words used in this note</summary>
+  <dl class="gloss">
+    <div><dt>Engine</dt><dd>A program that applies the rules of the language to an agreement. The repository has two, written separately.</dd></div>
+    <div><dt>Fingerprint</dt><dd>A short code computed from the exact bytes of something. Change one character and the fingerprint changes.</dd></div>
+    <div><dt>State fingerprint</dt><dd>The fingerprint of where an agreement stands after its latest accepted event.</dd></div>
+    <div><dt>Manifest</dt><dd>An optional file that lists the questions an agreement will answer.</dd></div>
+    <div><dt>Trace</dt><dd>One answer: the inputs, the state fingerprint and the verdict.</dd></div>
+  </dl>
+</details>
+
+<h2>The idea</h2>
+<p>The signed agreement is the interface. A party names the questions the agreement will answer. Anyone with the bytes, or with the fingerprint plus the slice of values disclosed to them, runs an engine and gets a <strong>trace</strong>: the inputs, the state fingerprint and the verdict. A second engine on the other side recomputes the same trace.</p>
+<div class="flow rs-flow">
+  <div><span class="fn">01</span><b>A party names the questions</b><p>In a short, optional file beside the agreement.</p></div>
+  <div><span class="fn">02</span><b>Anyone with the bytes runs an engine</b><p>Their own copy, on their own machine.</p></div>
+  <div><span class="fn">03</span><b>The engine returns a trace</b><p>Inputs, state fingerprint, verdict.</p></div>
+  <div><span class="fn">04</span><b>The other side recomputes it</b><p>Equal fingerprints, same answer.</p></div>
+</div>
+<p class="rs-pull">If the two fingerprints match, the answer is the same, because the bytes are the same.</p>
+<p>No account, no vendor API and no shared database sits between the two sides.</p>
+
+<h2>What it adds to the language</h2>
+<p class="sum rs-zero"><b>Nothing.</b><span>No Term, no Event kind and no required field.</span></p>
+<p>This idea needs no new language. The file that names the questions is called a <strong>manifest</strong>. It is optional. It sits beside the agreement, it is fingerprinted with the rule the language already uses, and it can only name engine calls that already exist.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Question</th><th>Existing engine call</th><th>What the call reads</th></tr></thead>
+<tbody>
+<tr><td>Is this member covered?</td><td><code>simulate_eligibility</code></td><td>The participation, its term, and the agreement it sits under</td></tr>
+<tr><td>What fee is owed?</td><td><code>derive_state</code> (the fee derivation)</td><td>The obligations of the <a href="/spec/terms/UP-Admin-Fee/">UP:Admin-Fee</a> clause</td></tr>
+<tr><td>Would this change be accepted?</td><td><code>simulate_amendment</code></td><td>The agent&rsquo;s Mandate and <a href="/spec/axioms/">axiom A9</a>, bounded delegation</td></tr>
+</tbody></table></div>
+<p>An agreement with no manifest is exactly as valid as one with a manifest, and a manifest cannot change what an agreement means. Delete every manifest and every agreement still computes the same.</p>
+
+<h2>The manifest</h2>
+<p>The example was derived from <a href="{{BUNDLE_URL}}">the generative example bundle</a> in the repository. It names three questions about one agreement, Master X. It is simulated, and no party signed it.</p>
+<ol class="rs-qs">
+  <li><span class="fn">Question 1</span><b>Is this member covered by this agreement at this time?</b><p>Runs <code>simulate_eligibility</code>. You supply the member and the time.</p></li>
+  <li><span class="fn">Question 2</span><b>What administrative fee is owed, and has it been paid?</b><p>Runs <code>derive_state</code> and reads the fee clause. You supply the time.</p></li>
+  <li><span class="fn">Question 3</span><b>Would this fee rate be accepted if the aggregator&rsquo;s agent proposed it?</b><p>Runs <code>simulate_amendment</code>. You supply the rate and the time.</p></li>
+</ol>
+{{PART:3}}
+<dl class="gloss">
+  <div><dt>agreement</dt><dd>Which agreement the questions are about, by its ChainId and by the fingerprint of the agreement in force.</dd></div>
+  <div><dt>named_by</dt><dd>The party naming the questions. In this example nobody signed the manifest. If a party did, it would be the same Ed25519 signature the language uses everywhere else.</dd></div>
+  <div><dt>call</dt><dd>The existing engine call that answers the question. A manifest cannot define a new one.</dd></div>
+  <div><dt>fixed, open</dt><dd>The arguments the manifest pins, and the ones the asker supplies, such as the member and the time.</dd></div>
+  <div><dt>reads</dt><dd>For a call that returns a whole state, the part that answers the question.</dd></div>
+</dl>
+<p class="fp"><span>Manifest fingerprint</span><code>{{MANIFEST_FP}}</code></p>
+<p class="fine">Canonical JSON (RFC 8785), then SHA-256, the rule in <a href="/spec/domain/#1-encoding-canonical-form-and-hashes">section 1 of the domain</a>. The hosted engine&rsquo;s <code>hash_object</code> and a separate script written for this note returned the same value.</p>
+
+<h2>The trace</h2>
+<p>An answer is a trace with three parts.</p>
+<dl class="kv">
+  <div><dt>Inputs</dt><dd>Every argument the call was given, including the time. Agreements are named by ChainId, never by their position in someone&rsquo;s file.</dd></div>
+  <div><dt>State</dt><dd>The state fingerprint of each agreement the answer read. It pins the exact history the answer rests on.</dd></div>
+  <div><dt>Verdict</dt><dd>What the engine returned: eligible or not, the fee and its status, accepted or rejected and by which rule.</dd></div>
+</dl>
+<p>The trace has a fingerprint of its own, computed the same way. Here are the three example questions, asked about March 1, 2027.</p>
+<ol class="rs-qs rs-answers">
+  <li><span class="fn">Question 1 · <code>simulate_eligibility</code></span><b>Is Hypothetical Rural Hospital covered by Master X?</b><p><span class="vd ok">{{ICO:check}}Eligible</span> An active participant on tier B.</p><p class="rs-fpline"><span>Trace</span><code title="{{T0}}">{{SHORT:T0}}</code></p></li>
+  <li><span class="fn">Question 2 · <code>derive_state</code></span><b>What administrative fee is owed, and has it been paid?</b><p><span class="vd ok">{{ICO:check}}Paid</span> January 2027: $21.89, which is 2.5% of $875.50 in reported sales. February 2027 is open, with no sales reported yet.</p><p class="rs-fpline"><span>Trace</span><code title="{{T1}}">{{SHORT:T1}}</code></p></li>
+  <li><span class="fn">Question 3 · <code>simulate_amendment</code></span><b>Would a fee rate of 3.5% be accepted if the aggregator&rsquo;s agent proposed it?</b><p><span class="vd bad">{{ICO:x}}Rejected</span> Rule A9, bounded delegation. The Mandate allows at most 3%. A rate of 3% is accepted.</p><p class="rs-fpline"><span>Trace</span><code title="{{T2}}">{{SHORT:T2}}</code></p></li>
+</ol>
+{{PART:2}}
+<p>The state fingerprint is not new either. Every event already carries one as <code>prev</code>, the fingerprint of the state it builds on, and <code>derive_state</code> returns it as <code>state_hash</code>. If two parties name the same state fingerprint, they hold the same history, whatever else differs in their files.</p>
+
+<h2>Recompute it yourself</h2>
+<p><strong>The MCP server is a convenience, not the source.</strong> It runs the reference engine for you, which is handy inside an assistant. The answer comes from the bytes. A local engine must be able to recompute every trace. An answer that only one server can produce is a claim, and this idea has no use for it.</p>
+<p>The commands for a local server and for the reference interpreter are in <a href="/research/three-traces-recomputed/#run-it-yourself">Experiment 002</a>.</p>
+<p>For this example, the state fingerprint of Master X is:</p>
+<p class="fp"><span>State fingerprint</span><code>{{STATE_X}}</code></p>
+<p class="fine">The hosted server returned this value on November 27, 2026. The <a href="{{REPO}}/blob/main/examples/traces/generative.trace.json">trace file in the repository</a>, written by the reference interpreter, carries the same value for the same history.</p>
+<h3 id="with-a-disclosed-slice">With only a disclosed slice</h3>
+<p>Some values in an agreement can be sealed. Every fingerprint covers the sealed form, so a party who sees every value and a party who sees none compute the same state fingerprint. A party who holds the fingerprint plus the values disclosed to them gets a full verdict for any question those values answer. For the rest, the engine says <code>sealed</code> instead of guessing. See <a href="/spec/domain/#3-seal">Seal</a> in the specification.</p>
+
+<h2>Where this could go</h2>
+<p>The third question is a small version of something larger. It lets an outside party ask, before offering anything, whether a change would be accepted.</p>
+<p>The hope is a future app or layer in which an agreement, and possibly a party&rsquo;s profile, states to outside parties: this is what I have accepted, and this is what I will keep accepting, on these conditions, if you want to make an offer. An agent reads those acceptance states and acts on them. It makes the offer that will pass, or it skips the round trip.</p>
+<p>None of that is built. If it is built, it belongs in an app or a layer above the language, not in the language.</p>
+
+<h2>What we are not sure about</h2>
+<p>Six questions are open. Each has its own page, with what is known so far and what would settle it.</p>
+{{QUESTIONS}}
+<p>If you have a view on any of these, <a href="{{REPO}}/issues">open an issue</a>.</p>
+
+<h2>For agents and tools</h2>
+<p>Everything on this page is available without reading the page.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>File</th><th>What it holds</th></tr></thead>
+<tbody>
+<tr><td><a href="/research/query-surfaces/entry.json">entry.json</a></td><td>This note as a record: kind, status, topics, what it is built on, and its eight parts</td></tr>
+<tr><td><a href="/research/query-surfaces/summary.json">summary.json</a></td><td>The three questions, the trace shape, and the three example traces with their fingerprints</td></tr>
+<tr><td><a href="/research/query-surfaces.md">query-surfaces.md</a></td><td>This note as Markdown</td></tr>
+<tr><td><a href="/research/query-test-vectors/manifest.json">manifest.json</a></td><td>The example manifest, labeled simulated. It belongs to <a href="/research/query-test-vectors/">Reusable 003</a></td></tr>
+<tr><td><a href="/research/schema/0/query-manifest.schema.json">query-manifest.schema.json</a>, <a href="/research/schema/0/query-trace.schema.json">query-trace.schema.json</a></td><td>JSON Schemas for the two research formats</td></tr>
+<tr><td><a href="{{BUNDLE_URL}}">bundle.json</a></td><td>The public example bundle the manifest was derived from</td></tr>
+</tbody></table></div>
+<p>To answer a named question:</p>
+<ol>
+  <li>Fetch the manifest and check its fingerprint.</li>
+  <li>Load the bundle and run <code>validate_bundle</code>. It names any rejected events. They are skipped, and they leave the state fingerprint unchanged.</li>
+  <li>Run the call the question names, with its fixed arguments and your own open ones.</li>
+  <li>Build the trace: inputs, the state fingerprint of each agreement read, and the verdict.</li>
+  <li>Fingerprint the trace and compare it with the other side&rsquo;s.</li>
+</ol>
+
+<div class="doc-foot"><p>Research note by <a href="https://uppercentile.com">Uppercentile</a>, licensed under <a href="/license/">CC BY 4.0</a>. Example data is CC0 1.0. Published November 27, 2026.</p></div>
