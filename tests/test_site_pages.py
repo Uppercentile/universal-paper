@@ -279,11 +279,11 @@ def test_hero_timeline_uses_the_real_fingerprint(dist):
     assert "animation: underline-in 2.8s" in s and "const START = 600, DRAW = 2800" in s  # CSS and script keep one clock
 
 
-TRUST = ("/privacy/", "/terms/", "/security/", "/support/", "/accessibility/")
+TRUST = ("/privacy/", "/terms/", "/legal/", "/security/", "/support/", "/accessibility/")
 
 
 def test_trust_pages_are_served_and_linked_everywhere(dist):
-    """The five trust pages exist, every page's footer links all five, and llms.txt, agent.json and the sitemap list them."""
+    """The six trust pages exist, every page's footer links all six, and llms.txt, agent.json and the sitemap list them."""
     for p in TRUST:
         s = (dist / p.strip("/") / "index.html").read_text(encoding="utf-8")
         assert s.count("<h1") == 1 and f'<a href="{p}" aria-current="page">' in s
@@ -296,6 +296,30 @@ def test_trust_pages_are_served_and_linked_everywhere(dist):
     for p in TRUST:
         assert f"https://universalpaper.org{p}" in llms and f"<loc>https://universalpaper.org{p}</loc>" in sitemap
         assert f"https://universalpaper.org{p}" in agent.values()
+
+
+def test_legal_page_quotes_the_spec_it_cites(dist):
+    """The legal and compliance page quotes axiom A6 and the UP:Overlay text word for word, says the overlay example lets the
+    existing agreement control, links every spec section it relies on, and carries the not-legal-advice notice."""
+    s = (dist / "legal/index.html").read_text(encoding="utf-8")
+    text = html.unescape(re.sub(r"<[^>]+>", "", s))
+    assert "Not legal advice." in text and "does not give legal advice" in text
+    axioms = (ROOT / "spec/03-axioms.md").read_text(encoding="utf-8")
+    a6 = re.search(r"## A6 Value neutrality\n\n(.*?)\n", axioms).group(1)
+    assert re.sub(r"\*\*", "", a6).replace(" ", " ") in text.replace("\u201c", "").replace("\u201d", "")
+    overlay = json.loads((ROOT / "spec/06-terms/UP-Overlay.json").read_text(encoding="utf-8"))
+    assert set(overlay["params"]["governs"]["type"].replace('"', "").split(" | ")) == {"document", "this-record"}
+    assert "It does not amend or replace that agreement." in overlay["render"] and "It does not amend or replace that agreement." in text
+    bundle = (ROOT / "examples/overlay/bundle.json").read_text(encoding="utf-8")
+    assert '"governs": "document"' in bundle or '"governs":"document"' in bundle
+    for href in ("/spec/axioms/#a6-value-neutrality", "/spec/axioms/#a8-rendering-binding-ricardian", "/spec/axioms/#a9-bounded-delegation",
+                 "/spec/axioms/#a10-verifiable-confidentiality", "/spec/terms/UP-Overlay/", "/spec/domain/#13-keys-and-signatures",
+                 "/spec/overview/#71-antitrust", "/spec/mapping-guide/#2-agreements-on-existing-paper-overlay", "/privacy/", "/license/"):
+        assert f'href="{href}"' in s, href
+    for cite in ("15 U.S.C. §7001(a)", "15 U.S.C. §7006(5)", "UETA §2(8)", "15 U.S.C. §7001(h)", "15 U.S.C. §1", "17 U.S.C. §512",
+                 "47 U.S.C. §230(c)(1)", "42 C.F.R. §1001.952(j)"):
+        assert cite in text, cite
+    assert not re.search(r"within \d+ (?:working |business )?days", text)  # no response-time promises
 
 
 def test_privacy_policy_matches_what_the_site_loads(dist):
